@@ -6,7 +6,7 @@ import { About } from './components/About';
 import { Header } from './components/Header';
 import { Home } from './components/Home';
 
-export const App = () => (
+export const App: React.FunctionComponent = () => (
   <BrowserRouter>
     <div>
       <Grid container spacing={2}>

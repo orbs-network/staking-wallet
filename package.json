@@ -8,18 +8,11 @@
   },
   "scripts": {
     "clean": "rimraf dist",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
     "type-check": "tsc -p ./src/tsconfig.json",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
     "dev": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server"
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "printWidth": 120
   },
   "keywords": [
     "typescript",
@@ -52,12 +45,16 @@
     "@types/webpack": "^4.39.8",
     "@types/webpack-bundle-analyzer": "^2.13.3",
     "@types/webpack-dev-server": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
     "babel-loader": "^8.0.6",
     "concurrently": "^5.0.0",
     "core-js": "^3.4.0",
     "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
+    "eslint": "^6.6.0",
+    "eslint-plugin-react": "^7.16.0",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
     "postcss-loader": "^3.0.0",

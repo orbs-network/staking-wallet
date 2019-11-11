@@ -10,9 +10,7 @@ export const About: React.FunctionComponent = () => (
     <Card>
       <CardHeader title='ABOUT' />
       <CardContent>
-        <Typography variant='h4'>
-          ORBS staking wallet is a simple way to stake your ORBS
-        </Typography>
+        <Typography variant='h4'>ORBS staking wallet is a simple way to stake your ORBS</Typography>
       </CardContent>
     </Card>
   </Grid>

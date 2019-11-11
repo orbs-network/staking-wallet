@@ -10,9 +10,7 @@ export const Home: React.FunctionComponent = () => (
     <Card>
       <CardHeader title='HOME' />
       <CardContent>
-        <Typography variant='h4'>
-          This is The ORBS Staking Wallet.
-        </Typography>
+        <Typography variant='h4'>This is The ORBS Staking Wallet.</Typography>
       </CardContent>
     </Card>
   </Grid>
