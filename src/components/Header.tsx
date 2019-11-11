@@ -9,6 +9,9 @@ export const Header: React.FunctionComponent = () => (
       <LinkButton color='primary' to='/'>
         Home
       </LinkButton>
+      <LinkButton color='primary' to='/guardians'>
+        Guardians
+      </LinkButton>
       <LinkButton color='primary' to='/about'>
         About
       </LinkButton>
