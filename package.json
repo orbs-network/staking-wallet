@@ -26,7 +26,10 @@
   "license": "MIT",
   "author": "Gil Amran",
   "dependencies": {
-    "tslib": "^1.10.0"
+    "orbs-client-sdk": "^2.2.1",
+    "orbs-pos-data": "^2.0.0",
+    "tslib": "^1.10.0",
+    "web3": "^1.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -54,10 +57,13 @@
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
     "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.16.0",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
     "postcss-loader": "^3.0.0",
+    "prettier": "^1.19.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-router": "^5.1.2",
