@@ -6,12 +6,17 @@ import { About } from './components/About';
 import { Guardians } from './components/guardians';
 import { Header } from './components/Header';
 import { Home } from './components/Home';
-import { IServices } from './services/Services';
+
 import { configure } from 'mobx';
+import { buildServices, IServices } from './services/Services';
+import { getStores } from './store/storesInitialization';
 
 configure({
   enforceActions: 'observed',
 });
+
+const services = buildServices();
+const stores = getStores(services.orbsPOSDataService);
 
 interface IProps {
   services: IServices;
@@ -19,7 +24,7 @@ interface IProps {
 
 export const App: React.FunctionComponent<IProps> = ({ services }) => (
   <BrowserRouter>
-    <Provider {...services}>
+    <Provider {...services} {...stores}>
       <Grid container spacing={2}>
         <Header />
         <Switch>

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
     "target": "esnext",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -12,5 +14,7 @@
     "types": [],
     "jsx": "react"
   },
-  "files": ["./client.tsx"]
+  "include": [
+    "./**/*"
+  ]
 }

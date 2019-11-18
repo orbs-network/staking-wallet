@@ -3,31 +3,14 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import * as React from 'react';
-import { useOrbsPOSDataService } from '../services/ServicesHooks';
-import { IGuardianInfo } from 'orbs-pos-data';
+
+import React from 'react';
 import { GuardiansTable } from './GuardiansTable';
+import { useGuardiansStore } from '../store/storeHooks';
+import { observer } from 'mobx-react';
 
-export const Guardians: React.FunctionComponent = () => {
-  const orbsPOSDataService = useOrbsPOSDataService();
-  const [guardiansAddressList, setGuardiansAddressList] = React.useState<string[]>([]);
-  const [guardiansList, setGuardiansList] = React.useState<IGuardianInfo[]>([]);
-
-  React.useEffect(() => {
-    const fetch = async () => {
-      const list = await orbsPOSDataService.getGuardiansList(0, 100);
-      setGuardiansAddressList(list);
-    };
-    fetch();
-  }, [orbsPOSDataService]);
-
-  React.useEffect(() => {
-    const fetch = async () => {
-      const promises = guardiansAddressList.map(guardianAddress => orbsPOSDataService.getGuardianInfo(guardianAddress));
-      setGuardiansList(await Promise.all(promises));
-    };
-    fetch();
-  }, [guardiansAddressList]);
+export const Guardians = observer(() => {
+  const guardiansStore = useGuardiansStore();
 
   return (
     <Grid item xs={12}>
@@ -35,13 +18,14 @@ export const Guardians: React.FunctionComponent = () => {
         <CardHeader title='Guardians' />
         <CardContent>
           <Typography>Guardians List</Typography>
-          {guardiansList.length === 0 ? (
+
+          {guardiansStore.guardiansList.length === 0 ? (
             <Typography>Loading...</Typography>
           ) : (
-            <GuardiansTable guardians={guardiansList} />
+            <GuardiansTable guardians={guardiansStore.guardiansList} />
           )}
         </CardContent>
       </Card>
     </Grid>
   );
-};
+});
