@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { useOrbsPOSDataService } from '../services/ServicesHooks';
-import { IGuardianInfo } from 'orbs-pos-data/dist/orbs-pos-data-service';
+import { IGuardianInfo } from 'orbs-pos-data';
 import { GuardiansTable } from './GuardiansTable';
 
 export const Guardians: React.FunctionComponent = () => {

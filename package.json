@@ -29,7 +29,7 @@
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "orbs-client-sdk": "^2.2.2",
-    "orbs-pos-data": "^2.0.0",
+    "orbs-pos-data": "^3.0.2",
     "tslib": "^1.10.0",
     "web3": "^1.2.2"
   },

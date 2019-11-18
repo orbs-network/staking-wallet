@@ -1,8 +1,8 @@
-import { OrbsPOSDataService } from 'orbs-pos-data';
+import { IOrbsPOSDataService } from 'orbs-pos-data';
 import { buildOrbsPOSDataService } from './OrbsPOSDataServiceFactory';
 
 export interface IServices {
-  orbsPOSDataService: OrbsPOSDataService;
+  orbsPOSDataService: IOrbsPOSDataService;
 }
 
 export function buildServices(): IServices {

@@ -1,4 +1,4 @@
-import { IGuardianInfo } from 'orbs-pos-data/dist/orbs-pos-data-service';
+import { IGuardianInfo } from 'orbs-pos-data';
 import * as React from 'react';
 import { Table, TableHead, TableCell, TableBody, TableRow, Typography } from '@material-ui/core';
 
