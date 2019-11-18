@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["esnext", "dom"],
+    "jsx": "react",
+    "types": ["node", "jest"],
+    "noEmit": true
+  },
+  "include": ["**/*.test.ts", "**/*.test.tsx"]
+}

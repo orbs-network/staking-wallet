@@ -1,5 +1,4 @@
 import Grid from '@material-ui/core/Grid';
-import { configure } from 'mobx';
 import { Provider } from 'mobx-react';
 import * as React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -7,14 +6,18 @@ import { About } from './components/About';
 import { Guardians } from './components/guardians';
 import { Header } from './components/Header';
 import { Home } from './components/Home';
-import { buildServices } from './services/Services';
+import { IServices } from './services/Services';
+import { configure } from 'mobx';
 
 configure({
   enforceActions: 'observed',
 });
-const services = buildServices();
 
-export const App: React.FunctionComponent = () => (
+interface IProps {
+  services: IServices;
+}
+
+export const App: React.FunctionComponent<IProps> = ({ services }) => (
   <BrowserRouter>
     <Provider {...services}>
       <Grid container spacing={2}>
