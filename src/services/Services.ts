@@ -1,6 +1,6 @@
 import { IOrbsPOSDataService } from 'orbs-pos-data';
 import { buildOrbsPOSDataService } from './OrbsPOSDataServiceFactory';
-import { IEthereumTxService, EthereumTxService } from './EthereumTxService';
+import { IEthereumTxService, EthereumTxService } from './ethereumTxService/EthereumTxService';
 
 export interface IServices {
   orbsPOSDataService: IOrbsPOSDataService;
