@@ -79,7 +79,7 @@ const config: Configuration = {
     historyApiFallback: true,
   },
   externals: {
-    'react': 'React',
+    react: 'React',
     'react-dom': 'ReactDOM',
   },
 };
