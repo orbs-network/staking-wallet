@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
     "target": "esnext",
     "moduleResolution": "node",
     "sourceMap": true,
     "noEmit": true,
-    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "isolatedModules": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
     "outDir": "../dist",
-    "lib": ["es2015", "dom"],
+    "lib": ["esnext", "dom"],
     "types": [],
     "jsx": "react"
   },

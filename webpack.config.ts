@@ -18,6 +18,7 @@ const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 const config: Configuration = {
   mode: IS_DEV ? 'development' : 'production',
+  target: 'web',
   devtool: IS_DEV ? 'inline-source-map' : false,
   entry: ['core-js', './src/client'],
   output: {
@@ -42,6 +43,11 @@ const config: Configuration = {
     rules: [
       {
         test: /\.tsx?$/,
+        loaders: ['babel-loader'],
+        exclude: [/node_modules/, nodeModulesPath],
+      },
+      {
+        test: /\.ts?$/,
         loaders: ['babel-loader'],
         exclude: [/node_modules/, nodeModulesPath],
       },

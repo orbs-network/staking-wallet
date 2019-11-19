@@ -2,9 +2,27 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import * as React from 'react';
 import { LinkButton } from './LinkButton';
+import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
+import { useMemo } from 'react';
 
 export const Header: React.FunctionComponent = () => {
+  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
 
+  const linkForCryptoWallet = useMemo(() => {
+    if (cryptoWalletIntegrationStore.isConnectedToWallet) {
+      return (
+        <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/my-wallet'>
+          My Wallet
+        </LinkButton>
+      );
+    } else {
+      return (
+        <LinkButton data-testid={'menuLink-connectWallet'} color='primary' to='/connect-wallet'>
+          Connect wallet
+        </LinkButton>
+      );
+    }
+  }, [cryptoWalletIntegrationStore.isConnectedToWallet]);
 
   return (
     <AppBar position='static' color='default'>
