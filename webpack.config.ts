@@ -2,8 +2,12 @@ import path from 'path';
 import { Configuration } from 'webpack';
 import cssnano from 'cssnano';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const plugins = [
+  new ForkTsCheckerWebpackPlugin({
+    tsconfig: path.join(__dirname, 'src', 'tsconfig.json'),
+  }),
   new HtmlWebpackPlugin({
     title: 'ORBS Staking Wallet',
     template: 'index.html',
