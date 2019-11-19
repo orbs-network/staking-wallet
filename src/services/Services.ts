@@ -9,7 +9,7 @@ export interface IServices {
 
 export function buildServices(): IServices {
   return {
-    orbsTransactionService: new EthereumTxService(window.ethereum),
+    orbsTransactionService: new EthereumTxService((window as any).ethereum),
     orbsPOSDataService: buildOrbsPOSDataService(),
   };
 }
