@@ -8,6 +8,6 @@ export interface IEthereumTxService {
   requestConnectionPermission: () => Promise<boolean>;
 
   // Event listeners
-  onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
-  onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => void;
+  onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
+  onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
 }
