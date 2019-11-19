@@ -3,14 +3,14 @@ import { IEthereumTxService } from './IEthereumTxService';
 
 export class EthereumTxService implements IEthereumTxService {
   private web3: Web3;
-  private isAvailable: boolean;
+  public readonly isAvailable: boolean;
 
-  constructor(private ethereum: any) {
-    this.web3 = new Web3(ethereum);
-  }
-
-  get isEthereumAvailable(): boolean {
-    return this.isAvailable;
+  constructor() {
+    const ethereum = (window as any).ethereum;
+    this.isAvailable = ethereum !== undefined;
+    if (this.isAvailable) {
+      this.web3 = new Web3(ethereum);
+    }
   }
 
   getMainAddress: () => Promise<string>;

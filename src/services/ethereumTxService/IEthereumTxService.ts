@@ -1,6 +1,6 @@
 export interface IEthereumTxService {
   // Getters
-  isEthereumAvailable: boolean;
+  readonly isAvailable: boolean;
   getMainAddress: () => Promise<string>;
 
   // Permissions
