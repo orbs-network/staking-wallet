@@ -1,6 +1,6 @@
 import { observable, action, reaction } from 'mobx';
-import { IOrbsPOSDataService } from 'orbs-pos-data';
-import { IGuardianInfo } from 'orbs-pos-data';
+
+import { IOrbsPOSDataService, IGuardianInfo } from 'orbs-pos-data';
 
 export interface IGuardiansStoreState {
   guardiansAddresses: string[];

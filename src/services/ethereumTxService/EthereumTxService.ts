@@ -1,33 +1,25 @@
 import Web3 from 'web3';
-
-export interface IEthereumTxService {
-  // Getters
-  isEthereumAvailable: boolean;
-  getMainAddress: () => Promise<string>;
-
-  // Permissions
-  // TODO : ORL : Update to a better name&signature
-  requestConnectionPermissions: () => Promise<boolean>;
-
-  // Event listeners
-  onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
-  onIsMainNetworkChange: (onChange: (mainAddress: string) => void) => void;
-}
+import { IEthereumTxService } from './IEthereumTxService';
 
 export class EthereumTxService implements IEthereumTxService {
   private web3: Web3;
-  private isAvailable: boolean;
+  public readonly isAvailable: boolean;
 
-  constructor(private ethereum: any) {
-    this.web3 = new Web3(ethereum);
+  constructor() {
+    const ethereum = (window as any).ethereum;
+    this.isAvailable = ethereum !== undefined;
+    if (this.isAvailable) {
+      this.web3 = new Web3(ethereum);
+    }
   }
 
-  get isEthereumAvailable(): boolean {
-    return this.isAvailable;
-  }
+  requestConnectionPermission: () => Promise<boolean>;
 
+  // Getters
+  getIsMainNetwork: () => Promise<boolean>;
   getMainAddress: () => Promise<string>;
-  onIsMainNetworkChange: (onChange: (mainAddress: string) => void) => void;
-  onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
-  requestConnectionPermissions: () => Promise<boolean>;
+
+  // Event listeners
+  onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
+  onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
 }

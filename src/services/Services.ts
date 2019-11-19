@@ -1,18 +1,16 @@
 import { IOrbsPOSDataService } from 'orbs-pos-data';
 import { buildOrbsPOSDataService } from './OrbsPOSDataServiceFactory';
-import { IEthereumTxService, EthereumTxService } from './ethereumTxService/EthereumTxService';
-import { EthereumTxDevService, IEthereumTxDevService } from './ethereumTxService/EthereumTxDevService';
+import { IEthereumTxService } from './ethereumTxService/IEthereumTxService';
+import { EthereumTxService } from './ethereumTxService/EthereumTxService';
 
 export interface IServices {
   orbsPOSDataService: IOrbsPOSDataService;
-  orbsTransactionService: IEthereumTxService;
-  orbsTransactionDevService: IEthereumTxDevService;
+  ethereumTxService: IEthereumTxService;
 }
 
 export function buildServices(): IServices {
   return {
-    orbsTransactionService: new EthereumTxService(window.ethereum),
+    ethereumTxService: new EthereumTxService(),
     orbsPOSDataService: buildOrbsPOSDataService(),
-    orbsTransactionDevService: new EthereumTxDevService(),
   };
 }

@@ -2,8 +2,10 @@ import { configure } from 'mobx';
 import { GuardiansStore } from './GuardiansStore';
 import { IStores } from './stores';
 import { IOrbsPOSDataService } from 'orbs-pos-data';
+
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
-import { IEthereumTxService } from '../services/ethereumTxService/EthereumTxService';
+import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
+
 
 /**
  * Configures the mobx library. Should get called at App's initialization.
