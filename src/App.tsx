@@ -16,7 +16,7 @@ configure({
 });
 
 const services = buildServices();
-const stores = getStores(services.orbsPOSDataService);
+const stores = getStores(services.orbsPOSDataService, services.orbsTransactionService);
 
 interface IProps {
   services: IServices;

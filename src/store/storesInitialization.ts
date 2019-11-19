@@ -1,7 +1,9 @@
 import { configure } from 'mobx';
 import { GuardiansStore } from './GuardiansStore';
 import { IStores } from './stores';
-import { OrbsPOSDataService } from 'orbs-pos-data';
+import { IOrbsPOSDataService } from 'orbs-pos-data';
+import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
+import { IEthereumTxService } from '../services/ethereumTxService/EthereumTxService';
 
 /**
  * Configures the mobx library. Should get called at App's initialization.
@@ -15,9 +17,10 @@ export function configureMobx() {
 /**
  * Builds and initializes all of the stores
  */
-export function getStores(orbsPOSDataService: OrbsPOSDataService): IStores {
+export function getStores(orbsPOSDataService: IOrbsPOSDataService, ethereumTxService: IEthereumTxService): IStores {
   // Create stores instances + Hydrate the stores
   const guardiansStore = new GuardiansStore(orbsPOSDataService);
+  const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
 
   // Call the initialize function on each one
@@ -27,6 +30,7 @@ export function getStores(orbsPOSDataService: OrbsPOSDataService): IStores {
 
   const stores: IStores = {
     guardiansStore,
+    cryptoWalletIntegrationStore,
   };
 
   return stores;

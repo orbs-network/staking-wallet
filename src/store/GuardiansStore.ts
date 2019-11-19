@@ -1,6 +1,6 @@
 import { observable, action, reaction } from 'mobx';
-import { OrbsPOSDataService } from 'orbs-pos-data';
-import { IGuardianInfo } from 'orbs-pos-data/dist/orbs-pos-data-service';
+import { IOrbsPOSDataService } from 'orbs-pos-data';
+import { IGuardianInfo } from 'orbs-pos-data';
 
 export interface IGuardiansStoreState {
   guardiansAddresses: string[];
@@ -18,7 +18,7 @@ export class GuardiansStore implements TGuardiansStore {
   @observable public guardiansAddresses: string[];
   @observable public guardiansList: IGuardianInfo[];
 
-  constructor(private orbsPOSDataService: OrbsPOSDataService) {
+  constructor(private orbsPOSDataService: IOrbsPOSDataService) {
     this.guardiansAddresses = [];
     this.guardiansList = [];
 
