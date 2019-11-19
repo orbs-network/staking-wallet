@@ -16,7 +16,7 @@ configure({
 });
 
 const services = buildServices();
-const stores = getStores(services.orbsPOSDataService, services.orbsTransactionService);
+const stores = getStores(services.orbsPOSDataService, services.ethereumTxService);
 
 interface IProps {
   services: IServices;

@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { IEthereumTxService } from '../services/ethereumTxService/EthereumTxService';
+import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
 
 export interface ICryptoWalletIntegrationStoreState {
   isConnectedToWallet: boolean;
@@ -15,6 +15,6 @@ export class CryptoWalletIntegrationStore implements TCryptoWalletIntegrationSto
   @observable public isConnectedToWallet: boolean;
 
   constructor(private ethereumTxService: IEthereumTxService) {
-    this.isConnectedToWallet = ethereumTxService.isEthereumAvailable;
+    this.isConnectedToWallet = ethereumTxService.isAvailable;
   }
 }
