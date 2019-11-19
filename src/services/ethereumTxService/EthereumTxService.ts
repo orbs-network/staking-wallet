@@ -13,8 +13,13 @@ export class EthereumTxService implements IEthereumTxService {
     }
   }
 
-  getMainAddress: () => Promise<string>;
-  onIsMainNetworkChange: (onChange: (mainAddress: string) => void) => void;
-  onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
   requestConnectionPermission: () => Promise<boolean>;
+
+  // Getters
+  getIsMainNetwork: () => Promise<boolean>;
+  getMainAddress: () => Promise<string>;
+
+  // Event listeners
+  onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => void;
+  onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
 }
