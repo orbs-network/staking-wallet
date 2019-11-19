@@ -16,5 +16,5 @@ export class EthereumTxService implements IEthereumTxService {
   getMainAddress: () => Promise<string>;
   onIsMainNetworkChange: (onChange: (mainAddress: string) => void) => void;
   onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
-  requestConnectionPermissions: () => Promise<boolean>;
+  requestConnectionPermission: () => Promise<boolean>;
 }

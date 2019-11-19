@@ -5,7 +5,7 @@ export interface IEthereumTxService {
 
   // Permissions
   // TODO : ORL : Update to a better name&signature
-  requestConnectionPermissions: () => Promise<boolean>;
+  requestConnectionPermission: () => Promise<boolean>;
 
   // Event listeners
   onMainAddressChange: (onChange: (mainAddress: string) => void) => void;
