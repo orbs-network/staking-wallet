@@ -13,9 +13,16 @@ import { Guardians } from '../components/Guardians';
 import { IServices } from '../services/Services';
 import { IStores } from '../store/stores';
 
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+
 export class ComponentTestDriver {
   private services: Partial<IServices> = {};
   private stores: Partial<IStores> = {};
+
+  constructor(private Component) {
+
+  }
 
   withServices(services: Partial<IServices>): this {
     this.services = services;
@@ -28,10 +35,14 @@ export class ComponentTestDriver {
   }
 
   public render() {
+    const Component = this.Component
+
     return render(
-      <Provider {...this.services} {...this.stores}>
-        <Guardians />
-      </Provider>,
+      <BrowserRouter>
+        <Provider {...this.services} {...this.stores}>
+          <Component />
+        </Provider>
+      </BrowserRouter>
     );
   }
 }

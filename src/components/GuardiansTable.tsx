@@ -14,7 +14,7 @@ export const GuardiansTable: React.FunctionComponent<IProps> = ({ guardians }) =
   const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stake - a.stake), [guardians]);
 
   return (
-    <Table>
+    <Table data-testid={'guardians-table'}>
       <TableHead>
         <TableRow>
           <TableCell>Name</TableCell>
@@ -24,12 +24,12 @@ export const GuardiansTable: React.FunctionComponent<IProps> = ({ guardians }) =
         </TableRow>
       </TableHead>
       <TableBody>
-        {sortedGuardians.map(g => (
-          <TableRow key={g.name} hover>
-            <TableCell>{g.name}</TableCell>
-            <TableCell>{g.website}</TableCell>
-            <TableCell>{asPercent(g.stake)}</TableCell>
-            <TableCell>{g.voted.toString()}</TableCell>
+        {sortedGuardians.map((g, idx) => (
+          <TableRow data-testid={`guardian-${idx + 1}`} key={g.name} hover>
+            <TableCell data-testid={`guardian-${idx + 1}-name`}>{g.name}</TableCell>
+            <TableCell data-testid={`guardian-${idx + 1}-website`}>{g.website}</TableCell>
+            <TableCell data-testid={`guardian-${idx + 1}-stake`}>{asPercent(g.stake)}</TableCell>
+            <TableCell data-testid={`guardian-${idx + 1}-voted`}>{g.voted.toString()}</TableCell>
           </TableRow>
         ))}
       </TableBody>

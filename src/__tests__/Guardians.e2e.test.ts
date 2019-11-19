@@ -10,10 +10,14 @@ import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { GuardiansListDriver } from './GuardiansListDriver';
+import { ComponentTestDriver } from './ComponentTestDriver';
+import { Guardians } from '../components/Guardians';
+import { GuardiansStore } from '../store/GuardiansStore';
 
 describe('Guardians Component', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
   let guardiansListDriver: GuardiansListDriver;
+  let testDriver: ComponentTestDriver;
 
   const guardian1Address = '0x0874BC1383958e2475dF73dC68C4F09658E23777';
   const guardian2Address = '0xf257EDE1CE68CA4b94e18eae5CB14942CBfF7D1C';
@@ -24,7 +28,7 @@ describe('Guardians Component', () => {
     website: 'http://www.guardian1.com',
     hasEligibleVote: true,
     voted: true,
-    stake: 0.1,
+    stake: 0.2,
   };
 
   const guardian2: IGuardianInfo = {
@@ -32,7 +36,7 @@ describe('Guardians Component', () => {
     website: 'http://www.guardian2.com',
     hasEligibleVote: false,
     voted: false,
-    stake: 0.2,
+    stake: 0.1,
   };
 
   const guardian3: IGuardianInfo = {
@@ -44,6 +48,7 @@ describe('Guardians Component', () => {
   };
 
   beforeEach(() => {
+    testDriver = new ComponentTestDriver(Guardians);
     orbsPOSDataService = new OrbsPOSDataServiceMock();
     guardiansListDriver = new GuardiansListDriver();
   });
@@ -52,27 +57,36 @@ describe('Guardians Component', () => {
     orbsPOSDataService.withGuardian(guardian1Address, guardian1);
     orbsPOSDataService.withGuardian(guardian2Address, guardian2);
     orbsPOSDataService.withGuardian(guardian3Address, guardian3);
-    const { getByTestId, container } = guardiansListDriver.withPODDataService(orbsPOSDataService).render();
-    await wait(() => getByTestId('guardians-table'));
+
+    const guardiansStore = new GuardiansStore(orbsPOSDataService);
+
+    await guardiansStore.init();
+
+    const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
+
+    // DEV_NOTE : O.L : We need to remember that guardians will be sorted by their stake (descending).
+    //            and so, the first one to be displayed will be the one with the most stake.
+    const guardiansByExpectedOrder = [guardian3, guardian1, guardian2];
+
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId('guardian-1')).toBeDefined();
     expect(getByTestId('guardian-2')).toBeDefined();
     expect(getByTestId('guardian-3')).toBeDefined();
 
-    expect(getByTestId('guardian-1-name')).toHaveTextContent('Guardian 1');
-    expect(getByTestId('guardian-2-name')).toHaveTextContent('Guardian 2');
-    expect(getByTestId('guardian-3-name')).toHaveTextContent('Guardian 3');
+    expect(getByTestId('guardian-1-name')).toHaveTextContent(guardiansByExpectedOrder[0].name);
+    expect(getByTestId('guardian-2-name')).toHaveTextContent(guardiansByExpectedOrder[1].name);
+    expect(getByTestId('guardian-3-name')).toHaveTextContent(guardiansByExpectedOrder[2].name);
 
-    expect(getByTestId('guardian-1-website')).toHaveTextContent('http://www.guardian1.com');
-    expect(getByTestId('guardian-2-website')).toHaveTextContent('http://www.guardian2.com');
-    expect(getByTestId('guardian-3-website')).toHaveTextContent('http://www.guardian3.com');
+    expect(getByTestId('guardian-1-website')).toHaveTextContent(guardiansByExpectedOrder[0].website);
+    expect(getByTestId('guardian-2-website')).toHaveTextContent(guardiansByExpectedOrder[1].website);
+    expect(getByTestId('guardian-3-website')).toHaveTextContent(guardiansByExpectedOrder[2].website);
 
-    expect(getByTestId('guardian-1-stake')).toHaveTextContent('10.00%');
-    expect(getByTestId('guardian-2-stake')).toHaveTextContent('20.00%');
-    expect(getByTestId('guardian-3-stake')).toHaveTextContent('30.00%');
+    expect(getByTestId('guardian-1-stake')).toHaveTextContent((guardiansByExpectedOrder[0].stake * 100).toString());
+    expect(getByTestId('guardian-2-stake')).toHaveTextContent((guardiansByExpectedOrder[1].stake * 100).toString());
+    expect(getByTestId('guardian-3-stake')).toHaveTextContent((guardiansByExpectedOrder[2].stake * 100).toString());
 
-    expect(getByTestId('guardian-1-voted')).toHaveTextContent('true');
-    expect(getByTestId('guardian-2-voted')).toHaveTextContent('false');
-    expect(getByTestId('guardian-3-voted')).toHaveTextContent('true');
+    expect(getByTestId('guardian-1-voted')).toHaveTextContent(guardiansByExpectedOrder[0].voted.toString());
+    expect(getByTestId('guardian-2-voted')).toHaveTextContent(guardiansByExpectedOrder[1].voted.toString());
+    expect(getByTestId('guardian-3-voted')).toHaveTextContent(guardiansByExpectedOrder[2].voted.toString());
   });
 });

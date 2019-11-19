@@ -9,6 +9,7 @@
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { mock, when } from 'ts-mockito';
 import { ICryptoWalletIntegrationStoreState } from '../../store/CryptoWalletIntegrationStore';
+import { Header } from '../../components/Header';
 
 describe('Header Component', () => {
   let mockedCryptoWalletIntegrationStore = mock<ICryptoWalletIntegrationStoreState>();
@@ -16,13 +17,15 @@ describe('Header Component', () => {
 
   beforeEach(() => {
     mockedCryptoWalletIntegrationStore = mock<ICryptoWalletIntegrationStoreState>();
-    testDriver = new ComponentTestDriver();
+    testDriver = new ComponentTestDriver(Header);
   });
 
   it('Should display "my wallet" when a metamask-ethereum provider exists', async () => {
     when(mockedCryptoWalletIntegrationStore.isConnectedToWallet).thenReturn(true);
 
-    const { getByTestId } = testDriver.withStores({cryptoWalletIntegrationStore: mockedCryptoWalletIntegrationStore}).render();
+    const { getByTestId } = testDriver
+      .withStores({ cryptoWalletIntegrationStore: mockedCryptoWalletIntegrationStore })
+      .render();
 
     expect(getByTestId('menuLink-myWallet')).toBeDefined();
     expect(getByTestId('menuLink-connectWallet')).not.toBeDefined();
