@@ -5,18 +5,15 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
  * The above notice should be included in all copies or substantial portions of the software.
  */
-import { wait } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
-import { GuardiansListDriver } from './GuardiansListDriver';
-import { ComponentTestDriver } from './ComponentTestDriver';
-import { Guardians } from '../components/Guardians';
-import { GuardiansStore } from '../store/GuardiansStore';
+import { ComponentTestDriver } from '../../ComponentTestDriver';
+import { Guardians } from '../../../components/Guardians';
+import { GuardiansStore } from '../../../store/GuardiansStore';
 
 describe('Guardians Component', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
-  let guardiansListDriver: GuardiansListDriver;
   let testDriver: ComponentTestDriver;
 
   const guardian1Address = '0x0874BC1383958e2475dF73dC68C4F09658E23777';
@@ -50,7 +47,6 @@ describe('Guardians Component', () => {
   beforeEach(() => {
     testDriver = new ComponentTestDriver(Guardians);
     orbsPOSDataService = new OrbsPOSDataServiceMock();
-    guardiansListDriver = new GuardiansListDriver();
   });
 
   it('should display all the given guardians', async () => {
