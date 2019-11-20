@@ -54,9 +54,10 @@ describe('Guardians Component', () => {
   beforeEach(() => {
     testDriver = new ComponentTestDriver(Guardians);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore (observable is not typed)
-    guardiansStore = observable({});
+    guardiansStore = observable.object<TGuardiansStore>({
+      guardiansAddresses: [],
+      guardiansList: [],
+    });
   });
 
   it('should display all the given guardians', async () => {
