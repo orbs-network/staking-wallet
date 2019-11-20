@@ -7,13 +7,17 @@ export interface ICryptoWalletIntegrationStoreState {
   isConnectedToWallet: boolean;
 }
 
+export interface ICryptoWalletIntegrationStoreActions {
+  askToConnect: () => Promise<boolean>;
+}
+
 export const defaultPosStoreState: ICryptoWalletIntegrationStoreState = {
   hasEthereumProvider: false,
   hasWalletPermissions: false,
   isConnectedToWallet: false,
 };
 
-export type TCryptoWalletIntegrationStore = ICryptoWalletIntegrationStoreState;
+export type TCryptoWalletIntegrationStore = ICryptoWalletIntegrationStoreState & ICryptoWalletIntegrationStoreActions;
 
 export class CryptoWalletIntegrationStore implements TCryptoWalletIntegrationStore {
   @observable public hasEthereumProvider: boolean;
@@ -27,5 +31,9 @@ export class CryptoWalletIntegrationStore implements TCryptoWalletIntegrationSto
   @computed
   public get isConnectedToWallet(): boolean {
     return this.hasEthereumProvider && this.hasWalletPermissions;
+  }
+
+  public askToConnect(): Promise<boolean> {
+    return this.ethereumTxService.requestConnectionPermission();
   }
 }

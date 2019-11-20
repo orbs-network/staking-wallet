@@ -3,18 +3,29 @@ import { IEthereumTxService } from './IEthereumTxService';
 import { HttpProvider } from 'web3-core';
 
 export class EthereumTxService implements IEthereumTxService {
+  private ethereum;
   private web3: Web3;
   public readonly isAvailable: boolean;
 
   constructor() {
-    const ethereum = (window as any).ethereum;
-    this.isAvailable = ethereum !== undefined;
+    this.ethereum = (window as any).ethereum;
+    this.isAvailable = this.ethereum !== undefined;
     if (this.isAvailable) {
-      this.web3 = new Web3(ethereum);
+      this.web3 = new Web3(this.ethereum);
     }
   }
 
-  requestConnectionPermission: () => Promise<boolean>;
+  public async requestConnectionPermission() {
+    // this.ensureEthereumProvider();
+
+    try {
+      await this.ethereum.enable();
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  };
 
   // Getters
   public get didUserApproveWalletAccess(): boolean {
@@ -31,4 +42,10 @@ export class EthereumTxService implements IEthereumTxService {
   // Event listeners
   onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
   onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
+
+  private ensureEthereumProvider() {
+    if (!this.isAvailable) {
+      throw new Error(`Tried using 'EthereumTxService' but no ethereum provider exists`);
+    }
+  }
 }

@@ -10,6 +10,7 @@ import { Home } from './components/Home';
 import { configure } from 'mobx';
 import { buildServices, IServices } from './services/Services';
 import { getStores } from './store/storesInitialization';
+import { ConnectWalletPage } from './pages/ConnectWalletPage';
 
 configure({
   enforceActions: 'observed',
@@ -31,6 +32,7 @@ export const App: React.FunctionComponent<IProps> = ({ services }) => (
           <Route exact path='/' component={Home} />
           <Route path='/about' component={About} />
           <Route path='/guardians' component={Guardians} />
+          <Route path='/connect-wallet' component={ConnectWalletPage} />
         </Switch>
       </Grid>
     </Provider>
