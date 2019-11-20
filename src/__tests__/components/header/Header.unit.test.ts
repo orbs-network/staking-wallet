@@ -15,11 +15,11 @@ import { Header } from '../../../components/Header';
 import { observable } from 'mobx';
 
 describe('Header Component', () => {
-  let cryptoWalletIntegrationStore: TCryptoWalletIntegrationStore;
+  let cryptoWalletIntegrationStore: Partial<TCryptoWalletIntegrationStore>;
   let testDriver: ComponentTestDriver;
 
   beforeEach(() => {
-    cryptoWalletIntegrationStore = observable.object<ICryptoWalletIntegrationStoreState>({
+    cryptoWalletIntegrationStore = observable.object<Partial<ICryptoWalletIntegrationStoreState>>({
       isConnectedToWallet: false,
     });
 

@@ -2,6 +2,7 @@ export interface IEthereumTxService {
   readonly isAvailable: boolean;
 
   // Getters
+  didUserApproveWalletAccess: boolean;
   getMainAddress: () => Promise<string>;
   getIsMainNetwork: () => Promise<boolean>;
 
