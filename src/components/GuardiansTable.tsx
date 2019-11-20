@@ -2,6 +2,7 @@ import { IGuardianInfo } from 'orbs-pos-data';
 import * as React from 'react';
 import { Table, TableHead, TableCell, TableBody, TableRow } from '@material-ui/core';
 import { useMemo } from 'react';
+import { observer } from 'mobx-react';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -10,8 +11,8 @@ interface IProps {
   guardians: IGuardianInfo[];
 }
 
-export const GuardiansTable: React.FunctionComponent<IProps> = ({ guardians }) => {
-  const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stake - a.stake), [guardians]);
+export const GuardiansTable = React.memo<IProps>(props => {
+  const sortedGuardians = useMemo(() => props.guardians.slice().sort((a, b) => b.stake - a.stake), [props.guardians]);
 
   return (
     <Table data-testid={'guardians-table'}>
@@ -35,4 +36,4 @@ export const GuardiansTable: React.FunctionComponent<IProps> = ({ guardians }) =
       </TableBody>
     </Table>
   );
-};
+});
