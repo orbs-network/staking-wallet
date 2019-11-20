@@ -7,17 +7,14 @@
  */
 import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
-import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { Guardians } from '../../../components/Guardians';
-import { GuardiansStore, IGuardiansStoreState, TGuardiansStore } from '../../../store/GuardiansStore';
-import { mock, when } from 'ts-mockito';
+import { TGuardiansStore } from '../../../store/GuardiansStore';
 import { observable } from 'mobx';
-
 
 describe('Guardians Component', () => {
   let testDriver: ComponentTestDriver;
-  let guardiansStore: TGuardiansStore;
+  let guardiansStore: Partial<TGuardiansStore>;
 
   const guardian1: IGuardianInfo = {
     name: 'Guardian 1',
@@ -54,8 +51,7 @@ describe('Guardians Component', () => {
   beforeEach(() => {
     testDriver = new ComponentTestDriver(Guardians);
 
-    guardiansStore = observable.object<TGuardiansStore>({
-      guardiansAddresses: [],
+    guardiansStore = observable.object<Partial<TGuardiansStore>>({
       guardiansList: [],
     });
   });

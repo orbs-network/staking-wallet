@@ -14,35 +14,33 @@ import { IServices } from '../services/Services';
 import { IStores } from '../store/stores';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-
+import { DeepPartial } from 'utility-types';
 
 export class ComponentTestDriver {
-  private services: Partial<IServices> = {};
-  private stores: Partial<IStores> = {};
+  private services: DeepPartial<IServices> = {};
+  private stores: DeepPartial<IStores> = {};
 
-  constructor(private Component) {
+  constructor(private Component) {}
 
-  }
-
-  withServices(services: Partial<IServices>): this {
+  withServices(services: DeepPartial<IServices>): this {
     this.services = services;
     return this;
   }
 
-  withStores(stores: Partial<IStores>): this {
+  withStores(stores: DeepPartial<IStores>): this {
     this.stores = stores;
     return this;
   }
 
   public render() {
-    const Component = this.Component
+    const Component = this.Component;
 
     return render(
       <BrowserRouter>
         <Provider {...this.services} {...this.stores}>
           <Component />
         </Provider>
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   }
 }
