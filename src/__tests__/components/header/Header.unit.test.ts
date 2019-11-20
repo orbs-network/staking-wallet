@@ -29,16 +29,19 @@ describe('Header Component', () => {
   it('Should display "my wallet" when a connected to wallet and "Connect Wallet" when not + reacting to store', async () => {
     const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
 
-    // Display 'My Wallet'
+    // Display 'My Wallet', 'Stake Orbs'
     cryptoWalletIntegrationStore.isConnectedToWallet = true;
     expect(queryByTestId('menuLink-myWallet')).toBeDefined();
+    expect(queryByTestId('menuLink-stakeOrbs')).toBeDefined();
     expect(queryByTestId('menuLink-connectWallet')).toBeNull();
     expect(getByTestId('menuLink-myWallet')).toHaveTextContent('My Wallet');
+    expect(getByTestId('menuLink-stakeOrbs')).toHaveTextContent('Stake ORBS');
 
     // Display 'Connect Wallet'
     cryptoWalletIntegrationStore.isConnectedToWallet = false;
     expect(queryByTestId('menuLink-connectWallet')).toBeDefined();
     expect(queryByTestId('menuLink-myWallet')).toBeNull();
+    expect(queryByTestId('menuLink-stakeOrbs')).toBeNull();
     expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
   });
 });

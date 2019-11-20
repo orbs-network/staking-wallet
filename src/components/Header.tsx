@@ -12,9 +12,15 @@ export const Header = observer(() => {
   const linkForCryptoWallet = useMemo(() => {
     if (cryptoWalletIntegrationStore.isConnectedToWallet) {
       return (
-        <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/my-wallet'>
-          My Wallet
-        </LinkButton>
+        <>
+          <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/my-wallet'>
+            My Wallet
+          </LinkButton>
+
+          <LinkButton data-testid={'menuLink-stakeOrbs'} color='primary' to='/my-wallet'>
+            Stake ORBS
+          </LinkButton>
+        </>
       );
     } else {
       return (
