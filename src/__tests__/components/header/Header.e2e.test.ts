@@ -31,10 +31,30 @@ describe('Header Component', () => {
     expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
   });
 
+  it('Should have an ethereum provider, but no user approval to connect wallet , and should offer to connect wallet', async () => {
+    // DEV_NOTE: O.L:  We mimic an 'ethereum' provider on the 'window' object, we should consider passing this as a dependency.
+    // @ts-ignore
+    window.ethereum = {
+      selectedAddress: null,
+    };
+
+    const ethereumTxService: IEthereumTxService = new EthereumTxService();
+    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+
+    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+
+    // Display 'Connect Wallet'
+    expect(queryByTestId('menuLink-connectWallet')).toBeDefined();
+    expect(queryByTestId('menuLink-myWallet')).toBeNull();
+    expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
+  });
+
   it('Should have an ethereum provider, and should display "My Wallet" link', async () => {
     // DEV_NOTE: O.L:  We mimic an 'ethereum' provider on the 'window' object, we should consider passing this as a dependency.
     // @ts-ignore
-    window.ethereum = {};
+    window.ethereum = {
+      selectedAddress: '0xanyAddress',
+    };
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService();
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);

@@ -22,7 +22,7 @@ export class EthereumTxService implements IEthereumTxService {
     //                                and is not part of the properties in the official types of web3.
     //                                We need to check and find a better way to detect if the user has already approved wallet access.
     // @ts-ignore
-    return !!this.web3.currentProvider.selectedAddress;
+    return this.isAvailable && !!this.web3.currentProvider.selectedAddress;
   }
 
   getIsMainNetwork: () => Promise<boolean>;
