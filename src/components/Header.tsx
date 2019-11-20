@@ -4,8 +4,9 @@ import * as React from 'react';
 import { LinkButton } from './LinkButton';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { useMemo } from 'react';
+import { observer } from 'mobx-react';
 
-export const Header: React.FunctionComponent = () => {
+export const Header = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
 
   const linkForCryptoWallet = useMemo(() => {
@@ -18,7 +19,7 @@ export const Header: React.FunctionComponent = () => {
     } else {
       return (
         <LinkButton data-testid={'menuLink-connectWallet'} color='primary' to='/connect-wallet'>
-          Connect wallet
+          Connect Wallet
         </LinkButton>
       );
     }
@@ -36,7 +37,8 @@ export const Header: React.FunctionComponent = () => {
         <LinkButton data-testid={'menuLink-about'} color='primary' to='/about'>
           About
         </LinkButton>
+        {linkForCryptoWallet}
       </Toolbar>
     </AppBar>
   );
-};
+});
