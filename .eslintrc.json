@@ -29,6 +29,7 @@
     "@typescript-eslint/no-empty-function": 0,
     "react/prop-types": 0,
     "react/display-name": 0,
-    "@typescript-eslint/interface-name-prefix": ["error", "always" ]
+    "@typescript-eslint/interface-name-prefix": ["error", "always" ],
+    "@typescript-eslint/ban-ts-ignore": 0
   }
 }

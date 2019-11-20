@@ -8,5 +8,5 @@
 
 module.exports = {
   testRegex: '.*test.tsx?$',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 };
