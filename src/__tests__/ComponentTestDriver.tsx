@@ -9,16 +9,16 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'mobx-react';
-import { Guardians } from '../components/Guardians';
 import { IServices } from '../services/Services';
 import { IStores } from '../store/stores';
 
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { DeepPartial } from 'utility-types';
 
-export class ComponentTestDriver {
+export class ComponentTestDriver<P = {}> {
   private services: DeepPartial<IServices> = {};
   private stores: DeepPartial<IStores> = {};
+  private renderProps: P = null;
 
   constructor(private Component) {}
 
@@ -32,13 +32,18 @@ export class ComponentTestDriver {
     return this;
   }
 
+  withProps(props: P) {
+    this.renderProps = props;
+  }
+
   public render() {
     const Component = this.Component;
+    const props: {} | P = this.renderProps ? this.renderProps : {};
 
     return render(
       <BrowserRouter>
         <Provider {...this.services} {...this.stores}>
-          <Component />
+          <Component {...props} />
         </Provider>
       </BrowserRouter>,
     );

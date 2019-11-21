@@ -1,16 +1,17 @@
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import * as React from 'react';
+import React, { useMemo } from 'react';
 import { LinkButton } from './LinkButton';
-import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
-import { useMemo } from 'react';
-import { observer } from 'mobx-react';
 
-export const Header = observer(() => {
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
+export interface IHeaderProps {
+  isConnectedToWallet: boolean;
+}
+
+export const Header = React.memo<IHeaderProps>(props => {
+  const { isConnectedToWallet } = props;
 
   const linkForCryptoWallet = useMemo(() => {
-    if (cryptoWalletIntegrationStore.isConnectedToWallet) {
+    if (isConnectedToWallet) {
       return (
         <>
           <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/my-wallet'>
@@ -29,7 +30,7 @@ export const Header = observer(() => {
         </LinkButton>
       );
     }
-  }, [cryptoWalletIntegrationStore.isConnectedToWallet]);
+  }, [isConnectedToWallet]);
 
   return (
     <AppBar position='static' color='default'>
