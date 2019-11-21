@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { App } from './App';
 import { buildServices } from './services/Services';
+import { AppWrapper } from './AppWrapper';
 
 const services = buildServices();
 
-ReactDOM.render(<App services={services} />, document.getElementById('app'));
+ReactDOM.render(<AppWrapper services={services} />, document.getElementById('app'));
