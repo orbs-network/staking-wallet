@@ -6,13 +6,6 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { ComponentTestDriver } from '../../ComponentTestDriver';
-import {
-  ICryptoWalletIntegrationStoreState,
-  TCryptoWalletIntegrationStore,
-} from '../../../store/CryptoWalletIntegrationStore';
-import { Header } from '../../../components/Header';
-import { observable } from 'mobx';
 import { HeaderTestDriver, IHeaderCustomDriver } from './HeaderTestDriver';
 
 describe('Header Component', () => {
@@ -32,38 +25,23 @@ describe('Header Component', () => {
     } = headerTestDriver.renderSpecificDriver();
 
     expectRegularLinksToExist();
+
     expectMyWalletLinksToExist();
     expectConnectWalletLinkToNotExist();
   });
 
-  // it.skip('Should display regular links + only "Connect to wallet" when not connected to a wallet', async () => {
-  //   const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
-  //
-  //   // Display 'Connect Wallet'
-  //   cryptoWalletIntegrationStore.isConnectedToWallet = false;
-  //   expect(queryByTestId('menuLink-connectWallet')).toBeDefined();
-  //   expect(queryByTestId('menuLink-myWallet')).toBeNull();
-  //   expect(queryByTestId('menuLink-stakeOrbs')).toBeNull();
-  //
-  //   expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
-  // });
-  //
-  // it.skip('Should display "my wallet" when a connected to wallet and "Connect Wallet" when not + reacting to store', async () => {
-  //   const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
-  //
-  //   // Display 'My Wallet', 'Stake Orbs'
-  //   cryptoWalletIntegrationStore.isConnectedToWallet = true;
-  //   expect(queryByTestId('menuLink-myWallet')).toBeDefined();
-  //   expect(queryByTestId('menuLink-stakeOrbs')).toBeDefined();
-  //   expect(queryByTestId('menuLink-connectWallet')).toBeNull();
-  //   expect(getByTestId('menuLink-myWallet')).toHaveTextContent('My Wallet');
-  //   expect(getByTestId('menuLink-stakeOrbs')).toHaveTextContent('Stake ORBS');
-  //
-  //   // Display 'Connect Wallet'
-  //   cryptoWalletIntegrationStore.isConnectedToWallet = false;
-  //   expect(queryByTestId('menuLink-connectWallet')).toBeDefined();
-  //   expect(queryByTestId('menuLink-myWallet')).toBeNull();
-  //   expect(queryByTestId('menuLink-stakeOrbs')).toBeNull();
-  //   expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
-  // });
+  it.skip('Should display regular links + only "Connect to wallet" when not connected to a wallet', async () => {
+    headerTestDriver.setIsConnectedToWalletProp(false);
+
+    const {
+      expectRegularLinksToExist,
+      expectMyWalletLinksToNotExist,
+      expectConnectWalletLinkToExist,
+    } = headerTestDriver.renderSpecificDriver();
+
+    expectRegularLinksToExist();
+
+    expectConnectWalletLinkToExist();
+    expectMyWalletLinksToNotExist();
+  });
 });
