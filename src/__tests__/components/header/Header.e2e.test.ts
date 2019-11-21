@@ -11,24 +11,34 @@ import { CryptoWalletIntegrationStore } from '../../../store/CryptoWalletIntegra
 import { Header } from '../../../components/Header';
 import { IEthereumTxService } from '../../../services/ethereumTxService/IEthereumTxService';
 import { EthereumTxService } from '../../../services/ethereumTxService/EthereumTxService';
+import { App } from '../../../App';
+import { HeaderTestDriver, IHeaderCustomDriver } from './HeaderTestDriver';
 
 describe('Header Component', () => {
-  let testDriver: ComponentTestDriver;
+  let appTestDriver: ComponentTestDriver;
+  let headerTestDriver: IHeaderCustomDriver;
 
   beforeEach(() => {
-    testDriver = new ComponentTestDriver(Header);
+    appTestDriver = new ComponentTestDriver(App);
+    headerTestDriver = new HeaderTestDriver();
   });
 
   it('Should not have an ethereum provider, and should offer to connect wallet', async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService();
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const renderResults = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
+
+    const {
+      expectRegularLinksToExist,
+      expectMyWalletLinksToNotExist,
+      expectConnectWalletLinkToExist,
+    } = headerTestDriver.buildTestFunctionsFromRenderResults(renderResults);
 
     // Display 'Connect Wallet'
-    expect(queryByTestId('menuLink-connectWallet')).toBeDefined();
-    expect(queryByTestId('menuLink-myWallet')).toBeNull();
-    expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
+    expectRegularLinksToExist();
+    expectMyWalletLinksToNotExist();
+    expectConnectWalletLinkToExist();
   });
 
   it('Should have an ethereum provider, but no user approval to connect wallet , and should offer to connect wallet', async () => {
@@ -41,12 +51,18 @@ describe('Header Component', () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService();
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const renderResults = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
+
+    const {
+      expectRegularLinksToExist,
+      expectMyWalletLinksToNotExist,
+      expectConnectWalletLinkToExist,
+    } = headerTestDriver.buildTestFunctionsFromRenderResults(renderResults);
 
     // Display 'Connect Wallet'
-    expect(queryByTestId('menuLink-connectWallet')).toBeDefined();
-    expect(queryByTestId('menuLink-myWallet')).toBeNull();
-    expect(getByTestId('menuLink-connectWallet')).toHaveTextContent('Connect Wallet');
+    expectRegularLinksToExist();
+    expectMyWalletLinksToNotExist();
+    expectConnectWalletLinkToExist();
   });
 
   it('Should have an ethereum provider, and should display "My Wallet" link', async () => {
@@ -59,11 +75,17 @@ describe('Header Component', () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService();
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const renderResults = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
+
+    const {
+      expectRegularLinksToExist,
+      expectMyWalletLinksToExist,
+      expectConnectWalletLinkToNotExist,
+    } = headerTestDriver.buildTestFunctionsFromRenderResults(renderResults);
 
     // Display 'My Wallet'
-    expect(queryByTestId('menuLink-myWallet')).toBeDefined();
-    expect(queryByTestId('menuLink-connectWallet')).toBeNull();
-    expect(getByTestId('menuLink-myWallet')).toHaveTextContent('My Wallet');
+    expectRegularLinksToExist();
+    expectMyWalletLinksToExist();
+    expectConnectWalletLinkToNotExist();
   });
 });

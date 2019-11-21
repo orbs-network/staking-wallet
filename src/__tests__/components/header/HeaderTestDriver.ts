@@ -39,11 +39,8 @@ export class HeaderTestDriver extends ComponentTestDriver<IHeaderProps> implemen
     this.props.isConnectedToWallet = isConnected;
   }
 
-  public renderSpecificDriver(): { renderResult: RenderResult } & IHeaderDriverTestFunctions {
-    super.withProps(this.props);
-    const renderResult = super.render();
-
-    const driverFunctions: IHeaderDriverTestFunctions = {
+  public buildTestFunctionsFromRenderResults(renderResult) {
+    const driverTestFunctions: IHeaderDriverTestFunctions = {
       expectRegularLinksToExist: buildExpectToExist(renderResult, REGULAR_LINKS_TEST_IDS),
 
       expectMyWalletLinksToExist: buildExpectToExist(renderResult, WALLET_LINKS_TEST_IDS),
@@ -53,9 +50,18 @@ export class HeaderTestDriver extends ComponentTestDriver<IHeaderProps> implemen
       expectConnectWalletLinkToNotExist: buildExpectToNotExist(renderResult, CONNECT_WALLET_TEST_IDS),
     };
 
+    return driverTestFunctions;
+  }
+
+  public renderSpecificDriver(): { renderResult: RenderResult } & IHeaderDriverTestFunctions {
+    super.withProps(this.props);
+    const renderResult = super.render();
+
+    const driverTestFunctions = this.buildTestFunctionsFromRenderResults(renderResult);
+
     return {
       renderResult,
-      ...driverFunctions,
+      ...driverTestFunctions,
     };
   }
 }
