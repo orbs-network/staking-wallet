@@ -9,4 +9,5 @@
 module.exports = {
   testRegex: '.*test.tsx?$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  setupTestFrameworkScriptFile: 'jest-expect-message',
 };

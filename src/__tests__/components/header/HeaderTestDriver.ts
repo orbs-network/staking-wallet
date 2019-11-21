@@ -3,9 +3,8 @@ import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { Header, IHeaderProps } from '../../../components/Header';
 import { RenderResult } from '@testing-library/react';
 
-interface ICustomTestDriver<R> {
-  renderSpecificDriver(): { renderResult: RenderResult } & R;
-}
+import 'jest-expect-message';
+import { ICustomTestDriver } from '../../TestDriver';
 
 interface IHeaderDriverTestFunctions {
   expectRegularLinksToExist: () => void;
@@ -26,7 +25,7 @@ const WALLET_LINKS_TEST_IDS = ['menuLink-myWallet', 'menuLink-stakeOrbs'];
 const CONNECT_WALLET_TEST_IDS = ['menuLink-connectWallet'];
 
 export class HeaderTestDriver extends ComponentTestDriver<IHeaderProps> implements IHeaderCustomDriver {
-  private props: IHeaderProps = null;
+  private readonly props: IHeaderProps = null;
 
   constructor() {
     super(Header);
@@ -39,7 +38,6 @@ export class HeaderTestDriver extends ComponentTestDriver<IHeaderProps> implemen
   public setIsConnectedToWalletProp(isConnected: boolean) {
     this.props.isConnectedToWallet = isConnected;
   }
-
 
   public renderSpecificDriver(): { renderResult: RenderResult } & IHeaderDriverTestFunctions {
     super.withProps(this.props);
@@ -65,7 +63,7 @@ export class HeaderTestDriver extends ComponentTestDriver<IHeaderProps> implemen
 function buildExpectToExist({ queryByTestId }, testIds: string[]): () => void {
   return () => {
     for (const testId of testIds) {
-      expect(queryByTestId(testId)).toBeDefined();
+      expect(queryByTestId(testId), `'${testId}' should not exist in the dom`).toBeDefined();
     }
   };
 }
@@ -73,7 +71,7 @@ function buildExpectToExist({ queryByTestId }, testIds: string[]): () => void {
 function buildExpectToNotExist({ queryByTestId }, testIds: string[]): () => void {
   return () => {
     for (const testId of testIds) {
-      expect(queryByTestId(testId)).toBeNull();
+      expect(queryByTestId(testId), `'${testId}' should not exist in the dom`).toBeNull();
     }
   };
 }
