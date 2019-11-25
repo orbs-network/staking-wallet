@@ -33,6 +33,7 @@ describe('Wallet connection', () => {
   it('Should offer to connect wallet when Metamask is installed but not connected', async () => {
     const ethereumProviderMock: IEthereumProvider = new EthereumProviderMock();
     ethereumProviderMock.selectedAddress = undefined;
+    ethereumProviderMock.enable = async () => null;
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
