@@ -9,6 +9,7 @@ export class CryptoWalletIntegrationStore {
 
   @observable public mainAddress: string;
   @observable public liquidOrbs: number;
+  @observable public stakedOrbs: number;
   @observable public accumulatedRewards: number;
 
   constructor(private ethereumTxService: IEthereumTxService) {
@@ -42,6 +43,11 @@ export class CryptoWalletIntegrationStore {
   }
 
   @action('setLiquidOrbs')
+  private setStakedOrbs(stakedOrbs: number) {
+    this.stakedOrbs = stakedOrbs;
+  }
+
+  @action('setAccumulatedRewards')
   private setAccumulatedRewards(accumulatedRewards: number) {
     this.accumulatedRewards = accumulatedRewards;
   }
