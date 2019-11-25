@@ -1,5 +1,5 @@
 export interface IEthereumTxService {
-  readonly isAvailable: boolean;
+  readonly isMetamaskInstalled: boolean;
 
   // Getters
   didUserApproveWalletAccess: boolean;

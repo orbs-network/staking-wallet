@@ -1,7 +1,7 @@
 import { TGuardiansStore } from './GuardiansStore';
-import { TCryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
+import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 
 interface IStores {
   guardiansStore: TGuardiansStore;
-  cryptoWalletIntegrationStore: TCryptoWalletIntegrationStore,
+  cryptoWalletIntegrationStore: CryptoWalletIntegrationStore;
 }

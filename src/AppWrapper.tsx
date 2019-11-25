@@ -11,14 +11,10 @@ configure({
   enforceActions: 'observed',
 });
 
-const services = buildServices();
+const services = buildServices((window as any).ethereum);
 const stores = getStores(services.orbsPOSDataService, services.ethereumTxService);
 
-interface IProps {
-  services: IServices;
-}
-
-export const AppWrapper: React.FunctionComponent<IProps> = ({ services }) => (
+export const AppWrapper: React.FunctionComponent = () => (
   <BrowserRouter>
     <Provider {...services} {...stores}>
       <App />

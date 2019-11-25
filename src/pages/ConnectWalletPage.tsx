@@ -11,16 +11,16 @@ export const ConnectWalletPage = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
 
   const installOrConnectMetamask = useMemo(() => {
-    if (cryptoWalletIntegrationStore.hasEthereumProvider) {
-      return <Button onClick={() => cryptoWalletIntegrationStore.askToConnect()}>Connect your metamask</Button>;
-    } else {
+    if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
-        <>
-          <Button>Install metamask</Button>
-        </>
+        <Button data-testid='connect-to-metamask-button' onClick={() => cryptoWalletIntegrationStore.askToConnect()}>
+          Connect your metamask
+        </Button>
       );
+    } else {
+      return <Button data-testid='install-metamask-button'>Install metamask</Button>;
     }
-  }, [cryptoWalletIntegrationStore.hasEthereumProvider]);
+  }, [cryptoWalletIntegrationStore.isMetamaskInstalled]);
 
   return (
     <Container>

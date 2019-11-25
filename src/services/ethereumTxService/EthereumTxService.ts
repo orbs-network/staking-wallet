@@ -1,17 +1,15 @@
 import Web3 from 'web3';
 import { IEthereumTxService } from './IEthereumTxService';
-import { HttpProvider } from 'web3-core';
+import { IEthereumProvider } from './IEthereumProvider';
 
 export class EthereumTxService implements IEthereumTxService {
-  private ethereum;
   private web3: Web3;
-  public readonly isAvailable: boolean;
+  public readonly isMetamaskInstalled: boolean;
 
-  constructor() {
-    this.ethereum = (window as any).ethereum;
-    this.isAvailable = this.ethereum !== undefined;
-    if (this.isAvailable) {
-      this.web3 = new Web3(this.ethereum);
+  constructor(private ethereum: IEthereumProvider) {
+    this.isMetamaskInstalled = this.ethereum !== undefined;
+    if (this.isMetamaskInstalled) {
+      this.web3 = new Web3(this.ethereum as any);
     }
   }
 
@@ -25,7 +23,7 @@ export class EthereumTxService implements IEthereumTxService {
       console.error(e);
       return false;
     }
-  };
+  }
 
   // Getters
   public get didUserApproveWalletAccess(): boolean {
@@ -33,7 +31,7 @@ export class EthereumTxService implements IEthereumTxService {
     //                                and is not part of the properties in the official types of web3.
     //                                We need to check and find a better way to detect if the user has already approved wallet access.
     // @ts-ignore
-    return this.isAvailable && !!this.web3.currentProvider.selectedAddress;
+    return this.isMetamaskInstalled && !!this.ethereum.selectedAddress;
   }
 
   getIsMainNetwork: () => Promise<boolean>;
@@ -44,7 +42,7 @@ export class EthereumTxService implements IEthereumTxService {
   onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
 
   private ensureEthereumProvider() {
-    if (!this.isAvailable) {
+    if (!this.isMetamaskInstalled) {
       throw new Error(`Tried using 'EthereumTxService' but no ethereum provider exists`);
     }
   }
