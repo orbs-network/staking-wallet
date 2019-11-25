@@ -24,7 +24,7 @@ const TEST_IDS = {
   walletNotConnectedMessage: 'text_walletNotConnected',
 };
 
-describe('Header Component', () => {
+describe('My Wallet Page', () => {
   let cryptoWalletIntegrationStore: Partial<TCryptoWalletIntegrationStore>;
   let testDriver: ComponentTestDriver;
 

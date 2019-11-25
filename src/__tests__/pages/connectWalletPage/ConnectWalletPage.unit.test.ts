@@ -21,7 +21,7 @@ const TEST_IDS = {
   alreadyConnected: 'text-alreadyConnectedToMetamask',
 };
 
-describe('Header Component', () => {
+describe('Connect wallet page', () => {
   let cryptoWalletIntegrationStore: Partial<TCryptoWalletIntegrationStore>;
   let testDriver: ComponentTestDriver;
 
