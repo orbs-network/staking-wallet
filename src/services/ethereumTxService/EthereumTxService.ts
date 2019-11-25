@@ -13,14 +13,11 @@ export class EthereumTxService implements IEthereumTxService {
     }
   }
 
-  public async requestConnectionPermission() {
-    // this.ensureEthereumProvider();
-
+  public async requestConnectionPermission(): Promise<boolean> {
     try {
       await this.ethereum.enable();
       return true;
     } catch (e) {
-      console.error(e);
       return false;
     }
   }
@@ -40,10 +37,4 @@ export class EthereumTxService implements IEthereumTxService {
   // Event listeners
   onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
   onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
-
-  private ensureEthereumProvider() {
-    if (!this.isMetamaskInstalled) {
-      throw new Error(`Tried using 'EthereumTxService' but no ethereum provider exists`);
-    }
-  }
 }
