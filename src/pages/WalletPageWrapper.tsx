@@ -1,14 +1,15 @@
 import React from 'react';
+import { MyWalletPage } from './MyWalletPage';
+import { ConnectWalletPage } from './ConnectWalletPage';
+import { observer } from 'mobx-react';
+import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 
-export interface IWalletPageWrapperProps {
-  isConnectedToWallet: boolean;
-}
+export const WalletPageWrapper = observer(() => {
+  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
 
-export const WalletPageWrapper = React.memo<IWalletPageWrapperProps>(props => {
-  const { isConnectedToWallet } = props;
-  if (isConnectedToWallet) {
-    return <div data-testid='wallet-page'>Wallet Page</div>;
+  if (cryptoWalletIntegrationStore.isConnectedToWallet) {
+    return <MyWalletPage />;
   } else {
-    return <div data-testid='connect-to-wallet-page'>Connect to Wallet</div>;
+    return <ConnectWalletPage />;
   }
 });
