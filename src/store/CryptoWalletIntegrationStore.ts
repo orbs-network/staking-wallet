@@ -23,10 +23,15 @@ export class CryptoWalletIntegrationStore {
     const success = await this.ethereumTxService.requestConnectionPermission();
 
     if (success) {
-      this.hasWalletPermissions = true;
+      this.setHasWalletPermissions(true);
     }
 
     return success;
+  }
+
+  @action('setHasWalletPermissions')
+  private setHasWalletPermissions(hasWalletPermissions: boolean) {
+    this.hasWalletPermissions = hasWalletPermissions;
   }
 
   @action('setMainAddress')

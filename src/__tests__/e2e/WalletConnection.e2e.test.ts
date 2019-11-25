@@ -6,6 +6,7 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
+import {wait} from '@testing-library/react';
 import { App } from '../../App';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
@@ -33,16 +34,18 @@ describe('Wallet connection', () => {
   it('Should offer to connect wallet when Metamask is installed but not connected', async () => {
     const ethereumProviderMock: IEthereumProvider = new EthereumProviderMock();
     ethereumProviderMock.selectedAddress = undefined;
-    ethereumProviderMock.enable = async () => null;
+    ethereumProviderMock.enable = async () => null; // Approves the connect request
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
     const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
     const connectButton = queryByTestId('connect-to-metamask-button');
-
     expect(connectButton).toBeInTheDocument();
+
+    // Click and wait for UI update
     connectButton.click();
+    await wait(() => queryByTestId('page-my-wallet'));
     expect(queryByTestId('page-my-wallet')).toBeInTheDocument();
   });
 
