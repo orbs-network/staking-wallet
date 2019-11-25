@@ -37,4 +37,27 @@ describe('Ethereum Tx Service', () => {
     expect(result).toBe(true);
     expect(ethereumTxServer.didUserApproveWalletInThePast).toBe(true);
   });
+
+  describe('getIsMainNetwork', () => {
+    it(`Should return false when metamask is not installed`, async () => {
+      const ethereumTxServer = new EthereumTxService(undefined);
+      const result = await ethereumTxServer.getIsMainNetwork();
+      expect(result).toBe(false);
+    });
+
+    it(`Should return false when metamask is not installed`, async () => {
+      const ethereumProvider = new EthereumProviderMock();
+      const ethereumTxServer = new EthereumTxService(ethereumProvider);
+      const result = await ethereumTxServer.getIsMainNetwork();
+      expect(result).toBe(true);
+    });
+
+    it(`Should return false when networkVersion is not set to 1`, async () => {
+      const ethereumProvider = new EthereumProviderMock();
+      ethereumProvider.networkVersion = '3';
+      const ethereumTxServer = new EthereumTxService(ethereumProvider);
+      const result = await ethereumTxServer.getIsMainNetwork();
+      expect(result).toBe(false);
+    });
+  });
 });

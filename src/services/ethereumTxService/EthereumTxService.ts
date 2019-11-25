@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { IEthereumTxService } from './IEthereumTxService';
 import { IEthereumProvider } from './IEthereumProvider';
+import { ThemeProvider } from '@material-ui/styles';
 
 export class EthereumTxService implements IEthereumTxService {
   private web3: Web3;
@@ -31,10 +32,14 @@ export class EthereumTxService implements IEthereumTxService {
     return this.isMetamaskInstalled && !!this.ethereum.selectedAddress;
   }
 
-  getIsMainNetwork: () => Promise<boolean>;
-  getMainAddress: () => Promise<string>;
+  async getIsMainNetwork(): Promise<boolean> {
+    return this.isMetamaskInstalled && this.ethereum.networkVersion === '1';
+  }
+
+  async getMainAddress(): Promise<string> {
+    return null;
+  }
 
   // Event listeners
   onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
-  onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
 }

@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "test": "jest --config ./src/__tests__/jest.config.js",
+    "test-watch": "jest --watch --config ./src/__tests__/jest.config.js",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "type-check": "tsc -p ./src/tsconfig.json",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",

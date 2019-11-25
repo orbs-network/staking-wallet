@@ -1,8 +1,10 @@
-import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
+import { IEthereumProvider, TNetworkVersion } from '../../services/ethereumTxService/IEthereumProvider';
 
 export class EthereumProviderMock implements IEthereumProvider {
-  public selectedAddress: string = null;
   private shouldApproveFutureEnable = true;
+
+  public selectedAddress: string = null;
+  public networkVersion: TNetworkVersion = '1';
 
   async enable(): Promise<void> {
     if (this.shouldApproveFutureEnable) {
