@@ -6,21 +6,24 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'mobx-react';
-import { IServices } from '../services/Services';
-import { IStores } from '../store/stores';
-
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { DeepPartial } from 'utility-types';
+import { IServices } from '../services/Services';
+import { IStores } from '../store/stores';
+import { configureMobx } from '../store/storesInitialization';
+
 
 export class ComponentTestDriver<P = {}> {
   private services: DeepPartial<IServices> = {};
   private stores: DeepPartial<IStores> = {};
   private renderProps: P = null;
 
-  constructor(private Component) {}
+  constructor(private Component) {
+    configureMobx();
+  }
 
   withServices(services: DeepPartial<IServices>): this {
     this.services = services;

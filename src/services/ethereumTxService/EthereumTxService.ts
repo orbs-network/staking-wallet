@@ -23,7 +23,7 @@ export class EthereumTxService implements IEthereumTxService {
   }
 
   // Getters
-  public get didUserApproveWalletAccess(): boolean {
+  public get didUserApproveWalletInThePast(): boolean {
     // DEV_NOTE : O.L : IMPORTANT ! : This currently works with the soon to be deprecated apis of metamask injected 'ethereum'
     //                                and is not part of the properties in the official types of web3.
     //                                We need to check and find a better way to detect if the user has already approved wallet access.

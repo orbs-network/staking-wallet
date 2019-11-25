@@ -2,7 +2,7 @@ export interface IEthereumTxService {
   readonly isMetamaskInstalled: boolean;
 
   // Getters
-  didUserApproveWalletAccess: boolean;
+  didUserApproveWalletInThePast: boolean;
   getMainAddress: () => Promise<string>;
   getIsMainNetwork: () => Promise<boolean>;
 

@@ -4,12 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { configure } from 'mobx';
 import { buildServices, IServices } from './services/Services';
-import { getStores } from './store/storesInitialization';
+import { getStores, configureMobx } from './store/storesInitialization';
 import { App } from './App';
 
-configure({
-  enforceActions: 'observed',
-});
+configureMobx();
 
 const services = buildServices((window as any).ethereum);
 const stores = getStores(services.orbsPOSDataService, services.ethereumTxService);

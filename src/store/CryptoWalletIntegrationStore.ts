@@ -1,9 +1,11 @@
 import { action, computed, observable } from 'mobx';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
+import { ThemeProvider } from '@material-ui/styles';
 
 export class CryptoWalletIntegrationStore {
+  @observable private requestApproved: boolean;
+
   @observable public isMetamaskInstalled: boolean;
-  @observable public hasWalletPermissions: boolean;
 
   @observable public mainAddress: string;
   @observable public liquidOrbs: number;
@@ -11,27 +13,22 @@ export class CryptoWalletIntegrationStore {
 
   constructor(private ethereumTxService: IEthereumTxService) {
     this.isMetamaskInstalled = ethereumTxService.isMetamaskInstalled;
-    this.hasWalletPermissions = ethereumTxService.didUserApproveWalletAccess;
   }
 
   @computed
   public get isConnectedToWallet(): boolean {
-    return this.isMetamaskInstalled && this.hasWalletPermissions;
+    return this.isMetamaskInstalled && (this.ethereumTxService.didUserApproveWalletInThePast || this.requestApproved);
   }
 
   public async askToConnect(): Promise<boolean> {
-    const success = await this.ethereumTxService.requestConnectionPermission();
-
-    if (success) {
-      this.setHasWalletPermissions(true);
-    }
-
-    return success;
+    const result = await this.ethereumTxService.requestConnectionPermission();
+    this.setRequestApproved(result);
+    return this.requestApproved;
   }
 
-  @action('setHasWalletPermissions')
-  private setHasWalletPermissions(hasWalletPermissions: boolean) {
-    this.hasWalletPermissions = hasWalletPermissions;
+  @action('setRequestApproved')
+  private setRequestApproved(requestApproved: boolean) {
+    this.requestApproved = requestApproved;
   }
 
   @action('setMainAddress')

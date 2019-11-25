@@ -27,7 +27,7 @@ describe('Ethereum Tx Service', () => {
     ethereumProvider.rejectNextEnable();
     const result = await ethereumTxServer.requestConnectionPermission();
     expect(result).toBe(false);
-    expect(ethereumTxServer.didUserApproveWalletAccess).toBe(false);
+    expect(ethereumTxServer.didUserApproveWalletInThePast).toBe(false);
   });
 
   it(`Should return true when calling requestConnectionPermission and the user approved`, async () => {
@@ -35,6 +35,6 @@ describe('Ethereum Tx Service', () => {
     const ethereumTxServer = new EthereumTxService(ethereumProvider);
     const result = await ethereumTxServer.requestConnectionPermission();
     expect(result).toBe(true);
-    expect(ethereumTxServer.didUserApproveWalletAccess).toBe(true);
+    expect(ethereumTxServer.didUserApproveWalletInThePast).toBe(true);
   });
 });
