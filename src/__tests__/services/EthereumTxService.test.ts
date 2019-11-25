@@ -38,6 +38,15 @@ describe('Ethereum Tx Service', () => {
     expect(ethereumTxServer.didUserApproveWalletInThePast).toBe(true);
   });
 
+  it(`Should return the main address after successful connect`, async () => {
+    const ethereumProvider = new EthereumProviderMock();
+    const ethereumTxServer = new EthereumTxService(ethereumProvider);
+    await ethereumTxServer.requestConnectionPermission();
+    ethereumProvider.setSelectedAddress('BLABLA');
+    const result = ethereumTxServer.getMainAddress();
+    expect(result).toBe('BLABLA');
+  });
+
   describe('getIsMainNetwork', () => {
     it(`Should return false when metamask is not installed`, async () => {
       const ethereumTxServer = new EthereumTxService(undefined);

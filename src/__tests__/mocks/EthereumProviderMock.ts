@@ -18,4 +18,8 @@ export class EthereumProviderMock implements IEthereumProvider {
   public rejectNextEnable(): void {
     this.shouldApproveFutureEnable = false;
   }
+
+  public setSelectedAddress(selectedAddress): void {
+    this.selectedAddress = selectedAddress;
+  }
 }

@@ -3,12 +3,11 @@ export interface IEthereumTxService {
 
   // Getters
   didUserApproveWalletInThePast: boolean;
-  getMainAddress: () => Promise<string>;
+  getMainAddress: () => string;
   getIsMainNetwork: () => Promise<boolean>;
 
   requestConnectionPermission: () => Promise<boolean>;
 
   // Event listeners
   onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
-  onIsMainNetworkChange: (onChange: (isMainNetwork: boolean) => void) => () => void;
 }
