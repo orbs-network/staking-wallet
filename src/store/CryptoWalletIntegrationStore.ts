@@ -19,8 +19,14 @@ export class CryptoWalletIntegrationStore {
     return this.isMetamaskInstalled && this.hasWalletPermissions;
   }
 
-  public askToConnect(): Promise<boolean> {
-    return this.ethereumTxService.requestConnectionPermission();
+  public async askToConnect(): Promise<boolean> {
+    const success = await this.ethereumTxService.requestConnectionPermission();
+
+    if (success) {
+      this.hasWalletPermissions = true;
+    }
+
+    return success;
   }
 
   @action('setMainAddress')
