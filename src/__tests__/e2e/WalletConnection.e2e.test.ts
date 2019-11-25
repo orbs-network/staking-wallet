@@ -32,6 +32,9 @@ describe('Wallet connection', () => {
 
   it('Should offer to connect wallet when Metamask is installed but not connected', async () => {
     const ethereumProviderMock: IEthereumProvider = new EthereumProviderMock();
+    ethereumProviderMock.selectedAddress = undefined;
+    ethereumProviderMock.enable = async () => null;
+
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
@@ -40,7 +43,7 @@ describe('Wallet connection', () => {
 
     expect(connectButton).toBeInTheDocument();
     connectButton.click();
-    expect(queryByTestId('wallet-page')).toBeInTheDocument();
+    expect(queryByTestId('page-my-wallet')).toBeInTheDocument();
   });
 
   // it.skip('Should have an ethereum provider, but no user approval to connect wallet , and should offer to connect wallet', async () => {

@@ -23,7 +23,7 @@ export const ConnectWalletPage = observer(() => {
   }, [cryptoWalletIntegrationStore.isMetamaskInstalled]);
 
   return (
-    <Container>
+    <Container data-testid={'page-connect-to-wallet'}>
       <Grid item xs={12}>
         <Typography variant={'h4'}>Connect your wallet</Typography>
 

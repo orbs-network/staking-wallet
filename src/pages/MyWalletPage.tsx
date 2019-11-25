@@ -9,7 +9,7 @@ export const MyWalletPage = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
 
   return (
-    <Container>
+    <Container data-testid={'page-my-wallet'}>
       <Grid item xs={12}>
         <Typography variant={'h4'}>My Wallet</Typography>
       </Grid>
