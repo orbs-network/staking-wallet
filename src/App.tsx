@@ -2,7 +2,6 @@ import Grid from '@material-ui/core/Grid';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { About } from './components/About';
 import { Guardians } from './components/guardians';
 import { Header } from './components/Header';
 import { MyWalletPage } from './pages/MyWalletPage';
@@ -19,7 +18,6 @@ export const App = observer(() => {
       <Switch>
         <Route exact path='/' component={WalletPageWrapper} />
         <Route path='/stake' component={MyWalletPage} />
-        <Route path='/about' component={About} />
         <Route path='/guardians' component={Guardians} />
       </Switch>
     </Grid>

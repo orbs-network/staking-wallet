@@ -15,11 +15,10 @@ describe('Header Component', () => {
     headerTestDriver = new HeaderTestDriver();
   });
 
-  it('Should display Home, Guardians, and About menu items', async () => {
-    const { homeLink, guardiansLink, aboutLink } = headerTestDriver.render();
+  it('Should display Home, and Guardians menu items', async () => {
+    const { homeLink, guardiansLink } = headerTestDriver.render();
     expect(homeLink).toBeInTheDocument();
     expect(guardiansLink).toBeInTheDocument();
-    expect(aboutLink).toBeInTheDocument();
   });
 
   it('Should display only "Connect Wallet" when NOT connected to a wallet', async () => {

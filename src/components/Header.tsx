@@ -41,9 +41,6 @@ export const Header = React.memo<IHeaderProps>(props => {
         <LinkButton data-testid={'menuLink-guardians'} color='primary' to='/guardians'>
           Guardians
         </LinkButton>
-        <LinkButton data-testid={'menuLink-about'} color='primary' to='/about'>
-          About
-        </LinkButton>
         {linkForCryptoWallet}
       </Toolbar>
     </AppBar>
