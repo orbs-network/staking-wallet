@@ -13,16 +13,28 @@ describe('Ethereum Tx Service', () => {
   it(`Should mark isMetamaskInstalled as false when we don't provide a Provider`, async () => {
     const ethereumTxServer = new EthereumTxService(undefined);
     expect(ethereumTxServer.isMetamaskInstalled).toBe(false);
-	});
-	
+  });
+
   it(`Should mark isMetamaskInstalled as true when we provice a Provider`, async () => {
     const ethereumProvider = new EthereumProviderMock();
     const ethereumTxServer = new EthereumTxService(ethereumProvider);
     expect(ethereumTxServer.isMetamaskInstalled).toBe(true);
   });
 
-  it(`Should mark isMetamaskInstalled as false when we don't provide a Provider`, async () => {
-    const ethereumTxServer = new EthereumTxService(undefined);
-    expect(ethereumTxServer.isMetamaskInstalled).toBe(false);
+  it(`Should return false when calling requestConnectionPermission and the user rejected`, async () => {
+    const ethereumProvider = new EthereumProviderMock();
+    const ethereumTxServer = new EthereumTxService(ethereumProvider);
+    ethereumProvider.rejectNextEnable();
+    const result = await ethereumTxServer.requestConnectionPermission();
+    expect(result).toBe(false);
+    expect(ethereumTxServer.didUserApproveWalletAccess).toBe(false);
+  });
+
+  it(`Should return true when calling requestConnectionPermission and the user approved`, async () => {
+    const ethereumProvider = new EthereumProviderMock();
+    const ethereumTxServer = new EthereumTxService(ethereumProvider);
+    const result = await ethereumTxServer.requestConnectionPermission();
+    expect(result).toBe(true);
+    expect(ethereumTxServer.didUserApproveWalletAccess).toBe(true);
   });
 });
