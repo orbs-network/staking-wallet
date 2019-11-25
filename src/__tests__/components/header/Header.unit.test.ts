@@ -6,42 +6,33 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { HeaderTestDriver, IHeaderCustomDriver } from './HeaderTestDriver';
+import { HeaderTestDriver } from './HeaderTestDriver';
 
 describe('Header Component', () => {
-  let headerTestDriver: IHeaderCustomDriver = new HeaderTestDriver();
+  let headerTestDriver: HeaderTestDriver = new HeaderTestDriver();
 
   beforeEach(() => {
     headerTestDriver = new HeaderTestDriver();
   });
 
-  it('Should display regular links + only "my wallet" and "stake orbs" when connected to a wallet', async () => {
-    headerTestDriver.setIsConnectedToWalletProp(true);
-
-    const {
-      expectRegularLinksToExist,
-      expectMyWalletLinksToExist,
-      expectConnectWalletLinkToNotExist,
-    } = headerTestDriver.renderSpecificDriver();
-
-    expectRegularLinksToExist();
-
-    expectMyWalletLinksToExist();
-    expectConnectWalletLinkToNotExist();
+  it('Should display Home, Guardians, and About menu items', async () => {
+    const { homeLink, guardiansLink, aboutLink } = headerTestDriver.render();
+    expect(homeLink).toBeInTheDocument();
+    expect(guardiansLink).toBeInTheDocument();
+    expect(aboutLink).toBeInTheDocument();
   });
 
-  it.skip('Should display regular links + only "Connect to wallet" when not connected to a wallet', async () => {
-    headerTestDriver.setIsConnectedToWalletProp(false);
+  it('Should display only "Connect Wallet" when NOT connected to a wallet', async () => {
+    const { connectWalletLink, myWalletLink, stakeOrbsLink } = headerTestDriver.render();
+    expect(connectWalletLink).toBeInTheDocument();
+    expect(myWalletLink).not.toBeInTheDocument();
+    expect(stakeOrbsLink).not.toBeInTheDocument();
+  });
 
-    const {
-      expectRegularLinksToExist,
-      expectMyWalletLinksToNotExist,
-      expectConnectWalletLinkToExist,
-    } = headerTestDriver.renderSpecificDriver();
-
-    expectRegularLinksToExist();
-
-    expectConnectWalletLinkToExist();
-    expectMyWalletLinksToNotExist();
+  it('Should display "My Wallet" and "Stake ORBS" when connected to a wallet', async () => {
+    const { connectWalletLink, myWalletLink, stakeOrbsLink } = headerTestDriver.connectedToWallet().render();
+    expect(connectWalletLink).not.toBeInTheDocument();
+    expect(myWalletLink).toBeInTheDocument();
+    expect(stakeOrbsLink).toBeInTheDocument();
   });
 });

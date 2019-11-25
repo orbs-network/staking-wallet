@@ -14,18 +14,18 @@ export const Header = React.memo<IHeaderProps>(props => {
     if (isConnectedToWallet) {
       return (
         <>
-          <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/my-wallet'>
+          <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/wallet'>
             My Wallet
           </LinkButton>
 
-          <LinkButton data-testid={'menuLink-stakeOrbs'} color='primary' to='/my-wallet'>
+          <LinkButton data-testid={'menuLink-stakeOrbs'} color='primary' to='/stake'>
             Stake ORBS
           </LinkButton>
         </>
       );
     } else {
       return (
-        <LinkButton data-testid={'menuLink-connectWallet'} color='primary' to='/connect-wallet'>
+        <LinkButton data-testid={'menuLink-connectWallet'} color='primary' to='/wallet'>
           Connect Wallet
         </LinkButton>
       );

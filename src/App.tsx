@@ -21,8 +21,8 @@ export const App = observer(() => {
         <Route exact path='/' component={Home} />
         <Route path='/about' component={About} />
         <Route path='/guardians' component={Guardians} />
-        <Route path='/connect-wallet' component={ConnectWalletPage} />
-        <Route path='/my-wallet' component={MyWalletPage} />
+        <Route path='/wallet' component={ConnectWalletPage} />
+        <Route path='/stake' component={MyWalletPage} />
       </Switch>
     </Grid>
   );
