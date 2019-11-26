@@ -10,7 +10,7 @@ import { IGuardianInfo } from 'orbs-pos-data';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { Guardians } from '../../../components/Guardians';
 import { TGuardiansStore } from '../../../store/GuardiansStore';
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 
 describe('Guardians Component', () => {
   let testDriver: ComponentTestDriver;
@@ -88,7 +88,9 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-3-voted')).toHaveTextContent(guardiansByExpectedOrder[2].voted.toString());
 
     // Testing for reaction to observable (this is the 3rd highest stake)
-    guardiansStore.guardiansList = [...guardiansByExpectedOrder, guardian4];
+    const addGuardian = action(() => (guardiansStore.guardiansList = [...guardiansByExpectedOrder, guardian4]));
+    addGuardian();
+
     expect(getByTestId('guardian-4')).toBeDefined();
     expect(getByTestId('guardian-3-name')).toHaveTextContent(guardian4.name);
     expect(getByTestId('guardian-3-website')).toHaveTextContent(guardian4.website);
