@@ -29,6 +29,7 @@
   "author": "Gil Amran",
   "dependencies": {
     "@babel/runtime": "^7.7.2",
+    "copy-to-clipboard": "^3.2.0",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "orbs-client-sdk": "^2.2.2",

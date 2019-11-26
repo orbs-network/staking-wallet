@@ -4,6 +4,7 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import copy from 'copy-to-clipboard';
 
 export const MyWalletPage = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
