@@ -28,7 +28,7 @@ describe('Wallet connection', () => {
 
     const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
 
-    expect(queryByTestId('install-metamask-button')).toBeInTheDocument();
+    expect(queryByTestId('button-install-metamask')).toBeInTheDocument();
   });
 
   it('Should offer to connect wallet when Metamask is installed but not connected, and after connection is approved, display the "My Wallet" page', async () => {
@@ -42,7 +42,7 @@ describe('Wallet connection', () => {
     expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
 
     // Ensure 'connect button' is displayed + Click.
-    const connectButton = queryByTestId('connect-to-metamask-button');
+    const connectButton = queryByTestId('button-connect-metamask');
     expect(connectButton).toBeInTheDocument();
     connectButton.click();
 
@@ -63,14 +63,14 @@ describe('Wallet connection', () => {
 
     // Ensure we start with the 'Connect wallet page'
     expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
-    expect(queryByTestId('connection-was-not-approved')).not.toBeInTheDocument();
+    expect(queryByTestId('text-connection-was-not-approved')).not.toBeInTheDocument();
 
     // Ensure 'connect button' is displayed + Click.
-    const connectButton = queryByTestId('connect-to-metamask-button');
+    const connectButton = queryByTestId('button-connect-metamask');
     expect(connectButton).toBeInTheDocument();
     connectButton.click();
 
-    await waitForElement(() => queryByTestId('connection-was-not-approved'));
+    await waitForElement(() => queryByTestId('text-connection-was-not-approved'));
 
     expect(queryByTestId('page-my-wallet')).not.toBeInTheDocument();
     expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();

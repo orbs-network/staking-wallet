@@ -41,17 +41,23 @@ describe('Connect wallet page', () => {
     ethereumProviderMock = new EthereumProviderMock();
   });
 
-  it(`Should display 'install metamask' button when there is no ethereum provider`, async () => {
+  it(`Should display 'install metamask' button when there is no ethereum provider that opens an 'install metamask' tab`, async () => {
     const { getByTestId, queryByTestId } = renderWithMock(testDriver, undefined);
+
+    window.open = jest.fn();
 
     // Has no ethereum provider - should offer to install metamask
     expect(queryByTestId(TEST_IDS.installMetamask)).toBeDefined();
     expect(queryByTestId(TEST_IDS.connectMetamask)).toBeNull();
     expect(getByTestId(TEST_IDS.installMetamask)).toHaveTextContent('Install Metamask');
+
+    fireEvent.click(getByTestId(TEST_IDS.installMetamask));
+    expect(window.open).toHaveBeenCalledTimes(1);
+    expect(window.open).toBeCalledWith('https://metamask.io/', '_blank');
   });
 
   it(`Should display a 'please refresh page' message after user clicks on 'install metamask' `, async () => {
-    const { getByTestId, queryByTestId } = renderWithMock(testDriver, ethereumProviderMock);
+    const { getByTestId, queryByTestId } = renderWithMock(testDriver, undefined);
 
     expect(queryByTestId(TEST_IDS.installMetamask)).toBeDefined();
     fireEvent.click(getByTestId(TEST_IDS.installMetamask));
@@ -59,6 +65,9 @@ describe('Connect wallet page', () => {
     await waitForElement(() => queryByTestId(TEST_IDS.pleaseRefreshPageMessage));
 
     expect(queryByTestId(TEST_IDS.pleaseRefreshPageMessage)).toBeInTheDocument();
+    expect(queryByTestId(TEST_IDS.pleaseRefreshPageMessage)).toHaveTextContent(
+      'Please refresh this page after installing Metamask',
+    );
   });
 
   it(`Should display 'connect metamask' button when there is an ethereum provider but it is not connected that triggers a wallet-connect request`, async () => {
@@ -87,10 +96,12 @@ describe('Connect wallet page', () => {
 
     // Has ethereum provider but no wallet permissions - should offer to install metamask
     expect(queryByTestId(TEST_IDS.connectMetamask)).toBeDefined();
-    expect(queryByTestId(TEST_IDS.installMetamask)).toBeNull();
-    expect(getByTestId(TEST_IDS.connectMetamask)).toHaveTextContent('Connect your metamask');
+    fireEvent.click(getByTestId(TEST_IDS.connectMetamask));
 
     await waitForElement(() => queryByTestId(TEST_IDS.connectionWasNotApprovedMessage));
-    expect(queryByTestId(TEST_IDS.connectionWasNotApprovedMessage)).toBeDefined();
+    expect(queryByTestId(TEST_IDS.connectionWasNotApprovedMessage)).toBeInTheDocument();
+    expect(queryByTestId(TEST_IDS.connectionWasNotApprovedMessage)).toHaveTextContent(
+      'Please approve',
+    );
   });
 });

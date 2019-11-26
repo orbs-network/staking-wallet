@@ -11,30 +11,47 @@ import { useBoolean } from 'react-hanger';
 export const ConnectWalletPage = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
+  const pressedOnInstallMetamask = useBoolean(false);
 
   const handleConnectClicked = useCallback(async () => {
     const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
     rejectedConnection.setValue(!approvedConnection);
   }, [rejectedConnection, cryptoWalletIntegrationStore]);
 
+  const handleInstallClicked = useCallback(async () => {
+    window.open('https://metamask.io/', '_blank');
+    pressedOnInstallMetamask.setTrue();
+  }, [pressedOnInstallMetamask]);
+
   const installOrConnectMetamask = useMemo(() => {
     if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
         <>
-          <Button data-testid='connect-to-metamask-button' onClick={handleConnectClicked}>
+          <Button data-testid='button-connect-metamask' onClick={handleConnectClicked}>
             Connect your metamask
           </Button>
-          {rejectedConnection.value && <div data-testid='connection-was-not-approved'>Please approve</div>}
+          {rejectedConnection.value && <div data-testid='text-connection-was-not-approved'>Please approve</div>}
         </>
       );
     } else {
       return (
-        <Button data-testid='install-metamask-button' onClick={() => window.open('https://metamask.io/', '_blank')}>
-          Install metamask
-        </Button>
+        <>
+          <Button data-testid='button-install-metamask' onClick={handleInstallClicked}>
+            Install Metamask
+          </Button>
+          {pressedOnInstallMetamask.value && (
+            <div data-testid='text-pleaseRefresh'>Please refresh this page after installing Metamask</div>
+          )}
+        </>
       );
     }
-  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, rejectedConnection.value, handleConnectClicked]);
+  }, [
+    cryptoWalletIntegrationStore.isMetamaskInstalled,
+    rejectedConnection.value,
+    pressedOnInstallMetamask.value,
+    handleConnectClicked,
+    handleInstallClicked,
+  ]);
 
   return (
     <Container data-testid={'page-connect-to-wallet'}>
