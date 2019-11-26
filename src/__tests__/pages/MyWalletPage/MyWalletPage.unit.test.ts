@@ -29,19 +29,21 @@ describe('My Wallet Page', () => {
   let testDriver: ComponentTestDriver;
   let ethereumProviderMock: EthereumProviderMock;
 
+  const testAddress = '0x0afdafad';
+
   beforeEach(() => {
     testDriver = new ComponentTestDriver(WalletPageWrapper);
 
     ethereumProviderMock = new EthereumProviderMock();
+
+    // Any test case expects a connected wallet
+    ethereumProviderMock.setSelectedAddress(testAddress);
   });
 
   it(`Should show all account data`, async () => {
-    const testAddress = '0x0afdafad';
     const liquidOrbs = 500_000;
     const stakedOrbs = 10_000;
     const accumulatedRewards = 7_030;
-
-    ethereumProviderMock.setSelectedAddress(testAddress);
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
@@ -110,12 +112,12 @@ describe('My Wallet Page', () => {
       .withStores({ cryptoWalletIntegrationStore })
       .render();
 
-    const stakeTokensButton = queryByText('Stake your tokens');
+    const stakeTokensButton = queryByText('Stake Your Tokens');
     expect(stakeTokensButton).toBeInTheDocument();
 
     fireEvent.click(stakeTokensButton);
 
-    expect(window.location.pathname).toBe('/stake-orbs');
+    expect(window.location.pathname).toBe('/stake');
   });
 
   it(`Should have a 'History' button that redirects to 'History' `, async () => {

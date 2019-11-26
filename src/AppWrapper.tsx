@@ -6,6 +6,7 @@ import { configure } from 'mobx';
 import { buildServices, IServices } from './services/Services';
 import { getStores, configureMobx } from './store/storesInitialization';
 import { App } from './App';
+import { StylesProvider } from '@material-ui/core/styles';
 
 configureMobx();
 
@@ -15,7 +16,9 @@ const stores = getStores(services.orbsPOSDataService, services.ethereumTxService
 export const AppWrapper: React.FunctionComponent = () => (
   <BrowserRouter>
     <Provider {...services} {...stores}>
-      <App />
+      <StylesProvider injectFirst>
+        <App />
+      </StylesProvider>
     </Provider>
   </BrowserRouter>
 );
