@@ -16,8 +16,7 @@ describe('Header Component', () => {
   });
 
   it('Should display Home, and Guardians menu items', async () => {
-    const { homeLink, guardiansLink } = headerTestDriver.render();
-    expect(homeLink).toBeInTheDocument();
+    const { guardiansLink } = headerTestDriver.render();
     expect(guardiansLink).toBeInTheDocument();
   });
 

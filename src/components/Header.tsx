@@ -14,7 +14,7 @@ export const Header = React.memo<IHeaderProps>(props => {
     if (isConnectedToWallet) {
       return (
         <>
-          <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/wallet'>
+          <LinkButton data-testid={'menuLink-myWallet'} color='primary' to='/'>
             My Wallet
           </LinkButton>
 
@@ -25,7 +25,7 @@ export const Header = React.memo<IHeaderProps>(props => {
       );
     } else {
       return (
-        <LinkButton data-testid={'menuLink-connectWallet'} color='primary' to='/wallet'>
+        <LinkButton data-testid={'menuLink-connectWallet'} color='primary' to='/'>
           Connect Wallet
         </LinkButton>
       );
@@ -35,13 +35,10 @@ export const Header = React.memo<IHeaderProps>(props => {
   return (
     <AppBar position='static' color='default'>
       <Toolbar>
-        <LinkButton data-testid={'menuLink-home'} color='primary' to='/'>
-          Home
-        </LinkButton>
+        {linkForCryptoWallet}
         <LinkButton data-testid={'menuLink-guardians'} color='primary' to='/guardians'>
           Guardians
         </LinkButton>
-        {linkForCryptoWallet}
       </Toolbar>
     </AppBar>
   );

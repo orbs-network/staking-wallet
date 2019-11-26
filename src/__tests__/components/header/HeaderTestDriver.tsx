@@ -17,13 +17,11 @@ export class HeaderTestDriver {
   public render() {
     const renderResult = this.renderHeader();
     const { queryByTestId } = renderResult;
-    const homeLink = queryByTestId('menuLink-home');
     const guardiansLink = queryByTestId('menuLink-guardians');
     const connectWalletLink = queryByTestId('menuLink-connectWallet');
     const myWalletLink = queryByTestId('menuLink-myWallet');
     const stakeOrbsLink = queryByTestId('menuLink-stakeOrbs');
     return {
-      homeLink,
       guardiansLink,
       connectWalletLink,
       myWalletLink,
