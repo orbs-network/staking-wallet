@@ -28,7 +28,11 @@ export const ConnectWalletPage = observer(() => {
         </>
       );
     } else {
-      return <Button data-testid='install-metamask-button'>Install metamask</Button>;
+      return (
+        <Button data-testid='install-metamask-button' onClick={() => window.open('https://metamask.io/', '_blank')}>
+          Install metamask
+        </Button>
+      );
     }
   }, [cryptoWalletIntegrationStore.isMetamaskInstalled, rejectedConnection.value, handleConnectClicked]);
 
