@@ -2,7 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Guardians } from './components/guardians';
+import { Guardians } from './components/Guardians';
 import { Header } from './components/Header';
 import { MyWalletPage } from './pages/MyWalletPage';
 import { WalletPageWrapper } from './pages/WalletPageWrapper';
