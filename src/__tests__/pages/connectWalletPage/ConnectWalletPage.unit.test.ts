@@ -7,60 +7,90 @@
  */
 import '@testing-library/jest-dom/extend-expect';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
-import {
-  ICryptoWalletIntegrationStoreState,
-  TCryptoWalletIntegrationStore,
-} from '../../../store/CryptoWalletIntegrationStore';
-import { Header } from '../../../components/Header';
-import { observable } from 'mobx';
 import { ConnectWalletPage } from '../../../pages/ConnectWalletPage';
+import { EthereumProviderMock } from '../../mocks/EthereumProviderMock';
+import { IEthereumTxService } from '../../../services/ethereumTxService/IEthereumTxService';
+import { EthereumTxService } from '../../../services/ethereumTxService/EthereumTxService';
+import { CryptoWalletIntegrationStore } from '../../../store/CryptoWalletIntegrationStore';
+import { fireEvent, waitForElement, RenderResult } from '@testing-library/react';
+import { IEthereumProvider } from '../../../services/ethereumTxService/IEthereumProvider';
 
 const TEST_IDS = {
-  connectMetamask: 'actionButton-connectMetamask',
-  installMetamask: 'actionButton-installMetamask',
+  connectMetamask: 'button-connect-metamask',
+  installMetamask: 'button-install-metamask',
+
+  pleaseRefreshPageMessage: 'text-pleaseRefresh',
+  connectionWasNotApprovedMessage: 'text-connection-was-not-approved',
   alreadyConnected: 'text-alreadyConnectedToMetamask',
 };
 
+function renderWithMock(testDriver: ComponentTestDriver, ethereumProvider: IEthereumProvider): RenderResult {
+  const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProvider);
+  const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+
+  return testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+}
+
 describe('Connect wallet page', () => {
-  let cryptoWalletIntegrationStore: Partial<TCryptoWalletIntegrationStore>;
   let testDriver: ComponentTestDriver;
+  let ethereumProviderMock: EthereumProviderMock;
 
   beforeEach(() => {
-    cryptoWalletIntegrationStore = observable.object<Partial<ICryptoWalletIntegrationStoreState>>({
-      hasEthereumProvider: false,
-      hasWalletPermissions: false,
-      isConnectedToWallet: false,
-    });
-
     testDriver = new ComponentTestDriver(ConnectWalletPage);
+
+    ethereumProviderMock = new EthereumProviderMock();
   });
 
-  it(`Should differentiate between 'install metamask' and 'connect metamask' + mobx connection`, async () => {
-    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+  it(`Should display 'install metamask' button when there is no ethereum provider`, async () => {
+    const { getByTestId, queryByTestId } = renderWithMock(testDriver, undefined);
 
     // Has no ethereum provider - should offer to install metamask
-    cryptoWalletIntegrationStore.hasEthereumProvider = false;
     expect(queryByTestId(TEST_IDS.installMetamask)).toBeDefined();
     expect(queryByTestId(TEST_IDS.connectMetamask)).toBeNull();
     expect(getByTestId(TEST_IDS.installMetamask)).toHaveTextContent('Install Metamask');
+  });
+
+  it(`Should display a 'please refresh page' message after user clicks on 'install metamask' `, async () => {
+    const { getByTestId, queryByTestId } = renderWithMock(testDriver, ethereumProviderMock);
+
+    expect(queryByTestId(TEST_IDS.installMetamask)).toBeDefined();
+    fireEvent.click(getByTestId(TEST_IDS.installMetamask));
+
+    await waitForElement(() => queryByTestId(TEST_IDS.pleaseRefreshPageMessage));
+
+    expect(queryByTestId(TEST_IDS.pleaseRefreshPageMessage)).toBeInTheDocument();
+  });
+
+  it(`Should display 'connect metamask' button when there is an ethereum provider but it is not connected that triggers a wallet-connect request`, async () => {
+    ethereumProviderMock.setSelectedAddress(undefined);
+    ethereumProviderMock.acceptNextEnable();
+
+    const spy = jest.spyOn(ethereumProviderMock, 'enable');
+
+    const { getByTestId, queryByTestId } = renderWithMock(testDriver, ethereumProviderMock);
 
     // Has ethereum provider but no wallet permissions - should offer to install metamask
-    cryptoWalletIntegrationStore.hasEthereumProvider = true;
-    cryptoWalletIntegrationStore.hasWalletPermissions = false;
     expect(queryByTestId(TEST_IDS.connectMetamask)).toBeDefined();
     expect(queryByTestId(TEST_IDS.installMetamask)).toBeNull();
     expect(getByTestId(TEST_IDS.connectMetamask)).toHaveTextContent('Connect your metamask');
+
+    fireEvent.click(getByTestId(TEST_IDS.connectMetamask));
+
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it(`Should show a 'already connected' message and not action buttons if it has wallet connection`, async () => {
-    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+  it(`Should display an error if user declined metamask connection.`, async () => {
+    ethereumProviderMock.setSelectedAddress(undefined);
+    ethereumProviderMock.rejectNextEnable();
 
-    cryptoWalletIntegrationStore.isConnectedToWallet = true;
+    const { getByTestId, queryByTestId } = renderWithMock(testDriver, ethereumProviderMock);
 
-    expect(queryByTestId(TEST_IDS.alreadyConnected)).toBeDefined();
+    // Has ethereum provider but no wallet permissions - should offer to install metamask
+    expect(queryByTestId(TEST_IDS.connectMetamask)).toBeDefined();
     expect(queryByTestId(TEST_IDS.installMetamask)).toBeNull();
-    expect(queryByTestId(TEST_IDS.connectMetamask)).toBeNull();
+    expect(getByTestId(TEST_IDS.connectMetamask)).toHaveTextContent('Connect your metamask');
 
-    expect(getByTestId(TEST_IDS.alreadyConnected)).toHaveTextContent('Already connected');
+    await waitForElement(() => queryByTestId(TEST_IDS.connectionWasNotApprovedMessage));
+    expect(queryByTestId(TEST_IDS.connectionWasNotApprovedMessage)).toBeDefined();
   });
 });
