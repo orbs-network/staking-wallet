@@ -13,6 +13,10 @@ import { IEthereumTxService } from '../../../services/ethereumTxService/IEthereu
 import { EthereumTxService } from '../../../services/ethereumTxService/EthereumTxService';
 import { CryptoWalletIntegrationStore } from '../../../store/CryptoWalletIntegrationStore';
 import { fireEvent, waitForElement } from '@testing-library/dom';
+import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
+import { orbsPOSDataServiceFactory } from 'orbs-pos-data';
+import { OrbsAccountStore } from '../../../store/OrbsAccountStore';
+import BN from 'bn.js';
 
 const TEST_IDS = {
   activeAddress: 'text-active-address',
@@ -28,6 +32,7 @@ const TEST_IDS = {
 describe('My Wallet Page', () => {
   let testDriver: ComponentTestDriver;
   let ethereumProviderMock: EthereumProviderMock;
+  let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
 
   const testAddress = '0x0afdafad';
 
@@ -35,6 +40,8 @@ describe('My Wallet Page', () => {
     testDriver = new ComponentTestDriver(WalletPageWrapper);
 
     ethereumProviderMock = new EthereumProviderMock();
+
+    orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
 
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
@@ -45,10 +52,15 @@ describe('My Wallet Page', () => {
     const stakedOrbs = 10_000;
     const accumulatedRewards = 7_030;
 
+    orbsPOSDataServiceMock.withORBSBalance(testAddress, BigInt(liquidOrbs));
+
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    const orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock);
 
-    const { getByTestId, queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { getByTestId, queryByTestId } = testDriver
+      .withStores({ cryptoWalletIntegrationStore, orbsAccountStore })
+      .render();
 
     expect(queryByTestId(TEST_IDS.activeAddress)).toBeDefined();
     expect(queryByTestId(TEST_IDS.liquidOrbs)).toBeDefined();
