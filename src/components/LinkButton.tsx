@@ -8,7 +8,7 @@ interface IProps {
 }
 export const LinkButton: React.FunctionComponent<IProps & ButtonProps> = ({ to, children, ...rest }) => {
   const renderLink: any = React.useMemo(
-    () => React.forwardRef((linkProps, ref) => <Link to={to} {...linkProps} innerRef={ref} />),
+    () => React.forwardRef<HTMLAnchorElement>((linkProps, ref) => <Link to={to} {...linkProps} innerRef={ref} />),
     [to],
   );
 
