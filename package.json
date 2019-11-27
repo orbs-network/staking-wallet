@@ -29,6 +29,7 @@
   "author": "Gil Amran",
   "dependencies": {
     "@babel/runtime": "^7.7.4",
+    "@material-ui/icons": "^4.5.1",
     "copy-to-clipboard": "^3.2.0",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",

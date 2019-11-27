@@ -8,6 +8,9 @@ import copy from 'copy-to-clipboard';
 import { Button } from '@material-ui/core';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
+import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
+import { useBoolean } from 'react-hanger';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -16,8 +19,13 @@ const LoweCaseButton = styled(Button)({
 export const MyWalletPage = observer(() => {
   const history = useHistory();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
+  const showSnackbarMessage = useBoolean(false);
 
   const navigateToStakeOrbs = useCallback(() => history.push('/stake'), [history]);
+  const copyAddress = useCallback(() => {
+    copy(cryptoWalletIntegrationStore.mainAddress);
+    showSnackbarMessage.setTrue();
+  }, [cryptoWalletIntegrationStore.mainAddress, showSnackbarMessage]);
 
   return (
     <Container data-testid={'page-my-wallet'}>
@@ -27,8 +35,8 @@ export const MyWalletPage = observer(() => {
         <div>
           {/* Address */}
           <span data-testid={'text-active-address'}> Address : {cryptoWalletIntegrationStore.mainAddress} </span>
-          <Button> Copy </Button>
-          <Button> QR </Button>
+          <LoweCaseButton onClick={copyAddress}> Copy </LoweCaseButton>
+          <LoweCaseButton> QR </LoweCaseButton>
           <br />
 
           <span data-testid={'text-user-email'}> Your Email : </span>
@@ -47,8 +55,25 @@ export const MyWalletPage = observer(() => {
         {/* Rewards */}
         Total Rewards :{' '}
         <span data-testid={'text-total-rewards'}>{cryptoWalletIntegrationStore.accumulatedRewards}</span>
-        <Button>History</Button>
+        <LoweCaseButton>History</LoweCaseButton>
       </Grid>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={showSnackbarMessage.value}
+        autoHideDuration={2000}
+        onClose={showSnackbarMessage.setFalse}
+      >
+        <CustomSnackBarContent
+          variant={'success'}
+          message={'Copied Address !'}
+          onClose={showSnackbarMessage.setFalse}
+
+          data-testid={'message-address-was-copied'}
+        />
+      </Snackbar>
     </Container>
   );
 });
