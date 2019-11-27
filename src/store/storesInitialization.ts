@@ -5,7 +5,7 @@ import { IOrbsPOSDataService } from 'orbs-pos-data';
 
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
-
+import { OrbsAccountStore } from './OrbsAccountStore';
 
 /**
  * Configures the mobx library. Should get called at App's initialization.
@@ -23,7 +23,7 @@ export function getStores(orbsPOSDataService: IOrbsPOSDataService, ethereumTxSer
   // Create stores instances + Hydrate the stores
   const guardiansStore = new GuardiansStore(orbsPOSDataService);
   const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-
+  const orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataService);
 
   // Call the initialize function on each one
   // NOTE : FUTURE : O.L : Should consider the order and relation between Hydrating and 'init'
@@ -33,6 +33,7 @@ export function getStores(orbsPOSDataService: IOrbsPOSDataService, ethereumTxSer
   const stores: IStores = {
     guardiansStore,
     cryptoWalletIntegrationStore,
+    orbsAccountStore,
   };
 
   return stores;

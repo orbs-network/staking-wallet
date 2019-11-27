@@ -1,6 +1,5 @@
 import { action, computed, observable } from 'mobx';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
-import { ThemeProvider } from '@material-ui/styles';
 
 export class CryptoWalletIntegrationStore {
   @observable private requestApproved: boolean;
