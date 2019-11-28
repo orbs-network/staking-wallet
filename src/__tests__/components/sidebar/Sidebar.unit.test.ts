@@ -6,31 +6,29 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { HeaderTestDriver } from './HeaderTestDriver';
+import { SidebarTestDriver } from './SidebarTestDriver';
 
-describe('Header Component', () => {
-  let headerTestDriver: HeaderTestDriver = new HeaderTestDriver();
+describe('Sidebar Component', () => {
+  let sidebarTestDriver: SidebarTestDriver = new SidebarTestDriver();
 
   beforeEach(() => {
-    headerTestDriver = new HeaderTestDriver();
+    sidebarTestDriver = new SidebarTestDriver();
   });
 
-  it('Should display Home, and Guardians menu items', async () => {
-    const { guardiansLink } = headerTestDriver.render();
+  it('Should display the Guardians menu item', async () => {
+    const { guardiansLink } = sidebarTestDriver.render();
     expect(guardiansLink).toBeInTheDocument();
   });
 
   it('Should display only "Connect Wallet" when NOT connected to a wallet', async () => {
-    const { connectWalletLink, myWalletLink, stakeOrbsLink } = headerTestDriver.render();
+    const { connectWalletLink, myWalletLink } = sidebarTestDriver.render();
     expect(connectWalletLink).toBeInTheDocument();
     expect(myWalletLink).not.toBeInTheDocument();
-    expect(stakeOrbsLink).not.toBeInTheDocument();
   });
 
   it('Should display "My Wallet" and "Stake ORBS" when connected to a wallet', async () => {
-    const { connectWalletLink, myWalletLink, stakeOrbsLink } = headerTestDriver.connectedToWallet().render();
+    const { connectWalletLink, myWalletLink } = sidebarTestDriver.connectedToWallet().render();
     expect(connectWalletLink).not.toBeInTheDocument();
     expect(myWalletLink).toBeInTheDocument();
-    expect(stakeOrbsLink).toBeInTheDocument();
   });
 });

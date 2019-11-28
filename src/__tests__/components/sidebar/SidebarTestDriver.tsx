@@ -2,11 +2,11 @@
 import { render } from '@testing-library/react';
 import 'jest-expect-message';
 import React from 'react';
-import { Header, IHeaderProps } from '../../../components/Header';
+import { Sidebar, ISidebarProps } from '../../../components/nav/Sidebar';
 import { BrowserRouter } from 'react-router-dom';
 
-export class HeaderTestDriver {
-  private readonly props: IHeaderProps = null;
+export class SidebarTestDriver {
+  private readonly props: ISidebarProps = null;
 
   constructor() {
     this.props = {
@@ -20,12 +20,10 @@ export class HeaderTestDriver {
     const guardiansLink = queryByTestId('menuLink-guardians');
     const connectWalletLink = queryByTestId('menuLink-connectWallet');
     const myWalletLink = queryByTestId('menuLink-myWallet');
-    const stakeOrbsLink = queryByTestId('menuLink-stakeOrbs');
     return {
       guardiansLink,
       connectWalletLink,
       myWalletLink,
-      stakeOrbsLink,
     };
   }
 
@@ -37,7 +35,7 @@ export class HeaderTestDriver {
   private renderHeader() {
     return render(
       <BrowserRouter>
-        <Header {...this.props} />
+        <Sidebar {...this.props} />
       </BrowserRouter>,
     );
   }
