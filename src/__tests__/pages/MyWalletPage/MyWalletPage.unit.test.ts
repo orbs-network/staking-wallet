@@ -12,11 +12,10 @@ import { WalletPageWrapper } from '../../../pages/WalletPageWrapper';
 import { IEthereumTxService } from '../../../services/ethereumTxService/IEthereumTxService';
 import { EthereumTxService } from '../../../services/ethereumTxService/EthereumTxService';
 import { CryptoWalletIntegrationStore } from '../../../store/CryptoWalletIntegrationStore';
-import { fireEvent, waitForElement } from '@testing-library/dom';
+import { waitForElement } from '@testing-library/dom';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
-import { orbsPOSDataServiceFactory } from 'orbs-pos-data';
 import { OrbsAccountStore } from '../../../store/OrbsAccountStore';
-import BN from 'bn.js';
+import { fireEvent } from '@testing-library/react';
 
 const TEST_IDS = {
   activeAddress: 'text-active-address',
@@ -29,6 +28,9 @@ const TEST_IDS = {
   addressCopiedMessage: 'message-address-was-copied',
 };
 
+jest.mock('copy-to-clipboard', () => jest.fn());
+import copyMock from 'copy-to-clipboard';
+
 describe('My Wallet Page', () => {
   let testDriver: ComponentTestDriver;
   let ethereumProviderMock: EthereumProviderMock;
@@ -36,6 +38,12 @@ describe('My Wallet Page', () => {
 
   const testAddress = '0x0afdafad';
 
+  // Fresh mock for 'copy-tp-clipboard'
+  beforeEach(() => {
+    (copyMock as jest.Mock).mockReset();
+  });
+
+  // Refresh test driver and other mocks
   beforeEach(() => {
     testDriver = new ComponentTestDriver(WalletPageWrapper);
 
@@ -74,17 +82,14 @@ describe('My Wallet Page', () => {
   });
 
   it(`Should copy account address to clipboard + show message`, async () => {
-    jest.mock('copy-to-clipboard');
-    // TODO : ORL : Fix mocking of this module
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const copy = require('copy-to-clipboard');
-
     const testAddress = '0x0afdafad';
     ethereumProviderMock.setSelectedAddress(testAddress);
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-    const { getByTestId, queryByTestId, queryByText } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { getByTestId, queryByTestId, queryByText } = testDriver
+      .withStores({ cryptoWalletIntegrationStore })
+      .render();
 
     const copyAddressButton = queryByText('Copy');
     expect(copyAddressButton).toBeInTheDocument();
@@ -95,10 +100,10 @@ describe('My Wallet Page', () => {
     await waitForElement(() => queryByTestId(TEST_IDS.addressCopiedMessage));
 
     expect(queryByTestId(TEST_IDS.addressCopiedMessage)).toBeDefined();
-    // expect(getByTestId(TEST_IDS.addressCopiedMessage)).toHaveTextContent('Copied Address');
+    expect(getByTestId(TEST_IDS.addressCopiedMessage)).toHaveTextContent('Copied Address !');
 
-    expect(copy).toBeCalledTimes(1);
-    expect(copy).toBeCalledWith(testAddress);
+    expect(copyMock).toBeCalledTimes(1);
+    expect(copyMock).toBeCalledWith(testAddress);
   });
 
   // TODO : ORL : We need to decide where to save the user's email.
