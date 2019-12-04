@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
+import { useCryptoWalletIntegrationStore, useOrbsAccountStore } from '../store/storeHooks';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -21,6 +21,7 @@ export const MyWalletPage = observer(() => {
   const { t } = useTranslation();
   const history = useHistory();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
+  const orbsAccountStore = useOrbsAccountStore();
   const showSnackbarMessage = useBoolean(false);
 
   const navigateToStakeOrbs = useCallback(() => history.push('/stake'), [history]);
@@ -47,16 +48,15 @@ export const MyWalletPage = observer(() => {
         {/* balance */}
         <div>
           <Typography>Balance</Typography>
-          Liquid Orbs : <span data-testid={'text-liquid-orbs'}>{cryptoWalletIntegrationStore.liquidOrbs}</span>
+          Liquid Orbs : <span data-testid={'text-liquid-orbs'}>{orbsAccountStore.liquidOrbs}</span>
           <br />
-          Staked Orbs : <span data-testid={'text-staked-orbs'}>{cryptoWalletIntegrationStore.stakedOrbs}</span>
+          Staked Orbs : <span data-testid={'text-staked-orbs'}>{orbsAccountStore.stakedOrbs}</span>
           <br />
           <LoweCaseButton onClick={navigateToStakeOrbs}>Stake Your Tokens</LoweCaseButton>
         </div>
         <br />
         {/* Rewards */}
-        Total Rewards :{' '}
-        <span data-testid={'text-total-rewards'}>{cryptoWalletIntegrationStore.accumulatedRewards}</span>
+        Total Rewards : <span data-testid={'text-total-rewards'}>{orbsAccountStore.accumulatedRewards}</span>
         <LoweCaseButton>History</LoweCaseButton>
       </Grid>
       <Snackbar
@@ -72,7 +72,6 @@ export const MyWalletPage = observer(() => {
           variant={'success'}
           message={'Copied Address !'}
           onClose={showSnackbarMessage.setFalse}
-
           data-testid={'message-address-was-copied'}
         />
       </Snackbar>
