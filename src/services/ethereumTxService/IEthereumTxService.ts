@@ -3,7 +3,7 @@ export interface IEthereumTxService {
 
   // Getters
   didUserApproveWalletInThePast: boolean;
-  getMainAddress: () => string;
+  getMainAddress: () => Promise<string>;
   getIsMainNetwork: () => Promise<boolean>;
 
   requestConnectionPermission: () => Promise<boolean>;

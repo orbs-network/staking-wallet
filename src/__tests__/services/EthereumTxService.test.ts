@@ -43,7 +43,7 @@ describe('Ethereum Tx Service', () => {
     const ethereumTxServer = new EthereumTxService(ethereumProvider);
     await ethereumTxServer.requestConnectionPermission();
     ethereumProvider.setSelectedAddress('BLABLA');
-    const result = ethereumTxServer.getMainAddress();
+    const result = await ethereumTxServer.getMainAddress();
     expect(result).toBe('BLABLA');
   });
 

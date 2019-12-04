@@ -35,7 +35,7 @@ export class EthereumTxService implements IEthereumTxService {
     return this.isMetamaskInstalled && this.ethereum.networkVersion === '1';
   }
 
-  getMainAddress(): string {
+  async getMainAddress(): Promise<string> {
     return this.ethereum.selectedAddress;
   }
 
