@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 import { IEthereumTxService } from './IEthereumTxService';
 import { IEthereumProvider } from './IEthereumProvider';
-import { ThemeProvider } from '@material-ui/styles';
 
 export class EthereumTxService implements IEthereumTxService {
   private web3: Web3;
@@ -41,5 +40,13 @@ export class EthereumTxService implements IEthereumTxService {
   }
 
   // Event listeners
-  onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
+  onMainAddressChange(onChange: (mainAddress: string) => void): () => void {
+    const listener = accounts => onChange(accounts[0]);
+
+    this.ethereum.on('accountsChanged', listener);
+
+    return () => {
+      this.ethereum.off('accountsChanged', listener);
+    };
+  }
 }

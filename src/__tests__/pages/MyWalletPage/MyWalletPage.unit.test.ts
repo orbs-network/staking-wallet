@@ -28,6 +28,7 @@ const TEST_IDS = {
   addressCopiedMessage: 'message-address-was-copied',
 };
 
+// DEV_NOTE : The node_modules mock should occur outside of the 'describe' in order to take effect
 jest.mock('copy-to-clipboard', () => jest.fn());
 import copyMock from 'copy-to-clipboard';
 
