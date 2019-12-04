@@ -76,6 +76,9 @@ describe('My Wallet Page', () => {
     storesForTests.cryptoWalletIntegrationStore = cryptoWalletIntegrationStore;
     storesForTests.orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock);
 
+    // Dev_Note : Wait for the store to and get the connected address.
+    await wait(() => expect(storesForTests.cryptoWalletIntegrationStore.mainAddress).toBeDefined());
+
     const { getByTestId, queryByTestId } = testDriver.withStores(storesForTests).render();
     expect(queryByTestId(TEST_IDS.activeAddress)).toBeDefined();
     expect(queryByTestId(TEST_IDS.liquidOrbs)).toBeDefined();
