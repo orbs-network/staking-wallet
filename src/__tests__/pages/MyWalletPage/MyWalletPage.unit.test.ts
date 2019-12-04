@@ -12,7 +12,7 @@ import { WalletPageWrapper } from '../../../pages/WalletPageWrapper';
 import { IEthereumTxService } from '../../../services/ethereumTxService/IEthereumTxService';
 import { EthereumTxService } from '../../../services/ethereumTxService/EthereumTxService';
 import { CryptoWalletIntegrationStore } from '../../../store/CryptoWalletIntegrationStore';
-import { waitForElement } from '@testing-library/dom';
+import { waitForElement, wait } from '@testing-library/dom';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { OrbsAccountStore } from '../../../store/OrbsAccountStore';
 import { fireEvent } from '@testing-library/react';
@@ -95,13 +95,16 @@ describe('My Wallet Page', () => {
     const copyAddressButton = queryByText('Copy');
     expect(copyAddressButton).toBeInTheDocument();
 
+    // Dev_Note : Wait for the store to and get the connected address.
+    await wait(() => expect(cryptoWalletIntegrationStore.mainAddress).toBeDefined());
+
     fireEvent.click(copyAddressButton);
 
-    // TODO : ORL : Uncomment this  (this is commented only to make TDD quicker)
     await waitForElement(() => queryByTestId(TEST_IDS.addressCopiedMessage));
 
     expect(queryByTestId(TEST_IDS.addressCopiedMessage)).toBeDefined();
     expect(getByTestId(TEST_IDS.addressCopiedMessage)).toHaveTextContent('Copied Address !');
+    expect(getByTestId(TEST_IDS.activeAddress)).toHaveTextContent(testAddress);
 
     expect(copyMock).toBeCalledTimes(1);
     expect(copyMock).toBeCalledWith(testAddress);

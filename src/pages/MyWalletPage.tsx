@@ -37,7 +37,7 @@ export const MyWalletPage = observer(() => {
         {/* Details section */}
         <div>
           {/* Address */}
-          <span data-testid={'text-active-address'}> Address : {cryptoWalletIntegrationStore.mainAddress} </span>
+          <span> Address : <span data-testid={'text-active-address'}>{cryptoWalletIntegrationStore.mainAddress}</span> </span>
           <LoweCaseButton onClick={copyAddress}> Copy </LoweCaseButton>
           <LoweCaseButton> QR </LoweCaseButton>
           <br />

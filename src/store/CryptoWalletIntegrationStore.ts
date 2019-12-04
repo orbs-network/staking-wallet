@@ -1,5 +1,6 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
+import { IReactionDisposer } from 'mobx/lib/core/reaction';
 
 export class CryptoWalletIntegrationStore {
   @observable private walletConnectionRequestApproved: boolean;
@@ -8,16 +9,24 @@ export class CryptoWalletIntegrationStore {
 
   @observable public mainAddress: string;
 
+  reactionToWalletConnection: IReactionDisposer;
+
   constructor(private ethereumTxService: IEthereumTxService) {
     this.isMetamaskInstalled = ethereumTxService.isMetamaskInstalled;
 
-    if (this.isMetamaskInstalled) {
-      this.ethereumTxService.onMainAddressChange(address => this.setMainAddress(address));
+    this.reactionToWalletConnection = reaction(
+      () => this.isConnectedToWallet,
+      async isConnected => {
+        if (isConnected) {
+          this.readInformationFromConnectedWallet();
+        }
+      },
+      {
+        fireImmediately: true,
+      },
+    );
 
-      if (this.isConnectedToWallet) {
-        this.readInformationFromConnectedWallet();
-      }
-    }
+    this.ethereumTxService.onMainAddressChange(address => this.setMainAddress(address));
   }
 
   @computed
@@ -34,10 +43,6 @@ export class CryptoWalletIntegrationStore {
     } else {
       const permissionGranted = await this.ethereumTxService.requestConnectionPermission();
       this.setWalletConnectionRequestApproved(permissionGranted);
-
-      if (permissionGranted) {
-        this.readInformationFromConnectedWallet();
-      }
 
       return this.walletConnectionRequestApproved;
     }
