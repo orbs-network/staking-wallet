@@ -26,7 +26,9 @@ export class CryptoWalletIntegrationStore {
       },
     );
 
-    this.ethereumTxService.onMainAddressChange(address => this.setMainAddress(address));
+    if (this.isMetamaskInstalled) {
+      this.ethereumTxService.onMainAddressChange(address => this.setMainAddress(address));
+    }
   }
 
   @computed
