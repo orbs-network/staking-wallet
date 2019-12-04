@@ -1,4 +1,4 @@
-import { action, observable, reaction } from 'mobx';
+import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IOrbsPOSDataService } from 'orbs-pos-data';
 
@@ -7,21 +7,41 @@ export class OrbsAccountStore {
   @observable public stakedOrbs: number;
   @observable public accumulatedRewards: number;
 
+  private addressChangeReaction: IReactionDisposer;
+  private orbsBalanceChangeUnsubscribeFunction: () => void;
+
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
     private orbsPOSDataService: IOrbsPOSDataService,
   ) {
-    const addressChangeReaction = reaction(
+    this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
       async address => {
         if (address) {
-          const liquidOrbs = await this.orbsPOSDataService.getOrbsBalance(address);
-          this.setLiquidOrbs(liquidOrbs);
+          await this.readDataForAccount(address);
+          this.refreshAccountListeners(address);
         }
       },
       {
         fireImmediately: true,
       },
+    );
+  }
+
+  private async readDataForAccount(accountAddress: string) {
+    const liquidOrbs = await this.orbsPOSDataService.getOrbsBalance(accountAddress);
+
+    this.setLiquidOrbs(liquidOrbs);
+  }
+
+  private async refreshAccountListeners(accountAddress: string) {
+    if (this.orbsBalanceChangeUnsubscribeFunction) {
+      this.orbsBalanceChangeUnsubscribeFunction();
+    }
+
+    this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
+      accountAddress,
+      newBalance => this.setLiquidOrbs(newBalance),
     );
   }
 
