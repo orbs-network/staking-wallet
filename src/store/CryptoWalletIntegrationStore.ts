@@ -2,7 +2,7 @@ import { action, computed, observable } from 'mobx';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
 
 export class CryptoWalletIntegrationStore {
-  @observable private requestApproved: boolean;
+  @observable private walletConnectionRequestApproved: boolean;
 
   @observable public isMetamaskInstalled: boolean;
 
@@ -13,23 +13,45 @@ export class CryptoWalletIntegrationStore {
 
     if (this.isMetamaskInstalled) {
       this.ethereumTxService.onMainAddressChange(address => this.setMainAddress(address));
+
+      if (this.isConnectedToWallet) {
+        this.readInformationFromConnectedWallet();
+      }
     }
   }
 
   @computed
   public get isConnectedToWallet(): boolean {
-    return this.isMetamaskInstalled && (this.ethereumTxService.didUserApproveWalletInThePast || this.requestApproved);
+    return (
+      this.isMetamaskInstalled &&
+      (this.ethereumTxService.didUserApproveWalletInThePast || this.walletConnectionRequestApproved)
+    );
   }
 
   public async askToConnect(): Promise<boolean> {
-    const result = await this.ethereumTxService.requestConnectionPermission();
-    this.setRequestApproved(result);
-    return this.requestApproved;
+    if (this.isConnectedToWallet) {
+      return true;
+    } else {
+      const permissionGranted = await this.ethereumTxService.requestConnectionPermission();
+      this.setWalletConnectionRequestApproved(permissionGranted);
+
+      if (permissionGranted) {
+        this.readInformationFromConnectedWallet();
+      }
+
+      return this.walletConnectionRequestApproved;
+    }
   }
 
-  @action('setRequestApproved')
-  private setRequestApproved(requestApproved: boolean) {
-    this.requestApproved = requestApproved;
+  private async readInformationFromConnectedWallet() {
+    const walletAddress = await this.ethereumTxService.getMainAddress();
+
+    this.setMainAddress(walletAddress);
+  }
+
+  @action('setWalletConnectionRequestApproved')
+  private setWalletConnectionRequestApproved(requestApproved: boolean) {
+    this.walletConnectionRequestApproved = requestApproved;
   }
 
   @action('setMainAddress')
