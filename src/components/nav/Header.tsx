@@ -3,6 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
+import { LanguagesSelector } from './LanguagesSelector';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -17,6 +18,7 @@ export const Header = () => {
     <AppBar position='static' color='default' className={classes.appBar}>
       <Toolbar>
         <Typography>Orbs</Typography>
+        <LanguagesSelector />
       </Toolbar>
     </AppBar>
   );

@@ -7,8 +7,10 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Youtube from 'react-youtube';
 import { useBoolean } from 'react-hanger';
+import { useTranslation } from 'react-i18next';
 
 export const ConnectWalletPage = observer(() => {
+  const { t } = useTranslation();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
@@ -56,7 +58,7 @@ export const ConnectWalletPage = observer(() => {
   return (
     <Container data-testid={'page-connect-to-wallet'}>
       <Grid item xs={12}>
-        <Typography variant={'h4'}>Connect your wallet</Typography>
+        <Typography variant={'h4'}>{t('Connect your wallet')}</Typography>
 
         <br />
         {installOrConnectMetamask}

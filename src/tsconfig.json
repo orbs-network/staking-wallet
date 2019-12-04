@@ -15,6 +15,6 @@
     "jsx": "react"
   },
   "files": [
-    "./client.tsx"
+    "./client.tsx", "global.d.ts"
   ]
 }
