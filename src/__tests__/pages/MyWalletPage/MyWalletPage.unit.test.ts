@@ -31,8 +31,11 @@ const TEST_IDS = {
 // DEV_NOTE : The node_modules mock should occur outside of the 'describe' in order to take effect
 jest.mock('copy-to-clipboard', () => jest.fn());
 import copyMock from 'copy-to-clipboard';
+import { DeepPartial } from 'utility-types';
+import { IStores } from '../../../store/stores';
 
 describe('My Wallet Page', () => {
+  let storesForTests: DeepPartial<IStores> = {};
   let testDriver: ComponentTestDriver;
   let ethereumProviderMock: EthereumProviderMock;
   let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
@@ -46,6 +49,11 @@ describe('My Wallet Page', () => {
 
   // Refresh test driver and other mocks
   beforeEach(() => {
+    // Dev_Note : This store is not part of the tests, so we mock it with an empty object.
+    storesForTests = {
+      orbsAccountStore: {},
+    };
+
     testDriver = new ComponentTestDriver(WalletPageWrapper);
 
     ethereumProviderMock = new EthereumProviderMock();
@@ -65,12 +73,10 @@ describe('My Wallet Page', () => {
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-    const orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock);
+    storesForTests.cryptoWalletIntegrationStore = cryptoWalletIntegrationStore;
+    storesForTests.orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock);
 
-    const { getByTestId, queryByTestId } = testDriver
-      .withStores({ cryptoWalletIntegrationStore, orbsAccountStore })
-      .render();
-
+    const { getByTestId, queryByTestId } = testDriver.withStores(storesForTests).render();
     expect(queryByTestId(TEST_IDS.activeAddress)).toBeDefined();
     expect(queryByTestId(TEST_IDS.liquidOrbs)).toBeDefined();
     expect(queryByTestId(TEST_IDS.stakedOrbs)).toBeDefined();
@@ -87,16 +93,14 @@ describe('My Wallet Page', () => {
     ethereumProviderMock.setSelectedAddress(testAddress);
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-    const { getByTestId, queryByTestId, queryByText } = testDriver
-      .withStores({ cryptoWalletIntegrationStore })
-      .render();
+    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    const { getByTestId, queryByTestId, queryByText } = testDriver.withStores(storesForTests).render();
 
     const copyAddressButton = queryByText('Copy');
     expect(copyAddressButton).toBeInTheDocument();
 
     // Dev_Note : Wait for the store to and get the connected address.
-    await wait(() => expect(cryptoWalletIntegrationStore.mainAddress).toBeDefined());
+    await wait(() => expect(storesForTests.cryptoWalletIntegrationStore.mainAddress).toBeDefined());
 
     fireEvent.click(copyAddressButton);
 
@@ -133,11 +137,9 @@ describe('My Wallet Page', () => {
 
   it(`Should have a 'stake orbs' button that redirects to 'Stake Orbs' `, async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { getByTestId, queryByTestId, queryByText } = testDriver
-      .withStores({ cryptoWalletIntegrationStore })
-      .render();
+    const { getByTestId, queryByTestId, queryByText } = testDriver.withStores(storesForTests).render();
 
     const stakeTokensButton = queryByText('Stake Your Tokens');
     expect(stakeTokensButton).toBeInTheDocument();
@@ -149,11 +151,9 @@ describe('My Wallet Page', () => {
 
   it(`Should have a 'History' button that redirects to 'History' `, async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { getByTestId, queryByTestId, queryByText } = testDriver
-      .withStores({ cryptoWalletIntegrationStore })
-      .render();
+    const { queryByText } = testDriver.withStores(storesForTests).render();
 
     const rewardHistoryButton = queryByText('history');
     expect(rewardHistoryButton).toBeInTheDocument();

@@ -13,22 +13,30 @@ import { CryptoWalletIntegrationStore } from '../../../store/CryptoWalletIntegra
 import { EthereumProviderMock } from '../../mocks/EthereumProviderMock';
 import { IEthereumTxService } from '../../../services/ethereumTxService/IEthereumTxService';
 import { EthereumTxService } from '../../../services/ethereumTxService/EthereumTxService';
+import { DeepPartial } from 'utility-types';
+import { IStores } from '../../../store/stores';
 
 describe.only('Wallet Page Wrapper Component', () => {
+  let storesForTests: DeepPartial<IStores> = {};
   let testDriver: ComponentTestDriver;
   let ethereumProviderMock: EthereumProviderMock;
 
   beforeEach(() => {
     testDriver = new ComponentTestDriver(WalletPageWrapper);
 
+    // Dev_Note : This store is not part of the tests, so we mock it with an empty object.
+    storesForTests = {
+      orbsAccountStore: {},
+    };
+
     ethereumProviderMock = new EthereumProviderMock();
   });
 
   it('Should ask the user to connect metamask when the wallet (Metamask) is not connected', async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(undefined);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { queryByTestId } = testDriver.withStores(storesForTests).render();
     expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
     expect(queryByTestId('page-my-wallet')).not.toBeInTheDocument();
   });
@@ -36,9 +44,9 @@ describe.only('Wallet Page Wrapper Component', () => {
   it('Should show the user wallet when connected', async () => {
     ethereumProviderMock.selectedAddress = '0x0afdafad'; // Mocking a connected wallet
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { queryByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { queryByTestId } = testDriver.withStores(storesForTests).render();
     expect(queryByTestId('page-connect-to-wallet')).not.toBeInTheDocument();
     expect(queryByTestId('page-my-wallet')).toBeInTheDocument();
   });

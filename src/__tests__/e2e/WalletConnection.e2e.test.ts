@@ -14,11 +14,21 @@ import { CryptoWalletIntegrationStore } from '../../store/CryptoWalletIntegratio
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
+import { DeepPartial } from 'utility-types';
+import { IStores } from '../../store/stores';
 
 describe('Wallet connection', () => {
+  let storesForTests: DeepPartial<IStores> = {};
   let appTestDriver: ComponentTestDriver;
 
   beforeEach(() => {
+    storesForTests = {};
+
+    // Dev_Note : This store is not part of the tests, so we mock it with an empty object.
+    storesForTests = {
+      orbsAccountStore: {},
+    };
+
     appTestDriver = new ComponentTestDriver(App);
   });
 
@@ -34,9 +44,9 @@ describe('Wallet connection', () => {
   it('Should offer to connect wallet when Metamask is installed but not connected, and after connection is approved, display the "My Wallet" page', async () => {
     const ethereumProviderMock: IEthereumProvider = new EthereumProviderMock();
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
 
-    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { queryByTestId } = appTestDriver.withStores(storesForTests).render();
 
     // Ensure we start with the 'Connect wallet page'
     expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
