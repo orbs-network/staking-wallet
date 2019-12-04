@@ -30,19 +30,19 @@ export const ConnectWalletPage = observer(() => {
       return (
         <>
           <Button data-testid='button-connect-metamask' onClick={handleConnectClicked}>
-            Connect your metamask
+            {t('Connect your metamask')}
           </Button>
-          {rejectedConnection.value && <div data-testid='text-connection-was-not-approved'>Please approve</div>}
+          {rejectedConnection.value && <div data-testid='text-connection-was-not-approved'>{t('Please approve')}</div>}
         </>
       );
     } else {
       return (
         <>
           <Button data-testid='button-install-metamask' onClick={handleInstallClicked}>
-            Install Metamask
+            {t('Install Metamask')}
           </Button>
           {pressedOnInstallMetamask.value && (
-            <div data-testid='text-pleaseRefresh'>Please refresh this page after installing Metamask</div>
+            <div data-testid='text-pleaseRefresh'>{t('Please refresh this page after installing Metamask')}</div>
           )}
         </>
       );

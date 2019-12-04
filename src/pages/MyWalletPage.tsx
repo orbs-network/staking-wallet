@@ -11,12 +11,14 @@ import { useHistory } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { useBoolean } from 'react-hanger';
+import { useTranslation } from 'react-i18next';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
 
 export const MyWalletPage = observer(() => {
+  const { t } = useTranslation();
   const history = useHistory();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const showSnackbarMessage = useBoolean(false);
@@ -30,7 +32,7 @@ export const MyWalletPage = observer(() => {
   return (
     <Container data-testid={'page-my-wallet'}>
       <Grid item xs={12}>
-        <Typography variant={'h4'}>Wallet Info</Typography>
+        <Typography variant={'h4'}>{t('Wallet Info')}</Typography>
         {/* Details section */}
         <div>
           {/* Address */}

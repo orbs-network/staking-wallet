@@ -22,7 +22,7 @@ export const Guardians = observer(() => {
           <Typography>{t('Guardians List')}</Typography>
 
           {guardiansStore.guardiansList.length === 0 ? (
-            <Typography>Loading...</Typography>
+            <Typography>{t('Loading...')}</Typography>
           ) : (
             <GuardiansTable guardians={guardiansStore.guardiansList} />
           )}

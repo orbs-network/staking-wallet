@@ -1,8 +1,8 @@
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { IGuardianInfo } from 'orbs-pos-data';
 import * as React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow } from '@material-ui/core';
 import { useMemo } from 'react';
-import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -12,16 +12,17 @@ interface IProps {
 }
 
 export const GuardiansTable = React.memo<IProps>(props => {
+  const { t } = useTranslation();
   const sortedGuardians = useMemo(() => props.guardians.slice().sort((a, b) => b.stake - a.stake), [props.guardians]);
 
   return (
     <Table data-testid={'guardians-table'}>
       <TableHead>
         <TableRow>
-          <TableCell>Name</TableCell>
-          <TableCell>Url</TableCell>
-          <TableCell>Stake</TableCell>
-          <TableCell>Voted</TableCell>
+          <TableCell>{t('Name')}</TableCell>
+          <TableCell>{t('Url')}</TableCell>
+          <TableCell>{t('Stake')}</TableCell>
+          <TableCell>{t('Voted')}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
