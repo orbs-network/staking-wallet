@@ -10,8 +10,11 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
-import { useBoolean } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useTranslation } from 'react-i18next';
+
+import Modal from 'react-modal';
+import { QRCode } from 'react-qrcode-logo';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -23,6 +26,7 @@ export const MyWalletPage = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const orbsAccountStore = useOrbsAccountStore();
   const showSnackbarMessage = useBoolean(false);
+  const showQrModal = useBoolean(false);
 
   const navigateToStakeOrbs = useCallback(() => history.push('/stake'), [history]);
   const copyAddress = useCallback(() => {
@@ -37,9 +41,12 @@ export const MyWalletPage = observer(() => {
         {/* Details section */}
         <div>
           {/* Address */}
-          <span> Address : <span data-testid={'text-active-address'}>{cryptoWalletIntegrationStore.mainAddress}</span> </span>
+          <span>
+            {' '}
+            Address : <span data-testid={'text-active-address'}>{cryptoWalletIntegrationStore.mainAddress}</span>{' '}
+          </span>
           <LoweCaseButton onClick={copyAddress}> Copy </LoweCaseButton>
-          <LoweCaseButton> QR </LoweCaseButton>
+          <LoweCaseButton onClick={showQrModal.setTrue}> QR </LoweCaseButton>
           <br />
 
           <span data-testid={'text-user-email'}> Your Email : </span>
@@ -58,6 +65,21 @@ export const MyWalletPage = observer(() => {
         {/* Rewards */}
         Total Rewards : <span data-testid={'text-total-rewards'}>{orbsAccountStore.accumulatedRewards}</span>
         <LoweCaseButton>History</LoweCaseButton>
+        <div id={'testCanvas'} />
+        <Modal isOpen={showQrModal.value} onRequestClose={showQrModal.setFalse} style={customStyles}>
+          <QRCode
+            value={cryptoWalletIntegrationStore.mainAddress}
+            logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
+            logoWidth={100}
+            logoHeight={100}
+            size={400}
+            qrStyle={'dots'}
+            // bgColor={'#16FAFF'}
+            fgColor={'#07142E'}
+            // fgColor={'#16FAFF'}
+            // bgColor={'#07142E'}
+          />
+        </Modal>
       </Grid>
       <Snackbar
         anchorOrigin={{
@@ -78,3 +100,14 @@ export const MyWalletPage = observer(() => {
     </Container>
   );
 });
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
