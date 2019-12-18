@@ -13,10 +13,12 @@ import { Container } from '@material-ui/core';
 import { MainAppPage } from './pages/MainAppPage';
 
 const ContentContainer = styled(Container)({
+  // Width and padding allows for full screen width with centering
   maxWidth: '100%',
-  maxHeight: '100%',
   paddingRight: '10%',
   paddingLeft: '10%',
+
+  height: '100%', // Agrees with the containing div and expands to the full height
 });
 
 export const App = observer(() => {
@@ -26,16 +28,11 @@ export const App = observer(() => {
     <>
       <Header />
       <ContentContainer>
-        <nav>
-          <Sidebar isConnectedToWallet={CryptoWalletIntegrationStore.isConnectedToWallet} />
-        </nav>
-        <main>
-          <Switch>
-            <Route exact path='/' component={MainAppPage} />
-            {/*<Route path='/stake' component={MyWalletPage} />*/}
-            {/*<Route path='/guardians' component={Guardians} />*/}
-          </Switch>
-        </main>
+        <Switch>
+          <Route exact path='/' component={MainAppPage} />
+          {/*<Route path='/stake' component={MyWalletPage} />*/}
+          {/*<Route path='/guardians' component={Guardians} />*/}
+        </Switch>
       </ContentContainer>
     </>
   );

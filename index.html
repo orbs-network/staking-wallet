@@ -5,9 +5,18 @@
 		<title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <style>
+		  html, body {
+			  height: 100%;
+		  }
+
+		  .full-height {
+			  height: 100%;
+		  }
+	  </style>
   </head>
   <body>
-	<div id="app">Loading...</div>
+	<div id="app" class="full-height">Loading...</div>
 	<% if (process.env.NODE_ENV === 'production') { %>
 		<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
 		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
