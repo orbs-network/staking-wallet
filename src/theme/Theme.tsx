@@ -6,6 +6,10 @@ export const baseTheme = responsiveFontSizes(
       primary: {
         main: '#0D0D0D',
       },
+      text: {
+        primary: '#FFFFFF',
+        secondary: '#7B7B7B',
+      }
     },
     overrides: {
       MuiContainer: {

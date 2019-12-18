@@ -10,6 +10,7 @@ import { WalletPageWrapper } from './pages/WalletPageWrapper';
 import { useCryptoWalletIntegrationStore } from './store/storeHooks';
 import styled from 'styled-components';
 import { Container } from '@material-ui/core';
+import { MainAppPage } from './pages/MainAppPage';
 
 const ContentContainer = styled(Container)({
   maxWidth: '100%',
@@ -30,9 +31,9 @@ export const App = observer(() => {
         </nav>
         <main>
           <Switch>
-            <Route exact path='/' component={WalletPageWrapper} />
-            <Route path='/stake' component={MyWalletPage} />
-            <Route path='/guardians' component={Guardians} />
+            <Route exact path='/' component={MainAppPage} />
+            {/*<Route path='/stake' component={MyWalletPage} />*/}
+            {/*<Route path='/guardians' component={Guardians} />*/}
           </Switch>
         </main>
       </ContentContainer>
