@@ -5,20 +5,27 @@ import { SectionHeader } from '../components/structure/SectionHeader';
 import SecurityIcon from '@material-ui/icons/Security';
 import StarIcon from '@material-ui/icons/Star';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import { Grid } from '@material-ui/core';
+import { WalletInfoSection } from '../sections/WalletInfoSection';
+import { BalanceSection } from '../sections/BalanceSection';
+import { RewardsSection } from '../sections/RrewardsSection';
+import { GuardiansSection } from '../sections/GuardiansSection';
 
 export const MainAppPage = observer(() => {
   return (
-    <>
-      <WalletPageWrapper />
+    <Grid container direction={'column'}>
+      {/*<WalletPageWrapper />*/}
+
+      <WalletInfoSection />
 
       {/* Balance */}
-      <SectionHeader title={'BALANCE'} icon={AccountBalanceIcon} />
+      <BalanceSection />
 
       {/* Rewards */}
-      <SectionHeader title={'REWARDS'} icon={StarIcon} />
+      <RewardsSection />
 
       {/* Guardians */}
-      <SectionHeader title={'ALL GUARDIANS'} icon={SecurityIcon} />
-    </>
+      <GuardiansSection />
+    </Grid>
   );
 });
