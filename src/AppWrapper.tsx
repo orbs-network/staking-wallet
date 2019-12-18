@@ -1,7 +1,7 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { createMuiTheme, responsiveFontSizes, StylesProvider, ThemeProvider } from '@material-ui/core/styles';
-import styled, { ThemeProvider as SCThemeProvider } from 'styled-components';
-import { AppStyles, baseTheme } from './theme/Theme';
+import { StylesProvider, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
+import { AppStyles, baseTheme, GlobalStyleComponent } from './theme/Theme';
 import { Provider } from 'mobx-react';
 import React from 'react';
 import { App } from './App';
@@ -26,6 +26,7 @@ export const AppWrapper: React.FunctionComponent = () => (
       <StylesProvider injectFirst>
         <ThemeProvider theme={baseTheme}>
           <SCThemeProvider theme={themeAndStyle}>
+            <GlobalStyleComponent />
             <CssBaseline />
             <App />
           </SCThemeProvider>
