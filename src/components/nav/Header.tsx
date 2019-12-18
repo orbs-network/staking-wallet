@@ -4,22 +4,27 @@ import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
 import { LanguagesSelector } from './LanguagesSelector';
+import styled from 'styled-components';
 
-const useStyles = makeStyles(theme => ({
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-}));
+
+const StyledAppBar = styled(AppBar)({
+  borderBottom: '2px solid #363636',
+  paddingRight: '10%',
+  paddingLeft: '10%',
+});
+
+const StyledToolBar = styled(Toolbar)({
+  paddingRight: 0,
+  paddingLeft: 0,
+});
 
 export const Header = () => {
-  const classes = useStyles({});
-
   return (
-    <AppBar position='static' color='default' className={classes.appBar}>
-      <Toolbar>
+    <StyledAppBar position='static'>
+      <StyledToolBar>
         <Typography>Orbs</Typography>
         <LanguagesSelector />
-      </Toolbar>
-    </AppBar>
+      </StyledToolBar>
+    </StyledAppBar>
   );
 };
