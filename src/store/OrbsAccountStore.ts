@@ -1,6 +1,7 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IOrbsPOSDataService } from 'orbs-pos-data';
+import { IOrbsContractsService } from '../services/orbsContractsService/IOrbsContractsService';
 
 export class OrbsAccountStore {
   @observable public liquidOrbs: string;
@@ -13,6 +14,7 @@ export class OrbsAccountStore {
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
     private orbsPOSDataService: IOrbsPOSDataService,
+    private orbsContractsService: IOrbsContractsService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
