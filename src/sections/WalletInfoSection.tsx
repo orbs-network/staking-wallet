@@ -17,15 +17,10 @@ import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import Snackbar from '@material-ui/core/Snackbar';
+import { CommonDivider } from '../components/base/CommonDivider';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
-});
-
-const StyledDivider = styled(Divider)({
-  backgroundColor: '#6C6D72',
-  marginTop: '0.8em',
-  marginBottom: '0.8em',
 });
 
 export const WalletInfoSection = observer(() => {
@@ -46,7 +41,7 @@ export const WalletInfoSection = observer(() => {
       {/* Balance */}
       <SectionHeader title={'WALLET INFO'} icon={AccountBalanceWalletIcon} />
 
-      <StyledDivider />
+      <CommonDivider />
 
       <Grid item xs={12}>
         <Typography>Address</Typography>
@@ -60,7 +55,7 @@ export const WalletInfoSection = observer(() => {
           <LoweCaseButton onClick={showQrModal.setTrue}> QR </LoweCaseButton>
         </div>
       </Grid>
-      <StyledDivider />
+      <CommonDivider />
 
       <Modal isOpen={showQrModal.value} onRequestClose={showQrModal.setFalse} style={customStyles}>
         <QRCode
