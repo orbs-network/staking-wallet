@@ -27,7 +27,7 @@ interface IYannoDriver {
 
   clickOnSelectAGuardian(): void;
 
-  chooseAGuardian(guardianIndex: number): string;
+  chooseAGuardianByTableIndex(guardianIndex: number): string;
 
   closeStakingDialog(): void;
 
@@ -41,10 +41,12 @@ interface IYannoDriver {
 
   setOrbsForUnlocking(orbsToUnlock: number): void;
 
-  forElement(elementTestId: string) : {
-    toAppear(): Promise<void>,
-    toDisappear(): Promise<void>,
-  }
+  forElement(
+    elementTestId: string,
+  ): {
+    toAppear(): Promise<void>;
+    toDisappear(): Promise<void>;
+  };
 }
 
 interface IStakingTestKit {
@@ -130,36 +132,34 @@ describe('Main User Story', async () => {
     driver.setOrbsForStake(7_000);
     driver.clickOnApproveStaking();
 
-    const txId = testKit.approveOrbsStakingRequest();
+    const orbsStakingTxId = testKit.approveOrbsStakingRequest();
 
-    await wait(() => expect(orbsStakingTxPendingStep).toBeDefined());
-
+    await driver.forElement(orbsStakingTxPendingStep).toAppear();
     expect(stakingStepTxPendingIndicator).toBeDefined();
 
     // @ts-ignore (TODO : find a matcher for a link)
-    expect(stakingStepTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${txId}`);
+    expect(stakingStepTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsStakingTxId}`);
 
-    testKit.confirmOrbsStakingRequest(txId);
+    testKit.confirmOrbsStakingRequest(orbsStakingTxId);
 
-    await wait(() => expect(orbsStakingSuccessStep).toBeDefined());
+    await driver.forElement(orbsStakingSuccessStep).toAppear();
 
     driver.clickOnSelectAGuardian();
 
-    await wait(() => expect(guardiansSelectionStep).toBeDefined());
+    await driver.forElement(guardiansSelectionStep).toAppear();
     expect(guardiansTable).toBeDefined();
 
-    const selectedGuardianAddress = driver.chooseAGuardian(5);
+    const selectedGuardianAddress = driver.chooseAGuardianByTableIndex(5);
     const guardianSelectionTxId = testKit.approveGuardianSelectingRequest();
 
-    await wait(() => expect(guardianSelectionTxPendingStep).toBeDefined());
+    await driver.forElement(guardianSelectionTxPendingStep).toAppear();
 
     testKit.confirmGuardianSelectingRequest(guardianSelectionTxId);
 
-    await wait(() => expect(guardianSelectionSuccessStep).toBeDefined());
+    await driver.forElement(guardianSelectionSuccessStep).toAppear();
 
     driver.closeStakingDialog();
-
-    await wait(() => expect(guardianSelectionSuccessStep).not.toBeDefined());
+    await driver.forElement(guardianSelectionSuccessStep).toDisappear();
 
     expect(liquidOrbsText).toHaveTextContent('3,000');
     expect(stakedOrbsText).toHaveTextContent('7,000');
@@ -171,8 +171,8 @@ describe('Main User Story', async () => {
     // NOTE : STARTING OF UNFREEZING OF ORBS
     driver.clickOnUnlockTokens();
 
-    await wait(() => expect(unlockingDialogPopUp).toBeDefined());
-    await wait(() => expect(orbsUnlockingStep).toBeDefined());
+    await driver.forElement(unlockingDialogPopUp).toAppear();
+    expect(orbsUnlockingStep).toBeDefined();
 
     // Should offer the maximum amount
     expect(orbsUnlockingStepOrbsToUnlock).toHaveTextContent('7,000');
@@ -183,17 +183,17 @@ describe('Main User Story', async () => {
 
     const orbsUnlockingTxId = testKit.approveOrbsUnlockingRequest();
 
-    await wait(() => expect(orbsUnlockingTxPendingStep).toBeDefined());
+    await driver.forElement(orbsUnlockingTxPendingStep).toAppear();
     expect(orbsUnlockingTxPendingIndicator).toBeDefined();
     // @ts-ignore (TODO : find a matcher for a link)
     expect(orbsUnlockingTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsUnlockingTxId}`);
 
     testKit.confirmOrbsUnlockingRequest(orbsUnlockingTxId);
 
-    await wait(() => expect(orbsUnlockingSuccessStep).toBeDefined());
+    await driver.forElement(orbsUnlockingSuccessStep).toAppear();
 
     driver.closeUnlockingDialog();
-    await wait(() => expect(unlockingDialogPopUp).not.toBeDefined());
+    await driver.forElement(unlockingDialogPopUp).toDisappear();
 
     expect(liquidOrbsText).toHaveTextContent('3,000');
     expect(stakedOrbsText).toHaveTextContent('3,500');
