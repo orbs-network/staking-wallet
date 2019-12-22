@@ -1,12 +1,13 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IOrbsPOSDataService } from 'orbs-pos-data';
-import { IOrbsContractsService } from '../services/orbsContractsService/IOrbsContractsService';
+import { raw } from 'express';
 
 export class OrbsAccountStore {
   @observable public liquidOrbs: string;
   @observable public stakedOrbs: number;
   @observable public accumulatedRewards: number;
+  @observable public selectedGuardianAddress: string;
 
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
@@ -14,20 +15,37 @@ export class OrbsAccountStore {
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
     private orbsPOSDataService: IOrbsPOSDataService,
-    private orbsContractsService: IOrbsContractsService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
-      async address => {
-        if (address) {
-          await this.readDataForAccount(address);
-          this.refreshAccountListeners(address);
-        }
-      },
+      async address => await this.reactToConnectedAddressChanged(address),
       {
         fireImmediately: true,
       },
     );
+  }
+
+  public async stakeOrbs(orbsToStake: number): Promise<string> {
+    // return this.orbsPOSDataService.stakeOrbs(orbsToStake);
+  }
+
+  public async selectGuardian(guardianAddress: string): Promise<string> {
+    // return this.orbsPOSDataService.selectGuardian(guardianAddress);
+  }
+
+  public async redeemTokens(): Promise<string> {
+    // return this.orbsPOSDataService.redeemTokens();
+  }
+
+  public async unlockTokens(orbsToUnlock: number): Promise<string> {
+    // return this.orbsPOSDataService.unlockTokens(orbsToUnlock);
+  }
+
+  private async reactToConnectedAddressChanged(currentAddress) {
+    if (currentAddress) {
+      await this.readDataForAccount(currentAddress);
+      this.refreshAccountListeners(currentAddress);
+    }
   }
 
   private async readDataForAccount(accountAddress: string) {
@@ -60,5 +78,10 @@ export class OrbsAccountStore {
   @action('setAccumulatedRewards')
   private setAccumulatedRewards(accumulatedRewards: number) {
     this.accumulatedRewards = accumulatedRewards;
+  }
+
+  @action('setSelectedGuardianAddress')
+  private setSelectedGuardianAddress(selectedGuardianAddress: string) {
+    this.selectedGuardianAddress = selectedGuardianAddress;
   }
 }

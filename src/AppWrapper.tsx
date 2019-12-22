@@ -13,7 +13,7 @@ import { resources } from './translations';
 configureMobx();
 
 const services = buildServices((window as any).ethereum);
-const stores = getStores(services.orbsPOSDataService, services.orbsContractsService, services.ethereumTxService);
+const stores = getStores(services.orbsPOSDataService, services.ethereumTxService);
 
 const themeAndStyle = {
   ...baseTheme,
