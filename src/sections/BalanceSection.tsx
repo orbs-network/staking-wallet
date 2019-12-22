@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { MODAL_CSTYLE_ENTERED_CONTENTS } from '../components/modals/modalsConfiguration';
 import Modal from 'react-modal';
 import { useBoolean } from 'react-hanger';
+import { StakingWizard } from '../wizards/staking/StakingWizard';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -62,7 +63,7 @@ export const BalanceSection = observer(() => {
         shouldCloseOnOverlayClick={true}
         style={MODAL_CSTYLE_ENTERED_CONTENTS}
       >
-        <div>Modal for Orbs Staking</div>
+        <StakingWizard />
       </Modal>
 
       <Modal
