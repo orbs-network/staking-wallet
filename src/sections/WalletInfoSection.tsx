@@ -18,6 +18,7 @@ import { Section } from '../components/structure/Section';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CommonDivider } from '../components/base/CommonDivider';
+import { MODAL_CSTYLE_ENTERED_CONTENTS } from '../components/modals/modalsConfiguration';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -57,7 +58,7 @@ export const WalletInfoSection = observer(() => {
       </Grid>
       <CommonDivider />
 
-      <Modal isOpen={showQrModal.value} onRequestClose={showQrModal.setFalse} style={customStyles}>
+      <Modal isOpen={showQrModal.value} onRequestClose={showQrModal.setFalse} style={MODAL_CSTYLE_ENTERED_CONTENTS}>
         <QRCode
           value={cryptoWalletIntegrationStore.mainAddress}
           logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
@@ -88,14 +89,3 @@ export const WalletInfoSection = observer(() => {
     </Section>
   );
 });
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};

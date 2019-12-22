@@ -13,13 +13,20 @@ const StyledGrid = styled('div')(styledProps => {
 interface IProps {
   title: string;
   amount: number;
-  buttonTitle: string;
+  actionButtonTitle: string;
+  actionButtonActive: boolean;
+  onActionButtonPressed: () => void;
 }
 
 // TODO : O.L : Change this component to use Card.
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
-  const { title, amount, buttonTitle } = props;
+  const {
+    title, amount,
+    actionButtonTitle,
+    actionButtonActive,
+    onActionButtonPressed,
+  } = props;
 
   return (
     <StyledGrid>
@@ -28,8 +35,8 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
       <CommonDivider />
       <Typography variant={'h6'}>{amount.toLocaleString()}</Typography>
       <br />
-      <Button color={'secondary'} variant={'contained'}>
-        {buttonTitle}
+      <Button color={'secondary'} variant={'contained'} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
+        {actionButtonTitle}
       </Button>
     </StyledGrid>
   );
