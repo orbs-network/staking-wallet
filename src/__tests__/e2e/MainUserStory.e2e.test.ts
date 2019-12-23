@@ -106,6 +106,10 @@ describe('Main User Story', () => {
         const stakeOrbsButton = getByText('STAKE YOUR TOKENS');
         stakeOrbsButton.click();
       },
+      clickOnApproveStaking(): void {
+        const stakeOrbsButton = getByText('STAKE');
+        stakeOrbsButton.click();
+      },
 
       setOrbsForStake(to: number): void {
         const orbsForStakeInput = queryByTestId('orbs_amount_for_staking');
@@ -135,9 +139,9 @@ describe('Main User Story', () => {
     const stakingDialogPopUp = null;
 
     // Staking step
-    const stakingStep = null;
+    const stakingStepTestId = 'wizard_step_wait_for_staking_confirmation';
     let stakingStepOrbsToStake = null;
-    const stakingStepTxPendingIndicator = null;
+    let stakingStepTxPendingIndicator = null;
     const stakingStepTxPendingLink = null;
 
     // Orbs staking transaction pending step
@@ -200,12 +204,13 @@ describe('Main User Story', () => {
 
     driver.setOrbsForStake(7_000);
     expect(stakingStepOrbsToStake).toHaveValue(7000);
-    // driver.clickOnApproveStaking();
+    driver.clickOnApproveStaking();
 
     // const orbsStakingTxId = testKit.approveOrbsStakingRequest();
-    //
-    // await driver.forElement(orbsStakingTxPendingStep).toAppear();
-    // expect(stakingStepTxPendingIndicator).toBeDefined();
+
+    await driver.forElement(stakingStepTestId).toAppear();
+    stakingStepTxPendingIndicator = queryByTestId('transaction_pending_indicator')
+    expect(stakingStepTxPendingIndicator).toBeDefined();
     //
     // // @ts-ignore (TODO : find a matcher for a link)
     // expect(stakingStepTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsStakingTxId}`);

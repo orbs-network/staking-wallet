@@ -44,15 +44,18 @@ export const StakingWizard: React.FC = () => {
               onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
               inputProps={{ 'data-testid': 'orbs_amount_for_staking' }}
             />
-            <Button onClick={goToNextStep}>Stake</Button>
+            <Button onClick={goToNextStep}>STAKE</Button>
           </StepContent>
         </Step>
 
         <Step>
           <StepLabel>Approving your transaction</StepLabel>
 
-          <StepContent>
+          <StepContent data-testid={'wizard_step_wait_for_staking_confirmation'}>
             <Typography>Approving your transaction</Typography>
+            <div data-testid={'transaction_pending_indicator'}>
+
+            </div>
             <Typography>
               Link to{' '}
               <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
