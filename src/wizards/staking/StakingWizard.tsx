@@ -22,12 +22,12 @@ export const StakingWizard: React.FC = () => {
   const goToNextStep = () => activeStep.increase();
 
   return (
-    <div>
+    <div data-testid={'wizard_staking'}>
       <StyledStepper activeStep={activeStep.value} alternativeLabel>
         <Step>
           <StepLabel>Staking your tokens</StepLabel>
 
-          <StepContent>
+          <StepContent data-testid={'wizard_step_select_amount_for_stake'}>
             <Typography>Staking your tokens in the smart contract</Typography>
             <Input type={'number'}></Input>
             <Button onClick={goToNextStep}>Stake</Button>

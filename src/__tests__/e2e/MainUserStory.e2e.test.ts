@@ -74,13 +74,6 @@ describe('Main User Story', () => {
   let ethereumProviderMock: EthereumProviderMock;
   let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
 
-  const driver: Partial<IYannoDriver> = {
-    userBoughtOrbs(amount: number): void {
-      console.log('In fire');
-      orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
-    },
-  };
-
   const testAddress = '0x0afdafad';
 
   // Refresh test driver and other mocks
@@ -102,6 +95,29 @@ describe('Main User Story', () => {
     storesForTests = getStores(orbsPOSDataServiceMock, ethereumTxService);
 
     const { queryByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
+
+    // TODO : O.L : Move the driver to a proper place after finishing scaffolding the tests.
+    const driver: Partial<IYannoDriver> = {
+      userBoughtOrbs(amount: number): void {
+        orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
+      },
+
+      clickOnStakeOrbsButton(): void {
+        const stakeOrbsButton = getByText('STAKE YOUR TOKENS');
+        stakeOrbsButton.click();
+      },
+
+      forElement(elementTestId: string): { toAppear(): Promise<void>; toDisappear(): Promise<void> } {
+        return {
+          async toAppear(): Promise<void> {
+            await waitForElement(() => queryByTestId(elementTestId));
+          },
+          async toDisappear(): Promise<void> {
+            await waitForElementToBeRemoved(() => queryByTestId(elementTestId));
+          },
+        };
+      },
+    };
 
     const liquidOrbsText = queryByTestId('amount_liquid_orbs');
     const stakedOrbsText = queryByTestId('amount_staked_orbs');
@@ -150,7 +166,7 @@ describe('Main User Story', () => {
     // Orbs staking success step
     const orbsUnlockingSuccessStep = null;
 
-    // DEV_NOTE : The appereance of the address signals that the 'OrbsAccountStore' has been initialised.
+    // DEV_NOTE : The appearance of the address signals that the 'OrbsAccountStore' has been initialised.
     //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
     await wait(() => getByText(testAddress));
 
@@ -161,14 +177,16 @@ describe('Main User Story', () => {
 
     driver.userBoughtOrbs(10_000);
 
+    // DEV_NOTE : We have to wait until the UI syncs with the store
     await wait(() => expect(liquidOrbsText).toHaveTextContent('10,000'));
     expect(liquidOrbsText).toHaveTextContent('10,000');
 
-    // driver.clickOnStakeOrbsButton();
-    //
-    // await driver.forElement(stakingDialogPopUp).toAppear();
-    // await driver.forElement(stakingStep).toAppear();
-    //
+    driver.clickOnStakeOrbsButton();
+
+    // Wait for the staking wizard to open with the first step
+    await driver.forElement('wizard_staking').toAppear();
+    await driver.forElement('wizard_step_select_amount_for_stake').toAppear();
+
     // // Expect max amount
     // expect(stakingStepOrbsToStake).toHaveTextContent('10,000');
     //

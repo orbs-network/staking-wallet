@@ -32,7 +32,7 @@ export const BalanceSection = observer(() => {
         <GridItem>
           <BalanceCard
             title={'Liquid Orbs in your wallet'}
-            actionButtonTitle={'Stake your tokens'}
+            actionButtonTitle={'STAKE YOUR TOKENS'}
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
             amount={parseInt(orbsAccountStore.liquidOrbs)}
