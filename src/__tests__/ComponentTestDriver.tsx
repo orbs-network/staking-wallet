@@ -14,7 +14,9 @@ import { DeepPartial } from 'utility-types';
 import { IServices } from '../services/Services';
 import { IStores } from '../store/stores';
 import { configureMobx } from '../store/storesInitialization';
-
+import { baseTheme } from '../theme/Theme';
+import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
 
 export class ComponentTestDriver<P = {}> {
   private services: DeepPartial<IServices> = {};
@@ -44,11 +46,15 @@ export class ComponentTestDriver<P = {}> {
     const props: {} | P = this.renderProps ? this.renderProps : {};
 
     return render(
-      <BrowserRouter>
-        <Provider {...this.services} {...this.stores}>
-          <Component {...props} />
-        </Provider>
-      </BrowserRouter>,
+      <ThemeProvider theme={baseTheme}>
+        <SCThemeProvider theme={baseTheme}>
+          <BrowserRouter>
+            <Provider {...this.services} {...this.stores}>
+              <Component {...props} />
+            </Provider>
+          </BrowserRouter>
+        </SCThemeProvider>
+      </ThemeProvider>
     );
   }
 }
