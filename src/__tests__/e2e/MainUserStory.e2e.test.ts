@@ -6,7 +6,7 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { wait, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
+import { wait, waitForElement, waitForElementToBeRemoved, fireEvent } from '@testing-library/react';
 import { App } from '../../App';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
@@ -94,7 +94,7 @@ describe('Main User Story', () => {
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
     storesForTests = getStores(orbsPOSDataServiceMock, ethereumTxService);
 
-    const { queryByTestId, findByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, findByTestId, getByText,  } = appTestDriver.withStores(storesForTests).render();
 
     // TODO : O.L : Move the driver to a proper place after finishing scaffolding the tests.
     const driver: Partial<IYannoDriver> = {
@@ -105,6 +105,12 @@ describe('Main User Story', () => {
       clickOnStakeOrbsButton(): void {
         const stakeOrbsButton = getByText('STAKE YOUR TOKENS');
         stakeOrbsButton.click();
+      },
+
+      setOrbsForStake(to: number): void {
+        const orbsForStakeInput = queryByTestId('orbs_amount_for_staking');
+
+        fireEvent.change(orbsForStakeInput, { target: { value: to.toString() }});
       },
 
       forElement(elementTestId: string): { toAppear(): Promise<void>; toDisappear(): Promise<void> } {
@@ -191,10 +197,11 @@ describe('Main User Story', () => {
     // TODO : O.L : Change text to comma separated after finishing the main test story.
     stakingStepOrbsToStake = queryByTestId('orbs_amount_for_staking');
     expect(stakingStepOrbsToStake).toHaveValue(10000);
-    //
-    // driver.setOrbsForStake(7_000);
+
+    driver.setOrbsForStake(7_000);
+    expect(stakingStepOrbsToStake).toHaveValue(7000);
     // driver.clickOnApproveStaking();
-    //
+
     // const orbsStakingTxId = testKit.approveOrbsStakingRequest();
     //
     // await driver.forElement(orbsStakingTxPendingStep).toAppear();
