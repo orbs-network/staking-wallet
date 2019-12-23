@@ -19,9 +19,11 @@ import { IStores } from '../../store/stores';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { WalletPageWrapper } from '../../pages/WalletPageWrapper';
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
+import { IServices } from '../../services/Services';
+import { getStores } from '../../store/storesInitialization';
 
 interface IYannoDriver {
-  userBoughtOrbs(number): void;
+  userBoughtOrbs(amount: number): void;
 
   clickOnStakeOrbsButton(): void;
   clickOnApproveStaking(): void;
@@ -63,20 +65,23 @@ interface IStakingTestKit {
   confirmOrbsUnlockingRequest: (txId: string) => void;
 }
 
-const driver: IYannoDriver = null;
 const testKit: IStakingTestKit = null;
 
 describe('Main User Story', () => {
   let appTestDriver: ComponentTestDriver;
   let storesForTests: DeepPartial<IStores> = {};
+  const servicesForTests: DeepPartial<IServices> = {};
   let ethereumProviderMock: EthereumProviderMock;
   let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
 
+  const driver: Partial<IYannoDriver> = {
+    userBoughtOrbs(amount: number): void {
+      console.log('In fire');
+      orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
+    },
+  };
+
   const testAddress = '0x0afdafad';
-
-  beforeEach(() => {
-
-  });
 
   // Refresh test driver and other mocks
   beforeEach(() => {
@@ -92,11 +97,11 @@ describe('Main User Story', () => {
 
   it('Complete story', async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-    storesForTests.cryptoWalletIntegrationStore = cryptoWalletIntegrationStore;
-    storesForTests.orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock);
 
-    const { queryByTestId } = appTestDriver.withStores(storesForTests).render();
+    // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
+    storesForTests = getStores(orbsPOSDataServiceMock, ethereumTxService);
+
+    const { queryByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
 
     const liquidOrbsText = queryByTestId('amount_liquid_orbs');
     const stakedOrbsText = queryByTestId('amount_staked_orbs');
@@ -145,14 +150,19 @@ describe('Main User Story', () => {
     // Orbs staking success step
     const orbsUnlockingSuccessStep = null;
 
+    // DEV_NOTE : The appereance of the address signals that the 'OrbsAccountStore' has been initialised.
+    //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
+    await wait(() => getByText(testAddress));
+
     // DEV : Initial
     expect(liquidOrbsText).toHaveTextContent(/^0$/);
     expect(stakedOrbsText).toHaveTextContent(/^0$/);
     expect(coolDownOrbsText).toHaveTextContent(/^0$/);
 
-    // driver.userBoughtOrbs(10_000);
+    driver.userBoughtOrbs(10_000);
 
-    // expect(liquidOrbsText).toHaveTextContent('10,000');
+    await wait(() => expect(liquidOrbsText).toHaveTextContent('10,000'));
+    expect(liquidOrbsText).toHaveTextContent('10,000');
 
     // driver.clickOnStakeOrbsButton();
     //
