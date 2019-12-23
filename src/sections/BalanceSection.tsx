@@ -11,12 +11,15 @@ import { MODAL_CSTYLE_ENTERED_CONTENTS } from '../components/modals/modalsConfig
 import Modal from 'react-modal';
 import { useBoolean } from 'react-hanger';
 import { StakingWizard } from '../wizards/staking/StakingWizard';
+import { useOrbsAccountStore } from '../store/storeHooks';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
 });
 
 export const BalanceSection = observer(() => {
+  const orbsAccountStore = useOrbsAccountStore();
+
   const showStakingModal = useBoolean(false);
   const showUnStakingModal = useBoolean(false);
 
@@ -32,8 +35,7 @@ export const BalanceSection = observer(() => {
             actionButtonTitle={'Stake your tokens'}
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
-            amount={4000}
-
+            amount={parseInt(orbsAccountStore.liquidOrbs)}
             testIdAmount={'amount_liquid_orbs'}
           />
         </GridItem>
@@ -42,10 +44,9 @@ export const BalanceSection = observer(() => {
           <BalanceCard
             title={'Staked Orbs in smart contract'}
             actionButtonTitle={'Unlock your tokens'}
-            amount={3000}
+            amount={orbsAccountStore.stakedOrbs}
             actionButtonActive={true}
             onActionButtonPressed={showUnStakingModal.setTrue}
-
             testIdAmount={'amount_staked_orbs'}
           />
         </GridItem>
@@ -54,10 +55,9 @@ export const BalanceSection = observer(() => {
           <BalanceCard
             title={'Tokens in cool down'}
             actionButtonTitle={'Redeem your tokens'}
-            amount={0}
+            amount={orbsAccountStore.orbsInCoolDown}
             actionButtonActive={true}
             onActionButtonPressed={() => null}
-
             testIdAmount={'amount_cool_down_orbs'}
           />
         </GridItem>

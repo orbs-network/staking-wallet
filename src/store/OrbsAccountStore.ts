@@ -5,8 +5,10 @@ import { raw } from 'express';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 
 export class OrbsAccountStore {
-  @observable public liquidOrbs: string;
-  @observable public stakedOrbs: number;
+  // TODO : O.L : Check if we really need to have a string here.
+  @observable public liquidOrbs: string = '0';
+  @observable public stakedOrbs: number = 0;
+  @observable public orbsInCoolDown: number = 0;
   @observable public accumulatedRewards: number;
   @observable public selectedGuardianAddress: string;
 

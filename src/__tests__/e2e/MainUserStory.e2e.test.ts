@@ -66,7 +66,7 @@ interface IStakingTestKit {
 const driver: IYannoDriver = null;
 const testKit: IStakingTestKit = null;
 
-describe('Main User Story', async () => {
+describe('Main User Story', () => {
   let appTestDriver: ComponentTestDriver;
   let storesForTests: DeepPartial<IStores> = {};
   let ethereumProviderMock: EthereumProviderMock;
@@ -146,90 +146,90 @@ describe('Main User Story', async () => {
     const orbsUnlockingSuccessStep = null;
 
     // DEV : Initial
-    expect(liquidOrbsText).toHaveTextContent('0');
-    expect(stakedOrbsText).toHaveTextContent('0');
-    expect(coolDownOrbsText).toHaveTextContent('0');
+    expect(liquidOrbsText).toHaveTextContent(/^0$/);
+    expect(stakedOrbsText).toHaveTextContent(/^0$/);
+    expect(coolDownOrbsText).toHaveTextContent(/^0$/);
 
-    driver.userBoughtOrbs(10_000);
+    // driver.userBoughtOrbs(10_000);
 
-    expect(liquidOrbsText).toHaveTextContent('10,000');
+    // expect(liquidOrbsText).toHaveTextContent('10,000');
 
-    driver.clickOnStakeOrbsButton();
-
-    await driver.forElement(stakingDialogPopUp).toAppear();
-    await driver.forElement(stakingStep).toAppear();
-
-    // Expect max amount
-    expect(stakingStepOrbsToStake).toHaveTextContent('10,000');
-
-    driver.setOrbsForStake(7_000);
-    driver.clickOnApproveStaking();
-
-    const orbsStakingTxId = testKit.approveOrbsStakingRequest();
-
-    await driver.forElement(orbsStakingTxPendingStep).toAppear();
-    expect(stakingStepTxPendingIndicator).toBeDefined();
-
-    // @ts-ignore (TODO : find a matcher for a link)
-    expect(stakingStepTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsStakingTxId}`);
-
-    testKit.confirmOrbsStakingRequest(orbsStakingTxId);
-
-    await driver.forElement(orbsStakingSuccessStep).toAppear();
-
-    driver.clickOnSelectAGuardian();
-
-    await driver.forElement(guardiansSelectionStep).toAppear();
-    expect(guardiansTable).toBeDefined();
-
-    const selectedGuardianAddress = driver.chooseAGuardianByTableIndex(5);
-    const guardianSelectionTxId = testKit.approveGuardianSelectingRequest();
-
-    await driver.forElement(guardianSelectionTxPendingStep).toAppear();
-
-    testKit.confirmGuardianSelectingRequest(guardianSelectionTxId);
-
-    await driver.forElement(guardianSelectionSuccessStep).toAppear();
-
-    driver.closeStakingDialog();
-    await driver.forElement(guardianSelectionSuccessStep).toDisappear();
-
-    expect(liquidOrbsText).toHaveTextContent('3,000');
-    expect(stakedOrbsText).toHaveTextContent('7,000');
-    expect(coolDownOrbsText).toHaveTextContent('0');
-
-    expect(driver.getSelectedGuardianAddress()).toBe(selectedGuardianAddress);
-
-    // NOTE : END OF STAKING AND GUARDIAN SELECTION
-    // NOTE : STARTING OF UNFREEZING OF ORBS
-    driver.clickOnUnlockTokens();
-
-    await driver.forElement(unlockingDialogPopUp).toAppear();
-    expect(orbsUnlockingStep).toBeDefined();
-
-    // Should offer the maximum amount
-    expect(orbsUnlockingStepOrbsToUnlock).toHaveTextContent('7,000');
-
-    driver.setOrbsForUnlocking(2500);
-
-    driver.clickOnApproveUnlocking();
-
-    const orbsUnlockingTxId = testKit.approveOrbsUnlockingRequest();
-
-    await driver.forElement(orbsUnlockingTxPendingStep).toAppear();
-    expect(orbsUnlockingTxPendingIndicator).toBeDefined();
-    // @ts-ignore (TODO : find a matcher for a link)
-    expect(orbsUnlockingTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsUnlockingTxId}`);
-
-    testKit.confirmOrbsUnlockingRequest(orbsUnlockingTxId);
-
-    await driver.forElement(orbsUnlockingSuccessStep).toAppear();
-
-    driver.closeUnlockingDialog();
-    await driver.forElement(unlockingDialogPopUp).toDisappear();
-
-    expect(liquidOrbsText).toHaveTextContent('3,000');
-    expect(stakedOrbsText).toHaveTextContent('3,500');
-    expect(coolDownOrbsText).toHaveTextContent('2,500');
+    // driver.clickOnStakeOrbsButton();
+    //
+    // await driver.forElement(stakingDialogPopUp).toAppear();
+    // await driver.forElement(stakingStep).toAppear();
+    //
+    // // Expect max amount
+    // expect(stakingStepOrbsToStake).toHaveTextContent('10,000');
+    //
+    // driver.setOrbsForStake(7_000);
+    // driver.clickOnApproveStaking();
+    //
+    // const orbsStakingTxId = testKit.approveOrbsStakingRequest();
+    //
+    // await driver.forElement(orbsStakingTxPendingStep).toAppear();
+    // expect(stakingStepTxPendingIndicator).toBeDefined();
+    //
+    // // @ts-ignore (TODO : find a matcher for a link)
+    // expect(stakingStepTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsStakingTxId}`);
+    //
+    // testKit.confirmOrbsStakingRequest(orbsStakingTxId);
+    //
+    // await driver.forElement(orbsStakingSuccessStep).toAppear();
+    //
+    // driver.clickOnSelectAGuardian();
+    //
+    // await driver.forElement(guardiansSelectionStep).toAppear();
+    // expect(guardiansTable).toBeDefined();
+    //
+    // const selectedGuardianAddress = driver.chooseAGuardianByTableIndex(5);
+    // const guardianSelectionTxId = testKit.approveGuardianSelectingRequest();
+    //
+    // await driver.forElement(guardianSelectionTxPendingStep).toAppear();
+    //
+    // testKit.confirmGuardianSelectingRequest(guardianSelectionTxId);
+    //
+    // await driver.forElement(guardianSelectionSuccessStep).toAppear();
+    //
+    // driver.closeStakingDialog();
+    // await driver.forElement(guardianSelectionSuccessStep).toDisappear();
+    //
+    // expect(liquidOrbsText).toHaveTextContent('3,000');
+    // expect(stakedOrbsText).toHaveTextContent('7,000');
+    // expect(coolDownOrbsText).toHaveTextContent('0');
+    //
+    // expect(driver.getSelectedGuardianAddress()).toBe(selectedGuardianAddress);
+    //
+    // // NOTE : END OF STAKING AND GUARDIAN SELECTION
+    // // NOTE : STARTING OF UNFREEZING OF ORBS
+    // driver.clickOnUnlockTokens();
+    //
+    // await driver.forElement(unlockingDialogPopUp).toAppear();
+    // expect(orbsUnlockingStep).toBeDefined();
+    //
+    // // Should offer the maximum amount
+    // expect(orbsUnlockingStepOrbsToUnlock).toHaveTextContent('7,000');
+    //
+    // driver.setOrbsForUnlocking(2500);
+    //
+    // driver.clickOnApproveUnlocking();
+    //
+    // const orbsUnlockingTxId = testKit.approveOrbsUnlockingRequest();
+    //
+    // await driver.forElement(orbsUnlockingTxPendingStep).toAppear();
+    // expect(orbsUnlockingTxPendingIndicator).toBeDefined();
+    // // @ts-ignore (TODO : find a matcher for a link)
+    // expect(orbsUnlockingTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsUnlockingTxId}`);
+    //
+    // testKit.confirmOrbsUnlockingRequest(orbsUnlockingTxId);
+    //
+    // await driver.forElement(orbsUnlockingSuccessStep).toAppear();
+    //
+    // driver.closeUnlockingDialog();
+    // await driver.forElement(unlockingDialogPopUp).toDisappear();
+    //
+    // expect(liquidOrbsText).toHaveTextContent('3,000');
+    // expect(stakedOrbsText).toHaveTextContent('3,500');
+    // expect(coolDownOrbsText).toHaveTextContent('2,500');
   });
 });
