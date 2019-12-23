@@ -33,6 +33,8 @@ export const BalanceSection = observer(() => {
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
             amount={4000}
+
+            testIdAmount={'amount_liquid_orbs'}
           />
         </GridItem>
 
@@ -43,6 +45,8 @@ export const BalanceSection = observer(() => {
             amount={3000}
             actionButtonActive={true}
             onActionButtonPressed={showUnStakingModal.setTrue}
+
+            testIdAmount={'amount_staked_orbs'}
           />
         </GridItem>
 
@@ -53,6 +57,8 @@ export const BalanceSection = observer(() => {
             amount={0}
             actionButtonActive={true}
             onActionButtonPressed={() => null}
+
+            testIdAmount={'amount_cool_down_orbs'}
           />
         </GridItem>
       </Grid>

@@ -21,12 +21,15 @@ interface IProps {
   actionButtonTitle: string;
   actionButtonActive: boolean;
   onActionButtonPressed: () => void;
+
+  // Testing
+  testIdAmount?: string;
 }
 
 // TODO : O.L : Change this component to use Card.
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
-  const { title, amount, actionButtonTitle, actionButtonActive, onActionButtonPressed } = props;
+  const { title, amount, actionButtonTitle, actionButtonActive, onActionButtonPressed, testIdAmount } = props;
 
   return (
     <StyledGrid>
@@ -34,7 +37,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
 
       <CommonDivider />
 
-      <Typography variant={'h6'}>{amount.toLocaleString()}</Typography>
+      <Typography data-testid={testIdAmount} variant={'h6'}>{amount.toLocaleString()}</Typography>
 
       <Button color={'secondary'} variant={'contained'} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
         {actionButtonTitle}

@@ -16,6 +16,9 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
+import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
+import { WalletPageWrapper } from '../../pages/WalletPageWrapper';
+import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 
 interface IYannoDriver {
   userBoughtOrbs(number): void;
@@ -64,10 +67,40 @@ const driver: IYannoDriver = null;
 const testKit: IStakingTestKit = null;
 
 describe('Main User Story', async () => {
+  let appTestDriver: ComponentTestDriver;
+  let storesForTests: DeepPartial<IStores> = {};
+  let ethereumProviderMock: EthereumProviderMock;
+  let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
+
+  const testAddress = '0x0afdafad';
+
+  beforeEach(() => {
+
+  });
+
+  // Refresh test driver and other mocks
+  beforeEach(() => {
+    appTestDriver = new ComponentTestDriver(App);
+
+    ethereumProviderMock = new EthereumProviderMock();
+
+    orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
+
+    // Any test case expects a connected wallet
+    ethereumProviderMock.setSelectedAddress(testAddress);
+  });
+
   it('Complete story', async () => {
-    const liquidOrbsText = null;
-    const stakedOrbsText = null;
-    const coolDownOrbsText = null;
+    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
+    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    storesForTests.cryptoWalletIntegrationStore = cryptoWalletIntegrationStore;
+    storesForTests.orbsAccountStore = new OrbsAccountStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock);
+
+    const { queryByTestId } = appTestDriver.withStores(storesForTests).render();
+
+    const liquidOrbsText = queryByTestId('amount_liquid_orbs');
+    const stakedOrbsText = queryByTestId('amount_staked_orbs');
+    const coolDownOrbsText = queryByTestId('amount_cool_down_orbs');
 
     // ------ Staking -------
 
