@@ -94,7 +94,7 @@ describe('Main User Story', () => {
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
     storesForTests = getStores(orbsPOSDataServiceMock, ethereumTxService);
 
-    const { queryByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, findByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
 
     // TODO : O.L : Move the driver to a proper place after finishing scaffolding the tests.
     const driver: Partial<IYannoDriver> = {
@@ -130,7 +130,7 @@ describe('Main User Story', () => {
 
     // Staking step
     const stakingStep = null;
-    const stakingStepOrbsToStake = null;
+    let stakingStepOrbsToStake = null;
     const stakingStepTxPendingIndicator = null;
     const stakingStepTxPendingLink = null;
 
@@ -187,8 +187,10 @@ describe('Main User Story', () => {
     await driver.forElement('wizard_staking').toAppear();
     await driver.forElement('wizard_step_select_amount_for_stake').toAppear();
 
-    // // Expect max amount
-    // expect(stakingStepOrbsToStake).toHaveTextContent('10,000');
+    // Expect max amount to be set by default
+    // TODO : O.L : Change text to comma separated after finishing the main test story.
+    stakingStepOrbsToStake = queryByTestId('orbs_amount_for_staking');
+    expect(stakingStepOrbsToStake).toHaveValue(10000);
     //
     // driver.setOrbsForStake(7_000);
     // driver.clickOnApproveStaking();

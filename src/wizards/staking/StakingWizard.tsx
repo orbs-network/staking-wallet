@@ -6,18 +6,26 @@ import {
   StepContent,
   StepLabel,
   Stepper,
-  Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
 import styled from 'styled-components';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const StyledStepper = styled(Stepper)(styledProps => ({
   backgroundColor: 'rgba(0, 0, 0, 0)',
 }));
 
 export const StakingWizard: React.FC = () => {
+  const orbsAccountStore = useOrbsAccountStore();
+  const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+
   const activeStep = useNumber(0);
   const goToNextStep = () => activeStep.increase();
 
@@ -29,7 +37,13 @@ export const StakingWizard: React.FC = () => {
 
           <StepContent data-testid={'wizard_step_select_amount_for_stake'}>
             <Typography>Staking your tokens in the smart contract</Typography>
-            <Input type={'number'}></Input>
+            {/* TODO : O.L : Add a number formatter here to dispaly the sums with proper separation */}
+            <Input
+              type={'number'}
+              value={orbsForStaking.value}
+              onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
+              inputProps={{ 'data-testid': 'orbs_amount_for_staking' }}
+            />
             <Button onClick={goToNextStep}>Stake</Button>
           </StepContent>
         </Step>
@@ -39,8 +53,13 @@ export const StakingWizard: React.FC = () => {
 
           <StepContent>
             <Typography>Approving your transaction</Typography>
-            <Typography>Link to <a href={"https://etherscan.com"} target={"_blank"} rel={"noopener noreferrer"}>Ether Scan</a> </Typography>
-            <Typography variant={"caption"}>Wait a few seconds... </Typography>
+            <Typography>
+              Link to{' '}
+              <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
+                Ether Scan
+              </a>{' '}
+            </Typography>
+            <Typography variant={'caption'}>Wait a few seconds... </Typography>
             <Button onClick={goToNextStep}>Proceed</Button>
           </StepContent>
         </Step>
@@ -76,7 +95,9 @@ export const StakingWizard: React.FC = () => {
                     <TableCell>1</TableCell>
                     <TableCell>Douglas Meshuga</TableCell>
                     <TableCell>0xff45223cb</TableCell>
-                    <TableCell><Button onClick={goToNextStep}>Select</Button></TableCell>
+                    <TableCell>
+                      <Button onClick={goToNextStep}>Select</Button>
+                    </TableCell>
                   </TableRow>
 
                   {/* Demo row 2 */}
@@ -84,7 +105,9 @@ export const StakingWizard: React.FC = () => {
                     <TableCell>2</TableCell>
                     <TableCell>Marina Aliasi</TableCell>
                     <TableCell>0x0343feab</TableCell>
-                    <TableCell><Button onClick={goToNextStep}>Select</Button></TableCell>
+                    <TableCell>
+                      <Button onClick={goToNextStep}>Select</Button>
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -97,8 +120,13 @@ export const StakingWizard: React.FC = () => {
 
           <StepContent>
             <Typography>Approving your transaction</Typography>
-            <Typography>Link to <a href={"https://etherscan.com"} target={"_blank"} rel={"noopener noreferrer"}>Ether Scan</a> </Typography>
-            <Typography variant={"caption"}>Wait a few seconds... </Typography>
+            <Typography>
+              Link to{' '}
+              <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
+                Ether Scan
+              </a>{' '}
+            </Typography>
+            <Typography variant={'caption'}>Wait a few seconds... </Typography>
             <Button onClick={goToNextStep}>Proceed</Button>
           </StepContent>
         </Step>
