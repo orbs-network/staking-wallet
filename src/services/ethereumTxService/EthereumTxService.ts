@@ -2,6 +2,8 @@ import Web3 from 'web3';
 import { IEthereumTxService } from './IEthereumTxService';
 import { IEthereumProvider } from './IEthereumProvider';
 
+// TODO : FUTURE : O.L : Change all ethereum.<call> to the new standard events format.
+
 export class EthereumTxService implements IEthereumTxService {
   private web3: Web3;
   public readonly isMetamaskInstalled: boolean;

@@ -1,5 +1,7 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { StylesProvider } from '@material-ui/core/styles';
+import { StylesProvider, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
+import { AppStyles, baseTheme, GlobalStyleComponent } from './theme/Theme';
 import { Provider } from 'mobx-react';
 import React from 'react';
 import { App } from './App';
@@ -13,12 +15,22 @@ configureMobx();
 const services = buildServices((window as any).ethereum);
 const stores = getStores(services.orbsPOSDataService, services.ethereumTxService);
 
+const themeAndStyle = {
+  ...baseTheme,
+  styles: AppStyles,
+};
+
 export const AppWrapper: React.FunctionComponent = () => (
   <LangRouter resources={resources}>
     <Provider {...services} {...stores}>
-      <CssBaseline />
       <StylesProvider injectFirst>
-        <App />
+        <ThemeProvider theme={baseTheme}>
+          <SCThemeProvider theme={themeAndStyle}>
+            <GlobalStyleComponent />
+            <CssBaseline />
+            <App />
+          </SCThemeProvider>
+        </ThemeProvider>
       </StylesProvider>
     </Provider>
   </LangRouter>
