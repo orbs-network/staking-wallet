@@ -1,0 +1,16 @@
+{
+  "name": "t",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "scripts": {
+    "compile-and-deploy": "truffle compile && truffle migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openzeppelin-solidity": "2.0.1",
+    "truffle": "5.0.36"
+  }
+}
