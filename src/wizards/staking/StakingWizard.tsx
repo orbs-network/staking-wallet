@@ -17,16 +17,9 @@ import {
 import { useNumber } from 'react-hanger';
 import styled from 'styled-components';
 import { useOrbsAccountStore } from '../../store/storeHooks';
-
-const WizardContainer = styled(props => <Grid container direction={'column'} alignItems={'center'} {...props} />)({});
-
-const WizardContent = styled(props => (
-  <Grid container direction={'column'} alignItems={'center'} item xs={11} sm={11} md={10} lg={9} xl={8} {...props} />
-))({});
-
-const StyledStepper = styled(Stepper)(styledProps => ({
-  backgroundColor: 'rgba(0, 0, 0, 0)',
-}));
+import { WizardContent } from '../../components/wizards/WizardContent';
+import { WizardContainer } from '../../components/wizards/WizardContainer';
+import { WizardStepper } from '../../components/wizards/WizardStepper';
 
 interface IProps {
   closeWizard(): void;
@@ -162,7 +155,7 @@ export const StakingWizard: React.FC<IProps> = props => {
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
-      <StyledStepper activeStep={activeStep.value} alternativeLabel>
+      <WizardStepper activeStep={activeStep.value} alternativeLabel>
         <Step>
           <StepLabel>Staking your tokens</StepLabel>
         </Step>
@@ -186,7 +179,7 @@ export const StakingWizard: React.FC<IProps> = props => {
         <Step>
           <StepLabel>Success selecting guardian</StepLabel>
         </Step>
-      </StyledStepper>
+      </WizardStepper>
 
       {stepContent}
     </WizardContainer>
