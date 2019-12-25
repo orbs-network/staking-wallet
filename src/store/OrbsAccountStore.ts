@@ -1,14 +1,14 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
-import { IOrbsPOSDataService } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IStakingService } from 'orbs-pos-data';
 import { raw } from 'express';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
-  @observable public liquidOrbs: string = '0';
-  @observable public stakedOrbs: number = 0;
-  @observable public orbsInCoolDown: number = 0;
+  @observable public liquidOrbs = '0';
+  @observable public stakedOrbs = 0;
+  @observable public orbsInCoolDown = 0;
   @observable public accumulatedRewards: number;
   @observable public selectedGuardianAddress: string;
 
@@ -18,6 +18,7 @@ export class OrbsAccountStore {
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
     private orbsPOSDataService: IOrbsPOSDataService,
+    private stakingService: IStakingService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -28,61 +29,60 @@ export class OrbsAccountStore {
     );
   }
 
-  public async stakeOrbs(
-    orbsToStake: number,
-  ): Promise<{ txId: string; txVerificationListener: TransactionVerificationListener }> {
-    // return this.orbsPOSDataService.stakeOrbs(orbsToStake);
+  public async stakeOrbs(orbsToStake: number): Promise<{ txVerificationListener: TransactionVerificationListener }> {
+    const promivent = this.stakingService.stake(orbsToStake);
 
-    const verificationListener = new TransactionVerificationListener(null);
+    const verificationListener = new TransactionVerificationListener(promivent);
 
     return {
       txVerificationListener: verificationListener,
-      txId: '',
     };
   }
 
   public async selectGuardian(
     guardianAddress: string,
-  ): Promise<{ txId: string; txVerificationListener: TransactionVerificationListener }> {
+  ): Promise<{ txVerificationListener: TransactionVerificationListener }> {
     // return this.orbsPOSDataService.selectGuardian(guardianAddress);
 
     const verificationListener = new TransactionVerificationListener(null);
 
     return {
       txVerificationListener: verificationListener,
-      txId: '',
     };
   }
 
-  public async redeemTokens(): Promise<{ txId: string; txVerificationListener: TransactionVerificationListener }> {
+  public async redeemTokens(): Promise<{ txVerificationListener: TransactionVerificationListener }> {
     // return this.orbsPOSDataService.redeemTokens();
 
     const verificationListener = new TransactionVerificationListener(null);
 
     return {
       txVerificationListener: verificationListener,
-      txId: '',
     };
   }
 
   public async unlockTokens(
     orbsToUnlock: number,
-  ): Promise<{ txId: string; txVerificationListener: TransactionVerificationListener }> {
+  ): Promise<{ txVerificationListener: TransactionVerificationListener }> {
     // return this.orbsPOSDataService.unlockTokens(orbsToUnlock);
 
     const verificationListener = new TransactionVerificationListener(null);
 
     return {
       txVerificationListener: verificationListener,
-      txId: '',
     };
   }
 
   private async reactToConnectedAddressChanged(currentAddress) {
     if (currentAddress) {
+      this.setDefaultAccountAddress(currentAddress);
       await this.readDataForAccount(currentAddress);
       this.refreshAccountListeners(currentAddress);
     }
+  }
+
+  private setDefaultAccountAddress(accountAddress: string) {
+    this.stakingService.setFromAccount(accountAddress);
   }
 
   private async readDataForAccount(accountAddress: string) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Button,
   Input,
@@ -29,6 +29,16 @@ export const StakingWizard: React.FC = () => {
   const activeStep = useNumber(0);
   const goToNextStep = () => activeStep.increase();
 
+  const stakeTokens = useCallback(async () => {
+    try {
+      const { txVerificationListener } = await orbsAccountStore.stakeOrbs(orbsForStaking.value);
+
+      activeStep.increase();
+    } catch (e) {
+      console.error(e);
+    }
+  }, [orbsAccountStore, activeStep, orbsForStaking]);
+
   return (
     <div data-testid={'wizard_staking'}>
       <StyledStepper activeStep={activeStep.value} alternativeLabel>
@@ -44,7 +54,7 @@ export const StakingWizard: React.FC = () => {
               onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
               inputProps={{ 'data-testid': 'orbs_amount_for_staking' }}
             />
-            <Button onClick={goToNextStep}>STAKE</Button>
+            <Button onClick={stakeTokens}>STAKE</Button>
           </StepContent>
         </Step>
 
