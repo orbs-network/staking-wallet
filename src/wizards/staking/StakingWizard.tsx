@@ -20,6 +20,7 @@ import { useOrbsAccountStore } from '../../store/storeHooks';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
+import { OrbsStakingStepContent } from './OrbsStakingStepContent';
 
 interface IProps {
   closeWizard(): void;
@@ -28,38 +29,16 @@ interface IProps {
 export const StakingWizard: React.FC<IProps> = props => {
   const { closeWizard } = props;
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
 
   const activeStep = useNumber(0);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
-
-  const stakeTokens = useCallback(async () => {
-    try {
-      const { txVerificationListener } = await orbsAccountStore.stakeOrbs(orbsForStaking.value);
-
-      activeStep.increase();
-    } catch (e) {
-      console.error(e);
-    }
-  }, [orbsAccountStore, activeStep, orbsForStaking]);
 
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
       case 0:
-        return (
-          <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
-            <Typography>Staking your tokens in the smart contract</Typography>
-            {/* TODO : O.L : Add a number formatter here to dispaly the sums with proper separation */}
-            <Input
-              type={'number'}
-              value={orbsForStaking.value}
-              onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
-              inputProps={{ 'data-testid': 'orbs_amount_for_staking' }}
-            />
-            <Button onClick={stakeTokens}>STAKE</Button>
-          </WizardContent>
-        );
+        return <OrbsStakingStepContent onStepFinished={goToNextStep} />;
+
       // Wait for staking tx approval
       case 1:
         return (
@@ -151,7 +130,7 @@ export const StakingWizard: React.FC<IProps> = props => {
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [activeStep.value, goToNextStep, orbsForStaking, stakeTokens]);
+  }, [activeStep.value, goToNextStep]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
