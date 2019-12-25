@@ -1,7 +1,6 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IOrbsPOSDataService, IStakingService } from 'orbs-pos-data';
-import { raw } from 'express';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 
 export class OrbsAccountStore {
@@ -31,6 +30,8 @@ export class OrbsAccountStore {
 
   public async stakeOrbs(orbsToStake: number): Promise<{ txVerificationListener: TransactionVerificationListener }> {
     const promivent = this.stakingService.stake(orbsToStake);
+
+    const res = await promivent;
 
     const verificationListener = new TransactionVerificationListener(promivent);
 
