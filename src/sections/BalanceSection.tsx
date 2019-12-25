@@ -69,7 +69,7 @@ export const BalanceSection = observer(() => {
         shouldCloseOnOverlayClick={true}
         style={MODAL_CSTYLE_ENTERED_CONTENTS}
       >
-        <StakingWizard />
+        <StakingWizard closeWizard={showStakingModal.setFalse} />
       </Modal>
 
       <Modal

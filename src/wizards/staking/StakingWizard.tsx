@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
+  Grid,
   Button,
   Input,
   Step,
-  StepContent,
   StepLabel,
   Stepper,
   Table,
@@ -18,16 +18,27 @@ import { useNumber } from 'react-hanger';
 import styled from 'styled-components';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 
+const WizardContainer = styled(props => <Grid container direction={'column'} alignItems={'center'} {...props} />)({});
+
+const WizardContent = styled(props => (
+  <Grid container direction={'column'} alignItems={'center'} item xs={11} sm={11} md={10} lg={9} xl={8} {...props} />
+))({});
+
 const StyledStepper = styled(Stepper)(styledProps => ({
   backgroundColor: 'rgba(0, 0, 0, 0)',
 }));
 
-export const StakingWizard: React.FC = () => {
+interface IProps {
+  closeWizard(): void;
+}
+
+export const StakingWizard: React.FC<IProps> = props => {
+  const { closeWizard } = props;
   const orbsAccountStore = useOrbsAccountStore();
   const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
 
   const activeStep = useNumber(0);
-  const goToNextStep = () => activeStep.increase();
+  const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
 
   const stakeTokens = useCallback(async () => {
     try {
@@ -39,13 +50,12 @@ export const StakingWizard: React.FC = () => {
     }
   }, [orbsAccountStore, activeStep, orbsForStaking]);
 
-  return (
-    <div data-testid={'wizard_staking'}>
-      <StyledStepper activeStep={activeStep.value} alternativeLabel>
-        <Step>
-          <StepLabel>Staking your tokens</StepLabel>
-
-          <StepContent data-testid={'wizard_step_select_amount_for_stake'}>
+  const stepContent = useMemo(() => {
+    switch (activeStep.value) {
+      // Stake orbs
+      case 0:
+        return (
+          <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
             <Typography>Staking your tokens in the smart contract</Typography>
             {/* TODO : O.L : Add a number formatter here to dispaly the sums with proper separation */}
             <Input
@@ -55,17 +65,14 @@ export const StakingWizard: React.FC = () => {
               inputProps={{ 'data-testid': 'orbs_amount_for_staking' }}
             />
             <Button onClick={stakeTokens}>STAKE</Button>
-          </StepContent>
-        </Step>
-
-        <Step>
-          <StepLabel>Approving your transaction</StepLabel>
-
-          <StepContent data-testid={'wizard_step_wait_for_staking_confirmation'}>
+          </WizardContent>
+        );
+      // Wait for staking tx approval
+      case 1:
+        return (
+          <WizardContent data-testid={'wizard_step_wait_for_staking_confirmation'}>
             <Typography>Approving your transaction</Typography>
-            <div data-testid={'transaction_pending_indicator'}>
-
-            </div>
+            <div data-testid={'transaction_pending_indicator'}></div>
             <Typography>
               Link to{' '}
               <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
@@ -74,23 +81,21 @@ export const StakingWizard: React.FC = () => {
             </Typography>
             <Typography variant={'caption'}>Wait a few seconds... </Typography>
             <Button onClick={goToNextStep}>Proceed</Button>
-          </StepContent>
-        </Step>
-
-        <Step>
-          <StepLabel>Success staking orbs</StepLabel>
-
-          <StepContent>
+          </WizardContent>
+        );
+      // Display success
+      case 2:
+        return (
+          <WizardContent>
             <Typography>Congratulations</Typography>
             <Typography>You have successfully staked Yamba orbs </Typography>
             <Button onClick={goToNextStep}>Select a Guardian</Button>
-          </StepContent>
-        </Step>
-
-        <Step>
-          <StepLabel>Select a guardian</StepLabel>
-
-          <StepContent>
+          </WizardContent>
+        );
+      // Select a guardian
+      case 3:
+        return (
+          <WizardContent>
             <TableContainer>
               <Table>
                 <TableHead>
@@ -125,13 +130,12 @@ export const StakingWizard: React.FC = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </StepContent>
-        </Step>
-
-        <Step>
-          <StepLabel>Approving your transaction</StepLabel>
-
-          <StepContent>
+          </WizardContent>
+        );
+      // Wait for guardian selection tx approval
+      case 4:
+        return (
+          <WizardContent>
             <Typography>Approving your transaction</Typography>
             <Typography>
               Link to{' '}
@@ -141,19 +145,50 @@ export const StakingWizard: React.FC = () => {
             </Typography>
             <Typography variant={'caption'}>Wait a few seconds... </Typography>
             <Button onClick={goToNextStep}>Proceed</Button>
-          </StepContent>
+          </WizardContent>
+        );
+      case 5:
+        return (
+          <WizardContent>
+            <Typography>Congratulations</Typography>
+            <Typography>You have successfully selected a guardian </Typography>
+            <Button onClick={() => null}>Finish</Button>
+          </WizardContent>
+        );
+      default:
+        throw new Error(`Unsupported step value of ${activeStep.value}`);
+    }
+  }, [activeStep.value, goToNextStep, orbsForStaking, stakeTokens]);
+
+  return (
+    <WizardContainer data-testid={'wizard_staking'}>
+      <StyledStepper activeStep={activeStep.value} alternativeLabel>
+        <Step>
+          <StepLabel>Staking your tokens</StepLabel>
+        </Step>
+
+        <Step>
+          <StepLabel>Approving your transaction</StepLabel>
+        </Step>
+
+        <Step>
+          <StepLabel>Success staking orbs</StepLabel>
+        </Step>
+
+        <Step>
+          <StepLabel>Select a guardian</StepLabel>
+        </Step>
+
+        <Step>
+          <StepLabel>Approving your transaction</StepLabel>
         </Step>
 
         <Step>
           <StepLabel>Success selecting guardian</StepLabel>
-
-          <StepContent>
-            <Typography>Congratulations</Typography>
-            <Typography>You have successfully selected a guardian </Typography>
-            <Button onClick={() => null}>Finish</Button>
-          </StepContent>
         </Step>
       </StyledStepper>
-    </div>
+
+      {stepContent}
+    </WizardContainer>
   );
 };

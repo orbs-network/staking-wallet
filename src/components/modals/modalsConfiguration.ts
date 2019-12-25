@@ -2,6 +2,12 @@
 import { baseTheme } from '../../theme/Theme';
 import Color from 'color';
 
+import Modal from 'react-modal';
+
+export function setModalAria(appRootId: string) {
+  Modal.setAppElement(`#${appRootId}`);
+}
+
 export const MODAL_CSTYLE_ENTERED_CONTENTS = {
   content: {
     top: '50%',
