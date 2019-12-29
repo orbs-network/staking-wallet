@@ -4,6 +4,7 @@ import { IEthereumTxService } from './ethereumTxService/IEthereumTxService';
 import { EthereumTxService } from './ethereumTxService/EthereumTxService';
 import { IEthereumProvider } from './ethereumTxService/IEthereumProvider';
 import Web3 from 'web3';
+import config from '../config';
 
 export interface IServices {
   orbsPOSDataService: IOrbsPOSDataService;
@@ -21,6 +22,6 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
   return {
     ethereumTxService: new EthereumTxService(ethereumProvider),
     orbsPOSDataService: buildOrbsPOSDataService(),
-    stakingService: new StakingService(web3),
+    stakingService: new StakingService(web3, config.contractsAddressesOverride.stakingContract),
   };
 }
