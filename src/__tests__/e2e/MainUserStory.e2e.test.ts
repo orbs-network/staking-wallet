@@ -16,7 +16,7 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
-import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
+import { OrbsPOSDataServiceMock, StakingServiceMock } from 'orbs-pos-data/dist/testkit';
 import { WalletPageWrapper } from '../../pages/WalletPageWrapper';
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 import { IServices } from '../../services/Services';
@@ -73,6 +73,7 @@ describe('Main User Story', () => {
   const servicesForTests: DeepPartial<IServices> = {};
   let ethereumProviderMock: EthereumProviderMock;
   let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
+  let stakingServiceMock: StakingServiceMock;
 
   const testAddress = '0x0afdafad';
 
@@ -83,6 +84,7 @@ describe('Main User Story', () => {
     ethereumProviderMock = new EthereumProviderMock();
 
     orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
+    stakingServiceMock = new StakingServiceMock();
 
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
@@ -92,7 +94,7 @@ describe('Main User Story', () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
 
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
-    storesForTests = getStores(orbsPOSDataServiceMock, ethereumTxService);
+    storesForTests = getStores(orbsPOSDataServiceMock, stakingServiceMock, ethereumTxService);
 
     const { queryByTestId, findByTestId, getByText,  } = appTestDriver.withStores(storesForTests).render();
 
