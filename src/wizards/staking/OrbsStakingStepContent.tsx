@@ -4,9 +4,11 @@ import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
+import { debug } from 'webpack';
+import { TransactionVerificationListener } from '../../transactions/TransactionVerificationListener';
 
 interface IProps {
-  onStepFinished(): void;
+  onStepFinished(txHash: string, transactionVerificationListener: TransactionVerificationListener): void;
 }
 
 const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
@@ -47,18 +49,18 @@ export const OrbsStakingStepContent: React.FC<IProps> = (props: IProps) => {
     subMessage.setValue('Please confirm transaction');
 
     try {
-      const { txVerificationListener } = await orbsAccountStore.stakeOrbs(orbsForStaking.value);
+      const { txVerificationListener, txHash } = await orbsAccountStore.stakeOrbs(orbsForStaking.value);
 
-      onStepFinished();
+      onStepFinished(txHash, txVerificationListener);
     } catch (e) {
-      console.error(e);
+      console.error('Error occurred while trying to send staking tx ', e);
 
       const { errorMessage, errorSubMessage } = errorMessageFromCode(e.code);
       message.setValue(errorMessage);
       subMessage.setValue(errorSubMessage);
-    }
 
-    inputsActive.setTrue();
+      inputsActive.setTrue();
+    }
   }, [inputsActive, subMessage, message, orbsAccountStore, orbsForStaking.value, onStepFinished, errorMessageFromCode]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's

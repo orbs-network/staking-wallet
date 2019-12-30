@@ -28,15 +28,18 @@ export class OrbsAccountStore {
     );
   }
 
-  public async stakeOrbs(orbsToStake: number): Promise<{ txVerificationListener: TransactionVerificationListener }> {
+  public async stakeOrbs(
+    orbsToStake: number,
+  ): Promise<{ txVerificationListener: TransactionVerificationListener; txHash: string }> {
     const promivent = this.stakingService.stake(orbsToStake);
 
-    const res = await promivent;
+    const transactionReceipt = await promivent;
 
     const verificationListener = new TransactionVerificationListener(promivent);
 
     return {
       txVerificationListener: verificationListener,
+      txHash: transactionReceipt.transactionHash,
     };
   }
 

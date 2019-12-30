@@ -14,13 +14,15 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { useNumber } from 'react-hanger';
+import { useNumber, useStateful } from 'react-hanger';
 import styled from 'styled-components';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
+import { TransactionVerificationListener } from '../../transactions/TransactionVerificationListener';
+import { TransactionApprovingStepContent } from './TransactionApprovingStepContent';
 
 interface IProps {
   closeWizard(): void;
@@ -33,27 +35,31 @@ export const StakingWizard: React.FC<IProps> = props => {
   const activeStep = useNumber(0);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
 
+  const orbsStakingTx = useStateful<string>('');
+  const orbsStakingTxVerificationListener = useStateful<TransactionVerificationListener>(null);
+  const onStakingTxSent = useCallback(
+    (txHash: string, transactionVerificationListener: TransactionVerificationListener) => {
+      orbsStakingTx.setValue(txHash);
+      orbsStakingTxVerificationListener.setValue(transactionVerificationListener);
+      goToNextStep();
+    },
+    [orbsStakingTx, orbsStakingTxVerificationListener, goToNextStep],
+  );
+
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
       case 0:
-        return <OrbsStakingStepContent onStepFinished={goToNextStep} />;
+        return <OrbsStakingStepContent onStepFinished={onStakingTxSent} />;
 
       // Wait for staking tx approval
       case 1:
         return (
-          <WizardContent data-testid={'wizard_step_wait_for_staking_confirmation'}>
-            <Typography>Approving your transaction</Typography>
-            <div data-testid={'transaction_pending_indicator'}></div>
-            <Typography>
-              Link to{' '}
-              <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
-                Ether Scan
-              </a>{' '}
-            </Typography>
-            <Typography variant={'caption'}>Wait a few seconds... </Typography>
-            <Button onClick={goToNextStep}>Proceed</Button>
-          </WizardContent>
+          <TransactionApprovingStepContent
+            onStepFinished={goToNextStep}
+            txHash={orbsStakingTx.value}
+            transactionVerificationListener={orbsStakingTxVerificationListener.value}
+          />
         );
       // Display success
       case 2:
@@ -130,7 +136,7 @@ export const StakingWizard: React.FC<IProps> = props => {
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [activeStep.value, goToNextStep]);
+  }, [activeStep.value, goToNextStep, onStakingTxSent, orbsStakingTx.value, orbsStakingTxVerificationListener.value]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
