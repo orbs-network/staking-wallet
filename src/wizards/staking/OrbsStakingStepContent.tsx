@@ -1,24 +1,25 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button, Input, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
-import { debug } from 'webpack';
-import { TransactionVerificationListener } from '../../transactions/TransactionVerificationListener';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 interface IProps {
-  onStepFinished(txHash: string, transactionVerificationListener: TransactionVerificationListener): void;
+  onTxStarted(pe: PromiEvent<TransactionReceipt>, errorHandler: (e: Error) => void): void;
+  stakeOrbs(orbsToStake: number): void;
+  disableInputs: boolean;
+  stakingError?: Error;
 }
 
 const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
 
 export const OrbsStakingStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished } = props;
+  const { disableInputs, onTxStarted, stakeOrbs, stakingError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
   const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
-  const inputsActive = useBoolean(true);
   const message = useStateful('Select amount of Orbs to stake');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
@@ -43,25 +44,22 @@ export const OrbsStakingStepContent: React.FC<IProps> = (props: IProps) => {
     };
   }, []);
 
-  const stakeTokens = useCallback(async () => {
-    inputsActive.setFalse();
-    message.setValue('');
-    subMessage.setValue('Please confirm transaction');
-
-    try {
-      const { txVerificationListener, txHash } = await orbsAccountStore.stakeOrbs(orbsForStaking.value);
-
-      onStepFinished(txHash, txVerificationListener);
-    } catch (e) {
-      console.error('Error occurred while trying to send staking tx ', e);
-
-      const { errorMessage, errorSubMessage } = errorMessageFromCode(e.code);
+  // Display the proper error message
+  useEffect(() => {
+    if (stakingError) {
+      // @ts-ignore (these errors will have code)
+      const { errorMessage, errorSubMessage } = errorMessageFromCode(stakingError.code);
       message.setValue(errorMessage);
       subMessage.setValue(errorSubMessage);
-
-      inputsActive.setTrue();
     }
-  }, [inputsActive, subMessage, message, orbsAccountStore, orbsForStaking.value, onStepFinished, errorMessageFromCode]);
+  }, [stakingError, errorMessageFromCode, message, subMessage]);
+
+  const stakeTokens = useCallback(async () => {
+    message.setValue('');
+    subMessage.setValue('Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed');
+
+    stakeOrbs(orbsForStaking.value);
+  }, [message, subMessage, stakeOrbs, orbsForStaking.value]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
@@ -79,10 +77,10 @@ export const OrbsStakingStepContent: React.FC<IProps> = (props: IProps) => {
         type={'number'}
         value={orbsForStaking.value}
         onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
-        disabled={!inputsActive.value}
+        disabled={disableInputs}
         inputProps={inputTestProps}
       />
-      <Button disabled={!inputsActive.value} onClick={stakeTokens}>
+      <Button disabled={disableInputs} onClick={stakeTokens}>
         STAKE
       </Button>
     </WizardContent>

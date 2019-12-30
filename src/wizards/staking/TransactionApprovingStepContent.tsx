@@ -1,41 +1,31 @@
-import React, { useCallback, useEffect } from 'react';
-import { Button, Input, Typography } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { Button, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
-import { useNumber, useBoolean, useStateful } from 'react-hanger';
-import { useOrbsAccountStore } from '../../store/storeHooks';
-import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
-import { debug } from 'webpack';
-import { TransactionVerificationListener } from '../../transactions/TransactionVerificationListener';
+import { useStateful, useBoolean } from 'react-hanger';
 
 interface IProps {
   txHash: string;
-  transactionVerificationListener: TransactionVerificationListener;
+  verificationCount: number;
   onStepFinished(): void;
+  requiredConfirmations: number;
 }
 
-const MIN_TX_VERIFICATIONS = 6;
-
 export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished, transactionVerificationListener, txHash } = props;
+  const { onStepFinished, txHash, verificationCount, requiredConfirmations } = props;
+
+  const allowToProceed = useBoolean(false);
   const message = useStateful('Waiting to receive enough confirmations');
   const subMessage = useStateful('');
 
   useEffect(() => {
-    transactionVerificationListener.subscribeToTxConfirmation((confirmationNumber, receipt) => {
-      subMessage.setValue(`Current transaction verification : ${confirmationNumber}/${MIN_TX_VERIFICATIONS}`);
+    subMessage.setValue(`Got ${verificationCount} verifications out of recommended ${requiredConfirmations}`);
+  }, [verificationCount, requiredConfirmations, subMessage]);
 
-      console.log('Confiramtion:' , confirmationNumber);
-
-      if (confirmationNumber >= MIN_TX_VERIFICATIONS) {
-        onStepFinished();
-      }
-    });
-
-    return () => {
-      console.log('Clearing subscriptions');
-      transactionVerificationListener.clearAllSubscriptions();
-    };
-  }, [transactionVerificationListener, onStepFinished, subMessage]);
+  useEffect(() => {
+    if (verificationCount >= requiredConfirmations) {
+      allowToProceed.setTrue();
+    }
+  }, [verificationCount, requiredConfirmations, allowToProceed]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
@@ -53,7 +43,8 @@ export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps)
         </a>{' '}
       </Typography>
       <Typography variant={'caption'}>Wait a few seconds... </Typography>
-      <Button onClick={onStepFinished}>Proceed</Button>
+
+      {allowToProceed.value && <Button onClick={onStepFinished}>Proceed</Button>}
     </WizardContent>
   );
 };

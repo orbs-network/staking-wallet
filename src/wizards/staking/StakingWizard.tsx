@@ -1,11 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import {
-  Grid,
   Button,
-  Input,
   Step,
   StepLabel,
-  Stepper,
   Table,
   TableBody,
   TableCell,
@@ -14,43 +11,89 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { useNumber, useStateful } from 'react-hanger';
-import styled from 'styled-components';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useNumber, useStateful, useBoolean } from 'react-hanger';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
-import { TransactionVerificationListener } from '../../transactions/TransactionVerificationListener';
 import { TransactionApprovingStepContent } from './TransactionApprovingStepContent';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 interface IProps {
   closeWizard(): void;
 }
 
+const REQUIRED_CONFIRMATIONS = 6;
+
 export const StakingWizard: React.FC<IProps> = props => {
   const { closeWizard } = props;
+
   const orbsAccountStore = useOrbsAccountStore();
 
   const activeStep = useNumber(0);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
 
+  const disableOrbsStakingInputs = useBoolean(false);
   const orbsStakingTx = useStateful<string>('');
-  const orbsStakingTxVerificationListener = useStateful<TransactionVerificationListener>(null);
-  const onStakingTxSent = useCallback(
-    (txHash: string, transactionVerificationListener: TransactionVerificationListener) => {
-      orbsStakingTx.setValue(txHash);
-      orbsStakingTxVerificationListener.setValue(transactionVerificationListener);
-      goToNextStep();
+  const orbsStakingTxVerificationCount = useNumber(-1);
+  const orbsStakingError = useStateful<Error>(null);
+
+  const stakeOrbs = useCallback(
+    async (orbsToStake: number) => {
+      disableOrbsStakingInputs.setTrue();
+
+      const { txPromivent } = await orbsAccountStore.stakeOrbs(orbsToStake);
+
+      txPromivent.on('confirmation', confirmation => {
+        orbsStakingTxVerificationCount.setValue(confirmation);
+
+        if (confirmation >= 10) {
+          // @ts-ignore
+          pe.removeAllListeners();
+          disableOrbsStakingInputs.setFalse();
+        }
+      });
+      txPromivent.once('receipt', receipt => {
+        orbsStakingTx.setValue(receipt.transactionHash);
+        goToNextStep();
+        disableOrbsStakingInputs.setFalse();
+      });
+      txPromivent.on('error', error => {
+        orbsStakingError.setValue(error);
+
+        // @ts-ignore
+        txPromivent.removeAllListeners();
+        disableOrbsStakingInputs.setFalse();
+      });
     },
-    [orbsStakingTx, orbsStakingTxVerificationListener, goToNextStep],
+    [
+      disableOrbsStakingInputs,
+      orbsAccountStore,
+      orbsStakingTxVerificationCount,
+      orbsStakingTx,
+      goToNextStep,
+      orbsStakingError,
+    ],
+  );
+
+  const handleStakingTxInitiated = useCallback(
+    (pe: PromiEvent<TransactionReceipt>, errorHandler?: (e: Error) => void) => {},
+    [],
   );
 
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
       case 0:
-        return <OrbsStakingStepContent onStepFinished={onStakingTxSent} />;
+        return (
+          <OrbsStakingStepContent
+            onTxStarted={handleStakingTxInitiated}
+            disableInputs={disableOrbsStakingInputs.value}
+            stakeOrbs={stakeOrbs}
+            stakingError={orbsStakingError.value}
+          />
+        );
 
       // Wait for staking tx approval
       case 1:
@@ -58,7 +101,8 @@ export const StakingWizard: React.FC<IProps> = props => {
           <TransactionApprovingStepContent
             onStepFinished={goToNextStep}
             txHash={orbsStakingTx.value}
-            transactionVerificationListener={orbsStakingTxVerificationListener.value}
+            verificationCount={orbsStakingTxVerificationCount.value}
+            requiredConfirmations={REQUIRED_CONFIRMATIONS}
           />
         );
       // Display success
@@ -136,7 +180,16 @@ export const StakingWizard: React.FC<IProps> = props => {
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [activeStep.value, goToNextStep, onStakingTxSent, orbsStakingTx.value, orbsStakingTxVerificationListener.value]);
+  }, [
+    activeStep.value,
+    disableOrbsStakingInputs.value,
+    goToNextStep,
+    handleStakingTxInitiated,
+    orbsStakingError.value,
+    orbsStakingTx.value,
+    orbsStakingTxVerificationCount.value,
+    stakeOrbs,
+  ]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>

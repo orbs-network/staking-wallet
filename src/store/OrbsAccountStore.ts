@@ -2,6 +2,7 @@ import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IOrbsPOSDataService, IStakingService } from 'orbs-pos-data';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
@@ -28,18 +29,11 @@ export class OrbsAccountStore {
     );
   }
 
-  public async stakeOrbs(
-    orbsToStake: number,
-  ): Promise<{ txVerificationListener: TransactionVerificationListener; txHash: string }> {
+  public async stakeOrbs(orbsToStake: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
     const promivent = this.stakingService.stake(orbsToStake);
 
-    const transactionReceipt = await promivent;
-
-    const verificationListener = new TransactionVerificationListener(promivent);
-
     return {
-      txVerificationListener: verificationListener,
-      txHash: transactionReceipt.transactionHash,
+      txPromivent: promivent,
     };
   }
 
