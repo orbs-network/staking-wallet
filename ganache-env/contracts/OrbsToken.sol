@@ -2,11 +2,12 @@
  *Submitted for verification at Etherscan.io on 2018-05-31
 */
 
+// DEV_NOTE : O.L : Upgraded 0.4.23 -> 0.4.26 to be compatible with the staking contract
 pragma solidity 0.4.26;
 
 
 /**
- * @title Math 
+ * @title Math
  * @dev Assorted math operations
  */
 library Math {
