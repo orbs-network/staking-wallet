@@ -4,12 +4,14 @@
   "description": "",
   "main": "truffle-config.js",
   "scripts": {
-    "compile-and-deploy": "truffle compile && truffle migrate"
+    "compile-and-deploy": "truffle compile && truffle migrate --reset",
+    "start-ganache": "ganache-cli --mnemonic \"bone spatial narrow improve drop rabbit song pride lamp strong run hand\" --blockTime 5"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ganache-cli": "^6.7.0",
     "openzeppelin-solidity": "2.0.1",
     "truffle": "5.0.36"
   }
