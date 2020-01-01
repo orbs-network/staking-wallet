@@ -11,10 +11,10 @@ const IS_DEV = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !==
 ////////////// CONFIG VARIABLES ///////////////
 
 // Contracts
-const OVERRIDE_STAKING_CONTRACT_ADDRESS = IS_DEV ? '0x1CC4211D2314B4b78994f2C61228C35C8fCD09Ad' : undefined;
-const OVERRIDE_ERC20_CONTRACT_ADDRESS = IS_DEV ? '0x2409BD6889CBB81Bca105d20C6701ab5b822f42D' : undefined;
-const OVERRIDE_GUARDIANS_CONTRACT_ADDRESS = IS_DEV ? '0x7D4089cF9448a6E59792b8a1af86f31A54ED69ee' : undefined;
-const ETHEREUM_PROVIDER_WS = IS_DEV ? 'ws://localhost:7545' : 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287';
+const OVERRIDE_STAKING_CONTRACT_ADDRESS = IS_DEV ? '0x57b5061D5Ce3618757b5A9363Ba0288eaeff0f92' : undefined;
+const OVERRIDE_ERC20_CONTRACT_ADDRESS = IS_DEV ? '0xf89c914555717aA8cBEc1472233EDFDd659b57d4' : undefined;
+const OVERRIDE_GUARDIANS_CONTRACT_ADDRESS = IS_DEV ? '0xe99e62f03eb4c10deBD532E3494ef103e632153A' : undefined;
+const ETHEREUM_PROVIDER_WS = IS_DEV ? 'ws://localhost:8545' : 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287';
 
 module.exports = {
   contractsAddressesOverride: {
