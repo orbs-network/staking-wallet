@@ -34,9 +34,13 @@ export class GuardiansStore implements TGuardiansStore {
   }
 
   async init() {
-    const guardiansAddresses = await this.orbsPOSDataService.getGuardiansList(0, 100);
-
-    this.setGuardiansAddresses(guardiansAddresses);
+    try {
+      const guardiansAddresses = await this.orbsPOSDataService.getGuardiansList(0, 100);
+      console.log('guardiansAddresses', guardiansAddresses);
+      this.setGuardiansAddresses(guardiansAddresses);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   @action('setGuardiansAddresses')

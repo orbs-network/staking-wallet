@@ -5,9 +5,9 @@
     * Point it to `localhost:8545`.
     * Import an account with this mnemonic: `bone spatial narrow improve drop rabbit song pride lamp strong run hand`
     * The first account is the main account that you should be working with: `0xbDBE6E5030f3e769FaC89AEF5ac34EbE8Cf95a76`
-* Run `npm run compile-and-deploy` to compile and deploy all the required contracts.
+* Run `npm run compile-and-deploy` to compile and deploy all the required contracts. (Take a node of the Orbs token address)
 * Back in metamask, add Orbs token
     * Custom Token
-    * Token Contract Address: `0xf89c914555717aA8cBEc1472233EDFDd659b57d4`
+    * Token Contract Address: Taken from the note above.
     * Token Symbol: `ORBS`
     * Decimals of Precision: 18
