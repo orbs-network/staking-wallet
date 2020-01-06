@@ -16,9 +16,10 @@ import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
-import { TransactionApprovingStepContent } from './TransactionApprovingStepContent';
+import { TransactionApprovingStepContentOld } from './TransactionApprovingStepContent';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import { ApprovableWizardStep, ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 
 interface IProps {
   closeWizard(): void;
@@ -86,19 +87,21 @@ export const StakingWizard: React.FC<IProps> = props => {
     switch (activeStep.value) {
       // Stake orbs
       case 0:
-        return (
+        const txCreation = ({ onTxStarted }: ITransactionCreationStepProps) => (
           <OrbsStakingStepContent
-            onTxStarted={handleStakingTxInitiated}
+            onTxStarted={onTxStarted}
             disableInputs={disableOrbsStakingInputs.value}
             stakeOrbs={stakeOrbs}
             stakingError={orbsStakingError.value}
           />
         );
 
+        return <ApprovableWizardStep transactionCreationStepContent={txCreation} />;
+
       // Wait for staking tx approval
       case 1:
         return (
-          <TransactionApprovingStepContent
+          <TransactionApprovingStepContentOld
             onStepFinished={goToNextStep}
             txHash={orbsStakingTx.value}
             verificationCount={orbsStakingTxVerificationCount.value}
@@ -184,7 +187,6 @@ export const StakingWizard: React.FC<IProps> = props => {
     activeStep.value,
     disableOrbsStakingInputs.value,
     goToNextStep,
-    handleStakingTxInitiated,
     orbsStakingError.value,
     orbsStakingTx.value,
     orbsStakingTxVerificationCount.value,

@@ -10,7 +10,7 @@ interface IProps {
   requiredConfirmations: number;
 }
 
-export const TransactionApprovingStepContentOld: React.FC<IProps> = (props: IProps) => {
+export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps) => {
   const { onStepFinished, txHash, verificationCount, requiredConfirmations } = props;
 
   const allowToProceed = useBoolean(false);

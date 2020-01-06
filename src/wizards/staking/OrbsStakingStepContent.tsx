@@ -5,9 +5,9 @@ import { useNumber, useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 
 interface IProps {
-  onTxStarted(pe: PromiEvent<TransactionReceipt>, errorHandler: (e: Error) => void): void;
   stakeOrbs(orbsToStake: number): void;
   disableInputs: boolean;
   stakingError?: Error;
@@ -15,7 +15,7 @@ interface IProps {
 
 const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
 
-export const OrbsStakingStepContent: React.FC<IProps> = (props: IProps) => {
+export const OrbsStakingStepContent: React.FC<IProps & ITransactionCreationStepProps> = props => {
   const { disableInputs, onTxStarted, stakeOrbs, stakingError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
@@ -80,7 +80,7 @@ export const OrbsStakingStepContent: React.FC<IProps> = (props: IProps) => {
         disabled={disableInputs}
         inputProps={inputTestProps}
       />
-      <Button disabled={disableInputs} onClick={stakeTokens}>
+      <Button disabled={disableInputs} onClick={onTxStarted}>
         STAKE
       </Button>
     </WizardContent>
