@@ -30,5 +30,4 @@ if (process.env.NODE_ENV !== 'production') {
   config.contractsAddressesOverride.guardiansContract = OrbsGuardiansContractJSON.networks['9999'].address;
 }
 
-console.log(config);
 export default config;
