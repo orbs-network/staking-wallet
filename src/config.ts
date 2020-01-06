@@ -16,19 +16,18 @@ const config = {
   },
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
 };
-
+  
 // Webpack will remove this section on production build //
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') { 
   config.ETHEREUM_PROVIDER_WS = 'ws://localhost:8545';
 
   const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
   const OrbsTokenContractJSON = require('../ganache-env/build/contracts/OrbsToken.json');
   const StakingContractJSON = require('../ganache-env/build/contracts/StakingContract.json');
 
-  config.contractsAddressesOverride.stakingContract = StakingContractJSON.networks['9999'].address;
-  config.contractsAddressesOverride.erc20Contract = OrbsTokenContractJSON.networks['9999'].address;
-  config.contractsAddressesOverride.guardiansContract = OrbsGuardiansContractJSON.networks['9999'].address;
+  config.contractsAddressesOverride.stakingContract = StakingContractJSON.networks['5777'].address;
+  config.contractsAddressesOverride.erc20Contract = OrbsTokenContractJSON.networks['5777'].address;
+  config.contractsAddressesOverride.guardiansContract = OrbsGuardiansContractJSON.networks['5777'].address;
 }
-
-console.log(config);
+  
 export default config;

@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf build",
     "compile-and-deploy": "truffle compile && truffle migrate --reset",
-    "start-ganache": "ganache-cli --networkId 9999 --mnemonic \"bone spatial narrow improve drop rabbit song pride lamp strong run hand\" --blockTime 3"
+    "start-ganache": "ganache-cli --networkId 5777 --mnemonic \"bone spatial narrow improve drop rabbit song pride lamp strong run hand\" --blockTime 3"
   },
   "keywords": [],
   "author": "",
