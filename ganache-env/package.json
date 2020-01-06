@@ -4,8 +4,9 @@
   "description": "",
   "main": "truffle-config.js",
   "scripts": {
+    "clean": "rimraf build",
     "compile-and-deploy": "truffle compile && truffle migrate --reset",
-    "start-ganache": "ganache-cli --mnemonic \"bone spatial narrow improve drop rabbit song pride lamp strong run hand\" --blockTime 5"
+    "start-ganache": "ganache-cli --networkId 9999 --mnemonic \"bone spatial narrow improve drop rabbit song pride lamp strong run hand\" --blockTime 3"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,7 @@
   "dependencies": {
     "ganache-cli": "^6.7.0",
     "openzeppelin-solidity": "2.0.1",
+    "rimraf": "^3.0.0",
     "truffle": "5.0.36"
   }
 }
