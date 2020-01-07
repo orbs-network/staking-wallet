@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
-import { TransactionApprovingSubStepContent } from './TransactionApprovingSubStepContent';
-import { CongratulationsSubStepContent } from './CongratulationsSubStepContent';
+import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
+import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
 
 type TStepState = 'Action' | 'Approving' | 'Success';
 

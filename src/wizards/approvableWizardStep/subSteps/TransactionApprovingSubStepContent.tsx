@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
+import { WizardContent } from '../../../components/wizards/WizardContent';
 import { useStateful, useBoolean } from 'react-hanger';
 
 interface IProps {
