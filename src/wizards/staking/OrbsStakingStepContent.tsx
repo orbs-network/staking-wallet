@@ -1,22 +1,15 @@
 import React, { useCallback, useEffect } from 'react';
 import { Button, Input, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
-import { useNumber, useBoolean, useStateful } from 'react-hanger';
+import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
-import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
-
-interface IProps {
-  stakeOrbs(orbsToStake: number): void;
-  disableInputs: boolean;
-  stakingError?: Error;
-}
 
 const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
 
-export const OrbsStakingStepContent: React.FC<IProps & ITransactionCreationStepProps> = props => {
-  const { disableInputs, onTxStarted, stakeOrbs, stakingError } = props;
+export const OrbsStakingStepContent: React.FC<ITransactionCreationStepProps> = props => {
+  const { disableInputs, orbsTxCreatingAction, stakingError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
   const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
@@ -58,8 +51,8 @@ export const OrbsStakingStepContent: React.FC<IProps & ITransactionCreationStepP
     message.setValue('');
     subMessage.setValue('Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed');
 
-    stakeOrbs(orbsForStaking.value);
-  }, [message, subMessage, stakeOrbs, orbsForStaking.value]);
+    orbsTxCreatingAction(orbsForStaking.value);
+  }, [message, subMessage, orbsTxCreatingAction, orbsForStaking.value]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
@@ -80,7 +73,7 @@ export const OrbsStakingStepContent: React.FC<IProps & ITransactionCreationStepP
         disabled={disableInputs}
         inputProps={inputTestProps}
       />
-      <Button disabled={disableInputs} onClick={onTxStarted}>
+      <Button disabled={disableInputs} onClick={stakeTokens}>
         STAKE
       </Button>
     </WizardContent>
