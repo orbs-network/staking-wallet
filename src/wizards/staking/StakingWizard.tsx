@@ -28,14 +28,14 @@ export const StakingWizard: React.FC<IProps> = props => {
 
   const orbsAccountStore = useOrbsAccountStore();
 
-  const activeStep = useNumber(2);
+  const activeStep = useNumber(1);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
   const goToSelectGuardianStep = useCallback(() => activeStep.setValue(3), [activeStep]);
 
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
-      case 2:
+      case 1:
         return (
           <ApprovableWizardStep
             orbsStakingAction={amount => orbsAccountStore.stakeOrbs(amount)}
@@ -45,7 +45,7 @@ export const StakingWizard: React.FC<IProps> = props => {
           />
         );
       // Select a guardian
-      case 3:
+      case 2:
         return (
           <WizardContent>
             <TableContainer>
@@ -85,47 +85,28 @@ export const StakingWizard: React.FC<IProps> = props => {
           </WizardContent>
         );
       // Wait for guardian selection tx approval
-      case 4:
+      case 3:
         return (
           <WizardContent>
-            <Typography>Approving your transaction</Typography>
-            <Typography>
-              Link to{' '}
-              {/* eslint-disable-next-line react/jsx-no-target-blank */}
-              <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
-                Ether Scan
-              </a>{' '}
-            </Typography>
-            <Typography variant={'caption'}>Wait a few seconds... </Typography>
-            <Button onClick={goToNextStep}>Proceed</Button>
-          </WizardContent>
-        );
-      case 5:
-        return (
-          <WizardContent>
-            <Typography>Congratulations</Typography>
-            <Typography>You have successfully selected a guardian </Typography>
-            <Button onClick={() => null}>Finish</Button>
+            <Typography>Awesome !</Typography>
+            <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
+            <Button onClick={closeWizard}>Finish</Button>
           </WizardContent>
         );
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [activeStep.value, goToNextStep, goToSelectGuardianStep, orbsAccountStore]);
+  }, [activeStep.value, closeWizard, goToNextStep, goToSelectGuardianStep, orbsAccountStore]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
       <WizardStepper activeStep={activeStep.value} alternativeLabel>
         <Step>
-          <StepLabel>Staking your tokens</StepLabel>
+          <StepLabel>Approve usage of Orbs</StepLabel>
         </Step>
 
         <Step>
-          <StepLabel>Approving your transaction</StepLabel>
-        </Step>
-
-        <Step>
-          <StepLabel>Success staking orbs</StepLabel>
+          <StepLabel>Stake your tokens</StepLabel>
         </Step>
 
         <Step>
@@ -133,11 +114,7 @@ export const StakingWizard: React.FC<IProps> = props => {
         </Step>
 
         <Step>
-          <StepLabel>Approving your transaction</StepLabel>
-        </Step>
-
-        <Step>
-          <StepLabel>Success selecting guardian</StepLabel>
+          <StepLabel>Finish</StepLabel>
         </Step>
       </WizardStepper>
 

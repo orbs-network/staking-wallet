@@ -16,7 +16,7 @@ export interface ITransactionCreationStepProps {
 
 interface IProps {
   // Tx creation sub step
-  transactionCreationSubStepContent: any;
+  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps>;
   orbsStakingAction(amount: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }>;
 
   // Congratulations sub step
@@ -35,7 +35,7 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
   const stepState = useStateful<TStepState>('Action');
 
   const goToApprovalSubStep = useCallback(() => stepState.setValue('Approving'), [stepState]);
-  const goToCongratulationSubStep = useCallback(() => stepState.setValue('Approving'), [stepState]);
+  const goToCongratulationSubStep = useCallback(() => stepState.setValue('Success'), [stepState]);
 
   const disableTxCreationInputs = useBoolean(false);
   const txHash = useStateful<string>('');
@@ -86,7 +86,7 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
       case 'Approving':
         return (
           <TransactionApprovingSubStepContent
-            requiredConfirmations={6}
+            requiredConfirmations={REQUIRED_CONFIRMATIONS}
             verificationCount={txVerificationsCount.value}
             txHash={txHash.value}
             onStepFinished={goToCongratulationSubStep}
