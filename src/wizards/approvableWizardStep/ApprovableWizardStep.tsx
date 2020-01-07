@@ -51,6 +51,7 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
       txPromivent.on('confirmation', confirmation => {
         txVerificationsCount.setValue(confirmation);
 
+        // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
         if (confirmation >= 10) {
           // @ts-ignore
           pe.removeAllListeners();
