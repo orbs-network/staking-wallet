@@ -1,6 +1,6 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
-import { IOrbsPOSDataService, IStakingService } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IStakingService, IOrbsTokenService } from 'orbs-pos-data';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 
@@ -19,6 +19,7 @@ export class OrbsAccountStore {
     private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
+    private orbsTokenService: IOrbsTokenService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -81,6 +82,7 @@ export class OrbsAccountStore {
 
   private setDefaultAccountAddress(accountAddress: string) {
     this.stakingService.setFromAccount(accountAddress);
+    this.orbsTokenService.setFromAccount(accountAddress);
   }
 
   private async readDataForAccount(accountAddress: string) {

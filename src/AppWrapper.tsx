@@ -14,7 +14,12 @@ import { setModalAria } from './components/modals/modalsConfiguration';
 configureMobx();
 
 const services = buildServices((window as any).ethereum);
-const stores = getStores(services.orbsPOSDataService, services.stakingService, services.ethereumTxService);
+const stores = getStores(
+  services.orbsPOSDataService,
+  services.stakingService,
+  services.orbsTokenService,
+  services.ethereumTxService,
+);
 
 const themeAndStyle = {
   ...baseTheme,

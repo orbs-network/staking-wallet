@@ -16,7 +16,7 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
-import { OrbsPOSDataServiceMock, StakingServiceMock } from 'orbs-pos-data/dist/testkit';
+import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock } from 'orbs-pos-data/dist/testkit';
 import { WalletPageWrapper } from '../../pages/WalletPageWrapper';
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 import { IServices } from '../../services/Services';
@@ -74,6 +74,7 @@ describe('Main User Story', () => {
   let ethereumProviderMock: EthereumProviderMock;
   let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
   let stakingServiceMock: StakingServiceMock;
+  let orbsTokenServiceMock: OrbsTokenServiceMock;
 
   const testAddress = '0x0afdafad';
 
@@ -85,18 +86,19 @@ describe('Main User Story', () => {
 
     orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
     stakingServiceMock = new StakingServiceMock();
+    orbsTokenServiceMock = new OrbsTokenServiceMock();
 
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
   });
-
   it('Complete story', async () => {
+
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
 
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
-    storesForTests = getStores(orbsPOSDataServiceMock, stakingServiceMock, ethereumTxService);
+    storesForTests = getStores(orbsPOSDataServiceMock, stakingServiceMock, orbsTokenServiceMock, ethereumTxService);
 
-    const { queryByTestId, findByTestId, getByText,  } = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, findByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
 
     // TODO : O.L : Move the driver to a proper place after finishing scaffolding the tests.
     const driver: Partial<IYannoDriver> = {
@@ -116,7 +118,7 @@ describe('Main User Story', () => {
       setOrbsForStake(to: number): void {
         const orbsForStakeInput = queryByTestId('orbs_amount_for_staking');
 
-        fireEvent.change(orbsForStakeInput, { target: { value: to.toString() }});
+        fireEvent.change(orbsForStakeInput, { target: { value: to.toString() } });
       },
 
       forElement(elementTestId: string): { toAppear(): Promise<void>; toDisappear(): Promise<void> } {
@@ -211,7 +213,7 @@ describe('Main User Story', () => {
     // const orbsStakingTxId = testKit.approveOrbsStakingRequest();
 
     await driver.forElement(stakingStepTestId).toAppear();
-    stakingStepTxPendingIndicator = queryByTestId('transaction_pending_indicator')
+    stakingStepTxPendingIndicator = queryByTestId('transaction_pending_indicator');
     expect(stakingStepTxPendingIndicator).toBeDefined();
     //
     // // @ts-ignore (TODO : find a matcher for a link)

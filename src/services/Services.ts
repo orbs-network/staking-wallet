@@ -1,4 +1,10 @@
-import { IOrbsPOSDataService, IStakingService, StakingService } from 'orbs-pos-data';
+import {
+  IOrbsPOSDataService,
+  IStakingService,
+  StakingService,
+  IOrbsTokenService,
+  OrbsTokenService,
+} from 'orbs-pos-data';
 import { buildOrbsPOSDataService } from './OrbsPOSDataServiceFactory';
 import { IEthereumTxService } from './ethereumTxService/IEthereumTxService';
 import { EthereumTxService } from './ethereumTxService/EthereumTxService';
@@ -10,6 +16,7 @@ export interface IServices {
   orbsPOSDataService: IOrbsPOSDataService;
   ethereumTxService: IEthereumTxService;
   stakingService: IStakingService;
+  orbsTokenService: IOrbsTokenService;
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider): IServices {
@@ -23,5 +30,6 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
     ethereumTxService: new EthereumTxService(ethereumProvider),
     orbsPOSDataService: buildOrbsPOSDataService(),
     stakingService: new StakingService(web3, config.contractsAddressesOverride.stakingContract),
+    orbsTokenService: new OrbsTokenService(web3, config.contractsAddressesOverride.erc20Contract),
   };
 }
