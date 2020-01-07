@@ -8,26 +8,26 @@ type TStepState = 'Action' | 'Approving' | 'Success';
 
 const REQUIRED_CONFIRMATIONS = 6;
 
-export interface ITransactionCreationStepProps {
-  orbsTxCreatingAction(amountInOrbs: number): void;
+export interface ITransactionCreationStepProps<T> {
+  orbsTxCreatingAction(txCreatingParam: T): void;
   disableInputs: boolean;
   stakingError?: Error;
 }
 
-interface IProps {
+interface IProps<T> {
   // Tx creation sub step
-  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps>;
-  orbsStakingAction(amount: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }>;
+  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps<T>>;
+  txCreatingAction(txCreatingParam: T): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }>;
 
   // Congratulations sub step
   moveToNextStepAction: () => void;
   moveToNextStepTitle: string;
 }
 
-export const ApprovableWizardStep: React.FC<IProps> = props => {
+export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
   const {
     transactionCreationSubStepContent: TransactionCreationSubStepContent,
-    orbsStakingAction,
+    txCreatingAction,
     moveToNextStepAction,
     moveToNextStepTitle,
   } = props;
@@ -42,11 +42,11 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
   const txVerificationsCount = useNumber(-1);
   const txCreatingError = useStateful<Error>(null);
 
-  const txCreationAction = useCallback(
-    async (orbsToStake: number) => {
+  const txCreationAction = useCallback<(txCreationParam: T) => Promise<void>>(
+    async txCreationParam => {
       disableTxCreationInputs.setTrue();
 
-      const { txPromivent } = await orbsStakingAction(orbsToStake);
+      const { txPromivent } = await txCreatingAction(txCreationParam);
 
       txPromivent.on('confirmation', confirmation => {
         txVerificationsCount.setValue(confirmation);
@@ -70,7 +70,7 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
         disableTxCreationInputs.setFalse();
       });
     },
-    [disableTxCreationInputs, orbsStakingAction, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
+    [disableTxCreationInputs, txCreatingAction, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
   );
 
   const currentSubStepContent = useMemo(() => {
@@ -115,4 +115,4 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
   ]);
 
   return currentSubStepContent;
-};
+}

@@ -32,13 +32,15 @@ export const StakingWizard: React.FC<IProps> = props => {
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
   const goToSelectGuardianStep = useCallback(() => activeStep.setValue(3), [activeStep]);
 
+  const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
+
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
       case 1:
         return (
-          <ApprovableWizardStep
-            orbsStakingAction={amount => orbsAccountStore.stakeOrbs(amount)}
+          <ApprovableWizardStep<number>
+            txCreatingAction={createStakeOrbsTx}
             transactionCreationSubStepContent={OrbsStakingStepContent}
             moveToNextStepAction={goToSelectGuardianStep}
             moveToNextStepTitle={'Select a Guardian'}
