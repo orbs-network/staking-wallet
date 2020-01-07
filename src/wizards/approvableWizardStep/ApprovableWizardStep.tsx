@@ -2,8 +2,11 @@ import React, { useCallback, useMemo } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './TransactionApprovingSubStepContent';
+import { CongratulationsSubStepContent } from './CongratulationsSubStepContent';
 
 type TStepState = 'Action' | 'Approving' | 'Success';
+
+const REQUIRED_CONFIRMATIONS = 6;
 
 export interface ITransactionCreationStepProps {
   orbsTxCreatingAction(amountInOrbs: number): void;
@@ -12,13 +15,22 @@ export interface ITransactionCreationStepProps {
 }
 
 interface IProps {
+  // Tx creation sub step
   transactionCreationSubStepContent: any;
-
   orbsStakingAction(amount: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }>;
+
+  // Congratulations sub step
+  moveToNextStepAction: () => void;
+  moveToNextStepTitle: string;
 }
 
 export const ApprovableWizardStep: React.FC<IProps> = props => {
-  const { transactionCreationSubStepContent: TransactionCreationSubStepContent, orbsStakingAction } = props;
+  const {
+    transactionCreationSubStepContent: TransactionCreationSubStepContent,
+    orbsStakingAction,
+    moveToNextStepAction,
+    moveToNextStepTitle,
+  } = props;
 
   const stepState = useStateful<TStepState>('Action');
 
@@ -58,14 +70,7 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
         disableTxCreationInputs.setFalse();
       });
     },
-    [
-      disableTxCreationInputs,
-      orbsStakingAction,
-      txVerificationsCount,
-      txHash,
-      goToApprovalSubStep,
-      txCreatingError,
-    ],
+    [disableTxCreationInputs, orbsStakingAction, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
   );
 
   const currentSubStepContent = useMemo(() => {
@@ -88,18 +93,25 @@ export const ApprovableWizardStep: React.FC<IProps> = props => {
           />
         );
       case 'Success':
-        return <div>Approving</div>;
+        return (
+          <CongratulationsSubStepContent
+            moveToNextStepAction={moveToNextStepAction}
+            moveToNextStepTitle={moveToNextStepTitle}
+          />
+        );
       default:
         throw new Error(`Invalid step state value of ${stepState.value}`);
     }
   }, [
-    disableTxCreationInputs.value,
-    goToCongratulationSubStep,
-    txCreatingError.value,
-    txHash.value,
-    txVerificationsCount.value,
     stepState.value,
+    disableTxCreationInputs.value,
+    txCreatingError.value,
     txCreationAction,
+    txVerificationsCount.value,
+    txHash.value,
+    goToCongratulationSubStep,
+    moveToNextStepAction,
+    moveToNextStepTitle,
   ]);
 
   return currentSubStepContent;

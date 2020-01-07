@@ -11,12 +11,11 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { useNumber, useStateful } from 'react-hanger';
+import { useNumber } from 'react-hanger';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
-import { TransactionApprovingStepContentOld } from './TransactionApprovingStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 
@@ -24,48 +23,26 @@ interface IProps {
   closeWizard(): void;
 }
 
-const REQUIRED_CONFIRMATIONS = 6;
-
 export const StakingWizard: React.FC<IProps> = props => {
   const { closeWizard } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
 
-  const activeStep = useNumber(0);
+  const activeStep = useNumber(2);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
-
-  const orbsStakingTx = useStateful<string>('');
-  const orbsStakingTxVerificationCount = useNumber(-1);
+  const goToSelectGuardianStep = useCallback(() => activeStep.setValue(3), [activeStep]);
 
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
-      case 0:
+      case 2:
         return (
           <ApprovableWizardStep
             orbsStakingAction={amount => orbsAccountStore.stakeOrbs(amount)}
             transactionCreationSubStepContent={OrbsStakingStepContent}
+            moveToNextStepAction={goToSelectGuardianStep}
+            moveToNextStepTitle={'Select a Guardian'}
           />
-        );
-
-      // Wait for staking tx approval
-      case 1:
-        return (
-          <TransactionApprovingStepContentOld
-            onStepFinished={goToNextStep}
-            txHash={orbsStakingTx.value}
-            verificationCount={orbsStakingTxVerificationCount.value}
-            requiredConfirmations={REQUIRED_CONFIRMATIONS}
-          />
-        );
-      // Display success
-      case 2:
-        return (
-          <WizardContent>
-            <Typography>Congratulations</Typography>
-            <Typography>You have successfully staked Yamba orbs </Typography>
-            <Button onClick={goToNextStep}>Select a Guardian</Button>
-          </WizardContent>
         );
       // Select a guardian
       case 3:
@@ -114,6 +91,7 @@ export const StakingWizard: React.FC<IProps> = props => {
             <Typography>Approving your transaction</Typography>
             <Typography>
               Link to{' '}
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
                 Ether Scan
               </a>{' '}
@@ -133,7 +111,7 @@ export const StakingWizard: React.FC<IProps> = props => {
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [activeStep.value, goToNextStep, orbsAccountStore, orbsStakingTx.value, orbsStakingTxVerificationCount.value]);
+  }, [activeStep.value, goToNextStep, goToSelectGuardianStep, orbsAccountStore]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
