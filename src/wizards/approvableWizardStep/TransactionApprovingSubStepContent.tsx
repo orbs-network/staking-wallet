@@ -10,17 +10,19 @@ interface IProps {
   requiredConfirmations: number;
 }
 
-export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps) => {
+export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
   const { onStepFinished, txHash, verificationCount, requiredConfirmations } = props;
 
   const allowToProceed = useBoolean(false);
   const message = useStateful('Waiting to receive enough confirmations');
   const subMessage = useStateful('');
 
+  // Update the verification count text
   useEffect(() => {
     subMessage.setValue(`Got ${verificationCount} verifications out of recommended ${requiredConfirmations}`);
   }, [verificationCount, requiredConfirmations, subMessage]);
 
+  // Should allow the user to proceed ?
   useEffect(() => {
     if (verificationCount >= requiredConfirmations) {
       allowToProceed.setTrue();
@@ -37,8 +39,8 @@ export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps)
 
       <div data-testid={'transaction_pending_indicator'}></div>
       <Typography>
-        Link to{' '}
-        <a href={`https://etherscan.com/tx/${txHash}`} target={'_blank'} rel={'noopener noreferrer'}>
+        Link to {/* eslint-disable-next-line react/jsx-no-target-blank */}
+        <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
           Ether Scan
         </a>{' '}
       </Typography>

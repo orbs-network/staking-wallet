@@ -44,7 +44,7 @@ export const StakingWizard: React.FC<IProps> = props => {
         return (
           <ApprovableWizardStep
             orbsStakingAction={amount => orbsAccountStore.stakeOrbs(amount)}
-            transactionCreationStepContent={OrbsStakingStepContent}
+            transactionCreationSubStepContent={OrbsStakingStepContent}
           />
         );
 
