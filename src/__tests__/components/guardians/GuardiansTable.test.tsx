@@ -6,15 +6,12 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { IGuardianInfo } from 'orbs-pos-data';
+import { GuardiansTable } from '../../../components/GuardiansTable';
+import { TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
-import { Guardians } from '../../../components/Guardians';
-import { TGuardiansStore, TGuardianInfoExtended } from '../../../store/GuardiansStore';
-import { action, observable } from 'mobx';
 
 describe('Guardians Component', () => {
   let testDriver: ComponentTestDriver;
-  let guardiansStore: Partial<TGuardiansStore>;
 
   const guardian1: TGuardianInfoExtended = {
     address: '0x1111111111111111111111111111111111111111',
@@ -53,19 +50,13 @@ describe('Guardians Component', () => {
   };
 
   beforeEach(() => {
-    testDriver = new ComponentTestDriver(Guardians);
-
-    guardiansStore = observable.object<Partial<TGuardiansStore>>({
-      guardiansList: [],
-    });
+    testDriver = new ComponentTestDriver(GuardiansTable);
   });
 
   it('should display all the given guardians', async () => {
-    guardiansStore.guardiansList = [guardian1, guardian2, guardian3, guardian4];
+    const guardians = [guardian1, guardian2, guardian3, guardian4];
 
-    const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
-
-    const guardiansByExpectedOrder = [guardian3, guardian1, guardian2, guardian4];
+    const { getByTestId } = testDriver.withProps({ guardians }).render();
 
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId('guardian-1')).toBeDefined();
