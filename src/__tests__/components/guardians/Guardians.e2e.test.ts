@@ -60,29 +60,29 @@ describe('Guardians Component', () => {
 
     const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
 
-    // DEV_NOTE : O.L : We need to remember that guardians will be sorted by their stake (descending).
-    //            and so, the first one to be displayed will be the one with the most stake.
-    const guardiansByExpectedOrder = [guardian3, guardian1, guardian2];
-
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId('guardian-1')).toBeDefined();
     expect(getByTestId('guardian-2')).toBeDefined();
     expect(getByTestId('guardian-3')).toBeDefined();
 
-    expect(getByTestId('guardian-1-name')).toHaveTextContent(guardiansByExpectedOrder[0].name);
-    expect(getByTestId('guardian-2-name')).toHaveTextContent(guardiansByExpectedOrder[1].name);
-    expect(getByTestId('guardian-3-name')).toHaveTextContent(guardiansByExpectedOrder[2].name);
+    expect(getByTestId('guardian-1-name')).toHaveTextContent('Guardian 3');
+    expect(getByTestId('guardian-2-name')).toHaveTextContent('Guardian 1');
+    expect(getByTestId('guardian-3-name')).toHaveTextContent('Guardian 2');
 
-    expect(getByTestId('guardian-1-website')).toHaveTextContent(guardiansByExpectedOrder[0].website);
-    expect(getByTestId('guardian-2-website')).toHaveTextContent(guardiansByExpectedOrder[1].website);
-    expect(getByTestId('guardian-3-website')).toHaveTextContent(guardiansByExpectedOrder[2].website);
+    expect(getByTestId('guardian-1-address')).toHaveTextContent(guardian3Address);
+    expect(getByTestId('guardian-2-address')).toHaveTextContent(guardian1Address);
+    expect(getByTestId('guardian-3-address')).toHaveTextContent(guardian2Address);
 
-    expect(getByTestId('guardian-1-stake')).toHaveTextContent((guardiansByExpectedOrder[0].stake * 100).toString());
-    expect(getByTestId('guardian-2-stake')).toHaveTextContent((guardiansByExpectedOrder[1].stake * 100).toString());
-    expect(getByTestId('guardian-3-stake')).toHaveTextContent((guardiansByExpectedOrder[2].stake * 100).toString());
+    expect(getByTestId('guardian-1-website')).toHaveTextContent('http://www.guardian3.com');
+    expect(getByTestId('guardian-2-website')).toHaveTextContent('http://www.guardian1.com');
+    expect(getByTestId('guardian-3-website')).toHaveTextContent('http://www.guardian2.com');
 
-    expect(getByTestId('guardian-1-voted')).toHaveTextContent(guardiansByExpectedOrder[0].voted.toString());
-    expect(getByTestId('guardian-2-voted')).toHaveTextContent(guardiansByExpectedOrder[1].voted.toString());
-    expect(getByTestId('guardian-3-voted')).toHaveTextContent(guardiansByExpectedOrder[2].voted.toString());
+    expect(getByTestId('guardian-1-stake')).toHaveTextContent('30.00%');
+    expect(getByTestId('guardian-2-stake')).toHaveTextContent('20.00%');
+    expect(getByTestId('guardian-3-stake')).toHaveTextContent('10.00%');
+
+    expect(getByTestId('guardian-1-voted')).toHaveTextContent('Yes');
+    expect(getByTestId('guardian-2-voted')).toHaveTextContent('Yes');
+    expect(getByTestId('guardian-3-voted')).toHaveTextContent('No');
   });
 });

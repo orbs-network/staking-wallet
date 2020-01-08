@@ -1,14 +1,18 @@
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core';
 import { createGlobalStyle } from 'styled-components';
 
+const COLOR1 = '#0D0D0D'; // dark gray
+const COLOR2 = '#6FC7D9'; // bluish
+
 export const baseTheme = responsiveFontSizes(
   createMuiTheme({
     palette: {
+      type: 'dark',
       primary: {
-        main: '#0D0D0D',
+        main: COLOR1,
       },
       secondary: {
-        main: '#6FC7D9',
+        main: COLOR2,
       },
       text: {
         primary: '#FFFFFF',
@@ -21,6 +25,11 @@ export const baseTheme = responsiveFontSizes(
           backgroundColor: 'black',
         },
       },
+      MuiPaper: {
+        root: {
+          backgroundColor: COLOR1
+        }
+      }
     },
   }),
 );
