@@ -7,6 +7,7 @@ import { PromiEvent, TransactionReceipt } from 'web3-core';
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
   @observable public liquidOrbs = '0';
+  @observable public stakingContractAllowance = '0';
   @observable public stakedOrbs = 0;
   @observable public orbsInCoolDown = 0;
   @observable public accumulatedRewards: number;
@@ -14,6 +15,7 @@ export class OrbsAccountStore {
 
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
+  private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
@@ -96,8 +98,13 @@ export class OrbsAccountStore {
 
   private async readDataForAccount(accountAddress: string) {
     const liquidOrbs = await this.orbsPOSDataService.getOrbsBalance(accountAddress);
+    const stakingContractAllowance = await this.orbsTokenService.getAllowance(
+      this.cryptoWalletIntegrationStore.mainAddress,
+      this.stakingService.stakingContractAddress,
+    );
 
     this.setLiquidOrbs(liquidOrbs);
+    this.setStakingContractAllowance(stakingContractAllowance);
   }
 
   private async refreshAccountListeners(accountAddress: string) {
@@ -109,11 +116,26 @@ export class OrbsAccountStore {
       accountAddress,
       newBalance => this.setLiquidOrbs(newBalance),
     );
+
+    if (this.stakingContractAllowanceChangeUnsubscribeFunction) {
+      this.stakingContractAllowanceChangeUnsubscribeFunction();
+    }
+
+    this.stakingContractAllowanceChangeUnsubscribeFunction = this.orbsTokenService.subscribeToAllowanceChange(
+      accountAddress,
+      this.stakingService.stakingContractAddress,
+      newAllowance => this.setStakingContractAllowance(newAllowance),
+    );
   }
 
   @action('setLiquidOrbs')
   private setLiquidOrbs(liquidOrbs: string) {
     this.liquidOrbs = liquidOrbs;
+  }
+
+  @action('setStakingContractAllowance')
+  private setStakingContractAllowance(stakingContractAllowance: string) {
+    this.stakingContractAllowance = stakingContractAllowance;
   }
 
   @action('setLiquidOrbs')
