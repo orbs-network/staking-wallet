@@ -8,12 +8,12 @@ import { ITransactionCreationStepProps } from '../approvableWizardStep/Approvabl
 
 const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
 
-export const OrbsStakingStepContent: React.FC<ITransactionCreationStepProps<number>> = props => {
+export const OrbsAllowanceStepContent: React.FC<ITransactionCreationStepProps<number>> = React.memo(props => {
   const { disableInputs, orbsTxCreatingAction, stakingError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
-  const message = useStateful('Select amount of Orbs to stake');
+  const orbsAllowance = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+  const message = useStateful('Select amount of Orbs to allow');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
   const errorMessageFromCode = useCallback((errorCode: number) => {
@@ -49,15 +49,17 @@ export const OrbsStakingStepContent: React.FC<ITransactionCreationStepProps<numb
 
   const stakeTokens = useCallback(async () => {
     message.setValue('');
-    subMessage.setValue('Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed');
+    subMessage.setValue(
+      'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
+    );
 
-    orbsTxCreatingAction(orbsForStaking.value);
-  }, [message, subMessage, orbsTxCreatingAction, orbsForStaking.value]);
+    orbsTxCreatingAction(orbsAllowance.value);
+  }, [message, subMessage, orbsTxCreatingAction, orbsAllowance.value]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
-      <Typography>Staking your tokens in the smart contract</Typography>
+      <Typography>Approve the smart contract to use youtr Orbs</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />
       <Typography variant={'caption'}>{subMessage.value}</Typography>
@@ -68,14 +70,14 @@ export const OrbsStakingStepContent: React.FC<ITransactionCreationStepProps<numb
       {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
       <Input
         type={'number'}
-        value={orbsForStaking.value}
-        onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
+        value={orbsAllowance.value}
+        onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
         disabled={disableInputs}
         inputProps={inputTestProps}
       />
       <Button disabled={disableInputs} onClick={stakeTokens}>
-        STAKE
+        Allow
       </Button>
     </WizardContent>
   );
-};
+});

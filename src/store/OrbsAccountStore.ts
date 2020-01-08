@@ -30,6 +30,15 @@ export class OrbsAccountStore {
     );
   }
 
+  public async setOrbsAllowance(orbsToStake: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
+    const { stakingContractAddress } = this.stakingService;
+    const promivent = this.orbsTokenService.approve(stakingContractAddress, orbsToStake);
+
+    return {
+      txPromivent: promivent,
+    };
+  }
+
   public async stakeOrbs(orbsToStake: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
     const promivent = this.stakingService.stake(orbsToStake);
 

@@ -18,6 +18,8 @@ import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
+import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
+import { observer } from 'mobx-react';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -30,23 +32,35 @@ interface IProps {
   closeWizard(): void;
 }
 
-export const StakingWizard: React.FC<IProps> = props => {
+// Connect to store
+export const StakingWizard = observer((props: IProps) => {
   const { closeWizard } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
 
-  const activeStep = useNumber(1);
+  const activeStep = useNumber(0);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
   const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
   const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
 
+  const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setOrbsAllowance(amount), [
+    orbsAccountStore,
+  ]);
   const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
 
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
       case STEPS_INDEXES.allowTransfer:
-        return <div>Allow transfer</div>;
+        return (
+          <ApprovableWizardStep<number>
+            txCreatingAction={createAllowOrbsTx}
+            transactionCreationSubStepContent={OrbsAllowanceStepContent}
+            moveToNextStepAction={goToStakeOrbsStep}
+            moveToNextStepTitle={'Stake your ORBs'}
+            key={'approvingStep'}
+          />
+        );
       // Stake orbs
       case STEPS_INDEXES.stakeOrbs:
         return (
@@ -55,6 +69,7 @@ export const StakingWizard: React.FC<IProps> = props => {
             transactionCreationSubStepContent={OrbsStakingStepContent}
             moveToNextStepAction={goToSelectGuardianStep}
             moveToNextStepTitle={'Select a Guardian'}
+            key={'stakingStep'}
           />
         );
       // Select a guardian
@@ -108,7 +123,15 @@ export const StakingWizard: React.FC<IProps> = props => {
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [activeStep.value, closeWizard, createStakeOrbsTx, goToNextStep, goToSelectGuardianStep]);
+  }, [
+    activeStep.value,
+    closeWizard,
+    createAllowOrbsTx,
+    createStakeOrbsTx,
+    goToNextStep,
+    goToSelectGuardianStep,
+    goToStakeOrbsStep,
+  ]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
@@ -133,4 +156,4 @@ export const StakingWizard: React.FC<IProps> = props => {
       {stepContent}
     </WizardContainer>
   );
-};
+});
