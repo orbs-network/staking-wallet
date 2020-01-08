@@ -1,13 +1,22 @@
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
-import { IGuardianInfo } from 'orbs-pos-data';
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
+import styled from 'styled-components';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
+
+const NameBox = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NameContainer = styled.span(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
+}));
 
 interface IProps {
   guardians: TGuardianInfoExtended[];
@@ -33,8 +42,10 @@ export const GuardiansTable = React.memo<IProps>(props => {
           {sortedGuardians.map((g, idx) => (
             <TableRow data-testid={`guardian-${idx + 1}`} key={g.name} hover>
               <TableCell data-testid={`guardian-${idx + 1}-name`}>
-                <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
-                {g.name}
+                <NameBox>
+                  <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
+                  <NameContainer>{g.name}</NameContainer>
+                </NameBox>
               </TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-address`}>{g.address}</TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-website`}>{g.website}</TableCell>
