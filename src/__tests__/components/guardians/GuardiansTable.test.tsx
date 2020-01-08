@@ -89,4 +89,35 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-3-voted')).toHaveTextContent('No');
     expect(getByTestId('guardian-4-voted')).toHaveTextContent('Yes');
   });
+
+  it('should display the "Select" guardian table', async () => {
+    const guardians = [guardian1, guardian2, guardian3, guardian4];
+
+    const { getByTestId } = testDriver.withProps({ guardians, onGuardianSelect: () => {} }).render();
+
+    expect(getByTestId('guardians-table')).toBeDefined();
+    expect(getByTestId('guardian-1')).toBeDefined();
+    expect(getByTestId('guardian-1-select-button')).toHaveTextContent('Select');
+  });
+
+  it('should NOT display the "Select" guardian table', async () => {
+    const guardians = [guardian1, guardian2, guardian3, guardian4];
+
+    const { getByTestId, queryByTestId } = testDriver.withProps({ guardians }).render();
+
+    expect(getByTestId('guardians-table')).toBeDefined();
+    expect(getByTestId('guardian-1')).toBeDefined();
+    expect(queryByTestId('guardian-1-select-button')).toBeNull();
+  });
+
+  it('should call onGuardianSelect when a guardian was selected', async () => {
+    const guardians = [guardian1, guardian2, guardian3, guardian4];
+    const spy = jest.fn();
+
+    const { getByTestId } = testDriver.withProps({ guardians, onGuardianSelect: spy }).render();
+
+    const selectButton = getByTestId('guardian-1-select-button');
+    selectButton.click();
+    expect(spy).toHaveBeenCalledWith(guardian3); // guardian3 is the first guardian
+  });
 });

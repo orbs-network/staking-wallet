@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@material-ui/core';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,11 +20,12 @@ const NameContainer = styled.span(({ theme }) => ({
 
 interface IProps {
   guardians: TGuardianInfoExtended[];
+  onGuardianSelect?: (guardian: TGuardianInfoExtended) => void;
 }
 
-export const GuardiansTable = React.memo<IProps>(props => {
+export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect }) => {
   const { t } = useTranslation();
-  const sortedGuardians = useMemo(() => props.guardians.slice().sort((a, b) => b.stake - a.stake), [props.guardians]);
+  const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stake - a.stake), [guardians]);
 
   return (
     <Paper>
@@ -36,6 +37,7 @@ export const GuardiansTable = React.memo<IProps>(props => {
             <TableCell>{t('Url')}</TableCell>
             <TableCell>{t('Stake')}</TableCell>
             <TableCell>{t('Voted')}</TableCell>
+            {onGuardianSelect && <TableCell>{t('Voted')}</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -51,6 +53,11 @@ export const GuardiansTable = React.memo<IProps>(props => {
               <TableCell data-testid={`guardian-${idx + 1}-website`}>{g.website}</TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-stake`}>{asPercent(g.stake)}</TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-voted`}>{g.voted ? 'Yes' : 'No'}</TableCell>
+              {onGuardianSelect && (
+                <TableCell>
+                  <Button variant='contained' data-testid={`guardian-${idx + 1}-select-button`} onClick={() => onGuardianSelect(g)}>{t('Select')}</Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
