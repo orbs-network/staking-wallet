@@ -32,8 +32,10 @@ export class OrbsAccountStore {
     );
   }
 
-  public async setOrbsAllowance(orbsToStake: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
-    const { stakingContractAddress } = this.stakingService;
+  public async setAllowanceForStakingContract(
+    orbsToStake: number,
+  ): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
+    const stakingContractAddress = this.stakingService.getStakingContractAddress();
     const promivent = this.orbsTokenService.approve(stakingContractAddress, orbsToStake);
 
     return {
@@ -98,9 +100,9 @@ export class OrbsAccountStore {
 
   private async readDataForAccount(accountAddress: string) {
     const liquidOrbs = await this.orbsPOSDataService.getOrbsBalance(accountAddress);
-    const stakingContractAllowance = await this.orbsTokenService.getAllowance(
+    const stakingContractAllowance = await this.orbsTokenService.readAllowance(
       this.cryptoWalletIntegrationStore.mainAddress,
-      this.stakingService.stakingContractAddress,
+      this.stakingService.getStakingContractAddress(),
     );
 
     this.setLiquidOrbs(liquidOrbs);
@@ -123,8 +125,8 @@ export class OrbsAccountStore {
 
     this.stakingContractAllowanceChangeUnsubscribeFunction = this.orbsTokenService.subscribeToAllowanceChange(
       accountAddress,
-      this.stakingService.stakingContractAddress,
-      newAllowance => this.setStakingContractAllowance(newAllowance),
+      this.stakingService.getStakingContractAddress(),
+      (error, newAllowance) => this.setStakingContractAllowance(newAllowance),
     );
   }
 

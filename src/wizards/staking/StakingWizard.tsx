@@ -43,7 +43,7 @@ export const StakingWizard = observer((props: IProps) => {
   const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
   const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
 
-  const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setOrbsAllowance(amount), [
+  const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setAllowanceForStakingContract(amount), [
     orbsAccountStore,
   ]);
   const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
