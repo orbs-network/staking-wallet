@@ -6,17 +6,17 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
+import { ThemeProvider } from '@material-ui/styles';
 import { render } from '@testing-library/react';
 import { Provider } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
 import { DeepPartial } from 'utility-types';
 import { IServices } from '../services/Services';
 import { IStores } from '../store/stores';
 import { configureMobx } from '../store/storesInitialization';
 import { baseTheme } from '../theme/Theme';
-import { ThemeProvider } from '@material-ui/styles';
-import { ThemeProvider as SCThemeProvider } from 'styled-components';
 
 export class ComponentTestDriver<P = {}> {
   private services: DeepPartial<IServices> = {};
@@ -39,6 +39,7 @@ export class ComponentTestDriver<P = {}> {
 
   withProps(props: P) {
     this.renderProps = props;
+    return this;
   }
 
   public render() {
