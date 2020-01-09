@@ -15,6 +15,9 @@ export const baseTheme = responsiveFontSizes(
         secondary: '#7B7B7B',
       },
     },
+    typography: {
+      fontFamily: 'Montserrat',
+    },
     overrides: {
       MuiContainer: {
         root: {
