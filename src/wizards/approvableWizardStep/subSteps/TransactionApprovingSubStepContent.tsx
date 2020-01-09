@@ -38,15 +38,21 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
       <Typography variant={'caption'}>{subMessage.value}</Typography>
 
       <div data-testid={'transaction_pending_indicator'}></div>
+      {!allowToProceed.value && <Typography variant={'caption'}>This might take a few moments... </Typography>}
+      {allowToProceed.value && (
+        <Button variant={'outlined'} onClick={onStepFinished}>
+          Proceed
+        </Button>
+      )}
+
+      <br />
+
       <Typography>
-        Link to {/* eslint-disable-next-line react/jsx-no-target-blank */}
+        You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
         <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
           Ether Scan
         </a>{' '}
       </Typography>
-      <Typography variant={'caption'}>Wait a few seconds... </Typography>
-
-      {allowToProceed.value && <Button onClick={onStepFinished}>Proceed</Button>}
     </WizardContent>
   );
 };

@@ -56,6 +56,7 @@ export const StakingWizard = observer((props: IProps) => {
           <ApprovableWizardStep<number>
             txCreatingAction={createAllowOrbsTx}
             transactionCreationSubStepContent={OrbsAllowanceStepContent}
+            finishedActionName={'allowed the staking contract to use your tokens'}
             moveToNextStepAction={goToStakeOrbsStep}
             moveToNextStepTitle={'Stake your ORBs'}
             key={'approvingStep'}
@@ -67,6 +68,7 @@ export const StakingWizard = observer((props: IProps) => {
           <ApprovableWizardStep<number>
             txCreatingAction={createStakeOrbsTx}
             transactionCreationSubStepContent={OrbsStakingStepContent}
+            finishedActionName={'staked your tokens'}
             moveToNextStepAction={goToSelectGuardianStep}
             moveToNextStepTitle={'Select a Guardian'}
             key={'stakingStep'}

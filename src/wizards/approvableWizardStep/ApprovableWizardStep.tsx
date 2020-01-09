@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
@@ -20,6 +20,7 @@ interface IProps<T> {
   txCreatingAction(txCreatingParam: T): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }>;
 
   // Congratulations sub step
+  finishedActionName: string;
   moveToNextStepAction: () => void;
   moveToNextStepTitle: string;
 }
@@ -30,14 +31,21 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
   const {
     transactionCreationSubStepContent: TransactionCreationSubStepContent,
     txCreatingAction,
+    finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
   } = props;
 
   const stepState = useStateful<TStepState>('Action');
 
+  const unsubscribeFromAllPromiventListeners = useRef<() => void>(null);
   const goToApprovalSubStep = useCallback(() => stepState.setValue('Approving'), [stepState]);
-  const goToCongratulationSubStep = useCallback(() => stepState.setValue('Success'), [stepState]);
+  const goToCongratulationSubStep = useCallback(() => {
+    if (unsubscribeFromAllPromiventListeners.current) {
+      unsubscribeFromAllPromiventListeners.current();
+    }
+    stepState.setValue('Success');
+  }, [stepState, unsubscribeFromAllPromiventListeners]);
 
   const disableTxCreationInputs = useBoolean(false);
   const txHash = useStateful<string>('');
@@ -50,13 +58,16 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
 
       const { txPromivent } = await txCreatingAction(txCreationParam);
 
+      unsubscribeFromAllPromiventListeners.current = () => {
+        // @ts-ignore
+        return txPromivent.removeAllListeners();
+      };
+
       txPromivent.on('confirmation', confirmation => {
         txVerificationsCount.setValue(confirmation);
 
         // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
         if (confirmation >= 10) {
-          // @ts-ignore
-          pe.removeAllListeners();
           disableTxCreationInputs.setFalse();
         }
       });
@@ -98,6 +109,7 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
       case 'Success':
         return (
           <CongratulationsSubStepContent
+            finishedActionName={finishedActionName}
             moveToNextStepAction={moveToNextStepAction}
             moveToNextStepTitle={moveToNextStepTitle}
           />
@@ -113,6 +125,7 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
     txVerificationsCount.value,
     txHash.value,
     goToCongratulationSubStep,
+    finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
   ]);
