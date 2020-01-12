@@ -13,5 +13,10 @@ export const Guardians = observer(() => {
     return <Typography>{t('Loading...')}</Typography>;
   }
 
-  return <GuardiansTable guardians={guardiansStore.guardiansList} />;
+  return (
+    <GuardiansTable
+      guardians={guardiansStore.guardiansList}
+      totalParticipatingTokens={guardiansStore.totalParticipatingTokens}
+    />
+  );
 });

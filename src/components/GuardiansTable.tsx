@@ -20,15 +20,17 @@ const NameContainer = styled.span(({ theme }) => ({
 
 interface IProps {
   guardians: TGuardianInfoExtended[];
+  totalParticipatingTokens: number;
   onGuardianSelect?: (guardian: TGuardianInfoExtended) => void;
 }
 
-export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect }) => {
+export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect, totalParticipatingTokens }) => {
   const { t } = useTranslation();
   const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stake - a.stake), [guardians]);
 
   return (
     <Paper>
+      <div data-testid='total-participating-tokens'>{totalParticipatingTokens.toLocaleString()}</div>
       <Table data-testid={'guardians-table'}>
         <TableHead>
           <TableRow>
@@ -55,7 +57,13 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect 
               <TableCell data-testid={`guardian-${idx + 1}-voted`}>{g.voted ? 'Yes' : 'No'}</TableCell>
               {onGuardianSelect && (
                 <TableCell>
-                  <Button variant='contained' data-testid={`guardian-${idx + 1}-select-button`} onClick={() => onGuardianSelect(g)}>{t('Select')}</Button>
+                  <Button
+                    variant='contained'
+                    data-testid={`guardian-${idx + 1}-select-button`}
+                    onClick={() => onGuardianSelect(g)}
+                  >
+                    {t('Select')}
+                  </Button>
                 </TableCell>
               )}
             </TableRow>
