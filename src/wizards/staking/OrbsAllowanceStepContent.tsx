@@ -9,12 +9,12 @@ import { observer } from 'mobx-react';
 
 const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
 
-export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
+export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
-  const message = useStateful('Select amount of Orbs to stake');
+  const orbsAllowance = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+  const message = useStateful('Select amount of Orbs to allow');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
   const errorMessageFromCode = useCallback((errorCode: number) => {
@@ -54,14 +54,14 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
     );
 
-    const promiEvent = orbsAccountStore.stakeOrbs(orbsForStaking.value);
+    const promiEvent = orbsAccountStore.setAllowanceForStakingContract(orbsAllowance.value);
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, orbsAccountStore, orbsForStaking.value, onPromiEventAction]);
+  }, [message, subMessage, orbsAccountStore, orbsAllowance.value, onPromiEventAction]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
-      <Typography>Staking your tokens in the smart contract</Typography>
+      <Typography>Approve the smart contract to use youtr Orbs</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />
       <Typography variant={'caption'}>{subMessage.value}</Typography>
@@ -72,13 +72,13 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
       <Input
         type={'number'}
-        value={orbsForStaking.value}
-        onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
+        value={orbsAllowance.value}
+        onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
         disabled={disableInputs}
         inputProps={inputTestProps}
       />
       <Button disabled={disableInputs} onClick={stakeTokens}>
-        STAKE
+        Allow
       </Button>
     </WizardContent>
   );

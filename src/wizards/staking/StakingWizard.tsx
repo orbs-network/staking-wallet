@@ -11,111 +11,69 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { useNumber, useStateful, useBoolean } from 'react-hanger';
+import { useNumber } from 'react-hanger';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
-import { TransactionApprovingStepContent } from './TransactionApprovingStepContent';
-import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
+import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
+import { observer } from 'mobx-react';
+
+const STEPS_INDEXES = {
+  allowTransfer: 0,
+  stakeOrbs: 1,
+  selectGuardian: 2,
+  finish: 3,
+};
 
 interface IProps {
   closeWizard(): void;
 }
 
-const REQUIRED_CONFIRMATIONS = 6;
-
-export const StakingWizard: React.FC<IProps> = props => {
+// Connect to store
+export const StakingWizard = observer((props: IProps) => {
   const { closeWizard } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
 
   const activeStep = useNumber(0);
   const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
+  const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
+  const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
 
-  const disableOrbsStakingInputs = useBoolean(false);
-  const orbsStakingTx = useStateful<string>('');
-  const orbsStakingTxVerificationCount = useNumber(-1);
-  const orbsStakingError = useStateful<Error>(null);
-
-  const stakeOrbs = useCallback(
-    async (orbsToStake: number) => {
-      disableOrbsStakingInputs.setTrue();
-
-      const { txPromivent } = await orbsAccountStore.stakeOrbs(orbsToStake);
-
-      txPromivent.on('confirmation', confirmation => {
-        orbsStakingTxVerificationCount.setValue(confirmation);
-
-        if (confirmation >= 10) {
-          // @ts-ignore
-          pe.removeAllListeners();
-          disableOrbsStakingInputs.setFalse();
-        }
-      });
-      txPromivent.once('receipt', receipt => {
-        orbsStakingTx.setValue(receipt.transactionHash);
-        goToNextStep();
-        disableOrbsStakingInputs.setFalse();
-      });
-      txPromivent.on('error', error => {
-        orbsStakingError.setValue(error);
-
-        // @ts-ignore
-        txPromivent.removeAllListeners();
-        disableOrbsStakingInputs.setFalse();
-      });
-    },
-    [
-      disableOrbsStakingInputs,
-      orbsAccountStore,
-      orbsStakingTxVerificationCount,
-      orbsStakingTx,
-      goToNextStep,
-      orbsStakingError,
-    ],
-  );
-
-  const handleStakingTxInitiated = useCallback(
-    (pe: PromiEvent<TransactionReceipt>, errorHandler?: (e: Error) => void) => {},
-    [],
-  );
+  const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setAllowanceForStakingContract(amount), [
+    orbsAccountStore,
+  ]);
+  const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
 
   const stepContent = useMemo(() => {
     switch (activeStep.value) {
       // Stake orbs
-      case 0:
+      case STEPS_INDEXES.allowTransfer:
         return (
-          <OrbsStakingStepContent
-            onTxStarted={handleStakingTxInitiated}
-            disableInputs={disableOrbsStakingInputs.value}
-            stakeOrbs={stakeOrbs}
-            stakingError={orbsStakingError.value}
+          <ApprovableWizardStep
+            transactionCreationSubStepContent={OrbsAllowanceStepContent}
+            finishedActionName={'allowed the staking contract to use your tokens'}
+            moveToNextStepAction={goToStakeOrbsStep}
+            moveToNextStepTitle={'Stake your ORBs'}
+            key={'approvingStep'}
           />
         );
-
-      // Wait for staking tx approval
-      case 1:
+      // Stake orbs
+      case STEPS_INDEXES.stakeOrbs:
         return (
-          <TransactionApprovingStepContent
-            onStepFinished={goToNextStep}
-            txHash={orbsStakingTx.value}
-            verificationCount={orbsStakingTxVerificationCount.value}
-            requiredConfirmations={REQUIRED_CONFIRMATIONS}
+          <ApprovableWizardStep
+            transactionCreationSubStepContent={OrbsStakingStepContent}
+            finishedActionName={'staked your tokens'}
+            moveToNextStepAction={goToSelectGuardianStep}
+            moveToNextStepTitle={'Select a Guardian'}
+            key={'stakingStep'}
           />
-        );
-      // Display success
-      case 2:
-        return (
-          <WizardContent>
-            <Typography>Congratulations</Typography>
-            <Typography>You have successfully staked Yamba orbs </Typography>
-            <Button onClick={goToNextStep}>Select a Guardian</Button>
-          </WizardContent>
         );
       // Select a guardian
-      case 3:
+      case STEPS_INDEXES.selectGuardian:
         return (
           <WizardContent>
             <TableContainer>
@@ -154,27 +112,12 @@ export const StakingWizard: React.FC<IProps> = props => {
             </TableContainer>
           </WizardContent>
         );
-      // Wait for guardian selection tx approval
-      case 4:
+      case STEPS_INDEXES.finish:
         return (
           <WizardContent>
-            <Typography>Approving your transaction</Typography>
-            <Typography>
-              Link to{' '}
-              <a href={'https://etherscan.com'} target={'_blank'} rel={'noopener noreferrer'}>
-                Ether Scan
-              </a>{' '}
-            </Typography>
-            <Typography variant={'caption'}>Wait a few seconds... </Typography>
-            <Button onClick={goToNextStep}>Proceed</Button>
-          </WizardContent>
-        );
-      case 5:
-        return (
-          <WizardContent>
-            <Typography>Congratulations</Typography>
-            <Typography>You have successfully selected a guardian </Typography>
-            <Button onClick={() => null}>Finish</Button>
+            <Typography>Awesome !</Typography>
+            <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
+            <Button onClick={closeWizard}>Finish</Button>
           </WizardContent>
         );
       default:
@@ -182,28 +125,23 @@ export const StakingWizard: React.FC<IProps> = props => {
     }
   }, [
     activeStep.value,
-    disableOrbsStakingInputs.value,
+    closeWizard,
+    createAllowOrbsTx,
+    createStakeOrbsTx,
     goToNextStep,
-    handleStakingTxInitiated,
-    orbsStakingError.value,
-    orbsStakingTx.value,
-    orbsStakingTxVerificationCount.value,
-    stakeOrbs,
+    goToSelectGuardianStep,
+    goToStakeOrbsStep,
   ]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>
       <WizardStepper activeStep={activeStep.value} alternativeLabel>
         <Step>
-          <StepLabel>Staking your tokens</StepLabel>
+          <StepLabel>Approve usage of Orbs</StepLabel>
         </Step>
 
         <Step>
-          <StepLabel>Approving your transaction</StepLabel>
-        </Step>
-
-        <Step>
-          <StepLabel>Success staking orbs</StepLabel>
+          <StepLabel>Stake your tokens</StepLabel>
         </Step>
 
         <Step>
@@ -211,15 +149,11 @@ export const StakingWizard: React.FC<IProps> = props => {
         </Step>
 
         <Step>
-          <StepLabel>Approving your transaction</StepLabel>
-        </Step>
-
-        <Step>
-          <StepLabel>Success selecting guardian</StepLabel>
+          <StepLabel>Finish</StepLabel>
         </Step>
       </WizardStepper>
 
       {stepContent}
     </WizardContainer>
   );
-};
+});

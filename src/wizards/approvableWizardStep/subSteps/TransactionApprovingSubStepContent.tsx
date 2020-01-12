@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
+import { WizardContent } from '../../../components/wizards/WizardContent';
 import { useStateful, useBoolean } from 'react-hanger';
 
 interface IProps {
@@ -10,17 +10,19 @@ interface IProps {
   requiredConfirmations: number;
 }
 
-export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps) => {
+export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
   const { onStepFinished, txHash, verificationCount, requiredConfirmations } = props;
 
   const allowToProceed = useBoolean(false);
   const message = useStateful('Waiting to receive enough confirmations');
   const subMessage = useStateful('');
 
+  // Update the verification count text
   useEffect(() => {
     subMessage.setValue(`Got ${verificationCount} verifications out of recommended ${requiredConfirmations}`);
   }, [verificationCount, requiredConfirmations, subMessage]);
 
+  // Should allow the user to proceed ?
   useEffect(() => {
     if (verificationCount >= requiredConfirmations) {
       allowToProceed.setTrue();
@@ -36,15 +38,21 @@ export const TransactionApprovingStepContent: React.FC<IProps> = (props: IProps)
       <Typography variant={'caption'}>{subMessage.value}</Typography>
 
       <div data-testid={'transaction_pending_indicator'}></div>
+      {!allowToProceed.value && <Typography variant={'caption'}>This might take a few moments... </Typography>}
+      {allowToProceed.value && (
+        <Button variant={'outlined'} onClick={onStepFinished}>
+          Proceed
+        </Button>
+      )}
+
+      <br />
+
       <Typography>
-        Link to{' '}
-        <a href={`https://etherscan.com/tx/${txHash}`} target={'_blank'} rel={'noopener noreferrer'}>
+        You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
+        <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
           Ether Scan
         </a>{' '}
       </Typography>
-      <Typography variant={'caption'}>Wait a few seconds... </Typography>
-
-      {allowToProceed.value && <Button onClick={onStepFinished}>Proceed</Button>}
     </WizardContent>
   );
 };
