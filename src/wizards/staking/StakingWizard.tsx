@@ -33,119 +33,121 @@ interface IProps {
 }
 
 // Connect to store
-export const StakingWizard = observer((props: IProps) => {
-  const { closeWizard } = props;
+export const StakingWizard = observer(
+  React.forwardRef<any, IProps>((props, ref) => {
+    const { closeWizard } = props;
 
-  const orbsAccountStore = useOrbsAccountStore();
+    const orbsAccountStore = useOrbsAccountStore();
 
-  const activeStep = useNumber(0);
-  const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
-  const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
-  const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
+    const activeStep = useNumber(0);
+    const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
+    const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
+    const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
 
-  const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setAllowanceForStakingContract(amount), [
-    orbsAccountStore,
-  ]);
-  const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
+    const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setAllowanceForStakingContract(amount), [
+      orbsAccountStore,
+    ]);
+    const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
 
-  const stepContent = useMemo(() => {
-    switch (activeStep.value) {
-      // Stake orbs
-      case STEPS_INDEXES.allowTransfer:
-        return (
-          <ApprovableWizardStep
-            transactionCreationSubStepContent={OrbsAllowanceStepContent}
-            finishedActionName={'allowed the staking contract to use your tokens'}
-            moveToNextStepAction={goToStakeOrbsStep}
-            moveToNextStepTitle={'Stake your ORBs'}
-            key={'approvingStep'}
-          />
-        );
-      // Stake orbs
-      case STEPS_INDEXES.stakeOrbs:
-        return (
-          <ApprovableWizardStep
-            transactionCreationSubStepContent={OrbsStakingStepContent}
-            finishedActionName={'staked your tokens'}
-            moveToNextStepAction={goToSelectGuardianStep}
-            moveToNextStepTitle={'Select a Guardian'}
-            key={'stakingStep'}
-          />
-        );
-      // Select a guardian
-      case STEPS_INDEXES.selectGuardian:
-        return (
-          <WizardContent>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Rank</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Address</TableCell>
-                    <TableCell>Selection</TableCell>
-                  </TableRow>
-                </TableHead>
+    const stepContent = useMemo(() => {
+      switch (activeStep.value) {
+        // Stake orbs
+        case STEPS_INDEXES.allowTransfer:
+          return (
+            <ApprovableWizardStep
+              transactionCreationSubStepContent={OrbsAllowanceStepContent}
+              finishedActionName={'allowed the staking contract to use your tokens'}
+              moveToNextStepAction={goToStakeOrbsStep}
+              moveToNextStepTitle={'Stake your ORBs'}
+              key={'approvingStep'}
+            />
+          );
+        // Stake orbs
+        case STEPS_INDEXES.stakeOrbs:
+          return (
+            <ApprovableWizardStep
+              transactionCreationSubStepContent={OrbsStakingStepContent}
+              finishedActionName={'staked your tokens'}
+              moveToNextStepAction={goToSelectGuardianStep}
+              moveToNextStepTitle={'Select a Guardian'}
+              key={'stakingStep'}
+            />
+          );
+        // Select a guardian
+        case STEPS_INDEXES.selectGuardian:
+          return (
+            <WizardContent>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Rank</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Address</TableCell>
+                      <TableCell>Selection</TableCell>
+                    </TableRow>
+                  </TableHead>
 
-                <TableBody>
-                  {/* Demo row 1 */}
-                  <TableRow>
-                    <TableCell>1</TableCell>
-                    <TableCell>Douglas Meshuga</TableCell>
-                    <TableCell>0xff45223cb</TableCell>
-                    <TableCell>
-                      <Button onClick={goToNextStep}>Select</Button>
-                    </TableCell>
-                  </TableRow>
+                  <TableBody>
+                    {/* Demo row 1 */}
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>Douglas Meshuga</TableCell>
+                      <TableCell>0xff45223cb</TableCell>
+                      <TableCell>
+                        <Button onClick={goToNextStep}>Select</Button>
+                      </TableCell>
+                    </TableRow>
 
-                  {/* Demo row 2 */}
-                  <TableRow>
-                    <TableCell>2</TableCell>
-                    <TableCell>Marina Aliasi</TableCell>
-                    <TableCell>0x0343feab</TableCell>
-                    <TableCell>
-                      <Button onClick={goToNextStep}>Select</Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </WizardContent>
-        );
-      case STEPS_INDEXES.finish:
-        return (
-          <WizardContent>
-            <Typography>Awesome !</Typography>
-            <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
-            <Button onClick={closeWizard}>Finish</Button>
-          </WizardContent>
-        );
-      default:
-        throw new Error(`Unsupported step value of ${activeStep.value}`);
-    }
-  }, [activeStep.value, closeWizard, goToNextStep, goToSelectGuardianStep, goToStakeOrbsStep]);
+                    {/* Demo row 2 */}
+                    <TableRow>
+                      <TableCell>2</TableCell>
+                      <TableCell>Marina Aliasi</TableCell>
+                      <TableCell>0x0343feab</TableCell>
+                      <TableCell>
+                        <Button onClick={goToNextStep}>Select</Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </WizardContent>
+          );
+        case STEPS_INDEXES.finish:
+          return (
+            <WizardContent>
+              <Typography>Awesome !</Typography>
+              <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
+              <Button onClick={closeWizard}>Finish</Button>
+            </WizardContent>
+          );
+        default:
+          throw new Error(`Unsupported step value of ${activeStep.value}`);
+      }
+    }, [activeStep.value, closeWizard, goToNextStep, goToSelectGuardianStep, goToStakeOrbsStep]);
 
-  return (
-    <WizardContainer data-testid={'wizard_staking'}>
-      <WizardStepper activeStep={activeStep.value} alternativeLabel>
-        <Step>
-          <StepLabel>Approve usage of Orbs</StepLabel>
-        </Step>
+    return (
+      <WizardContainer data-testid={'wizard_staking'}>
+        <WizardStepper activeStep={activeStep.value} alternativeLabel>
+          <Step>
+            <StepLabel>Approve usage of Orbs</StepLabel>
+          </Step>
 
-        <Step>
-          <StepLabel>Stake your tokens</StepLabel>
-        </Step>
+          <Step>
+            <StepLabel>Stake your tokens</StepLabel>
+          </Step>
 
-        <Step>
-          <StepLabel>Select a guardian</StepLabel>
-        </Step>
+          <Step>
+            <StepLabel>Select a guardian</StepLabel>
+          </Step>
 
-        <Step>
-          <StepLabel>Finish</StepLabel>
-        </Step>
-      </WizardStepper>
+          <Step>
+            <StepLabel>Finish</StepLabel>
+          </Step>
+        </WizardStepper>
 
-      {stepContent}
-    </WizardContainer>
-  );
-});
+        {stepContent}
+      </WizardContainer>
+    );
+  }),
+);

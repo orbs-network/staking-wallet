@@ -1,17 +1,16 @@
-import React from 'react';
-import { observer } from 'mobx-react';
-
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import { SectionHeader } from '../components/structure/SectionHeader';
-import { Section } from '../components/structure/Section';
 import { Grid } from '@material-ui/core';
-import { BalanceCard } from '../components/BalanceCard';
-import styled from 'styled-components';
-import { MODAL_CSTYLE_ENTERED_CONTENTS } from '../components/modals/modalsConfiguration';
-import Modal from 'react-modal';
+import Modal from '@material-ui/core/Modal';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import { observer } from 'mobx-react';
+import React from 'react';
 import { useBoolean } from 'react-hanger';
-import { StakingWizard } from '../wizards/staking/StakingWizard';
+import styled from 'styled-components';
+import { BalanceCard } from '../components/BalanceCard';
+import { Section } from '../components/structure/Section';
+import { SectionHeader } from '../components/structure/SectionHeader';
 import { useOrbsAccountStore } from '../store/storeHooks';
+import { StakingWizard } from '../wizards/staking/StakingWizard';
+
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -63,21 +62,11 @@ export const BalancesSection = observer(() => {
         </GridItem>
       </Grid>
 
-      <Modal
-        isOpen={showStakingModal.value}
-        onRequestClose={showStakingModal.setFalse}
-        shouldCloseOnOverlayClick={true}
-        style={MODAL_CSTYLE_ENTERED_CONTENTS}
-      >
+      <Modal open={showStakingModal.value} onClose={showStakingModal.setFalse}>
         <StakingWizard closeWizard={showStakingModal.setFalse} />
       </Modal>
 
-      <Modal
-        isOpen={showUnStakingModal.value}
-        onRequestClose={showUnStakingModal.setFalse}
-        shouldCloseOnOverlayClick={true}
-        style={MODAL_CSTYLE_ENTERED_CONTENTS}
-      >
+      <Modal open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
         <div>Modal for Orbs Un-staking</div>
       </Modal>
     </Section>

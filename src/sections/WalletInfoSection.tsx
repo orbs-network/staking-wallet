@@ -8,16 +8,14 @@ import { observer } from 'mobx-react';
 import React, { useCallback } from 'react';
 import { useBoolean } from 'react-hanger';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
+import Modal from '@material-ui/core/Modal';
 import { QRCode } from 'react-qrcode-logo';
 import styled from 'styled-components';
 import { CommonDivider } from '../components/base/CommonDivider';
-import { MODAL_CSTYLE_ENTERED_CONTENTS } from '../components/modals/modalsConfiguration';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
-
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -55,7 +53,7 @@ export const WalletInfoSection = observer(() => {
       </Grid>
       <CommonDivider />
 
-      <Modal isOpen={showQrModal.value} onRequestClose={showQrModal.setFalse} style={MODAL_CSTYLE_ENTERED_CONTENTS}>
+      <Modal disableEnforceFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
         <QRCode
           value={cryptoWalletIntegrationStore.mainAddress}
           logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
