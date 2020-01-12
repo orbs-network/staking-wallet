@@ -14,7 +14,7 @@ export interface ITransactionCreationStepProps {
   txError?: Error;
 }
 
-interface IProps<T> {
+interface IProps {
   // Tx creation sub step
   transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps>;
 
@@ -55,8 +55,7 @@ export function ApprovableWizardStep(props: IProps): React.ReactElement {
       disableTxCreationInputs.setTrue();
 
       unsubscribeFromAllPromiventListeners.current = () => {
-        // @ts-ignore
-        return txPromivent.removeAllListeners();
+        return (promiEvent as any).removeAllListeners();
       };
 
       promiEvent.on('confirmation', confirmation => {
@@ -88,8 +87,8 @@ export function ApprovableWizardStep(props: IProps): React.ReactElement {
         return (
           <TransactionCreationSubStepContent
             disableInputs={disableTxCreationInputs.value}
-            stakingError={txCreatingError.value}
-            orbsTxCreatingAction={txCreationAction}
+            txError={txCreatingError.value}
+            onPromiEventAction={txCreationAction}
           />
         );
       case 'Approving':
