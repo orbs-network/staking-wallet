@@ -56,7 +56,7 @@ describe('Guardians Component', () => {
   it('should display all the given guardians', async () => {
     const guardians = [guardian1, guardian2, guardian3, guardian4];
 
-    const { getByTestId } = testDriver.withProps({ guardians }).render();
+    const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
 
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId('guardian-1')).toBeDefined();
@@ -90,10 +90,20 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-4-voted')).toHaveTextContent('Yes');
   });
 
+  it('should display the "totalParticipatingTokens"', async () => {
+    const guardians = [guardian1, guardian2, guardian3, guardian4];
+
+    const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
+
+    expect(getByTestId('total-participating-tokens')).toHaveTextContent('1,000,000');
+  });
+
   it('should display the "Select" guardian table', async () => {
     const guardians = [guardian1, guardian2, guardian3, guardian4];
 
-    const { getByTestId } = testDriver.withProps({ guardians, onGuardianSelect: () => {} }).render();
+    const { getByTestId } = testDriver
+      .withProps({ guardians, totalParticipatingTokens: 1_000_000, onGuardianSelect: () => {} })
+      .render();
 
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId('guardian-1')).toBeDefined();
@@ -103,7 +113,9 @@ describe('Guardians Component', () => {
   it('should NOT display the "Select" guardian table', async () => {
     const guardians = [guardian1, guardian2, guardian3, guardian4];
 
-    const { getByTestId, queryByTestId } = testDriver.withProps({ guardians }).render();
+    const { getByTestId, queryByTestId } = testDriver
+      .withProps({ guardians, totalParticipatingTokens: 1_000_000 })
+      .render();
 
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId('guardian-1')).toBeDefined();
@@ -114,7 +126,9 @@ describe('Guardians Component', () => {
     const guardians = [guardian1, guardian2, guardian3, guardian4];
     const spy = jest.fn();
 
-    const { getByTestId } = testDriver.withProps({ guardians, onGuardianSelect: spy }).render();
+    const { getByTestId } = testDriver
+      .withProps({ guardians, totalParticipatingTokens: 1_000_000, onGuardianSelect: spy })
+      .render();
 
     const selectButton = getByTestId('guardian-1-select-button');
     selectButton.click();
