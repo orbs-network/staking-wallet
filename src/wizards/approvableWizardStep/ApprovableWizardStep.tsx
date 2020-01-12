@@ -24,9 +24,7 @@ interface IProps {
   moveToNextStepTitle: string;
 }
 
-//TODO : O.L : FUTURE : See how we can wrap this generic function with 'React.Memo'
-//  note: although everything here use hooks, so the performance does not get penalized
-export function ApprovableWizardStep(props: IProps): React.ReactElement {
+export const ApprovableWizardStep = React.memo<IProps>(props => {
   const {
     transactionCreationSubStepContent: TransactionCreationSubStepContent,
     finishedActionName,
@@ -125,4 +123,4 @@ export function ApprovableWizardStep(props: IProps): React.ReactElement {
   ]);
 
   return currentSubStepContent;
-}
+});
