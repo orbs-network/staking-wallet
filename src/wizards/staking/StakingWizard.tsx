@@ -123,15 +123,7 @@ export const StakingWizard = observer((props: IProps) => {
       default:
         throw new Error(`Unsupported step value of ${activeStep.value}`);
     }
-  }, [
-    activeStep.value,
-    closeWizard,
-    createAllowOrbsTx,
-    createStakeOrbsTx,
-    goToNextStep,
-    goToSelectGuardianStep,
-    goToStakeOrbsStep,
-  ]);
+  }, [activeStep.value, closeWizard, goToNextStep, goToSelectGuardianStep, goToStakeOrbsStep]);
 
   return (
     <WizardContainer data-testid={'wizard_staking'}>

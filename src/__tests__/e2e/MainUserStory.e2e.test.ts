@@ -247,7 +247,7 @@ describe('Main User Story', () => {
 
     const orbsForAllowance = orbsBought - 1000;
     stakingWizardDriver.setAmountForAllowance(orbsForAllowance);
-    stakingWizardDriver.clickOnAllow();
+    // stakingWizardDriver.clickOnAllow();
 
     // Second step - Stake your orbs
 
