@@ -8,11 +8,9 @@ const StyledGrid = styled(Grid)({
   marginBottom: '1em',
 });
 
-export const Section: React.FC = props => {
-  const { children } = props;
-
+export const Section: React.FC = ({ children, ...otherProps }) => {
   return (
-    <StyledGrid item>
+    <StyledGrid item {...otherProps}>
       {children}
     </StyledGrid>
   );

@@ -16,18 +16,31 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
+import { GuardiansStore } from '../../store/GuardiansStore';
+import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock } from 'orbs-pos-data/dist/testkit';
+import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 
 describe('Wallet connection', () => {
-  let storesForTests: DeepPartial<IStores> = {};
   let appTestDriver: ComponentTestDriver;
+  let ethereumProviderMock: EthereumProviderMock;
+  let guardiansStore: GuardiansStore;
+  let orbsAccountStore: OrbsAccountStore;
+  let cryptoWalletIntegrationStore: CryptoWalletIntegrationStore;
 
   beforeEach(() => {
-    storesForTests = {};
-
-    // Dev_Note : This store is not part of the tests, so we mock it with an empty object.
-    storesForTests = {
-      orbsAccountStore: {},
-    };
+    ethereumProviderMock = new EthereumProviderMock();
+    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
+    cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    const orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
+    guardiansStore = new GuardiansStore(orbsPOSDataServiceMock);
+    const stakingServiceMock = new StakingServiceMock();
+    const orbsTokenService = new OrbsTokenServiceMock();
+    orbsAccountStore = new OrbsAccountStore(
+      cryptoWalletIntegrationStore,
+      orbsPOSDataServiceMock,
+      stakingServiceMock,
+      orbsTokenService,
+    );
 
     appTestDriver = new ComponentTestDriver(App);
   });
@@ -35,44 +48,37 @@ describe('Wallet connection', () => {
   it('Should show "Install Metamask" button when metamask is not installed', async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(undefined);
     const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-
-    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore, guardiansStore }).render();
 
     expect(queryByTestId('button-install-metamask')).toBeInTheDocument();
   });
 
   it('Should offer to connect wallet when Metamask is installed but not connected, and after connection is approved, display the "My Wallet" page', async () => {
-    const ethereumProviderMock: IEthereumProvider = new EthereumProviderMock();
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    storesForTests.cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-
-    const { queryByTestId } = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId } = appTestDriver
+      .withStores({ orbsAccountStore, cryptoWalletIntegrationStore, guardiansStore })
+      .render();
 
     // Ensure we start with the 'Connect wallet page'
-    expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
+    expect(queryByTestId('connect-to-wallet-section')).toBeInTheDocument();
 
     // Ensure 'connect button' is displayed + Click.
     const connectButton = queryByTestId('button-connect-metamask');
     expect(connectButton).toBeInTheDocument();
     connectButton.click();
 
-    await waitForElement(() => queryByTestId('page-my-wallet'));
+    await waitForElement(() => queryByTestId('wallet-information-sections'));
 
-    expect(queryByTestId('page-my-wallet')).toBeInTheDocument();
-    expect(queryByTestId('page-connect-to-wallet')).not.toBeInTheDocument();
+    expect(queryByTestId('wallet-information-sections')).toBeInTheDocument();
+    expect(queryByTestId('connect-to-wallet-section')).not.toBeInTheDocument();
   });
 
   it('Should offer to connect wallet when Metamask is installed but not connected and after connection is NOT approved, stay in the "Connect wallet page"', async () => {
-    const ethereumProviderMock = new EthereumProviderMock();
     ethereumProviderMock.rejectNextEnable();
 
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
-
-    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore }).render();
+    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore, guardiansStore }).render();
 
     // Ensure we start with the 'Connect wallet page'
-    expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
+    expect(queryByTestId('connect-to-wallet-section')).toBeInTheDocument();
     expect(queryByTestId('text-connection-was-not-approved')).not.toBeInTheDocument();
 
     // Ensure 'connect button' is displayed + Click.
@@ -82,7 +88,7 @@ describe('Wallet connection', () => {
 
     await waitForElement(() => queryByTestId('text-connection-was-not-approved'));
 
-    expect(queryByTestId('page-my-wallet')).not.toBeInTheDocument();
-    expect(queryByTestId('page-connect-to-wallet')).toBeInTheDocument();
+    expect(queryByTestId('wallet-information-sections')).not.toBeInTheDocument();
+    expect(queryByTestId('connect-to-wallet-section')).toBeInTheDocument();
   });
 });

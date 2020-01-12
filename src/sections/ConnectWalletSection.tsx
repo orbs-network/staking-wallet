@@ -53,14 +53,15 @@ export const ConnectWalletSection = observer(() => {
     }
   }, [
     cryptoWalletIntegrationStore.isMetamaskInstalled,
-    rejectedConnection.value,
-    pressedOnInstallMetamask.value,
     handleConnectClicked,
+    t,
+    rejectedConnection.value,
     handleInstallClicked,
+    pressedOnInstallMetamask.value,
   ]);
 
   return (
-    <Section>
+    <Section data-testid='connect-to-wallet-section'>
       {/* Balance */}
       <SectionHeader title={'Connect your wallet'} icon={AccountBalanceWalletIcon} />
 
@@ -78,7 +79,6 @@ export const ConnectWalletSection = observer(() => {
           <Youtube videoId={'6Gf_kRE4MJU'} />
         </Grid>
       </Grid>
-
     </Section>
   );
 });
