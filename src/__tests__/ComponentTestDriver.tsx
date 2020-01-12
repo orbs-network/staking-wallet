@@ -8,6 +8,7 @@
 
 import { ThemeProvider } from '@material-ui/styles';
 import { render } from '@testing-library/react';
+import i18n from 'i18next';
 import { Provider } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
@@ -17,6 +18,7 @@ import { IServices } from '../services/Services';
 import { IStores } from '../store/stores';
 import { configureMobx } from '../store/storesInitialization';
 import { baseTheme } from '../theme/Theme';
+import { LangRouter } from '../multi-lang/LangRouter';
 
 export class ComponentTestDriver<P = {}> {
   private services: DeepPartial<IServices> = {};
@@ -47,15 +49,17 @@ export class ComponentTestDriver<P = {}> {
     const props: {} | P = this.renderProps ? this.renderProps : {};
 
     return render(
-      <ThemeProvider theme={baseTheme}>
-        <SCThemeProvider theme={baseTheme}>
-          <BrowserRouter>
-            <Provider {...this.services} {...this.stores}>
-              <Component {...props} />
-            </Provider>
-          </BrowserRouter>
-        </SCThemeProvider>
-      </ThemeProvider>
+      <LangRouter>
+        <ThemeProvider theme={baseTheme}>
+          <SCThemeProvider theme={baseTheme}>
+            <BrowserRouter>
+              <Provider {...this.services} {...this.stores}>
+                <Component {...props} />
+              </Provider>
+            </BrowserRouter>
+          </SCThemeProvider>
+        </ThemeProvider>
+      </LangRouter>,
     );
   }
 }

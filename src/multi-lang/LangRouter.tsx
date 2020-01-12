@@ -12,32 +12,29 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import i18n, { Resource } from 'i18next';
 import { PreLangBasenameProvider } from './PreLangBasenameContext';
 import { initReactI18next } from 'react-i18next';
+import { resources } from '../translations';
 
 function getForcedLanguage() {
   const langMatch = window.location.pathname.match(/\/(en|ko|jp)\//);
   return langMatch ? langMatch[1] : '';
 }
 
-function setupI18n(resources: Resource) {
-  i18n
-    .use(initReactI18next) // passes i18n down to react-i18next
-    .init({
-      resources,
-      lng: 'en',
-      keySeparator: false, // we do not use keys in form messages.welcome
-      interpolation: {
-        escapeValue: false, // react already safes from xss
-      },
-    });
-}
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources,
+    lng: 'en',
+    keySeparator: false, // we do not use keys in form messages.welcome
+    interpolation: {
+      escapeValue: false, // react already safes from xss
+    },
+  });
 
 interface IProps {
   preLangBasename?: string;
-  resources: Resource;
 }
 
-export const LangRouter: React.FC<IProps> = ({ children, resources, preLangBasename = '' }) => {
-  setupI18n(resources);
+export const LangRouter: React.FC<IProps> = ({ children, preLangBasename = '' }) => {
   const forcedLang = getForcedLanguage();
   let langBaseName = '';
   if (forcedLang) {

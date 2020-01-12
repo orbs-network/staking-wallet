@@ -8,7 +8,6 @@ import { App } from './App';
 import { buildServices } from './services/Services';
 import { configureMobx, getStores } from './store/storesInitialization';
 import { LangRouter } from './multi-lang/LangRouter';
-import { resources } from './translations';
 import { setModalAria } from './components/modals/modalsConfiguration';
 
 configureMobx();
@@ -30,7 +29,7 @@ const themeAndStyle = {
 setModalAria('app');
 
 export const AppWrapper: React.FunctionComponent = () => (
-  <LangRouter resources={resources}>
+  <LangRouter>
     <Provider {...services} {...stores}>
       <StylesProvider injectFirst>
         <ThemeProvider theme={baseTheme}>
