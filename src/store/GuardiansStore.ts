@@ -6,23 +6,25 @@ export type TGuardianInfoExtended = IGuardianInfo & { address: string };
 
 export interface IGuardiansStoreState {
   guardiansList: TGuardianInfoExtended[];
+  totalParticipatingTokens: number;
 }
-
-export const defaultPosStoreState: IGuardiansStoreState = {
-  guardiansList: [],
-};
 
 export type TGuardiansStore = IGuardiansStoreState;
 
 export class GuardiansStore implements TGuardiansStore {
   @observable public guardiansList: TGuardianInfoExtended[];
+  @observable public totalParticipatingTokens: number;
 
   constructor(private orbsPOSDataService: IOrbsPOSDataService) {
     this.guardiansList = [];
+    this.totalParticipatingTokens = 0;
   }
 
   async init() {
     try {
+      const totalParticipatingTokens = await this.orbsPOSDataService.getTotalParticipatingTokens();
+      this.setTotalParticipatingTokens(totalParticipatingTokens);
+
       const guardiansAddresses = await this.orbsPOSDataService.getGuardiansList(0, 100);
       const promises = guardiansAddresses.map(guardianAddress =>
         this.orbsPOSDataService.getGuardianInfo(guardianAddress),
@@ -38,5 +40,10 @@ export class GuardiansStore implements TGuardiansStore {
   @action('setGuardiansList')
   private setGuardiansList(guardians: TGuardianInfoExtended[]) {
     this.guardiansList = guardians;
+  }
+
+  @action('setTotalParticipatingTokens')
+  private setTotalParticipatingTokens(totalParticipatingTokens: number) {
+    this.totalParticipatingTokens = totalParticipatingTokens;
   }
 }

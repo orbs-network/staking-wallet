@@ -8,9 +8,9 @@
 import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
-import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { Guardians } from '../../../components/Guardians';
 import { GuardiansStore } from '../../../store/GuardiansStore';
+import { ComponentTestDriver } from '../../ComponentTestDriver';
 
 describe('Guardians Component', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
@@ -84,5 +84,20 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-1-voted')).toHaveTextContent('Yes');
     expect(getByTestId('guardian-2-voted')).toHaveTextContent('Yes');
     expect(getByTestId('guardian-3-voted')).toHaveTextContent('No');
+  });
+
+  it('should display the total participating tokens', async () => {
+    orbsPOSDataService.withTotalParticipatingTokens(BigInt(1_000_000));
+    orbsPOSDataService.withGuardian(guardian1Address, guardian1);
+    orbsPOSDataService.withGuardian(guardian2Address, guardian2);
+    orbsPOSDataService.withGuardian(guardian3Address, guardian3);
+
+    const guardiansStore = new GuardiansStore(orbsPOSDataService);
+
+    await guardiansStore.init();
+
+    const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
+
+    expect(getByTestId('total-participating-tokens')).toHaveTextContent('1,000,000');
   });
 });
