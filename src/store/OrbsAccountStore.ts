@@ -32,23 +32,15 @@ export class OrbsAccountStore {
     );
   }
 
-  public async setAllowanceForStakingContract(
-    orbsToStake: number,
-  ): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
+  public setAllowanceForStakingContract(orbsToStake: number): PromiEvent<TransactionReceipt> {
     const stakingContractAddress = this.stakingService.getStakingContractAddress();
     const promivent = this.orbsTokenService.approve(stakingContractAddress, orbsToStake);
 
-    return {
-      txPromivent: promivent,
-    };
+    return promivent;
   }
 
-  public async stakeOrbs(orbsToStake: number): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }> {
-    const promivent = this.stakingService.stake(orbsToStake);
-
-    return {
-      txPromivent: promivent,
-    };
+  public stakeOrbs(orbsToStake: number): PromiEvent<TransactionReceipt> {
+    return this.stakingService.stake(orbsToStake);
   }
 
   public async selectGuardian(

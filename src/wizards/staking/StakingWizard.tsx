@@ -53,8 +53,7 @@ export const StakingWizard = observer((props: IProps) => {
       // Stake orbs
       case STEPS_INDEXES.allowTransfer:
         return (
-          <ApprovableWizardStep<number>
-            txCreatingAction={createAllowOrbsTx}
+          <ApprovableWizardStep
             transactionCreationSubStepContent={OrbsAllowanceStepContent}
             finishedActionName={'allowed the staking contract to use your tokens'}
             moveToNextStepAction={goToStakeOrbsStep}
@@ -65,8 +64,7 @@ export const StakingWizard = observer((props: IProps) => {
       // Stake orbs
       case STEPS_INDEXES.stakeOrbs:
         return (
-          <ApprovableWizardStep<number>
-            txCreatingAction={createStakeOrbsTx}
+          <ApprovableWizardStep
             transactionCreationSubStepContent={OrbsStakingStepContent}
             finishedActionName={'staked your tokens'}
             moveToNextStepAction={goToSelectGuardianStep}

@@ -8,16 +8,15 @@ type TStepState = 'Action' | 'Approving' | 'Success';
 
 const REQUIRED_CONFIRMATIONS = 6;
 
-export interface ITransactionCreationStepProps<T> {
-  orbsTxCreatingAction(txCreatingParam: T): void;
+export interface ITransactionCreationStepProps {
+  onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>): void;
   disableInputs: boolean;
-  stakingError?: Error;
+  txError?: Error;
 }
 
 interface IProps<T> {
   // Tx creation sub step
-  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps<T>>;
-  txCreatingAction(txCreatingParam: T): Promise<{ txPromivent: PromiEvent<TransactionReceipt> }>;
+  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps>;
 
   // Congratulations sub step
   finishedActionName: string;
@@ -27,10 +26,9 @@ interface IProps<T> {
 
 //TODO : O.L : FUTURE : See how we can wrap this generic function with 'React.Memo'
 //  note: although everything here use hooks, so the performance does not get penalized
-export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
+export function ApprovableWizardStep(props: IProps): React.ReactElement {
   const {
     transactionCreationSubStepContent: TransactionCreationSubStepContent,
-    txCreatingAction,
     finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
@@ -52,18 +50,16 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
   const txVerificationsCount = useNumber(-1);
   const txCreatingError = useStateful<Error>(null);
 
-  const txCreationAction = useCallback<(txCreationParam: T) => Promise<void>>(
-    async txCreationParam => {
+  const txCreationAction = useCallback<(promiEvent: PromiEvent<TransactionReceipt>) => void>(
+    promiEvent => {
       disableTxCreationInputs.setTrue();
-
-      const { txPromivent } = await txCreatingAction(txCreationParam);
 
       unsubscribeFromAllPromiventListeners.current = () => {
         // @ts-ignore
         return txPromivent.removeAllListeners();
       };
 
-      txPromivent.on('confirmation', confirmation => {
+      promiEvent.on('confirmation', confirmation => {
         txVerificationsCount.setValue(confirmation);
 
         // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
@@ -71,20 +67,19 @@ export function ApprovableWizardStep<T>(props: IProps<T>): React.ReactElement {
           disableTxCreationInputs.setFalse();
         }
       });
-      txPromivent.once('receipt', receipt => {
+      promiEvent.once('receipt', receipt => {
         txHash.setValue(receipt.transactionHash);
         goToApprovalSubStep();
         disableTxCreationInputs.setFalse();
       });
-      txPromivent.on('error', error => {
+      promiEvent.on('error', error => {
         txCreatingError.setValue(error);
 
-        // @ts-ignore
-        txPromivent.removeAllListeners();
+        (promiEvent as any).removeAllListeners();
         disableTxCreationInputs.setFalse();
       });
     },
-    [disableTxCreationInputs, txCreatingAction, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
+    [disableTxCreationInputs, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
   );
 
   const currentSubStepContent = useMemo(() => {
