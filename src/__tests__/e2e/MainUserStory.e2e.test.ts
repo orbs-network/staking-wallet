@@ -6,7 +6,7 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { wait, waitForElement, waitForElementToBeRemoved, fireEvent } from '@testing-library/react';
+import { wait, waitForElement, waitForElementToBeRemoved, fireEvent, act } from '@testing-library/react';
 import { App } from '../../App';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
@@ -26,7 +26,6 @@ interface IYannoDriver {
   userBoughtOrbs(amount: number): void;
 
   clickOnStakeOrbsButton(): void;
-  clickOnApproveStaking(): void;
 
   setOrbsForStake(to: number): void;
 
@@ -54,6 +53,15 @@ interface IYannoDriver {
   };
 }
 
+interface IStakingWizardDriver {
+  // Allowance
+  setAmountForAllowance(allowanceInOrbs: number);
+  clickOnAllow(): void;
+
+  // Orbs staking
+  clickOnApproveStaking(): void;
+}
+
 interface IStakingTestKit {
   approveOrbsStakingRequest: () => string;
   confirmOrbsStakingRequest: (txId: string) => void;
@@ -68,6 +76,13 @@ interface IStakingTestKit {
 const testKit: IStakingTestKit = null;
 
 describe('Main User Story', () => {
+  const TEST_IDS = {
+    inputs: {
+      orbsForAllowance: 'input_orbs_for_allowance',
+      orbsForStaking: 'input_orbs_for_staking',
+    },
+  };
+
   let appTestDriver: ComponentTestDriver;
   let storesForTests: DeepPartial<IStores> = {};
   const servicesForTests: DeepPartial<IServices> = {};
@@ -87,6 +102,9 @@ describe('Main User Story', () => {
     orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
     stakingServiceMock = new StakingServiceMock();
     orbsTokenServiceMock = new OrbsTokenServiceMock();
+
+    // All pos-data services will auto-approve the tx
+
 
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
@@ -110,10 +128,6 @@ describe('Main User Story', () => {
         const stakeOrbsButton = getByText('STAKE YOUR TOKENS');
         stakeOrbsButton.click();
       },
-      clickOnApproveStaking(): void {
-        const stakeOrbsButton = getByText('STAKE');
-        stakeOrbsButton.click();
-      },
 
       setOrbsForStake(to: number): void {
         const orbsForStakeInput = queryByTestId('orbs_amount_for_staking');
@@ -130,6 +144,22 @@ describe('Main User Story', () => {
             await waitForElementToBeRemoved(() => queryByTestId(elementTestId));
           },
         };
+      },
+    };
+
+    const stakingWizardDriver: Partial<IStakingWizardDriver> = {
+      setAmountForAllowance(allowanceInOrbs: number) {
+        const orbsForAllowanceInput = queryByTestId(TEST_IDS.inputs.orbsForAllowance);
+
+        fireEvent.change(orbsForAllowanceInput, { target: { value: allowanceInOrbs.toString() } });
+      },
+      clickOnAllow() {
+        const setOrbsAllowanceButton = getByText('Allow');
+        setOrbsAllowanceButton.click();
+      },
+      clickOnApproveStaking(): void {
+        const stakeOrbsButton = getByText('STAKE');
+        stakeOrbsButton.click();
       },
     };
 
@@ -184,37 +214,67 @@ describe('Main User Story', () => {
     //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
     await wait(() => getByText(testAddress));
 
+    // **************************
+    // Initial
+    // **************************
     // DEV : Initial
     expect(liquidOrbsText).toHaveTextContent(/^0$/);
     expect(stakedOrbsText).toHaveTextContent(/^0$/);
     expect(coolDownOrbsText).toHaveTextContent(/^0$/);
 
-    driver.userBoughtOrbs(10_000);
+    const orbsBought = 10_000;
+    driver.userBoughtOrbs(orbsBought);
 
     // DEV_NOTE : We have to wait until the UI syncs with the store
     await wait(() => expect(liquidOrbsText).toHaveTextContent('10,000'));
     expect(liquidOrbsText).toHaveTextContent('10,000');
 
+    // **************************
+    // Start staking
+    // **************************
     driver.clickOnStakeOrbsButton();
 
     // Wait for the staking wizard to open with the first step
     await driver.forElement('wizard_staking').toAppear();
-    await driver.forElement('wizard_step_select_amount_for_stake').toAppear();
+    await driver.forElement(TEST_IDS.inputs.orbsForAllowance).toAppear();
 
-    // Expect max amount to be set by default
-    // TODO : O.L : Change text to comma separated after finishing the main test story.
-    stakingStepOrbsToStake = queryByTestId('orbs_amount_for_staking');
-    expect(stakingStepOrbsToStake).toHaveValue(10000);
+    // First step - Allow staking contract to use orbs
 
-    driver.setOrbsForStake(7_000);
-    expect(stakingStepOrbsToStake).toHaveValue(7000);
-    driver.clickOnApproveStaking();
+    // Default value should be the maximum value of liquid orbs
+    // // TODO : O.L : Change text to comma separated after finishing the main test story.
+    const inputOrbsForAllowance = queryByTestId('input_orbs_for_allowance');
+    expect(inputOrbsForAllowance).toHaveValue(orbsBought);
 
-    // const orbsStakingTxId = testKit.approveOrbsStakingRequest();
+    const orbsForAllowance = orbsBought - 1000;
+    stakingWizardDriver.setAmountForAllowance(orbsForAllowance);
+    stakingWizardDriver.clickOnAllow();
 
-    await driver.forElement(stakingStepTestId).toAppear();
-    stakingStepTxPendingIndicator = queryByTestId('transaction_pending_indicator');
-    expect(stakingStepTxPendingIndicator).toBeDefined();
+    // Second step - Stake your orbs
+
+    // Third step - Select guardian
+
+    // Close staking wizard after success
+
+    // Ensure app is displaying the right value after staking
+
+    // await driver.forElement('wizard_step_select_amount_for_stake').toAppear();
+    //
+    // // Expect max amount to be set by default
+    // // TODO : O.L : Change text to comma separated after finishing the main test story.
+    // stakingStepOrbsToStake = queryByTestId('orbs_amount_for_staking');
+    // expect(stakingStepOrbsToStake).toHaveValue(10000);
+    //
+    // driver.setOrbsForStake(7_000);
+    // expect(stakingStepOrbsToStake).toHaveValue(7000);
+    // stakingWizardDriver.clickOnApproveStaking();
+    //
+    // // const orbsStakingTxId = testKit.approveOrbsStakingRequest();
+    //
+    // await driver.forElement(stakingStepTestId).toAppear();
+    // stakingStepTxPendingIndicator = queryByTestId('transaction_pending_indicator');
+    // expect(stakingStepTxPendingIndicator).toBeDefined();
+
+
     //
     // // @ts-ignore (TODO : find a matcher for a link)
     // expect(stakingStepTxPendingLink).toHaveLinkValueOf(`etherscan:blabliblabla/${orbsStakingTxId}`);

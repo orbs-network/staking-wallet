@@ -7,7 +7,7 @@ import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 
-const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
+const inputTestProps = { 'data-testid': 'input_orbs_for_allowance' };
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -60,8 +60,8 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
-    <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
-      <Typography>Approve the smart contract to use youtr Orbs</Typography>
+    <WizardContent data-testid={'wizard_sub_step_select_amount_for_allowance'}>
+      <Typography>Approve the smart contract to use your Orbs</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />
       <Typography variant={'caption'}>{subMessage.value}</Typography>

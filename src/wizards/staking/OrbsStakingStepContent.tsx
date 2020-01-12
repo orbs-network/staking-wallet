@@ -7,7 +7,7 @@ import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 
-const inputTestProps = { 'data-testid': 'orbs_amount_for_staking' };
+const inputTestProps = { 'data-testid': 'wizard_sub_step_select_amount_for_staking' };
 
 export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
