@@ -17,7 +17,7 @@ const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} 
   return {};
 });
 
-export const BalanceSection = observer(() => {
+export const BalancesSection = observer(() => {
   const orbsAccountStore = useOrbsAccountStore();
 
   const showStakingModal = useBoolean(false);

@@ -1,29 +1,10 @@
-import Grid from '@material-ui/core/Grid';
+import { Container } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Guardians } from './components/Guardians';
-import { Header } from './components/nav/Header';
-import { Sidebar } from './components/nav/Sidebar';
-import { MyWalletPage } from './pages/MyWalletPage';
-import { WalletPageWrapper } from './pages/WalletPageWrapper';
-import { useCryptoWalletIntegrationStore } from './store/storeHooks';
 import styled from 'styled-components';
-import { Container } from '@material-ui/core';
+import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
-
-const PagePadder = styled('div')(({ theme }) => ({
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  [theme.breakpoints.up('sm')]: {
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-  },
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-  },
-}));
 
 const ContentContainer = styled(Container)(({ theme }) => {
   return {
@@ -52,16 +33,12 @@ const ContentContainer = styled(Container)(({ theme }) => {
 });
 
 export const App = observer(() => {
-  const CryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
-
   return (
     <>
       <Header />
       <ContentContainer>
         <Switch>
           <Route exact path='/' component={MainAppPage} />
-          {/*<Route path='/stake' component={MyWalletPage} />*/}
-          {/*<Route path='/guardians' component={Guardians} />*/}
         </Switch>
       </ContentContainer>
     </>

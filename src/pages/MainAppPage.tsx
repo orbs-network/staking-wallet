@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Grid } from '@material-ui/core';
-import { BalanceSection } from '../sections/BalanceSection';
+import { BalancesSection } from '../sections/BalancesSection';
 import { RewardsSection } from '../sections/RrewardsSection';
 import { GuardiansSection } from '../sections/GuardiansSection';
 import { WalletSectionsWrapper } from '../sections/WalletSectionsWrapper';
@@ -12,7 +12,7 @@ export const MainAppPage = observer(() => {
       <WalletSectionsWrapper />
 
       {/* Balance */}
-      <BalanceSection />
+      <BalancesSection />
 
       {/* Rewards */}
       <RewardsSection />

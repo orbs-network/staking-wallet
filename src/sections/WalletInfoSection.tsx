@@ -1,24 +1,23 @@
-import React, { useCallback } from 'react';
-import { observer } from 'mobx-react';
-import { useCryptoWalletIntegrationStore, useOrbsAccountStore } from '../store/storeHooks';
-import Typography from '@material-ui/core/Typography';
+import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import copy from 'copy-to-clipboard';
-import { Button, Divider } from '@material-ui/core';
-import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
-import { useBoolean, useStateful } from 'react-hanger';
-import { useTranslation } from 'react-i18next';
+import Snackbar from '@material-ui/core/Snackbar';
+import Typography from '@material-ui/core/Typography';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-
+import copy from 'copy-to-clipboard';
+import { observer } from 'mobx-react';
+import React, { useCallback } from 'react';
+import { useBoolean } from 'react-hanger';
+import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { QRCode } from 'react-qrcode-logo';
-import { SectionHeader } from '../components/structure/SectionHeader';
-import { Section } from '../components/structure/Section';
-import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
-import Snackbar from '@material-ui/core/Snackbar';
+import styled from 'styled-components';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { MODAL_CSTYLE_ENTERED_CONTENTS } from '../components/modals/modalsConfiguration';
+import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
+import { Section } from '../components/structure/Section';
+import { SectionHeader } from '../components/structure/SectionHeader';
+import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
+
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -26,9 +25,7 @@ const LoweCaseButton = styled(Button)({
 
 export const WalletInfoSection = observer(() => {
   const { t } = useTranslation();
-  const history = useHistory();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
-  const orbsAccountStore = useOrbsAccountStore();
   const showSnackbarMessage = useBoolean(false);
   const showQrModal = useBoolean(false);
 
