@@ -10,7 +10,7 @@ import { GuardiansTable } from '../../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 
-describe('Guardians Component', () => {
+describe('Guardians Table Component', () => {
   let testDriver: ComponentTestDriver;
 
   const guardian1: TGuardianInfoExtended = {
@@ -88,14 +88,6 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-2-voted')).toHaveTextContent('Yes');
     expect(getByTestId('guardian-3-voted')).toHaveTextContent('No');
     expect(getByTestId('guardian-4-voted')).toHaveTextContent('Yes');
-  });
-
-  it('should display the "totalParticipatingTokens"', async () => {
-    const guardians = [guardian1, guardian2, guardian3, guardian4];
-
-    const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
-
-    expect(getByTestId('total-participating-tokens')).toHaveTextContent('1,000,000');
   });
 
   it('should have an external link to the guardians website', async () => {

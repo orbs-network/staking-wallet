@@ -8,11 +8,12 @@
 import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
 import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
-import { Guardians } from '../../../components/Guardians';
+import { GuardiansSection } from '../../../sections/GuardiansSection';
 import { GuardiansStore } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
+import { getByTestId as getByTestIdWithContainer } from '@testing-library/dom';
 
-describe('Guardians Component', () => {
+describe('Guardians Section', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
   let testDriver: ComponentTestDriver;
 
@@ -45,7 +46,7 @@ describe('Guardians Component', () => {
   };
 
   beforeEach(() => {
-    testDriver = new ComponentTestDriver(Guardians);
+    testDriver = new ComponentTestDriver(GuardiansSection);
     orbsPOSDataService = new OrbsPOSDataServiceMock();
   });
 
@@ -97,7 +98,9 @@ describe('Guardians Component', () => {
     await guardiansStore.init();
 
     const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
+    const guardiansSection = getByTestId('guardians-section');
+    const sideTitle = getByTestIdWithContainer(guardiansSection, 'side-title');
 
-    expect(getByTestId('total-participating-tokens')).toHaveTextContent('1,000,000');
+    expect(sideTitle).toHaveTextContent('Participating stake: 1,000,000');
   });
 });

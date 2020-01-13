@@ -3,25 +3,40 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
 
-const SectionHeaderGrid = styled(Grid)({
-  marginBottom: '0.5em',
-});
+const SectionHeaderGrid = styled.div`
+  display: flex;
+  margin-bottom: 0.5em;
+`;
+
+const Title = styled(Typography)`
+  margin-left: 0.5em;
+`;
+
+const SideTitle = styled(Typography)`
+  flex: 1;
+  margin-right: 0.5em;
+  text-align: right;
+`;
 
 interface IProps {
   title: string;
+  sideTitle?: string;
   icon: React.ElementType;
 }
 
 export const SectionHeader: React.FC<IProps> = props => {
-  const { title, icon: MyIcon } = props;
+  const { title, sideTitle, icon: MyIcon } = props;
 
   return (
-    <SectionHeaderGrid container direction={'row'} alignItems={'center'}>
+    <SectionHeaderGrid>
       {/* TODO : O.L : Make this Icon adhere to the page font-size */}
       <MyIcon></MyIcon>
-      <Typography variant={'h5'} style={{ marginLeft: '0.5em' }}>
-        {title}
-      </Typography>
+      <Title variant={'h5'}>{title}</Title>
+      {sideTitle && (
+        <SideTitle data-testid='side-title' variant={'h6'}>
+          {sideTitle}
+        </SideTitle>
+      )}
     </SectionHeaderGrid>
   );
 };
