@@ -74,10 +74,10 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-3-address')).toHaveTextContent('0x2222222222222222222222222222222222222222');
     expect(getByTestId('guardian-4-address')).toHaveTextContent('0x4444444444444444444444444444444444444444');
 
-    expect(getByTestId('guardian-1-website')).toHaveTextContent('http://www.guardian3.com');
-    expect(getByTestId('guardian-2-website')).toHaveTextContent('http://www.guardian1.com');
-    expect(getByTestId('guardian-3-website')).toHaveTextContent('http://www.guardian2.com');
-    expect(getByTestId('guardian-4-website')).toHaveTextContent('http://www.guardian4.com');
+    expect(getByTestId('guardian-1-website')).toHaveAttribute('href', 'http://www.guardian3.com');
+    expect(getByTestId('guardian-2-website')).toHaveAttribute('href', 'http://www.guardian1.com');
+    expect(getByTestId('guardian-3-website')).toHaveAttribute('href', 'http://www.guardian2.com');
+    expect(getByTestId('guardian-4-website')).toHaveAttribute('href', 'http://www.guardian4.com');
 
     expect(getByTestId('guardian-1-stake')).toHaveTextContent('30.00%');
     expect(getByTestId('guardian-2-stake')).toHaveTextContent('20.00%');
@@ -96,6 +96,24 @@ describe('Guardians Component', () => {
     const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
 
     expect(getByTestId('total-participating-tokens')).toHaveTextContent('1,000,000');
+  });
+
+  it('should have an external link to the guardians website', async () => {
+    const guardians = [
+      {
+        address: '0x123',
+        name: 'Guardian',
+        website: 'www.guardian.com',
+        hasEligibleVote: true,
+        voted: true,
+        stake: 1,
+      },
+    ];
+
+    const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
+
+    expect(getByTestId('guardian-1-website')).toHaveAttribute('href', 'http://www.guardian.com');
+    expect(getByTestId('guardian-1-website')).toHaveAttribute('target', '_blank');
   });
 
   it('should display the "Select" guardian table', async () => {

@@ -73,9 +73,9 @@ describe('Guardians Component', () => {
     expect(getByTestId('guardian-2-address')).toHaveTextContent(guardian1Address);
     expect(getByTestId('guardian-3-address')).toHaveTextContent(guardian2Address);
 
-    expect(getByTestId('guardian-1-website')).toHaveTextContent('http://www.guardian3.com');
-    expect(getByTestId('guardian-2-website')).toHaveTextContent('http://www.guardian1.com');
-    expect(getByTestId('guardian-3-website')).toHaveTextContent('http://www.guardian2.com');
+    expect(getByTestId('guardian-1-website')).toHaveAttribute('href', 'http://www.guardian3.com');
+    expect(getByTestId('guardian-2-website')).toHaveAttribute('href', 'http://www.guardian1.com');
+    expect(getByTestId('guardian-3-website')).toHaveAttribute('href', 'http://www.guardian2.com');
 
     expect(getByTestId('guardian-1-stake')).toHaveTextContent('30.00%');
     expect(getByTestId('guardian-2-stake')).toHaveTextContent('20.00%');
