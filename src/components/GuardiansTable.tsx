@@ -42,6 +42,36 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
   const { t } = useTranslation();
   const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stake - a.stake), [guardians]);
 
+  function getSelectedGuardianCell(g: TGuardianInfoExtended, idx: number) {
+    if (onGuardianSelect) {
+      return (
+        <TableCell align='center'>
+          <SelectButton
+            variant='contained'
+            size='small'
+            disabled={g.address === selectedGuardian}
+            data-testid={`guardian-${idx + 1}-select-action`}
+            onClick={() => onGuardianSelect(g)}
+          >
+            {t(g.address === selectedGuardian ? 'Selected' : 'Select')}
+          </SelectButton>
+        </TableCell>
+      );
+    } else {
+      if (selectedGuardian) {
+        return (
+          <TableCell align='center'>
+            <Typography data-testid={`guardian-${idx + 1}-selected-status`}>
+              {t(g.address === selectedGuardian ? 'Selected' : '-')}
+            </Typography>
+          </TableCell>
+        );
+      }
+    }
+
+    return null;
+  }
+
   return (
     <Paper>
       <Table data-testid={'guardians-table'}>
@@ -81,26 +111,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
               <TableCell data-testid={`guardian-${idx + 1}-voted`} align='center'>
                 {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
               </TableCell>
-              {onGuardianSelect && (
-                <TableCell align='center'>
-                  <SelectButton
-                    variant='contained'
-                    size='small'
-                    disabled={g.address === selectedGuardian}
-                    data-testid={`guardian-${idx + 1}-select-action`}
-                    onClick={() => onGuardianSelect(g)}
-                  >
-                    {t(g.address === selectedGuardian ? 'Selected' : 'Select')}
-                  </SelectButton>
-                </TableCell>
-              )}
-              {!onGuardianSelect && selectedGuardian && (
-                <TableCell align='center'>
-                  <Typography data-testid={`guardian-${idx + 1}-selected-status`}>
-                    {t(g.address === selectedGuardian ? 'Selected' : '-')}
-                  </Typography>
-                </TableCell>
-              )}
+              {getSelectedGuardianCell(g, idx)}
             </TableRow>
           ))}
         </TableBody>
