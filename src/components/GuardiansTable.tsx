@@ -16,6 +16,14 @@ const NameBox = styled.div`
   align-items: center;
 `;
 
+const YesContainer = styled.span`
+  color: #00ff11;
+`;
+
+const NoContainer = styled.span`
+  color: red;
+`;
+
 const NameContainer = styled.span(({ theme }) => ({
   paddingLeft: theme.spacing(2),
 }));
@@ -66,7 +74,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect 
                 {asPercent(g.stake)}
               </TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-voted`} align='center'>
-                {g.voted ? 'Yes' : 'No'}
+                {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
               </TableCell>
               {onGuardianSelect && (
                 <TableCell>
