@@ -7,6 +7,9 @@
  */
 import '@testing-library/jest-dom/extend-expect';
 import { wait, waitForElement, waitForElementToBeRemoved, fireEvent, act } from '@testing-library/react';
+import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock, ITxCreatingServiceMock } from 'orbs-pos-data/dist/testkit';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { DeepPartial } from 'utility-types';
 import { App } from '../../App';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
@@ -14,12 +17,9 @@ import { CryptoWalletIntegrationStore } from '../../store/CryptoWalletIntegratio
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
-import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
-import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock } from 'orbs-pos-data/dist/testkit';
 import { IServices } from '../../services/Services';
 import { getStores } from '../../store/storesInitialization';
-import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { OrbsAllowanceStepDriver } from '../appDrivers/OrbsAllowanceStepDriver';
 
 interface IYannoDriver {
@@ -74,13 +74,18 @@ interface IStakingTestKit {
 
 const testKit: IStakingTestKit = null;
 
-describe('Main User Story', () => {
-  const TEST_IDS = {
-    inputs: {
-      orbsForStaking: 'input_orbs_for_staking',
-    },
-  };
+function sendTxConfirmations(
+  txServiceMock: ITxCreatingServiceMock,
+  promievent: PromiEvent<TransactionReceipt>,
+  from: number,
+  to: number,
+) {
+  for (let confirmation = 1; confirmation <= 6; confirmation++) {
+    txServiceMock.txsMocker.sendTxConfirmation(promievent, confirmation);
+  }
+}
 
+describe('Main User Story', () => {
   let appTestDriver: ComponentTestDriver;
   let storesForTests: DeepPartial<IStores> = {};
   const servicesForTests: DeepPartial<IServices> = {};
@@ -104,6 +109,7 @@ describe('Main User Story', () => {
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
   });
+
   it('Complete story', async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
 
@@ -241,21 +247,19 @@ describe('Main User Story', () => {
 
     const orbsForAllowance = orbsBought - 1000;
     orbsAllowanceStepDriver.setAmountForAllowance(orbsForAllowance);
+
+    // Clicking on 'allow' should move the user to the 'tx confirmation' view
     orbsAllowanceStepDriver.clickOnAllow();
+    await waitForElement(() => orbsAllowanceStepDriver.txConformationSubStepComponent);
 
-    await driver.forElement('wizard_sub_step_wait_for_tx_confirmation').toAppear();
+    // The 'proceed' button should appear only after 6 confirmations
+    expect(orbsAllowanceStepDriver.queryProceedButton).not.toBeInTheDocument();
+    sendTxConfirmations(orbsTokenServiceMock, approveOrbsTxPromievent, 1, 6);
+    await waitForElement(() => orbsAllowanceStepDriver.queryProceedButton);
 
-    expect(queryByText('Proceed')).not.toBeInTheDocument();
-
-    for (let confirmation = 1; confirmation <= 6; confirmation++) {
-      orbsTokenServiceMock.txsMocker.sendTxConfirmation(approveOrbsTxPromievent, confirmation);
-    }
-
-    await waitForElement(() => getByText('Proceed'));
-
+    // Clicking on 'Proceed' should move the user to the 'congratulations' view
     orbsAllowanceStepDriver.clickOnProceedAfterTxVerified();
-
-    await driver.forElement('wizard_sub_step_congratulations').toAppear();
+    await waitForElement(() => orbsAllowanceStepDriver.congratulationsSubStepComponent);
 
     orbsAllowanceStepDriver.clickOnFinishApprovableStep();
 

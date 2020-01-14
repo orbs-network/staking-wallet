@@ -11,15 +11,15 @@ export class OrbsAllowanceStepDriver extends ApprovableStepDriver {
   }
 
   clickOnAllow() {
-    const setOrbsAllowanceButton = within(this.orbsAllowanceSubStep).getByText('Allow');
+    const setOrbsAllowanceButton = within(this.orbsAllowanceSubStepComponent).getByText('Allow');
     fireEvent.click(setOrbsAllowanceButton);
   }
 
   public get orbsForAllowanceInput() {
-    return within(this.orbsAllowanceSubStep).getByLabelText('Allowance');
+    return within(this.orbsAllowanceSubStepComponent).getByLabelText('Allowance');
   }
 
-  private get orbsAllowanceSubStep() {
+  public get orbsAllowanceSubStepComponent() {
     const { getByTestId } = this.renderResults;
 
     return getByTestId('wizard_sub_step_select_amount_for_allowance');

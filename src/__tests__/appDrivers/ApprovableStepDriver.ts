@@ -10,16 +10,19 @@ export class ApprovableStepDriver implements IApprovableStepDriver {
   }
 
   clickOnProceedAfterTxVerified(): void {
-    const proceedButton = within(this.txConformationSubStep).getByText('Proceed');
-    fireEvent.click(proceedButton);
+    fireEvent.click(this.queryProceedButton);
+  }
+
+  public get queryProceedButton() {
+    return within(this.txConformationSubStepComponent).queryByRole('button');
   }
 
   clickOnFinishApprovableStep(): void {
-    const finishButton = within(this.congratulationsSubStep).getByRole('button');
+    const finishButton = within(this.congratulationsSubStepComponent).getByRole('button');
     fireEvent.click(finishButton);
   }
 
-  protected get txConformationSubStep() {
+  public get txConformationSubStepComponent() {
     const { getByTestId } = this.renderResults;
 
     const subStep = getByTestId('wizard_sub_step_wait_for_tx_confirmation');
@@ -27,7 +30,7 @@ export class ApprovableStepDriver implements IApprovableStepDriver {
     return subStep;
   }
 
-  protected get congratulationsSubStep() {
+  public get congratulationsSubStepComponent() {
     const { getByTestId } = this.renderResults;
 
     return getByTestId('wizard_sub_step_congratulations');
