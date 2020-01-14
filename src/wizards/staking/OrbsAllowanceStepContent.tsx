@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, Input, Typography } from '@material-ui/core';
+import { Button, Input, TextField, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
@@ -70,13 +70,15 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       <br />
 
       {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      <Input
+      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
+      <TextField
+        id={'orbsAllowance'}
+        label={'Allowance'}
         type={'number'}
         value={orbsAllowance.value}
         onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
-        disabled={disableInputs}
-        inputProps={inputTestProps}
       />
+
       <Button disabled={disableInputs} onClick={stakeTokens}>
         Allow
       </Button>
