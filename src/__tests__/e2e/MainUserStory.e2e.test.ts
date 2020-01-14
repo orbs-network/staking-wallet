@@ -17,10 +17,9 @@ import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumPro
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
 import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock } from 'orbs-pos-data/dist/testkit';
-import { WalletPageWrapper } from '../../pages/WalletPageWrapper';
-import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 import { IServices } from '../../services/Services';
 import { getStores } from '../../store/storesInitialization';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 interface IYannoDriver {
   userBoughtOrbs(amount: number): void;
@@ -60,6 +59,9 @@ interface IStakingWizardDriver {
 
   // Orbs staking
   clickOnApproveStaking(): void;
+
+  // Tx Approval sub step
+  clickOnProceedAfterTxVerified(): void;
 }
 
 interface IStakingTestKit {
@@ -100,11 +102,8 @@ describe('Main User Story', () => {
     ethereumProviderMock = new EthereumProviderMock();
 
     orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
-    stakingServiceMock = new StakingServiceMock();
+    stakingServiceMock = new StakingServiceMock(true);
     orbsTokenServiceMock = new OrbsTokenServiceMock();
-
-    // All pos-data services will auto-approve the tx
-
 
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
@@ -116,7 +115,7 @@ describe('Main User Story', () => {
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
     storesForTests = getStores(orbsPOSDataServiceMock, stakingServiceMock, orbsTokenServiceMock, ethereumTxService);
 
-    const { queryByTestId, findByTestId, getByText } = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, findByTestId, getByText, queryByText } = appTestDriver.withStores(storesForTests).render();
 
     // TODO : O.L : Move the driver to a proper place after finishing scaffolding the tests.
     const driver: Partial<IYannoDriver> = {
@@ -126,7 +125,7 @@ describe('Main User Story', () => {
 
       clickOnStakeOrbsButton(): void {
         const stakeOrbsButton = getByText('STAKE YOUR TOKENS');
-        stakeOrbsButton.click();
+        fireEvent.click(stakeOrbsButton);
       },
 
       setOrbsForStake(to: number): void {
@@ -147,7 +146,7 @@ describe('Main User Story', () => {
       },
     };
 
-    const stakingWizardDriver: Partial<IStakingWizardDriver> = {
+    const stakingWizardDriver: IStakingWizardDriver = {
       setAmountForAllowance(allowanceInOrbs: number) {
         const orbsForAllowanceInput = queryByTestId(TEST_IDS.inputs.orbsForAllowance);
 
@@ -155,12 +154,16 @@ describe('Main User Story', () => {
       },
       clickOnAllow() {
         const setOrbsAllowanceButton = getByText('Allow');
-        setOrbsAllowanceButton.click();
+        fireEvent.click(setOrbsAllowanceButton);
       },
       clickOnApproveStaking(): void {
         const stakeOrbsButton = getByText('STAKE');
-        stakeOrbsButton.click();
+        fireEvent.click(stakeOrbsButton);
       },
+      clickOnProceedAfterTxVerified() {
+        const proceedButton = getByText('Proceed');
+        fireEvent.click(proceedButton);
+      }
     };
 
     const liquidOrbsText = queryByTestId('amount_liquid_orbs');
@@ -173,7 +176,7 @@ describe('Main User Story', () => {
     const stakingDialogPopUp = null;
 
     // Staking step
-    const stakingStepTestId = 'wizard_step_wait_for_staking_confirmation';
+    const stakingStepTestId = '';
     let stakingStepOrbsToStake = null;
     let stakingStepTxPendingIndicator = null;
     const stakingStepTxPendingLink = null;
@@ -225,8 +228,6 @@ describe('Main User Story', () => {
     const orbsBought = 10_000;
     driver.userBoughtOrbs(orbsBought);
 
-    // DEV_NOTE : We have to wait until the UI syncs with the store
-    await wait(() => expect(liquidOrbsText).toHaveTextContent('10,000'));
     expect(liquidOrbsText).toHaveTextContent('10,000');
 
     // **************************
@@ -245,9 +246,28 @@ describe('Main User Story', () => {
     const inputOrbsForAllowance = queryByTestId('input_orbs_for_allowance');
     expect(inputOrbsForAllowance).toHaveValue(orbsBought);
 
+    let approveOrbsTxPromievent: PromiEvent<TransactionReceipt>;
+    orbsTokenServiceMock.txsMocker.registerToNextTxCreation(
+      'approve',
+      promievent => (approveOrbsTxPromievent = promievent),
+    );
+
     const orbsForAllowance = orbsBought - 1000;
     stakingWizardDriver.setAmountForAllowance(orbsForAllowance);
-    // stakingWizardDriver.clickOnAllow();
+    stakingWizardDriver.clickOnAllow();
+
+    await driver.forElement('wizard_sub_step_wait_for_staking_confirmation').toAppear();
+
+    expect(queryByText('Proceed')).not.toBeInTheDocument();
+
+    for (let confirmation = 1; confirmation <= 6; confirmation++) {
+      orbsTokenServiceMock.txsMocker.sendTxConfirmation(approveOrbsTxPromievent, confirmation);
+    }
+
+    await waitForElement(() => getByText('Proceed'));
+    stakingWizardDriver.clickOnProceedAfterTxVerified();
+
+    await driver.forElement('wizard_sub_step_congratulations').toAppear();
 
     // Second step - Stake your orbs
 
