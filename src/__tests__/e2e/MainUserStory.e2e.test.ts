@@ -26,6 +26,8 @@ import { IStores } from '../../store/stores';
 import { IServices } from '../../services/Services';
 import { getStores } from '../../store/storesInitialization';
 import { OrbsAllowanceStepDriver } from '../appDrivers/OrbsAllowanceStepDriver';
+import { OrbsStakingStepDriver } from '../appDrivers/OrbsStakingStepDriver';
+import { ApprovableStepDriver } from '../appDrivers/ApprovableStepDriver';
 
 interface IYannoDriver {
   userBoughtOrbs(amount: number): void;
@@ -87,6 +89,31 @@ function sendTxConfirmations(
 ) {
   for (let confirmation = 1; confirmation <= 6; confirmation++) {
     txServiceMock.txsMocker.sendTxConfirmation(promievent, confirmation);
+  }
+}
+
+/**
+ * Tests the 'tx confirmation' and 'tx success' (congratulations) sub-steps of an 'ApprovableWizardStep'
+ */
+async function testApprovableWizardStepAfterWasInitiated(
+  approvableStepDriver: ApprovableStepDriver,
+  txServiceMock: ITxCreatingServiceMock,
+  approveOrbsTxPromievent: PromiEvent<TransactionReceipt>,
+  clickOnFinishStep: boolean,
+) {
+  await waitForElement(() => approvableStepDriver.txConformationSubStepComponent);
+
+  // The 'proceed' button should appear only after 6 confirmations
+  expect(approvableStepDriver.queryProceedButton).not.toBeInTheDocument();
+  sendTxConfirmations(txServiceMock, approveOrbsTxPromievent, 1, 6);
+  await waitForElement(() => approvableStepDriver.queryProceedButton);
+
+  // Clicking on 'Proceed' should move the user to the 'congratulations' view
+  approvableStepDriver.clickOnProceedAfterTxVerified();
+  await waitForElement(() => approvableStepDriver.congratulationsSubStepComponent);
+
+  if (clickOnFinishStep) {
+    approvableStepDriver.clickOnFinishApprovableStep();
   }
 }
 
@@ -165,6 +192,7 @@ describe('Main User Story', () => {
     };
 
     const orbsAllowanceStepDriver = new OrbsAllowanceStepDriver(renderResults);
+    const orbsStakingStepDriver = new OrbsStakingStepDriver(renderResults);
 
     const liquidOrbsText = queryByTestId('amount_liquid_orbs');
     const stakedOrbsText = queryByTestId('amount_staked_orbs');
@@ -238,42 +266,57 @@ describe('Main User Story', () => {
     // Wait for the staking wizard to open with the first step
     await driver.forElement('wizard_staking').toAppear();
 
+    let approveOrbsTxPromievent: PromiEvent<TransactionReceipt>;
+    let stakeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
+
+    orbsTokenServiceMock.txsMocker.registerToNextTxCreation(
+      'approve',
+      promievent => (approveOrbsTxPromievent = promievent),
+    );
+
+    stakingServiceMock.txsMocker.registerToNextTxCreation(
+      'stake',
+      promievent => stakeOrbsTxPromievent = promievent
+    );
+
     // First step - Allow staking contract to use orbs
 
     // Default value should be the maximum value of liquid orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
     expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
 
-    let approveOrbsTxPromievent: PromiEvent<TransactionReceipt>;
-    orbsTokenServiceMock.txsMocker.registerToNextTxCreation(
-      'approve',
-      promievent => (approveOrbsTxPromievent = promievent),
-    );
-
     const orbsForAllowance = orbsBought - 1000;
     orbsAllowanceStepDriver.setAmountForAllowance(orbsForAllowance);
 
-    // TODO : O.L : We might want to change the 'test unit' to start with waiting for the conformation sub-step
-    //  to appear and up until pressing on 'Finish approvable step'. That way we can reproduce it on the other steps as well.
     // Clicking on 'allow' should move the user to the 'tx confirmation' view
     orbsAllowanceStepDriver.clickOnAllow();
-    await waitForElement(() => orbsAllowanceStepDriver.txConformationSubStepComponent);
 
-    // The 'proceed' button should appear only after 6 confirmations
-    expect(orbsAllowanceStepDriver.queryProceedButton).not.toBeInTheDocument();
-    sendTxConfirmations(orbsTokenServiceMock, approveOrbsTxPromievent, 1, 6);
-    await waitForElement(() => orbsAllowanceStepDriver.queryProceedButton);
-
-    // Clicking on 'Proceed' should move the user to the 'congratulations' view
-    orbsAllowanceStepDriver.clickOnProceedAfterTxVerified();
-    await waitForElement(() => orbsAllowanceStepDriver.congratulationsSubStepComponent);
-
-    orbsAllowanceStepDriver.clickOnFinishApprovableStep();
+    // Test the rest of the 'allowance' approvable step
+    await testApprovableWizardStepAfterWasInitiated(
+      orbsAllowanceStepDriver,
+      orbsTokenServiceMock,
+      approveOrbsTxPromievent,
+      true,
+    );
 
     // Second step - Stake your orbs
     // Default value should be the maximum value of liquid orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
+    expect(orbsStakingStepDriver.orbsForStakingInput).toHaveValue(orbsForAllowance);
+
+    const orbsFotStaking = orbsForAllowance - 1000;
+    orbsStakingStepDriver.setAmountForStaking(orbsFotStaking);
+
+    // Clicking on 'stake' should move the user to the 'tx confirmation' view
+    orbsStakingStepDriver.clickOnStake();
+
+    // Test the rest of the 'staking' approvable step
+    await testApprovableWizardStepAfterWasInitiated(
+      orbsStakingStepDriver,
+      stakingServiceMock,
+      stakeOrbsTxPromievent,
+      true,
+    );
 
     // Third step - Select guardian
 

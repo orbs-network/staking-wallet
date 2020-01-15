@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, Input, Typography } from '@material-ui/core';
+import { Button, Input, TextField, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
@@ -13,7 +13,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+  const orbsForStaking = useNumber(parseInt(orbsAccountStore.stakingContractAllowance)); // Start with the maximum amount
   const message = useStateful('Select amount of Orbs to stake');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
@@ -69,16 +69,19 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       <br />
       <br />
 
+      {/* TODO : O.L : Limit the maximum value to the value of the allowance */}
       {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      <Input
+      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
+      <TextField
+        id={'orbsStaking'}
+        label={'Staking'}
         type={'number'}
         value={orbsForStaking.value}
         onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
-        disabled={disableInputs}
-        inputProps={inputTestProps}
       />
+
       <Button disabled={disableInputs} onClick={stakeTokens}>
-        STAKE
+        Stake
       </Button>
     </WizardContent>
   );

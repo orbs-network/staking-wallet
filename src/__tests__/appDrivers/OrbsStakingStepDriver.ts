@@ -7,7 +7,7 @@ export class OrbsStakingStepDriver extends ApprovableStepDriver {
   }
 
   setAmountForStaking(allowanceInOrbs: number) {
-    fireEvent.change(this.orbsForAllowanceInput, { target: { value: allowanceInOrbs.toString() } });
+    fireEvent.change(this.orbsForStakingInput, { target: { value: allowanceInOrbs.toString() } });
   }
 
   clickOnStake() {
@@ -15,7 +15,7 @@ export class OrbsStakingStepDriver extends ApprovableStepDriver {
     fireEvent.click(orbsStakingActionButton);
   }
 
-  public get orbsForAllowanceInput() {
+  public get orbsForStakingInput() {
     return within(this.txCreatingSubStepComponent).getByLabelText('Staking');
   }
 }
