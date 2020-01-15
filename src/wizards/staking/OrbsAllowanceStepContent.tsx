@@ -13,7 +13,10 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsAllowance = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+
+  // Start and limit by liquid orbs
+  const liquidOrbsAsNumber = parseInt(orbsAccountStore.liquidOrbs); // TODO : O.L : Ensure this number converting is valid.
+  const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
   const message = useStateful('Select amount of Orbs to allow');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 

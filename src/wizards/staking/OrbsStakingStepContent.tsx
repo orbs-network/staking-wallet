@@ -13,7 +13,13 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsForStaking = useNumber(parseInt(orbsAccountStore.stakingContractAllowance)); // Start with the maximum amount
+
+  // Start and limit by allowance
+  const stakingContractAllowanceAsNumber = parseInt(orbsAccountStore.stakingContractAllowance); // TODO : O.L : Ensure this number converting is valid.
+  const orbsForStaking = useNumber(stakingContractAllowanceAsNumber, {
+    lowerLimit: 0,
+    upperLimit: stakingContractAllowanceAsNumber,
+  });
   const message = useStateful('Select amount of Orbs to stake');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 

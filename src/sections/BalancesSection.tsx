@@ -35,7 +35,7 @@ export const BalancesSection = observer(() => {
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
             amount={parseInt(orbsAccountStore.liquidOrbs)}
-            testIdAmount={'amount_liquid_orbs'}
+            balanceCardTestId={'balance_card_liquid_orbs'}
           />
         </GridItem>
 
@@ -46,7 +46,7 @@ export const BalancesSection = observer(() => {
             amount={orbsAccountStore.stakedOrbs}
             actionButtonActive={true}
             onActionButtonPressed={showUnStakingModal.setTrue}
-            testIdAmount={'amount_staked_orbs'}
+            balanceCardTestId={'balance_card_staked_orbs'}
           />
         </GridItem>
 
@@ -57,7 +57,7 @@ export const BalancesSection = observer(() => {
             amount={orbsAccountStore.orbsInCoolDown}
             actionButtonActive={true}
             onActionButtonPressed={() => null}
-            testIdAmount={'amount_cool_down_orbs'}
+            balanceCardTestId={'balance_card_cool_down_orbs'}
           />
         </GridItem>
       </Grid>

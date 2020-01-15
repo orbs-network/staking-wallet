@@ -19,19 +19,19 @@ interface IProps {
   onActionButtonPressed: () => void;
 
   // Testing
-  testIdAmount?: string;
+  balanceCardTestId?: string;
 }
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
-  const { title, amount, actionButtonTitle, actionButtonActive, onActionButtonPressed, testIdAmount } = props;
+  const { title, amount, actionButtonTitle, actionButtonActive, onActionButtonPressed, balanceCardTestId } = props;
 
   return (
-    <StyledGrid>
+    <StyledGrid data-testid={balanceCardTestId}>
       <Typography variant={'caption'}>{title}</Typography>
 
       <CommonDivider />
 
-      <Typography data-testid={testIdAmount} variant={'h6'}>
+      <Typography variant={'h6'} data-testid={'balance_text'}>
         {amount.toLocaleString()}
       </Typography>
 

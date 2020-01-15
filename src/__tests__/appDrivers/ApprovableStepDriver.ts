@@ -9,6 +9,10 @@ export class ApprovableStepDriver implements IApprovableStepDriver {
   constructor(protected renderResults: RenderResult, private txCreatingSubStepTestId: string) {
   }
 
+  public get txConfirmationLinkHref() {
+    return within(this.txConformationSubStepComponent).getByRole('link').getAttribute('href');
+  }
+
   clickOnProceedAfterTxVerified(): void {
     fireEvent.click(this.queryProceedButton);
   }
