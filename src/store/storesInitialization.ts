@@ -1,7 +1,7 @@
 import { configure } from 'mobx';
 import { GuardiansStore } from './GuardiansStore';
 import { IStores } from './stores';
-import { IOrbsPOSDataService, IStakingService, IOrbsTokenService } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
 
 import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
@@ -24,9 +24,10 @@ export function getStores(
   stakingService: IStakingService,
   orbsTokenService: IOrbsTokenService,
   ethereumTxService: IEthereumTxService,
+  guardiansService: IGuardiansService,
 ): IStores {
   // Create stores instances + Hydrate the stores
-  const guardiansStore = new GuardiansStore(orbsPOSDataService);
+  const guardiansStore = new GuardiansStore(orbsPOSDataService, guardiansService);
   const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
