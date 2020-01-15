@@ -60,7 +60,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
-    <WizardContent data-testid={'wizard_sub_step_select_amount_for_allowance'}>
+    <WizardContent data-testid={'wizard_sub_step_initiate_allowance_tx'}>
       <Typography>Approve the smart contract to use your Orbs</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />

@@ -3,7 +3,7 @@ import { fireEvent, RenderResult, within } from '@testing-library/react';
 
 export class OrbsAllowanceStepDriver extends ApprovableStepDriver {
   constructor(renderResults: RenderResult) {
-    super(renderResults);
+    super(renderResults, 'wizard_sub_step_initiate_allowance_tx');
   }
 
   setAmountForAllowance(allowanceInOrbs: number) {
@@ -11,17 +11,11 @@ export class OrbsAllowanceStepDriver extends ApprovableStepDriver {
   }
 
   clickOnAllow() {
-    const setOrbsAllowanceButton = within(this.orbsAllowanceSubStepComponent).getByText('Allow');
+    const setOrbsAllowanceButton = within(this.txCreatingSubStepComponent).getByText('Allow');
     fireEvent.click(setOrbsAllowanceButton);
   }
 
   public get orbsForAllowanceInput() {
-    return within(this.orbsAllowanceSubStepComponent).getByLabelText('Allowance');
-  }
-
-  public get orbsAllowanceSubStepComponent() {
-    const { getByTestId } = this.renderResults;
-
-    return getByTestId('wizard_sub_step_select_amount_for_allowance');
+    return within(this.txCreatingSubStepComponent).getByLabelText('Allowance');
   }
 }

@@ -60,7 +60,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
-    <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
+    <WizardContent data-testid={'wizard_sub_step_initiate_staking_tx'}>
       <Typography>Staking your tokens in the smart contract</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />

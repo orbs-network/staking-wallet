@@ -6,7 +6,7 @@ export interface IApprovableStepDriver {
 }
 
 export class ApprovableStepDriver implements IApprovableStepDriver {
-  constructor(protected renderResults: RenderResult) {
+  constructor(protected renderResults: RenderResult, private txCreatingSubStepTestId: string) {
   }
 
   clickOnProceedAfterTxVerified(): void {
@@ -20,6 +20,12 @@ export class ApprovableStepDriver implements IApprovableStepDriver {
   clickOnFinishApprovableStep(): void {
     const finishButton = within(this.congratulationsSubStepComponent).getByRole('button');
     fireEvent.click(finishButton);
+  }
+
+  public get txCreatingSubStepComponent() {
+    const { getByTestId } = this.renderResults;
+
+    return getByTestId(this.txCreatingSubStepTestId);
   }
 
   public get txConformationSubStepComponent() {

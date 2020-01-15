@@ -7,7 +7,12 @@
  */
 import '@testing-library/jest-dom/extend-expect';
 import { wait, waitForElement, waitForElementToBeRemoved, fireEvent, act } from '@testing-library/react';
-import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock, ITxCreatingServiceMock } from 'orbs-pos-data/dist/testkit';
+import {
+  OrbsPOSDataServiceMock,
+  StakingServiceMock,
+  OrbsTokenServiceMock,
+  ITxCreatingServiceMock,
+} from 'orbs-pos-data/dist/testkit';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { DeepPartial } from 'utility-types';
 import { App } from '../../App';
@@ -248,6 +253,8 @@ describe('Main User Story', () => {
     const orbsForAllowance = orbsBought - 1000;
     orbsAllowanceStepDriver.setAmountForAllowance(orbsForAllowance);
 
+    // TODO : O.L : We might want to change the 'test unit' to start with waiting for the conformation sub-step
+    //  to appear and up until pressing on 'Finish approvable step'. That way we can reproduce it on the other steps as well.
     // Clicking on 'allow' should move the user to the 'tx confirmation' view
     orbsAllowanceStepDriver.clickOnAllow();
     await waitForElement(() => orbsAllowanceStepDriver.txConformationSubStepComponent);
@@ -264,6 +271,9 @@ describe('Main User Story', () => {
     orbsAllowanceStepDriver.clickOnFinishApprovableStep();
 
     // Second step - Stake your orbs
+    // Default value should be the maximum value of liquid orbs
+    // // TODO : O.L : Change text to comma separated after finishing the main test story.
+    expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
 
     // Third step - Select guardian
 
