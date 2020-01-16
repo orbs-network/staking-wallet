@@ -1,17 +1,20 @@
 import {
-  IOrbsPOSDataService,
-  IStakingService,
-  StakingService,
-  IOrbsTokenService,
-  OrbsTokenService,
+  GuardiansService,
   IGuardiansService,
+  IOrbsPOSDataService,
+  IOrbsTokenService,
+  IStakingService,
+  OrbsClientService,
+  orbsPOSDataServiceFactory,
+  OrbsTokenService,
+  StakingService,
 } from 'orbs-pos-data';
-import { buildOrbsPOSDataService } from './OrbsPOSDataServiceFactory';
-import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
-import { CryptoWalletConnectionService } from './cryptoWalletConnectionService/CryptoWalletConnectionService';
-import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
 import Web3 from 'web3';
 import config from '../config';
+import { CryptoWalletConnectionService } from './cryptoWalletConnectionService/CryptoWalletConnectionService';
+import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
+import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
+import { BuildOrbsClient } from './OrbsClientFactory';
 
 export interface IServices {
   orbsPOSDataService: IOrbsPOSDataService;
@@ -26,13 +29,17 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
 
   if (ethereumProvider) {
     web3 = new Web3(ethereumProvider as any);
+  } else {
+    web3 = new Web3(new Web3.providers.WebsocketProvider(config.ETHEREUM_PROVIDER_WS));
   }
+  const orbsClient = BuildOrbsClient();
+  const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
 
   return {
     cryptoWalletConnectionService: new CryptoWalletConnectionService(ethereumProvider),
-    orbsPOSDataService: buildOrbsPOSDataService(),
+    orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient, config.contractsAddressesOverride),
     stakingService: new StakingService(web3, config.contractsAddressesOverride.stakingContract),
     orbsTokenService: new OrbsTokenService(web3, config.contractsAddressesOverride.erc20Contract),
-    guardiansService: undefined, // TODO : O.L : Change this to real service initialization
+    guardiansService: new GuardiansService(web3, orbsClientService, config.contractsAddressesOverride as any), // TODO : O.L : Change this to real service initialization
   };
 }
