@@ -11,4 +11,5 @@
     "noEmit": true
   },
   "include": ["**/*.test.ts", "**/*.test.tsx"],
+  "references": [{ "path": "../tsconfig.json" }]
 }
