@@ -10,5 +10,5 @@
     "types": ["node", "jest"],
     "noEmit": true
   },
-  "include": ["**/*.test.ts", "**/*.test.tsx"]
+  "include": ["**/*.test.ts", "**/*.test.tsx"],
 }

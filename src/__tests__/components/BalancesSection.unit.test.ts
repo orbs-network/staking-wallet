@@ -10,7 +10,7 @@ import { OrbsPOSDataServiceMock, OrbsTokenServiceMock, StakingServiceMock } from
 import { BalancesSection } from '../../sections/BalancesSection';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
-import { CryptoWalletIntegrationStore } from '../../store/CryptoWalletIntegrationStore';
+import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionStore';
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
@@ -18,7 +18,7 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 describe('Balances Section', () => {
   let testDriver: ComponentTestDriver;
   let orbsPOSDataServiceMock: OrbsPOSDataServiceMock;
-  let cryptoWalletIntegrationStore: CryptoWalletIntegrationStore;
+  let cryptoWalletIntegrationStore: CryptoWalletConnectionStore;
   let orbsAccountStore: OrbsAccountStore;
 
   const testAddress = '0x0afdafad';
@@ -33,7 +33,7 @@ describe('Balances Section', () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
     const stakingService = new StakingServiceMock();
     const orbsTokenService = new OrbsTokenServiceMock();
-    cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
     orbsAccountStore = new OrbsAccountStore(
       cryptoWalletIntegrationStore,
       orbsPOSDataServiceMock,

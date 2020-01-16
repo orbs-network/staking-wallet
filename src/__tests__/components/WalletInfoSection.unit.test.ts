@@ -11,7 +11,7 @@ import copyMock from 'copy-to-clipboard';
 import { WalletInfoSection } from '../../sections/WalletInfoSection';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
-import { CryptoWalletIntegrationStore } from '../../store/CryptoWalletIntegrationStore';
+import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 
@@ -32,7 +32,7 @@ jest.mock('copy-to-clipboard', () => jest.fn());
 describe('Wallet Info Section', () => {
   let testDriver: ComponentTestDriver;
   let ethereumProviderMock: EthereumProviderMock;
-  let cryptoWalletIntegrationStore: CryptoWalletIntegrationStore;
+  let cryptoWalletIntegrationStore: CryptoWalletConnectionStore;
 
   const testAddress = '0x0afdafad';
 
@@ -49,7 +49,7 @@ describe('Wallet Info Section', () => {
     ethereumProviderMock.setSelectedAddress(testAddress);
 
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
   });
 
   it(`Should display the account info`, async () => {

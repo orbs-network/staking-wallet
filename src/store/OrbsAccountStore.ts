@@ -1,5 +1,5 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
-import { CryptoWalletIntegrationStore } from './CryptoWalletIntegrationStore';
+import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { IOrbsPOSDataService, IStakingService, IOrbsTokenService } from 'orbs-pos-data';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
@@ -18,7 +18,7 @@ export class OrbsAccountStore {
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
 
   constructor(
-    private cryptoWalletIntegrationStore: CryptoWalletIntegrationStore,
+    private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,

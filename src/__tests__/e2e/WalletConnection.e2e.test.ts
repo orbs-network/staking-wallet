@@ -10,7 +10,7 @@ import { wait, waitForElement, waitForElementToBeRemoved } from '@testing-librar
 import { App } from '../../App';
 import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
 import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
-import { CryptoWalletIntegrationStore } from '../../store/CryptoWalletIntegrationStore';
+import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
@@ -25,12 +25,12 @@ describe('Wallet connection', () => {
   let ethereumProviderMock: EthereumProviderMock;
   let guardiansStore: GuardiansStore;
   let orbsAccountStore: OrbsAccountStore;
-  let cryptoWalletIntegrationStore: CryptoWalletIntegrationStore;
+  let cryptoWalletIntegrationStore: CryptoWalletConnectionStore;
 
   beforeEach(() => {
     ethereumProviderMock = new EthereumProviderMock();
     const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
     const orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
     guardiansStore = new GuardiansStore(orbsPOSDataServiceMock);
     const stakingServiceMock = new StakingServiceMock();
@@ -47,7 +47,7 @@ describe('Wallet connection', () => {
 
   it('Should show "Install Metamask" button when metamask is not installed', async () => {
     const ethereumTxService: IEthereumTxService = new EthereumTxService(undefined);
-    const cryptoWalletIntegrationStore = new CryptoWalletIntegrationStore(ethereumTxService);
+    const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
     const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore, guardiansStore }).render();
 
     expect(queryByTestId('button-install-metamask')).toBeInTheDocument();

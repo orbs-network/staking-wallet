@@ -2,7 +2,7 @@ import { action, computed, observable, reaction } from 'mobx';
 import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
 import { IReactionDisposer } from 'mobx/lib/core/reaction';
 
-export class CryptoWalletIntegrationStore {
+export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
 
   @observable public isMetamaskInstalled: boolean;
