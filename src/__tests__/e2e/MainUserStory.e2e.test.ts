@@ -23,11 +23,10 @@ import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IStores } from '../../store/stores';
 import { getStores } from '../../store/storesInitialization';
-import { OrbsAllowanceStepDriver } from '../appDrivers/OrbsAllowanceStepDriver';
-import { OrbsStakingStepDriver } from '../appDrivers/OrbsStakingStepDriver';
-import { ApprovableStepDriver } from '../appDrivers/ApprovableStepDriver';
-import { GuardianSelectionStepDriver } from '../appDrivers/GuardianSelectionStepDriver';
+import { ApprovableStepDriver } from '../appDrivers/wizardSteps/ApprovableStepDriver';
+import { GuardianSelectionStepDriver } from '../appDrivers/wizardSteps/GuardianSelectionStepDriver';
 import { BalanceBoxDriver } from '../appDrivers/BalanceBoxDriver';
+import { NumericOrbsTxStepDriver } from '../appDrivers/wizardSteps/NumericOrbsTxStepDriver';
 
 interface IYannoDriver {
   userBoughtOrbs(amount: number): void;
@@ -183,8 +182,18 @@ describe('Main User Story', () => {
       },
     };
 
-    const orbsAllowanceStepDriver = new OrbsAllowanceStepDriver(renderResults);
-    const orbsStakingStepDriver = new OrbsStakingStepDriver(renderResults);
+    const orbsAllowanceStepDriver = new NumericOrbsTxStepDriver(
+      renderResults,
+      'wizard_sub_step_initiate_allowance_tx',
+      'Allowance',
+      'Allow',
+    );
+    const orbsStakingStepDriver = new NumericOrbsTxStepDriver(
+      renderResults,
+      'wizard_sub_step_initiate_staking_tx',
+      'Staking',
+      'Stake',
+    );
     const guardianSelectionStepDriver = new GuardianSelectionStepDriver(renderResults);
 
     const liquidOrbsBalanceBox = new BalanceBoxDriver(renderResults, 'balance_card_liquid_orbs');
@@ -206,6 +215,7 @@ describe('Main User Story', () => {
     const orbsBought = 10_000;
     const orbsForAllowance = orbsBought - 1000; // 9,000
     const orbsFotStaking = orbsForAllowance - 1000; // 8,000
+    const orbsForUnStaking = orbsFotStaking - 2500; // 5,500
 
     // **************************
     // Chapter 1 - First time staking
@@ -240,12 +250,12 @@ describe('Main User Story', () => {
 
     // Default value should be the maximum value of liquid orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
+    expect(orbsAllowanceStepDriver.orbsAmountInput).toHaveValue(orbsBought);
 
-    orbsAllowanceStepDriver.setAmountForAllowance(orbsForAllowance);
+    orbsAllowanceStepDriver.setInputAmount(orbsForAllowance);
 
     // Clicking on 'allow' should move the user to the 'tx confirmation' view
-    orbsAllowanceStepDriver.clickOnAllow();
+    orbsAllowanceStepDriver.clickOnActionButton();
 
     // Test the rest of the 'allowance' approvable step
     await testApprovableWizardStepAfterWasInitiated(
@@ -258,12 +268,12 @@ describe('Main User Story', () => {
     // Second step - Stake your orbs
     // Default value should be the maximum value of liquid orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsStakingStepDriver.orbsForStakingInput).toHaveValue(orbsForAllowance);
+    expect(orbsStakingStepDriver.orbsAmountInput).toHaveValue(orbsForAllowance);
 
-    orbsStakingStepDriver.setAmountForStaking(orbsFotStaking);
+    orbsStakingStepDriver.setInputAmount(orbsFotStaking);
 
     // Clicking on 'stake' should move the user to the 'tx confirmation' view
-    orbsStakingStepDriver.clickOnStake();
+    orbsStakingStepDriver.clickOnActionButton();
 
     // Test the rest of the 'staking' approvable step
     await testApprovableWizardStepAfterWasInitiated(
@@ -294,11 +304,54 @@ describe('Main User Story', () => {
 
     // Ensure app is displaying the right balances after staking
     expect(liquidOrbsBalanceBox.balanceText).toBe('1,000');
-    expect(stakedOrbsBalanceBox.balanceText).toBe('9,000');
+    expect(stakedOrbsBalanceBox.balanceText).toBe('8,000');
     expect(coolDownOrbsBalanceBox.balanceText).toBe('0');
 
     // **************************
-    // Chapter 2 - Ask to unfreeze some orbs
+    // Chapter 2 - Ask to Un-Stake some orbs
     // **************************
+    const orbsUnStakingStepDriver = new NumericOrbsTxStepDriver(
+      renderResults,
+      'wizard_sub_step_initiate_unfreezing_tx',
+      'Unstaking',
+      'Unstake',
+    );
+
+    let unfreezeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
+    stakingServiceMock.txsMocker.registerToNextTxCreation('unstake', promievent => {
+      unfreezeOrbsTxPromievent = promievent;
+    });
+
+    stakedOrbsBalanceBox.clickOnActionButton();
+
+    // TODO : O.L : use real test id
+    await driver.forElement('wizard_unfreeze_orbs').toAppear();
+
+    // Default value should be the maximum value of staked orbs
+    // // TODO : O.L : Change text to comma separated after finishing the main test story.
+    expect(orbsUnStakingStepDriver.orbsAmountInput).toHaveValue(orbsFotStaking);
+
+    orbsUnStakingStepDriver.setInputAmount(orbsForUnStaking);
+
+    // Clicking on 'un stake' should move the user to the 'tx confirmation' view
+    orbsUnStakingStepDriver.clickOnActionButton();
+
+    // Test the rest of the 'Unstaking' approvable step
+    await testApprovableWizardStepAfterWasInitiated(
+      orbsUnStakingStepDriver,
+      stakingServiceMock,
+      unfreezeOrbsTxPromievent,
+      true,
+    );
+
+    const unfreezingWizardFinishButton = getByText('Close wizard');
+    fireEvent.click(unfreezingWizardFinishButton);
+
+    await driver.forElement('wizard_unfreeze_orbs').toDisappear();
+
+    // Ensure app is displaying the right balances after unstaking
+    expect(liquidOrbsBalanceBox.balanceText).toBe('1,000');
+    expect(stakedOrbsBalanceBox.balanceText).toBe('2,500');
+    expect(coolDownOrbsBalanceBox.balanceText).toBe('5,500');
   });
 });
