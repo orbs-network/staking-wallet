@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, Input, Typography } from '@material-ui/core';
+import { Button, Input, TextField, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
@@ -13,7 +13,13 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsForStaking = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+
+  // Start and limit by allowance
+  const stakingContractAllowanceAsNumber = parseInt(orbsAccountStore.stakingContractAllowance); // TODO : O.L : Ensure this number converting is valid.
+  const orbsForStaking = useNumber(stakingContractAllowanceAsNumber, {
+    lowerLimit: 0,
+    upperLimit: stakingContractAllowanceAsNumber,
+  });
   const message = useStateful('Select amount of Orbs to stake');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
@@ -60,7 +66,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
-    <WizardContent data-testid={'wizard_step_select_amount_for_stake'}>
+    <WizardContent data-testid={'wizard_sub_step_initiate_staking_tx'}>
       <Typography>Staking your tokens in the smart contract</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />
@@ -69,16 +75,19 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       <br />
       <br />
 
+      {/* TODO : O.L : Limit the maximum value to the value of the allowance */}
       {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      <Input
+      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
+      <TextField
+        id={'orbsStaking'}
+        label={'Staking'}
         type={'number'}
         value={orbsForStaking.value}
         onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
-        disabled={disableInputs}
-        inputProps={inputTestProps}
       />
+
       <Button disabled={disableInputs} onClick={stakeTokens}>
-        STAKE
+        Stake
       </Button>
     </WizardContent>
   );

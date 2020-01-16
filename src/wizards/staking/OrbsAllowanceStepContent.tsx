@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, Input, Typography } from '@material-ui/core';
+import { Button, Input, TextField, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
@@ -13,7 +13,10 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const orbsAccountStore = useOrbsAccountStore();
-  const orbsAllowance = useNumber(parseInt(orbsAccountStore.liquidOrbs)); // Start with the maximum amount
+
+  // Start and limit by liquid orbs
+  const liquidOrbsAsNumber = parseInt(orbsAccountStore.liquidOrbs); // TODO : O.L : Ensure this number converting is valid.
+  const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
   const message = useStateful('Select amount of Orbs to allow');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
@@ -60,7 +63,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
-    <WizardContent data-testid={'wizard_sub_step_select_amount_for_allowance'}>
+    <WizardContent data-testid={'wizard_sub_step_initiate_allowance_tx'}>
       <Typography>Approve the smart contract to use your Orbs</Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />
@@ -70,13 +73,15 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       <br />
 
       {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      <Input
+      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
+      <TextField
+        id={'orbsAllowance'}
+        label={'Allowance'}
         type={'number'}
         value={orbsAllowance.value}
         onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
-        disabled={disableInputs}
-        inputProps={inputTestProps}
       />
+
       <Button disabled={disableInputs} onClick={stakeTokens}>
         Allow
       </Button>

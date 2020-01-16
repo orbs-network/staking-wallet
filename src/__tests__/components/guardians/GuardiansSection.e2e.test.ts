@@ -7,14 +7,15 @@
  */
 import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
-import { OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { GuardiansSection } from '../../../sections/GuardiansSection';
+import { GuardiansServiceMock, OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { GuardiansStore } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { getByTestId as getByTestIdWithContainer } from '@testing-library/dom';
 
 describe('Guardians Section', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
+  let guardianService: GuardiansServiceMock;
   let testDriver: ComponentTestDriver;
 
   const guardian1Address = '0x0874BC1383958e2475dF73dC68C4F09658E23777';
@@ -48,14 +49,15 @@ describe('Guardians Section', () => {
   beforeEach(() => {
     testDriver = new ComponentTestDriver(GuardiansSection);
     orbsPOSDataService = new OrbsPOSDataServiceMock();
+    guardianService = new GuardiansServiceMock();
   });
 
   it('should display all the given guardians', async () => {
-    orbsPOSDataService.withGuardian(guardian1Address, guardian1);
-    orbsPOSDataService.withGuardian(guardian2Address, guardian2);
-    orbsPOSDataService.withGuardian(guardian3Address, guardian3);
+    guardianService.withGuardian(guardian1Address, guardian1);
+    guardianService.withGuardian(guardian2Address, guardian2);
+    guardianService.withGuardian(guardian3Address, guardian3);
 
-    const guardiansStore = new GuardiansStore(orbsPOSDataService);
+    const guardiansStore = new GuardiansStore(orbsPOSDataService, guardianService);
 
     await guardiansStore.init();
 
@@ -89,11 +91,11 @@ describe('Guardians Section', () => {
 
   it('should display the total participating tokens', async () => {
     orbsPOSDataService.withTotalParticipatingTokens(BigInt(1_000_000));
-    orbsPOSDataService.withGuardian(guardian1Address, guardian1);
-    orbsPOSDataService.withGuardian(guardian2Address, guardian2);
-    orbsPOSDataService.withGuardian(guardian3Address, guardian3);
+    guardianService.withGuardian(guardian1Address, guardian1);
+    guardianService.withGuardian(guardian2Address, guardian2);
+    guardianService.withGuardian(guardian3Address, guardian3);
 
-    const guardiansStore = new GuardiansStore(orbsPOSDataService);
+    const guardiansStore = new GuardiansStore(orbsPOSDataService, guardianService);
 
     await guardiansStore.init();
 

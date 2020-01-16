@@ -1,6 +1,6 @@
 import { observable, action, reaction } from 'mobx';
 
-import { IOrbsPOSDataService, IGuardianInfo } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IGuardianInfo, IGuardiansService } from 'orbs-pos-data';
 
 export type TGuardianInfoExtended = IGuardianInfo & { address: string };
 
@@ -15,7 +15,7 @@ export class GuardiansStore implements TGuardiansStore {
   @observable public guardiansList: TGuardianInfoExtended[];
   @observable public totalParticipatingTokens: number;
 
-  constructor(private orbsPOSDataService: IOrbsPOSDataService) {
+  constructor(private orbsPOSDataService: IOrbsPOSDataService, private guardiansService: IGuardiansService) {
     this.guardiansList = [];
     this.totalParticipatingTokens = 0;
   }
@@ -25,9 +25,9 @@ export class GuardiansStore implements TGuardiansStore {
       const totalParticipatingTokens = await this.orbsPOSDataService.getTotalParticipatingTokens();
       this.setTotalParticipatingTokens(totalParticipatingTokens);
 
-      const guardiansAddresses = await this.orbsPOSDataService.getGuardiansList(0, 100);
+      const guardiansAddresses = await this.guardiansService.getGuardiansList(0, 100);
       const promises = guardiansAddresses.map(guardianAddress =>
-        this.orbsPOSDataService.getGuardianInfo(guardianAddress),
+        this.guardiansService.getGuardianInfo(guardianAddress),
       );
       const guardiansInfo = await Promise.all(promises);
       const guardiansInfoExtended = guardiansInfo.map((g, idx) => ({ ...g, address: guardiansAddresses[idx] }));
