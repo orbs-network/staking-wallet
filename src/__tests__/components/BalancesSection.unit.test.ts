@@ -14,6 +14,7 @@ import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionS
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
+import { BalanceCardDriver } from '../appDrivers/BalanceCardDriver';
 
 describe('Balances Section', () => {
   let testDriver: ComponentTestDriver;
@@ -43,11 +44,13 @@ describe('Balances Section', () => {
   });
 
   it(`Should show all account data`, async () => {
-    const { getByTestId } = testDriver.withStores({ cryptoWalletIntegrationStore, orbsAccountStore }).render();
-    expect(getByTestId('amount_liquid_orbs')).toHaveTextContent('0');
+    const renderResults = testDriver.withStores({ cryptoWalletIntegrationStore, orbsAccountStore }).render();
+    const liquidOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_liquid_orbs');
+
+    expect(liquidOrbsBalanceCard.balanceText).toBe('0');
 
     orbsPOSDataServiceMock.fireORBSBalanceChange('500000');
-    expect(getByTestId('amount_liquid_orbs')).toHaveTextContent('500,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('500,000');
 
     // TODO: implement withStakedORBS and withORBSInCooldown on orbsPOSDataServiceMock
     // expect(getByTestId('amount_staked_orbs')).toHaveTextContent('10,000');

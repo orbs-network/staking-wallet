@@ -25,7 +25,7 @@ import { IStores } from '../../store/stores';
 import { getStores } from '../../store/storesInitialization';
 import { ApprovableStepDriver } from '../appDrivers/wizardSteps/ApprovableStepDriver';
 import { GuardianSelectionStepDriver } from '../appDrivers/wizardSteps/GuardianSelectionStepDriver';
-import { BalanceBoxDriver } from '../appDrivers/BalanceBoxDriver';
+import { BalanceCardDriver } from '../appDrivers/BalanceCardDriver';
 import { NumericOrbsTxStepDriver } from '../appDrivers/wizardSteps/NumericOrbsTxStepDriver';
 
 interface IYannoDriver {
@@ -196,9 +196,9 @@ describe('Main User Story', () => {
     );
     const guardianSelectionStepDriver = new GuardianSelectionStepDriver(renderResults);
 
-    const liquidOrbsBalanceBox = new BalanceBoxDriver(renderResults, 'balance_card_liquid_orbs');
-    const stakedOrbsBalanceBox = new BalanceBoxDriver(renderResults, 'balance_card_staked_orbs');
-    const coolDownOrbsBalanceBox = new BalanceBoxDriver(renderResults, 'balance_card_cool_down_orbs');
+    const liquidOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_liquid_orbs');
+    const stakedOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_staked_orbs');
+    const coolDownOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_cool_down_orbs');
 
     // DEV_NOTE : The appearance of the address signals that the 'OrbsAccountStore' has been initialised.
     //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
@@ -208,9 +208,9 @@ describe('Main User Story', () => {
     // Initial
     // **************************
     // DEV : Initial
-    expect(liquidOrbsBalanceBox.balanceText).toBe('0');
-    expect(stakedOrbsBalanceBox.balanceText).toBe('0');
-    expect(coolDownOrbsBalanceBox.balanceText).toBe('0');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('0');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('0');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
 
     const orbsBought = 10_000;
     const orbsForAllowance = orbsBought - 1000; // 9,000
@@ -223,9 +223,9 @@ describe('Main User Story', () => {
 
     driver.userBoughtOrbs(orbsBought);
 
-    expect(liquidOrbsBalanceBox.balanceText).toBe('10,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('10,000');
 
-    liquidOrbsBalanceBox.clickOnActionButton();
+    liquidOrbsBalanceCard.clickOnActionButton();
 
     // Wait for the staking wizard to open with the first step
     await driver.forElement('wizard_staking').toAppear();
@@ -303,9 +303,9 @@ describe('Main User Story', () => {
     await driver.forElement('wizard_last_page').toDisappear();
 
     // Ensure app is displaying the right balances after staking
-    expect(liquidOrbsBalanceBox.balanceText).toBe('1,000');
-    expect(stakedOrbsBalanceBox.balanceText).toBe('8,000');
-    expect(coolDownOrbsBalanceBox.balanceText).toBe('0');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('8,000');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
 
     // **************************
     // Chapter 2 - Ask to Un-Stake some orbs
@@ -322,7 +322,7 @@ describe('Main User Story', () => {
       unfreezeOrbsTxPromievent = promievent;
     });
 
-    stakedOrbsBalanceBox.clickOnActionButton();
+    stakedOrbsBalanceCard.clickOnActionButton();
 
     // TODO : O.L : use real test id
     await driver.forElement('wizard_unfreeze_orbs').toAppear();
@@ -350,8 +350,8 @@ describe('Main User Story', () => {
     await driver.forElement('wizard_unfreeze_orbs').toDisappear();
 
     // Ensure app is displaying the right balances after unstaking
-    expect(liquidOrbsBalanceBox.balanceText).toBe('1,000');
-    expect(stakedOrbsBalanceBox.balanceText).toBe('2,500');
-    expect(coolDownOrbsBalanceBox.balanceText).toBe('5,500');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('2,500');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('5,500');
   });
 });
