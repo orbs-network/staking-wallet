@@ -17,7 +17,7 @@ const variantIcon = {
   info: InfoIcon,
 };
 
-const useStyles1 = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   success: {
     backgroundColor: green[600],
   },
@@ -51,8 +51,7 @@ export interface IProps {
 }
 
 export const CustomSnackBarContent = React.memo((props: IProps) => {
-  // @ts-ignore
-  const classes = useStyles1();
+  const classes = useStyles(props);
   const { className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
 

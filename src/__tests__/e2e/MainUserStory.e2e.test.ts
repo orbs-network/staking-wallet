@@ -34,18 +34,13 @@ function sendTxConfirmations(
 }
 
 async function waitForPromieventTxHash(promievent: PromiEvent<TransactionReceipt>): Promise<string> {
-  return new Promise(resolve => {
-    promievent.once('transactionHash', hash => {
-      console.log('HASH', hash);
-      resolve(hash);
-    });
-  });
+  return new Promise(resolve => promievent.once('transactionHash', resolve));
 }
 
 /**
  * Tests the 'tx confirmation' and 'tx success' (congratulations) sub-steps of an 'ApprovableWizardStep'
  */
-async function testApprovableWizardStepAfterWasInitiated(
+async function testApprovableWizardStepAfterTxWasInitiated(
   approvableStepDriver: ApprovableStepDriver,
   txServiceMock: ITxCreatingServiceMock,
   approveOrbsTxPromievent: PromiEvent<TransactionReceipt>,
@@ -84,7 +79,7 @@ describe('Main User Story', () => {
   let orbsTokenServiceMock: OrbsTokenServiceMock;
   let guardiansServiceMock: GuardiansServiceMock;
 
-  const testAddress = '0x0afdafad';
+  const userAccountAddress = '0x0afdafad';
 
   // Refresh test driver and other mocks
   beforeEach(() => {
@@ -98,7 +93,7 @@ describe('Main User Story', () => {
     guardiansServiceMock = new GuardiansServiceMock();
 
     // Any test case expects a connected wallet
-    ethereumProviderMock.setSelectedAddress(testAddress);
+    ethereumProviderMock.setSelectedAddress(userAccountAddress);
   });
 
   it('Complete story', async () => {
@@ -151,7 +146,7 @@ describe('Main User Story', () => {
 
     // DEV_NOTE : The appearance of the address signals that the 'OrbsAccountStore' has been initialised.
     //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
-    await wait(() => getByText(testAddress));
+    await wait(() => getByText(userAccountAddress));
 
     // **************************
     // Initial
@@ -176,7 +171,6 @@ describe('Main User Story', () => {
 
     liquidOrbsBalanceCard.clickOnActionButton();
 
-    // Wait for the staking wizard to open with the first step
     await forElement('wizard_staking').toAppear();
 
     let approveOrbsTxPromievent: PromiEvent<TransactionReceipt>;
@@ -207,7 +201,7 @@ describe('Main User Story', () => {
     orbsAllowanceStepDriver.clickOnActionButton();
 
     // Test the rest of the 'allowance' approvable step
-    await testApprovableWizardStepAfterWasInitiated(
+    await testApprovableWizardStepAfterTxWasInitiated(
       orbsAllowanceStepDriver,
       orbsTokenServiceMock,
       approveOrbsTxPromievent,
@@ -225,7 +219,7 @@ describe('Main User Story', () => {
     orbsStakingStepDriver.clickOnActionButton();
 
     // Test the rest of the 'staking' approvable step
-    await testApprovableWizardStepAfterWasInitiated(
+    await testApprovableWizardStepAfterTxWasInitiated(
       orbsStakingStepDriver,
       stakingServiceMock,
       stakeOrbsTxPromievent,
@@ -236,7 +230,7 @@ describe('Main User Story', () => {
     guardianSelectionStepDriver.selectGuardian('Guardian_address');
 
     // Test the rest of the 'Guardian selection' approvable step
-    await testApprovableWizardStepAfterWasInitiated(
+    await testApprovableWizardStepAfterTxWasInitiated(
       guardianSelectionStepDriver,
       guardiansServiceMock,
       guardianSelectionTxPromievent,
@@ -286,7 +280,7 @@ describe('Main User Story', () => {
     orbsUnStakingStepDriver.clickOnActionButton();
 
     // Test the rest of the 'Unstaking' approvable step
-    await testApprovableWizardStepAfterWasInitiated(
+    await testApprovableWizardStepAfterTxWasInitiated(
       orbsUnStakingStepDriver,
       stakingServiceMock,
       unfreezeOrbsTxPromievent,

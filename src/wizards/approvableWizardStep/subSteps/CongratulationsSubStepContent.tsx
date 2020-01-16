@@ -11,7 +11,6 @@ interface IProps {
 export const CongratulationsSubStepContent: React.FC<IProps> = (props: IProps) => {
   const { finishedActionName, moveToNextStepAction, moveToNextStepTitle } = props;
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_congratulations'}>
       <Typography>Congratulations !</Typography>
