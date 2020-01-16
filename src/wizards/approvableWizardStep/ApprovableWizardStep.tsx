@@ -4,7 +4,7 @@ import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
 import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
 
-type TStepState = 'Action' | 'Approving' | 'Success';
+type TStepState = 'Action' | 'Confirmation' | 'Success';
 
 const REQUIRED_CONFIRMATIONS = 6;
 
@@ -35,7 +35,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
   const stepState = useStateful<TStepState>('Action');
 
   const unsubscribeFromAllPromiventListeners = useRef<() => void>(null);
-  const goToApprovalSubStep = useCallback(() => stepState.setValue('Approving'), [stepState]);
+  const goToApprovalSubStep = useCallback(() => stepState.setValue('Confirmation'), [stepState]);
   const goToCongratulationSubStep = useCallback(() => {
     if (unsubscribeFromAllPromiventListeners.current) {
       unsubscribeFromAllPromiventListeners.current();
@@ -89,7 +89,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
             onPromiEventAction={txCreationAction}
           />
         );
-      case 'Approving':
+      case 'Confirmation':
         return (
           <TransactionApprovingSubStepContent
             requiredConfirmations={REQUIRED_CONFIRMATIONS}

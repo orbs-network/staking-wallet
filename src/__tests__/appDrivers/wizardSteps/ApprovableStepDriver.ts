@@ -1,11 +1,6 @@
 import { RenderResult, within, fireEvent } from '@testing-library/react';
 
-export interface IApprovableStepDriver {
-  // Tx Approval sub step
-  clickOnProceedAfterTxVerified(): void;
-}
-
-export class ApprovableStepDriver implements IApprovableStepDriver {
+export class ApprovableStepDriver {
   constructor(protected renderResults: RenderResult, private txCreatingSubStepTestId: string) {
   }
 
