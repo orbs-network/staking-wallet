@@ -1,4 +1,4 @@
-import { IEthereumProvider, TNetworkVersion } from '../../services/ethereumTxService/IEthereumProvider';
+import { IEthereumProvider, TNetworkVersion } from '../../services/cryptoWalletConnectionService/IEthereumProvider';
 
 export class EthereumProviderMock implements IEthereumProvider {
   private shouldApproveFutureEnable = true;

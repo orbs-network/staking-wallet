@@ -4,7 +4,7 @@ import { IStores } from './stores';
 import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
 
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
+import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { OrbsAccountStore } from './OrbsAccountStore';
 
 /**
@@ -23,12 +23,12 @@ export function getStores(
   orbsPOSDataService: IOrbsPOSDataService,
   stakingService: IStakingService,
   orbsTokenService: IOrbsTokenService,
-  ethereumTxService: IEthereumTxService,
+  cryptoWalletConnectionService: ICryptoWalletConnectionService,
   guardiansService: IGuardiansService,
 ): IStores {
   // Create stores instances + Hydrate the stores
   const guardiansStore = new GuardiansStore(orbsPOSDataService, guardiansService);
-  const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
+  const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
     orbsPOSDataService,

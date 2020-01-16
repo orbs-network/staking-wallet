@@ -17,8 +17,8 @@ import {
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { DeepPartial } from 'utility-types';
 import { App } from '../../App';
-import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
-import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
+import { CryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
+import { ICryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IStores } from '../../store/stores';
@@ -139,14 +139,14 @@ describe('Main User Story', () => {
   });
 
   it('Complete story', async () => {
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
 
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
     storesForTests = getStores(
       orbsPOSDataServiceMock,
       stakingServiceMock,
       orbsTokenServiceMock,
-      ethereumTxService,
+      cryptoWalletConnectionService,
       guardiansServiceMock,
     );
 

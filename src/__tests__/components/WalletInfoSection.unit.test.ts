@@ -9,8 +9,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent } from '@testing-library/react';
 import copyMock from 'copy-to-clipboard';
 import { WalletInfoSection } from '../../sections/WalletInfoSection';
-import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
-import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
+import { CryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
+import { ICryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
@@ -48,8 +48,8 @@ describe('Wallet Info Section', () => {
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
 
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
   });
 
   it(`Should display the account info`, async () => {

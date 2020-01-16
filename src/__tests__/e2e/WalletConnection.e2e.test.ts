@@ -8,12 +8,12 @@
 import '@testing-library/jest-dom/extend-expect';
 import { wait, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
 import { App } from '../../App';
-import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
-import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
+import { CryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
+import { ICryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
-import { IEthereumProvider } from '../../services/ethereumTxService/IEthereumProvider';
+import { IEthereumProvider } from '../../services/cryptoWalletConnectionService/IEthereumProvider';
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
 import { GuardiansStore } from '../../store/GuardiansStore';
@@ -29,8 +29,8 @@ describe('Wallet connection', () => {
 
   beforeEach(() => {
     ethereumProviderMock = new EthereumProviderMock();
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
-    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
     const orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
     guardiansStore = new GuardiansStore(orbsPOSDataServiceMock);
     const stakingServiceMock = new StakingServiceMock();
@@ -46,8 +46,8 @@ describe('Wallet connection', () => {
   });
 
   it('Should show "Install Metamask" button when metamask is not installed', async () => {
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(undefined);
-    const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(undefined);
+    const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
     const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore, guardiansStore }).render();
 
     expect(queryByTestId('button-install-metamask')).toBeInTheDocument();

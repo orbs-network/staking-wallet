@@ -1,5 +1,5 @@
 import { action, computed, observable, reaction } from 'mobx';
-import { IEthereumTxService } from '../services/ethereumTxService/IEthereumTxService';
+import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { IReactionDisposer } from 'mobx/lib/core/reaction';
 
 export class CryptoWalletConnectionStore {
@@ -11,8 +11,8 @@ export class CryptoWalletConnectionStore {
 
   reactionToWalletConnection: IReactionDisposer;
 
-  constructor(private ethereumTxService: IEthereumTxService) {
-    this.isMetamaskInstalled = ethereumTxService.isMetamaskInstalled;
+  constructor(private cryptoWalletConnectionService: ICryptoWalletConnectionService) {
+    this.isMetamaskInstalled = cryptoWalletConnectionService.isMetamaskInstalled;
 
     this.reactionToWalletConnection = reaction(
       () => this.isConnectedToWallet,
@@ -27,7 +27,7 @@ export class CryptoWalletConnectionStore {
     );
 
     if (this.isMetamaskInstalled) {
-      this.ethereumTxService.onMainAddressChange(address => this.setMainAddress(address));
+      this.cryptoWalletConnectionService.onMainAddressChange(address => this.setMainAddress(address));
     }
   }
 
@@ -35,7 +35,7 @@ export class CryptoWalletConnectionStore {
   public get isConnectedToWallet(): boolean {
     return (
       this.isMetamaskInstalled &&
-      (this.ethereumTxService.didUserApproveWalletInThePast || this.walletConnectionRequestApproved)
+      (this.cryptoWalletConnectionService.didUserApproveWalletInThePast || this.walletConnectionRequestApproved)
     );
   }
 
@@ -43,7 +43,7 @@ export class CryptoWalletConnectionStore {
     if (this.isConnectedToWallet) {
       return true;
     } else {
-      const permissionGranted = await this.ethereumTxService.requestConnectionPermission();
+      const permissionGranted = await this.cryptoWalletConnectionService.requestConnectionPermission();
       this.setWalletConnectionRequestApproved(permissionGranted);
 
       return this.walletConnectionRequestApproved;
@@ -51,7 +51,7 @@ export class CryptoWalletConnectionStore {
   }
 
   private async readInformationFromConnectedWallet() {
-    const walletAddress = await this.ethereumTxService.getMainAddress();
+    const walletAddress = await this.cryptoWalletConnectionService.getMainAddress();
 
     this.setMainAddress(walletAddress);
   }

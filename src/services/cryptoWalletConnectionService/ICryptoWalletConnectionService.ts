@@ -1,4 +1,4 @@
-export interface IEthereumTxService {
+export interface ICryptoWalletConnectionService {
   readonly isMetamaskInstalled: boolean;
 
   // Getters

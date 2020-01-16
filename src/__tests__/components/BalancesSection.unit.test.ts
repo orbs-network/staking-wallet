@@ -8,8 +8,8 @@
 import '@testing-library/jest-dom/extend-expect';
 import { OrbsPOSDataServiceMock, OrbsTokenServiceMock, StakingServiceMock } from 'orbs-pos-data/dist/testkit';
 import { BalancesSection } from '../../sections/BalancesSection';
-import { EthereumTxService } from '../../services/ethereumTxService/EthereumTxService';
-import { IEthereumTxService } from '../../services/ethereumTxService/IEthereumTxService';
+import { CryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
+import { ICryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { CryptoWalletConnectionStore } from '../../store/CryptoWalletConnectionStore';
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
 import { ComponentTestDriver } from '../ComponentTestDriver';
@@ -30,10 +30,10 @@ describe('Balances Section', () => {
     ethereumProviderMock.setSelectedAddress(testAddress);
     orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
 
-    const ethereumTxService: IEthereumTxService = new EthereumTxService(ethereumProviderMock);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
     const stakingService = new StakingServiceMock();
     const orbsTokenService = new OrbsTokenServiceMock();
-    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(ethereumTxService);
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
     orbsAccountStore = new OrbsAccountStore(
       cryptoWalletIntegrationStore,
       orbsPOSDataServiceMock,
