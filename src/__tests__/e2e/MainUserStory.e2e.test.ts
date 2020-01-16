@@ -6,58 +6,21 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { wait, waitForElement, waitForElementToBeRemoved, fireEvent } from '@testing-library/react';
-import {
-  OrbsPOSDataServiceMock,
-  StakingServiceMock,
-  OrbsTokenServiceMock,
-  ITxCreatingServiceMock,
-  GuardiansServiceMock,
-} from 'orbs-pos-data/dist/testkit';
-import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { fireEvent, wait, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
+import { GuardiansServiceMock, ITxCreatingServiceMock, OrbsPOSDataServiceMock, OrbsTokenServiceMock, StakingServiceMock } from 'orbs-pos-data/dist/testkit';
 import { DeepPartial } from 'utility-types';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { App } from '../../App';
 import { CryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
 import { ICryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
-import { ComponentTestDriver } from '../ComponentTestDriver';
-import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { IStores } from '../../store/stores';
 import { getStores } from '../../store/storesInitialization';
+import { BalanceCardDriver } from '../appDrivers/BalanceCardDriver';
 import { ApprovableStepDriver } from '../appDrivers/wizardSteps/ApprovableStepDriver';
 import { GuardianSelectionStepDriver } from '../appDrivers/wizardSteps/GuardianSelectionStepDriver';
-import { BalanceCardDriver } from '../appDrivers/BalanceCardDriver';
 import { NumericOrbsTxStepDriver } from '../appDrivers/wizardSteps/NumericOrbsTxStepDriver';
-
-interface IYannoDriver {
-  userBoughtOrbs(amount: number): void;
-
-  clickOnStakeOrbsButton(): void;
-
-  setOrbsForStake(to: number): void;
-
-  clickOnSelectAGuardian(): void;
-
-  chooseAGuardianByTableIndex(guardianIndex: number): string;
-
-  closeStakingDialog(): void;
-
-  getSelectedGuardianAddress(): string;
-
-  clickOnUnlockTokens(): void;
-
-  closeUnlockingDialog(): void;
-
-  clickOnApproveUnlocking(): void;
-
-  setOrbsForUnlocking(orbsToUnlock: number): void;
-
-  forElement(
-    elementTestId: string,
-  ): {
-    toAppear(): Promise<void>;
-    toDisappear(): Promise<void>;
-  };
-}
+import { ComponentTestDriver } from '../ComponentTestDriver';
+import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -153,34 +116,20 @@ describe('Main User Story', () => {
     const renderResults = appTestDriver.withStores(storesForTests).render();
     const { queryByTestId, getByText } = renderResults;
 
-    // TODO : O.L : Move the driver to a proper place after finishing scaffolding the tests.
-    const driver: Partial<IYannoDriver> = {
-      userBoughtOrbs(amount: number): void {
-        orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
-      },
+    function userBoughtOrbs(amount: number): void {
+      orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
+    }
 
-      clickOnStakeOrbsButton(): void {
-        const stakeOrbsButton = getByText('STAKE YOUR TOKENS');
-        fireEvent.click(stakeOrbsButton);
-      },
-
-      setOrbsForStake(to: number): void {
-        const orbsForStakeInput = queryByTestId('orbs_amount_for_staking');
-
-        fireEvent.change(orbsForStakeInput, { target: { value: to.toString() } });
-      },
-
-      forElement(elementTestId: string): { toAppear(): Promise<void>; toDisappear(): Promise<void> } {
-        return {
-          async toAppear(): Promise<void> {
-            await waitForElement(() => queryByTestId(elementTestId));
-          },
-          async toDisappear(): Promise<void> {
-            await waitForElementToBeRemoved(() => queryByTestId(elementTestId));
-          },
-        };
-      },
-    };
+    function forElement(elementTestId: string): { toAppear(): Promise<void>; toDisappear(): Promise<void> } {
+      return {
+        async toAppear(): Promise<void> {
+          await waitForElement(() => queryByTestId(elementTestId));
+        },
+        async toDisappear(): Promise<void> {
+          await waitForElementToBeRemoved(() => queryByTestId(elementTestId));
+        },
+      };
+    }
 
     const orbsAllowanceStepDriver = new NumericOrbsTxStepDriver(
       renderResults,
@@ -221,14 +170,14 @@ describe('Main User Story', () => {
     // Chapter 1 - First time staking
     // **************************
 
-    driver.userBoughtOrbs(orbsBought);
+    userBoughtOrbs(orbsBought);
 
     expect(liquidOrbsBalanceCard.balanceText).toBe('10,000');
 
     liquidOrbsBalanceCard.clickOnActionButton();
 
     // Wait for the staking wizard to open with the first step
-    await driver.forElement('wizard_staking').toAppear();
+    await forElement('wizard_staking').toAppear();
 
     let approveOrbsTxPromievent: PromiEvent<TransactionReceipt>;
     let stakeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
@@ -295,12 +244,12 @@ describe('Main User Story', () => {
     );
 
     // Close staking wizard after success
-    await driver.forElement('wizard_last_page').toAppear();
+    await forElement('wizard_last_page').toAppear();
 
     const wizardFinishButton = getByText('Close wizard');
     fireEvent.click(wizardFinishButton);
 
-    await driver.forElement('wizard_last_page').toDisappear();
+    await forElement('wizard_last_page').toDisappear();
 
     // Ensure app is displaying the right balances after staking
     expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
@@ -325,7 +274,7 @@ describe('Main User Story', () => {
     stakedOrbsBalanceCard.clickOnActionButton();
 
     // TODO : O.L : use real test id
-    await driver.forElement('wizard_unfreeze_orbs').toAppear();
+    await forElement('wizard_unfreeze_orbs').toAppear();
 
     // Default value should be the maximum value of staked orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
@@ -347,7 +296,7 @@ describe('Main User Story', () => {
     const unfreezingWizardFinishButton = getByText('Close wizard');
     fireEvent.click(unfreezingWizardFinishButton);
 
-    await driver.forElement('wizard_unfreeze_orbs').toDisappear();
+    await forElement('wizard_unfreeze_orbs').toDisappear();
 
     // Ensure app is displaying the right balances after unstaking
     expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
