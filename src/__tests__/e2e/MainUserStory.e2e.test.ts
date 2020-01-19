@@ -29,6 +29,7 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { OrbsAllowanceStepDriver } from '../appDrivers/wizardSteps/OrbsAllowanceStepDriver';
 import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStepDriver';
 import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
+import { IGuardianInfo } from 'orbs-pos-data';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -108,6 +109,37 @@ describe('Main User Story', () => {
     const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(
       ethereumProviderMock,
     );
+
+    const guardianAAddress = '0xaaaaaaa';
+    const guardianAInfo: IGuardianInfo = {
+      hasEligibleVote: true,
+      name: 'Guardian A',
+      stake: 5_000_000,
+      voted: true,
+      website: 'http:guardianA.com',
+    };
+
+    const guardianBAddress = '0xbbbbbbb';
+    const guardianBInfo: IGuardianInfo = {
+      hasEligibleVote: true,
+      name: 'Guardian B',
+      stake: 3_000_000,
+      voted: true,
+      website: 'http:guardianB.com',
+    };
+
+    const guardianCAddress = '0xccccccc';
+    const guardianCInfo: IGuardianInfo = {
+      hasEligibleVote: true,
+      name: 'Guardian C',
+      stake: 4_000_120,
+      voted: false,
+      website: 'http:guardianC.com',
+    };
+
+    guardiansServiceMock.withGuardian(guardianAAddress, guardianAInfo);
+    guardiansServiceMock.withGuardian(guardianBAddress, guardianBInfo);
+    guardiansServiceMock.withGuardian(guardianCAddress, guardianCInfo);
 
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
     storesForTests = getStores(
@@ -232,7 +264,7 @@ describe('Main User Story', () => {
     // Third step - Select guardian
     await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
 
-    guardianSelectionStepDriver.selectGuardian('Guardian_address');
+    guardianSelectionStepDriver.selectGuardian(guardianAAddress);
 
     // Test the rest of the 'Guardian selection' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(
