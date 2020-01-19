@@ -61,7 +61,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianSelectionStepContent}
-              finishedActionName={'Selected a guardian'}
+              finishedActionName={'selected a guardian'}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={'Finish'}
               key={'guardianSelectionStep'}

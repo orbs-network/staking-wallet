@@ -10,6 +10,7 @@ import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useOrbsAccountStore } from '../store/storeHooks';
 import { StakingWizard } from '../wizards/staking/StakingWizard';
+import { UnstakingWizard } from '../wizards/unstaking/UnstakingWizard';
 
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
@@ -67,7 +68,7 @@ export const BalancesSection = observer(() => {
       </Modal>
 
       <Modal open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
-        <div>Modal for Orbs Un-staking</div>
+        <UnstakingWizard closeWizard={showUnStakingModal.setFalse} />
       </Modal>
     </Section>
   );

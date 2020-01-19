@@ -304,7 +304,7 @@ describe('Main User Story', () => {
     stakedOrbsBalanceCard.clickOnActionButton();
 
     // TODO : O.L : use real test id
-    await forElement('wizard_unfreeze_orbs').toAppear();
+    await forElement('wizard_unstaking').toAppear();
 
     // Default value should be the maximum value of staked orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
