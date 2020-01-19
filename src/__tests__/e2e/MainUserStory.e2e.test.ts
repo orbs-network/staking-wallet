@@ -6,7 +6,7 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, wait, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, wait, waitForElement, waitForElementToBeRemoved, within } from '@testing-library/react';
 import {
   GuardiansServiceMock,
   ITxCreatingServiceMock,
@@ -151,7 +151,7 @@ describe('Main User Story', () => {
     );
 
     const renderResults = appTestDriver.withStores(storesForTests).render();
-    const { queryByTestId, getByText } = renderResults;
+    const { queryByTestId, getByText, getByTestId } = renderResults;
 
     function userBoughtOrbs(amount: number): void {
       orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
@@ -275,12 +275,16 @@ describe('Main User Story', () => {
     );
 
     // Close staking wizard after success
-    await forElement('wizard_last_page').toAppear();
+    const finishSubStepTestId = 'wizard_sub_step_finish';
+    await forElement(finishSubStepTestId).toAppear();
+    const finishSubStep = getByTestId(finishSubStepTestId);
 
-    const wizardFinishButton = getByText('Close wizard');
+    const wizardFinishButton = within(finishSubStep).getByText('Finish');
     fireEvent.click(wizardFinishButton);
 
-    await forElement('wizard_last_page').toDisappear();
+    // TODO  : O.L : It seems that the 'click' closes the modal before the 'wait for element to disappear' has any chance to find it.
+    // await forElement(finishSubStepTestId).toDisappear();
+    expect(queryByTestId(finishSubStepTestId)).not.toBeInTheDocument();
 
     // Ensure app is displaying the right balances after staking
     expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');

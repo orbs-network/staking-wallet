@@ -69,7 +69,7 @@ export const StakingWizard = observer(
           );
         case STEPS_INDEXES.finish:
           return (
-            <WizardContent>
+            <WizardContent data-testid={'wizard_sub_step_finish'}>
               <Typography>Awesome !</Typography>
               <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
               <Button onClick={closeWizard}>Finish</Button>
