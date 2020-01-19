@@ -17,6 +17,7 @@ const stores = getStores(
   services.stakingService,
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
+  services.guardiansService,
 );
 
 const themeAndStyle = {
