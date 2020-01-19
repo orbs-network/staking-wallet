@@ -192,6 +192,7 @@ describe('Main User Story', () => {
     // First step - Allow staking contract to use orbs
 
     // Default value should be the maximum value of liquid orbs
+    await waitForElement(() => orbsAllowanceStepDriver.txCreatingSubStepComponent);
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
     expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
 
@@ -209,6 +210,8 @@ describe('Main User Story', () => {
     );
 
     // Second step - Stake your orbs
+    await waitForElement(() => orbsStakingStepDriver.txCreatingSubStepComponent);
+
     // Default value should be the maximum value of liquid orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
     expect(orbsStakingStepDriver.orbsForStakingInput).toHaveValue(orbsForAllowance);
@@ -227,6 +230,8 @@ describe('Main User Story', () => {
     );
 
     // Third step - Select guardian
+    await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
+
     guardianSelectionStepDriver.selectGuardian('Guardian_address');
 
     // Test the rest of the 'Guardian selection' approvable step
