@@ -1,22 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
-import {
-  Button,
-  Step,
-  StepLabel,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@material-ui/core';
+import { Button, Step, StepLabel, Typography } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
-import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
@@ -33,23 +21,16 @@ interface IProps {
   closeWizard(): void;
 }
 
+// TODO : O.L : FUTURE : The material-ui Modal requires passing a ref, decide what to do with this ref.
 // Connect to store
 export const StakingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
 
-    const orbsAccountStore = useOrbsAccountStore();
-
     const activeStep = useNumber(0);
-    const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
-
-    const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setAllowanceForStakingContract(amount), [
-      orbsAccountStore,
-    ]);
-    const createStakeOrbsTx = useCallback((amount: number) => orbsAccountStore.stakeOrbs(amount), [orbsAccountStore]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
@@ -97,7 +78,7 @@ export const StakingWizard = observer(
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToNextStep, goToSelectGuardianStep, goToStakeOrbsStep]);
+    }, [activeStep.value, closeWizard, goToFinishStep, goToSelectGuardianStep, goToStakeOrbsStep]);
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>

@@ -1,9 +1,9 @@
-import { TGuardiansStore } from './GuardiansStore';
+import { GuardiansStore, TGuardiansStore } from './GuardiansStore';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { OrbsAccountStore } from './OrbsStore';
 
 interface IStores {
-  guardiansStore: TGuardiansStore;
+  guardiansStore: GuardiansStore;
   cryptoWalletIntegrationStore: CryptoWalletConnectionStore;
   orbsAccountStore: OrbsAccountStore;
 }

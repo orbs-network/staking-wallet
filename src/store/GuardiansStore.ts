@@ -1,6 +1,8 @@
-import { observable, action, reaction } from 'mobx';
+import { observable, action, reaction, IReactionDisposer } from 'mobx';
 
 import { IOrbsPOSDataService, IGuardianInfo, IGuardiansService } from 'orbs-pos-data';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 
 export type TGuardianInfoExtended = IGuardianInfo & { address: string };
 
@@ -15,9 +17,23 @@ export class GuardiansStore implements TGuardiansStore {
   @observable public guardiansList: TGuardianInfoExtended[];
   @observable public totalParticipatingTokens: number;
 
-  constructor(private orbsPOSDataService: IOrbsPOSDataService, private guardiansService: IGuardiansService) {
+  private addressChangeReaction: IReactionDisposer;
+
+  constructor(
+    private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
+    private orbsPOSDataService: IOrbsPOSDataService,
+    private guardiansService: IGuardiansService,
+  ) {
     this.guardiansList = [];
     this.totalParticipatingTokens = 0;
+
+    this.addressChangeReaction = reaction(
+      () => this.cryptoWalletIntegrationStore.mainAddress,
+      async address => await this.reactToConnectedAddressChanged(address),
+      {
+        fireImmediately: true,
+      },
+    );
   }
 
   async init() {
@@ -35,6 +51,20 @@ export class GuardiansStore implements TGuardiansStore {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  private async reactToConnectedAddressChanged(currentAddress) {
+    if (currentAddress) {
+      this.setDefaultAccountAddress(currentAddress);
+    }
+  }
+
+  private setDefaultAccountAddress(accountAddress: string) {
+    this.guardiansService.setFromAccount(accountAddress);
+  }
+
+  public selectGuardian(guardianAddress: string): PromiEvent<TransactionReceipt> {
+    return this.guardiansService.selectGuardian(guardianAddress);
   }
 
   @action('setGuardiansList')

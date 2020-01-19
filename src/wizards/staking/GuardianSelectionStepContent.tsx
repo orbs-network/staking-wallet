@@ -7,6 +7,7 @@ import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable';
+import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 
 const inputTestProps = { 'data-testid': 'wizard_sub_step_select_amount_for_staking' };
 
@@ -66,6 +67,19 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsForStaking.value, onPromiEventAction]);
 
+  const selectGuardian = useCallback(
+    (guardian: TGuardianInfoExtended) => {
+      message.setValue('');
+      subMessage.setValue(
+        'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
+      );
+
+      const promiEvent = guardiansStore.selectGuardian(guardian.address);
+      onPromiEventAction(promiEvent);
+    },
+    [guardiansStore, message, onPromiEventAction, subMessage],
+  );
+
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_initiate_guardian_selection_tx'}>
@@ -77,7 +91,7 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
       <br />
       <br />
 
-      <GuardiansTable guardians={guardiansStore.guardiansList} />
+      <GuardiansTable guardians={guardiansStore.guardiansList} onGuardianSelect={selectGuardian}/>
     </WizardContent>
   );
 });
