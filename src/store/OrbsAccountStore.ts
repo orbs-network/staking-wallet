@@ -91,7 +91,7 @@ export class OrbsAccountStore {
   }
 
   private async readDataForAccount(accountAddress: string) {
-    const liquidOrbs = await this.orbsPOSDataService.getOrbsBalance(accountAddress);
+    const liquidOrbs = await this.orbsPOSDataService.readOrbsBalance(accountAddress);
     const stakingContractAllowance = await this.orbsTokenService.readAllowance(
       this.cryptoWalletIntegrationStore.mainAddress,
       this.stakingService.getStakingContractAddress(),

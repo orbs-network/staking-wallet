@@ -22,12 +22,12 @@ export class GuardiansStore implements TGuardiansStore {
 
   async init() {
     try {
-      const totalParticipatingTokens = await this.orbsPOSDataService.getTotalParticipatingTokens();
+      const totalParticipatingTokens = await this.orbsPOSDataService.readTotalParticipatingTokens();
       this.setTotalParticipatingTokens(totalParticipatingTokens);
 
-      const guardiansAddresses = await this.guardiansService.getGuardiansList(0, 100);
+      const guardiansAddresses = await this.guardiansService.readGuardiansList(0, 100);
       const promises = guardiansAddresses.map(guardianAddress =>
-        this.guardiansService.getGuardianInfo(guardianAddress),
+        this.guardiansService.readGuardianInfo(guardianAddress),
       );
       const guardiansInfo = await Promise.all(promises);
       const guardiansInfoExtended = guardiansInfo.map((g, idx) => ({ ...g, address: guardiansAddresses[idx] }));
