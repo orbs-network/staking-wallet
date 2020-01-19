@@ -20,6 +20,7 @@ import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
+import { GuardianSelectionStepContent } from './GuardianSelectionStepContent';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -43,6 +44,7 @@ export const StakingWizard = observer(
     const goToNextStep = useCallback(() => activeStep.increase(), [activeStep]);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
+    const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
     const createAllowOrbsTx = useCallback((amount: number) => orbsAccountStore.setAllowanceForStakingContract(amount), [
       orbsAccountStore,
@@ -76,42 +78,13 @@ export const StakingWizard = observer(
         // Select a guardian
         case STEPS_INDEXES.selectGuardian:
           return (
-            <WizardContent>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Rank</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Address</TableCell>
-                      <TableCell>Selection</TableCell>
-                    </TableRow>
-                  </TableHead>
-
-                  <TableBody>
-                    {/* Demo row 1 */}
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Douglas Meshuga</TableCell>
-                      <TableCell>0xff45223cb</TableCell>
-                      <TableCell>
-                        <Button onClick={goToNextStep}>Select</Button>
-                      </TableCell>
-                    </TableRow>
-
-                    {/* Demo row 2 */}
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Marina Aliasi</TableCell>
-                      <TableCell>0x0343feab</TableCell>
-                      <TableCell>
-                        <Button onClick={goToNextStep}>Select</Button>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </WizardContent>
+            <ApprovableWizardStep
+              transactionCreationSubStepContent={GuardianSelectionStepContent}
+              finishedActionName={'Selected a guardian'}
+              moveToNextStepAction={goToFinishStep}
+              moveToNextStepTitle={'Finish'}
+              key={'guardianSelectionStep'}
+            />
           );
         case STEPS_INDEXES.finish:
           return (
