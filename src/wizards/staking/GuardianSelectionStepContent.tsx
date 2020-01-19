@@ -91,7 +91,7 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
       <br />
       <br />
 
-      <GuardiansTable guardians={guardiansStore.guardiansList} onGuardianSelect={selectGuardian}/>
+      <GuardiansTable guardians={guardiansStore.guardiansList} onGuardianSelect={selectGuardian} />
     </WizardContent>
   );
 });
