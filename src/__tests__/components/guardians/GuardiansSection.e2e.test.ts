@@ -12,10 +12,15 @@ import { GuardiansServiceMock, OrbsPOSDataServiceMock } from 'orbs-pos-data/dist
 import { GuardiansStore } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { getByTestId as getByTestIdWithContainer } from '@testing-library/dom';
+import { createDeflateRaw } from 'zlib';
+import { CryptoWalletConnectionService } from '../../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
+import { EthereumProviderMock } from '../../mocks/EthereumProviderMock';
+import { CryptoWalletConnectionStore } from '../../../store/CryptoWalletConnectionStore';
 
 describe('Guardians Section', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
   let guardianService: GuardiansServiceMock;
+  let cryptoWalletConnectionStore: CryptoWalletConnectionStore;
   let testDriver: ComponentTestDriver;
 
   const guardian1Address = '0x0874BC1383958e2475dF73dC68C4F09658E23777';
@@ -46,10 +51,16 @@ describe('Guardians Section', () => {
     stake: 0.3,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    const ethereumProviderMock = new EthereumProviderMock();
+    const cryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
+
     testDriver = new ComponentTestDriver(GuardiansSection);
+    cryptoWalletConnectionStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
     orbsPOSDataService = new OrbsPOSDataServiceMock();
     guardianService = new GuardiansServiceMock();
+
+    const participating = await orbsPOSDataService.readTotalParticipatingTokens();
   });
 
   it('should display all the given guardians', async () => {
@@ -57,7 +68,7 @@ describe('Guardians Section', () => {
     guardianService.withGuardian(guardian2Address, guardian2);
     guardianService.withGuardian(guardian3Address, guardian3);
 
-    const guardiansStore = new GuardiansStore(orbsPOSDataService, guardianService);
+    const guardiansStore = new GuardiansStore(cryptoWalletConnectionStore, orbsPOSDataService, guardianService);
 
     await guardiansStore.init();
 
@@ -95,7 +106,7 @@ describe('Guardians Section', () => {
     guardianService.withGuardian(guardian2Address, guardian2);
     guardianService.withGuardian(guardian3Address, guardian3);
 
-    const guardiansStore = new GuardiansStore(orbsPOSDataService, guardianService);
+    const guardiansStore = new GuardiansStore(cryptoWalletConnectionStore, orbsPOSDataService, guardianService);
 
     await guardiansStore.init();
 

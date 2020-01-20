@@ -17,8 +17,14 @@ import { IEthereumProvider } from '../../services/cryptoWalletConnectionService/
 import { DeepPartial } from 'utility-types';
 import { IStores } from '../../store/stores';
 import { GuardiansStore } from '../../store/GuardiansStore';
-import { OrbsPOSDataServiceMock, StakingServiceMock, OrbsTokenServiceMock } from 'orbs-pos-data/dist/testkit';
+import {
+  OrbsPOSDataServiceMock,
+  StakingServiceMock,
+  OrbsTokenServiceMock,
+  GuardiansServiceMock,
+} from 'orbs-pos-data/dist/testkit';
 import { OrbsAccountStore } from '../../store/OrbsAccountStore';
+import { GuardianSelectionStepDriver } from '../appDrivers/wizardSteps/GuardianSelectionStepDriver';
 
 describe('Wallet connection', () => {
   let appTestDriver: ComponentTestDriver;
@@ -29,17 +35,22 @@ describe('Wallet connection', () => {
 
   beforeEach(() => {
     ethereumProviderMock = new EthereumProviderMock();
-    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
-    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(
+      ethereumProviderMock,
+    );
     const orbsPOSDataServiceMock = new OrbsPOSDataServiceMock();
-    guardiansStore = new GuardiansStore(orbsPOSDataServiceMock);
+    const guardiansServiceMock = new GuardiansServiceMock();
     const stakingServiceMock = new StakingServiceMock();
     const orbsTokenService = new OrbsTokenServiceMock();
+
+    cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
+    guardiansStore = new GuardiansStore(cryptoWalletIntegrationStore, orbsPOSDataServiceMock, guardiansServiceMock);
     orbsAccountStore = new OrbsAccountStore(
       cryptoWalletIntegrationStore,
       orbsPOSDataServiceMock,
       stakingServiceMock,
       orbsTokenService,
+      guardiansServiceMock,
     );
 
     appTestDriver = new ComponentTestDriver(App);

@@ -10,6 +10,8 @@ import { GuardiansTable } from '../../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 
+const selectActionButtonTestId = (guardian: TGuardianInfoExtended) => `guardian-${guardian.address}-select-action`;
+
 describe('Guardians Table Component', () => {
   let testDriver: ComponentTestDriver;
 
@@ -116,10 +118,10 @@ describe('Guardians Table Component', () => {
         .withProps({ guardians, totalParticipatingTokens: 1_000_000, onGuardianSelect: () => {} })
         .render();
 
-      expect(getByTestId('guardian-1-select-action')).toHaveTextContent('Select');
-      expect(getByTestId('guardian-2-select-action')).toHaveTextContent('Select');
-      expect(getByTestId('guardian-3-select-action')).toHaveTextContent('Select');
-      expect(getByTestId('guardian-4-select-action')).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian1))).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian2))).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian3))).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian4))).toHaveTextContent('Select');
     });
 
     it('should NOT display the "Select" button', async () => {
@@ -127,10 +129,10 @@ describe('Guardians Table Component', () => {
 
       const { queryByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
 
-      expect(queryByTestId('guardian-1-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-2-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-3-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-4-select-action')).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian1))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian2))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian3))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian4))).not.toBeInTheDocument();
     });
 
     it('should display "Selected" on the (disabled) select-button of the selected guardian', async () => {
@@ -145,17 +147,17 @@ describe('Guardians Table Component', () => {
         })
         .render();
 
-      expect(getByTestId('guardian-1-select-action')).toHaveTextContent('Selected'); // guardian3
-      expect(getByTestId('guardian-1-select-action')).toHaveAttribute('disabled');
+      expect(getByTestId(selectActionButtonTestId(guardian3))).toHaveTextContent('Selected'); // guardian3
+      expect(getByTestId(selectActionButtonTestId(guardian3))).toHaveAttribute('disabled');
 
-      expect(getByTestId('guardian-2-select-action')).toHaveTextContent('Select');
-      expect(getByTestId('guardian-2-select-action')).not.toHaveAttribute('disabled');
+      expect(getByTestId(selectActionButtonTestId(guardian1))).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian1))).not.toHaveAttribute('disabled');
 
-      expect(getByTestId('guardian-3-select-action')).toHaveTextContent('Select');
-      expect(getByTestId('guardian-3-select-action')).not.toHaveAttribute('disabled');
+      expect(getByTestId(selectActionButtonTestId(guardian2))).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian2))).not.toHaveAttribute('disabled');
 
-      expect(getByTestId('guardian-4-select-action')).toHaveTextContent('Select');
-      expect(getByTestId('guardian-4-select-action')).not.toHaveAttribute('disabled');
+      expect(getByTestId(selectActionButtonTestId(guardian4))).toHaveTextContent('Select');
+      expect(getByTestId(selectActionButtonTestId(guardian4))).not.toHaveAttribute('disabled');
     });
 
     it('should display the selected guardian without the select-button', async () => {
@@ -169,10 +171,10 @@ describe('Guardians Table Component', () => {
         })
         .render();
 
-      expect(queryByTestId('guardian-1-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-2-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-3-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-4-select-action')).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian1))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian2))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian3))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian4))).not.toBeInTheDocument();
 
       expect(queryByTestId('guardian-1-selected-status')).toHaveTextContent('Selected'); // guardian3
       expect(queryByTestId('guardian-2-selected-status')).toHaveTextContent('-');
@@ -190,10 +192,10 @@ describe('Guardians Table Component', () => {
         })
         .render();
 
-      expect(queryByTestId('guardian-1-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-2-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-3-select-action')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-4-select-action')).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian1))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian2))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian3))).not.toBeInTheDocument();
+      expect(queryByTestId(selectActionButtonTestId(guardian4))).not.toBeInTheDocument();
 
       expect(queryByTestId('guardian-1-selected-status')).not.toBeInTheDocument();
       expect(queryByTestId('guardian-2-selected-status')).not.toBeInTheDocument();
@@ -209,7 +211,7 @@ describe('Guardians Table Component', () => {
         .withProps({ guardians, totalParticipatingTokens: 1_000_000, onGuardianSelect: spy })
         .render();
 
-      const selectButton = getByTestId('guardian-1-select-action');
+      const selectButton = getByTestId(selectActionButtonTestId(guardian3));
       selectButton.click();
       expect(spy).toHaveBeenCalledWith(guardian3); // guardian3 is the first guardian
     });

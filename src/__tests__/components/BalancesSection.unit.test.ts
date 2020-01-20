@@ -6,7 +6,13 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { OrbsPOSDataServiceMock, OrbsTokenServiceMock, StakingServiceMock } from 'orbs-pos-data/dist/testkit';
+import {waitForDomChange} from '@testing-library/react';
+import {
+  GuardiansServiceMock,
+  OrbsPOSDataServiceMock,
+  OrbsTokenServiceMock,
+  StakingServiceMock,
+} from 'orbs-pos-data/dist/testkit';
 import { BalancesSection } from '../../sections/BalancesSection';
 import { CryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
 import { ICryptoWalletConnectionService } from '../../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
@@ -34,12 +40,14 @@ describe('Balances Section', () => {
     const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
     const stakingService = new StakingServiceMock();
     const orbsTokenService = new OrbsTokenServiceMock();
+    const guardiansServiceMock = new GuardiansServiceMock();
     cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
     orbsAccountStore = new OrbsAccountStore(
       cryptoWalletIntegrationStore,
       orbsPOSDataServiceMock,
       stakingService,
       orbsTokenService,
+      guardiansServiceMock,
     );
   });
 
@@ -48,6 +56,13 @@ describe('Balances Section', () => {
     const liquidOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_liquid_orbs');
 
     expect(liquidOrbsBalanceCard.balanceText).toBe('0');
+
+    // DEV_NOTE : This is needed because the registration for 'orbs balance cahnge' is done in an async function.
+    //            And so, we have to give it time to take effect, otherewise the triggering of the change will
+    //            have no effect.
+    await (new Promise(resolve => {
+      setTimeout(resolve, 1);
+    }));
 
     orbsPOSDataServiceMock.fireORBSBalanceChange('500000');
     expect(liquidOrbsBalanceCard.balanceText).toBe('500,000');

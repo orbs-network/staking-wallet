@@ -93,6 +93,7 @@ export class OrbsAccountStore {
   }
 
   private async refreshAccountListeners(accountAddress: string) {
+    // Orbs balance
     if (this.orbsBalanceChangeUnsubscribeFunction) {
       this.orbsBalanceChangeUnsubscribeFunction();
     }
@@ -102,6 +103,7 @@ export class OrbsAccountStore {
       newBalance => this.setLiquidOrbs(newBalance),
     );
 
+    // Staking contract allowance
     if (this.stakingContractAllowanceChangeUnsubscribeFunction) {
       this.stakingContractAllowanceChangeUnsubscribeFunction();
     }
