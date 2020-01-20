@@ -16,6 +16,7 @@ export class OrbsAccountStore {
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
+  private stakedAmountChangeUnsubscribeFunction: () => void;
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
@@ -112,6 +113,17 @@ export class OrbsAccountStore {
       accountAddress,
       this.stakingService.getStakingContractAddress(),
       (error, newAllowance) => this.setStakingContractAllowance(newAllowance),
+    );
+
+    // Staked orbs
+    if (this.stakedAmountChangeUnsubscribeFunction) {
+      this.stakedAmountChangeUnsubscribeFunction();
+    }
+
+    // TODO : O.L : Work out the string/number decision.
+    this.stakedAmountChangeUnsubscribeFunction = this.stakingService.subscribeToStakeAmountChange(
+      accountAddress,
+      (error, amount) => this.setStakedOrbs(parseInt(amount)),
     );
   }
 
