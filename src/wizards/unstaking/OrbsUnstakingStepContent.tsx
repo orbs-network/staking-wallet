@@ -54,13 +54,13 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     }
   }, [txError, errorMessageFromCode, message, subMessage]);
 
-  const stakeTokens = useCallback(() => {
+  const unstakeTokens = useCallback(() => {
     message.setValue('');
     subMessage.setValue(
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
     );
 
-    const promiEvent = orbsAccountStore.stakeOrbs(orbsForUnstaking.value);
+    const promiEvent = orbsAccountStore.unlockTokens(orbsForUnstaking.value);
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsForUnstaking.value, onPromiEventAction]);
 
@@ -86,7 +86,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         onChange={e => orbsForUnstaking.setValue(parseInt(e.target.value))}
       />
 
-      <Button disabled={disableInputs} onClick={stakeTokens}>
+      <Button disabled={disableInputs} onClick={unstakeTokens}>
         Unstake
       </Button>
     </WizardContent>

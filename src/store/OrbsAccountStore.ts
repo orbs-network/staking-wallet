@@ -55,16 +55,8 @@ export class OrbsAccountStore {
     };
   }
 
-  public async unlockTokens(
-    orbsToUnlock: number,
-  ): Promise<{ txVerificationListener: TransactionVerificationListener }> {
-    // return this.orbsPOSDataService.unlockTokens(orbsToUnlock);
-
-    const verificationListener = new TransactionVerificationListener(null);
-
-    return {
-      txVerificationListener: verificationListener,
-    };
+  public unlockTokens(orbsToUnlock: number): PromiEvent<TransactionReceipt> {
+    return this.stakingService.unstake(orbsToUnlock);
   }
 
   private async reactToConnectedAddressChanged(currentAddress) {

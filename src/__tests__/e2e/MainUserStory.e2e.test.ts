@@ -330,13 +330,17 @@ describe('Main User Story', () => {
       true,
     );
 
-    const unfreezingWizardFinishButton = getByText('Close wizard');
+    await forElement(finishSubStepTestId).toAppear();
+    const unstackingWizardFinishSubStep = getByTestId(finishSubStepTestId);
+
+    const unfreezingWizardFinishButton = within(unstackingWizardFinishSubStep).getByText('Finish');
     fireEvent.click(unfreezingWizardFinishButton);
 
-    await forElement('wizard_unfreeze_orbs').toDisappear();
+    // TODO  : O.L : It seems that the 'click' closes the modal before the 'wait for element to disappear' has any chance to find it.
+    // await forElement('wizard_unstaking').toDisappear();
 
     // Ensure app is displaying the right balances after unstaking
-    expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('2,000');
     expect(stakedOrbsBalanceCard.balanceText).toBe('2,500');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('5,500');
   });
