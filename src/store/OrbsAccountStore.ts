@@ -1,6 +1,6 @@
 import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import { IOrbsPOSDataService, IStakingService, IOrbsTokenService } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 
@@ -22,6 +22,7 @@ export class OrbsAccountStore {
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,
+    private guardiansService: IGuardiansService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -41,18 +42,6 @@ export class OrbsAccountStore {
 
   public stakeOrbs(orbsToStake: number): PromiEvent<TransactionReceipt> {
     return this.stakingService.stake(orbsToStake);
-  }
-
-  public async selectGuardian(
-    guardianAddress: string,
-  ): Promise<{ txVerificationListener: TransactionVerificationListener }> {
-    // return this.orbsPOSDataService.selectGuardian(guardianAddress);
-
-    const verificationListener = new TransactionVerificationListener(null);
-
-    return {
-      txVerificationListener: verificationListener,
-    };
   }
 
   public async redeemTokens(): Promise<{ txVerificationListener: TransactionVerificationListener }> {
@@ -96,9 +85,11 @@ export class OrbsAccountStore {
       this.cryptoWalletIntegrationStore.mainAddress,
       this.stakingService.getStakingContractAddress(),
     );
+    const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
 
     this.setLiquidOrbs(liquidOrbs);
     this.setStakingContractAllowance(stakingContractAllowance);
+    this.setSelectedGuardianAddress(selectedGuardianAddress);
   }
 
   private async refreshAccountListeners(accountAddress: string) {

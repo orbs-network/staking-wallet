@@ -6,8 +6,14 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, wait, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
-import { GuardiansServiceMock, ITxCreatingServiceMock, OrbsPOSDataServiceMock, OrbsTokenServiceMock, StakingServiceMock } from 'orbs-pos-data/dist/testkit';
+import { fireEvent, wait, waitForElement, waitForElementToBeRemoved, within } from '@testing-library/react';
+import {
+  GuardiansServiceMock,
+  ITxCreatingServiceMock,
+  OrbsPOSDataServiceMock,
+  OrbsTokenServiceMock,
+  StakingServiceMock,
+} from 'orbs-pos-data/dist/testkit';
 import { DeepPartial } from 'utility-types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { App } from '../../App';
@@ -18,9 +24,12 @@ import { getStores } from '../../store/storesInitialization';
 import { BalanceCardDriver } from '../appDrivers/BalanceCardDriver';
 import { ApprovableStepDriver } from '../appDrivers/wizardSteps/ApprovableStepDriver';
 import { GuardianSelectionStepDriver } from '../appDrivers/wizardSteps/GuardianSelectionStepDriver';
-import { NumericOrbsTxStepDriver } from '../appDrivers/wizardSteps/NumericOrbsTxStepDriver';
 import { ComponentTestDriver } from '../ComponentTestDriver';
 import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
+import { OrbsAllowanceStepDriver } from '../appDrivers/wizardSteps/OrbsAllowanceStepDriver';
+import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStepDriver';
+import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
+import { IGuardianInfo } from 'orbs-pos-data';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -97,7 +106,40 @@ describe('Main User Story', () => {
   });
 
   it('Complete story', async () => {
-    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(
+      ethereumProviderMock,
+    );
+
+    const guardianAAddress = '0xaaaaaaa';
+    const guardianAInfo: IGuardianInfo = {
+      hasEligibleVote: true,
+      name: 'Guardian A',
+      stake: 5_000_000,
+      voted: true,
+      website: 'http:guardianA.com',
+    };
+
+    const guardianBAddress = '0xbbbbbbb';
+    const guardianBInfo: IGuardianInfo = {
+      hasEligibleVote: true,
+      name: 'Guardian B',
+      stake: 3_000_000,
+      voted: true,
+      website: 'http:guardianB.com',
+    };
+
+    const guardianCAddress = '0xccccccc';
+    const guardianCInfo: IGuardianInfo = {
+      hasEligibleVote: true,
+      name: 'Guardian C',
+      stake: 4_000_120,
+      voted: false,
+      website: 'http:guardianC.com',
+    };
+
+    guardiansServiceMock.withGuardian(guardianAAddress, guardianAInfo);
+    guardiansServiceMock.withGuardian(guardianBAddress, guardianBInfo);
+    guardiansServiceMock.withGuardian(guardianCAddress, guardianCInfo);
 
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
     storesForTests = getStores(
@@ -109,7 +151,7 @@ describe('Main User Story', () => {
     );
 
     const renderResults = appTestDriver.withStores(storesForTests).render();
-    const { queryByTestId, getByText } = renderResults;
+    const { queryByTestId, getByText, getByTestId } = renderResults;
 
     function userBoughtOrbs(amount: number): void {
       orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
@@ -126,18 +168,8 @@ describe('Main User Story', () => {
       };
     }
 
-    const orbsAllowanceStepDriver = new NumericOrbsTxStepDriver(
-      renderResults,
-      'wizard_sub_step_initiate_allowance_tx',
-      'Allowance',
-      'Allow',
-    );
-    const orbsStakingStepDriver = new NumericOrbsTxStepDriver(
-      renderResults,
-      'wizard_sub_step_initiate_staking_tx',
-      'Staking',
-      'Stake',
-    );
+    const orbsAllowanceStepDriver = new OrbsAllowanceStepDriver(renderResults);
+    const orbsStakingStepDriver = new OrbsStakingStepDriver(renderResults);
     const guardianSelectionStepDriver = new GuardianSelectionStepDriver(renderResults);
 
     const liquidOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_liquid_orbs');
@@ -192,13 +224,14 @@ describe('Main User Story', () => {
     // First step - Allow staking contract to use orbs
 
     // Default value should be the maximum value of liquid orbs
+    await waitForElement(() => orbsAllowanceStepDriver.txCreatingSubStepComponent);
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsAllowanceStepDriver.orbsAmountInput).toHaveValue(orbsBought);
+    expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
 
-    orbsAllowanceStepDriver.setInputAmount(orbsForAllowance);
+    orbsAllowanceStepDriver.setAmountForAllowance(orbsForAllowance);
 
     // Clicking on 'allow' should move the user to the 'tx confirmation' view
-    orbsAllowanceStepDriver.clickOnActionButton();
+    orbsAllowanceStepDriver.clickOnAllow();
 
     // Test the rest of the 'allowance' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(
@@ -209,14 +242,16 @@ describe('Main User Story', () => {
     );
 
     // Second step - Stake your orbs
+    await waitForElement(() => orbsStakingStepDriver.txCreatingSubStepComponent);
+
     // Default value should be the maximum value of liquid orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsStakingStepDriver.orbsAmountInput).toHaveValue(orbsForAllowance);
+    expect(orbsStakingStepDriver.orbsForStakingInput).toHaveValue(orbsForAllowance);
 
-    orbsStakingStepDriver.setInputAmount(orbsFotStaking);
+    orbsStakingStepDriver.setAmountForStaking(orbsFotStaking);
 
     // Clicking on 'stake' should move the user to the 'tx confirmation' view
-    orbsStakingStepDriver.clickOnActionButton();
+    orbsStakingStepDriver.clickOnStake();
 
     // Test the rest of the 'staking' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(
@@ -227,7 +262,9 @@ describe('Main User Story', () => {
     );
 
     // Third step - Select guardian
-    guardianSelectionStepDriver.selectGuardian('Guardian_address');
+    await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
+
+    guardianSelectionStepDriver.selectGuardian(guardianAAddress);
 
     // Test the rest of the 'Guardian selection' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(
@@ -238,12 +275,16 @@ describe('Main User Story', () => {
     );
 
     // Close staking wizard after success
-    await forElement('wizard_last_page').toAppear();
+    const finishSubStepTestId = 'wizard_sub_step_finish';
+    await forElement(finishSubStepTestId).toAppear();
+    const finishSubStep = getByTestId(finishSubStepTestId);
 
-    const wizardFinishButton = getByText('Close wizard');
+    const wizardFinishButton = within(finishSubStep).getByText('Finish');
     fireEvent.click(wizardFinishButton);
 
-    await forElement('wizard_last_page').toDisappear();
+    // TODO  : O.L : It seems that the 'click' closes the modal before the 'wait for element to disappear' has any chance to find it.
+    // await forElement(finishSubStepTestId).toDisappear();
+    expect(queryByTestId(finishSubStepTestId)).not.toBeInTheDocument();
 
     // Ensure app is displaying the right balances after staking
     expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
@@ -253,12 +294,7 @@ describe('Main User Story', () => {
     // **************************
     // Chapter 2 - Ask to Un-Stake some orbs
     // **************************
-    const orbsUnStakingStepDriver = new NumericOrbsTxStepDriver(
-      renderResults,
-      'wizard_sub_step_initiate_unfreezing_tx',
-      'Unstaking',
-      'Unstake',
-    );
+    const orbsUnStakingStepDriver = new OrbsUnstakingStepDriver(renderResults);
 
     let unfreezeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
     stakingServiceMock.txsMocker.registerToNextTxCreation('unstake', promievent => {
@@ -268,16 +304,16 @@ describe('Main User Story', () => {
     stakedOrbsBalanceCard.clickOnActionButton();
 
     // TODO : O.L : use real test id
-    await forElement('wizard_unfreeze_orbs').toAppear();
+    await forElement('wizard_unstaking').toAppear();
 
     // Default value should be the maximum value of staked orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsUnStakingStepDriver.orbsAmountInput).toHaveValue(orbsFotStaking);
+    expect(orbsUnStakingStepDriver.orbsForUnstakingInput).toHaveValue(orbsFotStaking);
 
-    orbsUnStakingStepDriver.setInputAmount(orbsForUnStaking);
+    orbsUnStakingStepDriver.setAmountForStaking(orbsForUnStaking);
 
     // Clicking on 'un stake' should move the user to the 'tx confirmation' view
-    orbsUnStakingStepDriver.clickOnActionButton();
+    orbsUnStakingStepDriver.clickOnUnStake();
 
     // Test the rest of the 'Unstaking' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(

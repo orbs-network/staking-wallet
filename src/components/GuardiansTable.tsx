@@ -50,7 +50,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
             variant='contained'
             size='small'
             disabled={g.address === selectedGuardian}
-            data-testid={`guardian-${idx + 1}-select-action`}
+            data-testid={`guardian-${g.address}-select-action`}
             onClick={() => onGuardianSelect(g)}
           >
             {t(g.address === selectedGuardian ? 'Selected' : 'Select')}

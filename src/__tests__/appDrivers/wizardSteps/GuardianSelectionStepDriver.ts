@@ -13,6 +13,6 @@ export class GuardianSelectionStepDriver extends ApprovableStepDriver {
   }
 
   private getGuardianSelectionActionButton(guardianAddress: string) {
-    return within(this.txCreatingSubStepComponent).getByTestId(guardianAddress); // TODO : Fix this to use the real selector
+    return within(this.txCreatingSubStepComponent).getByTestId(`guardian-${guardianAddress}-select-action`);
   }
 }

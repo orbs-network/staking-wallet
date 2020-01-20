@@ -1,11 +1,12 @@
 import { RenderResult, within, fireEvent } from '@testing-library/react';
 
 export class ApprovableStepDriver {
-  constructor(protected renderResults: RenderResult, private txCreatingSubStepTestId: string) {
-  }
+  constructor(protected renderResults: RenderResult, private txCreatingSubStepTestId: string) {}
 
   public get txConfirmationLinkHref() {
-    return within(this.txConformationSubStepComponent).getByRole('link').getAttribute('href');
+    return within(this.txConformationSubStepComponent)
+      .getByRole('link')
+      .getAttribute('href');
   }
 
   clickOnProceedAfterTxVerified(): void {

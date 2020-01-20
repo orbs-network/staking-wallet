@@ -27,13 +27,14 @@ export function getStores(
   guardiansService: IGuardiansService,
 ): IStores {
   // Create stores instances + Hydrate the stores
-  const guardiansStore = new GuardiansStore(orbsPOSDataService, guardiansService);
   const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
+  const guardiansStore = new GuardiansStore(cryptoWalletIntegrationStore, orbsPOSDataService, guardiansService);
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
     orbsPOSDataService,
     stakingService,
     orbsTokenService,
+    guardiansService,
   );
 
   // Call the initialize function on each one
