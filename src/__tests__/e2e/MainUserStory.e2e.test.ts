@@ -261,6 +261,13 @@ describe('Main User Story', () => {
       true,
     );
 
+    // TODO : O.L : Important : Think of a way to fix this.
+    // IMPORTANT : TEST_HACK : Currently, our stakingServiceMock does not trigger transferring of orbs
+    //                          and so, the test state will not get updated with the new balance. This
+    //                          line will fix it,
+    orbsPOSDataServiceMock.fireORBSBalanceChange((orbsBought - orbsFotStaking).toString());
+
+
     // Third step - Select guardian
     await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
 
@@ -287,7 +294,7 @@ describe('Main User Story', () => {
     expect(queryByTestId(finishSubStepTestId)).not.toBeInTheDocument();
 
     // Ensure app is displaying the right balances after staking
-    expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('2,000');
     expect(stakedOrbsBalanceCard.balanceText).toBe('8,000');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
 
