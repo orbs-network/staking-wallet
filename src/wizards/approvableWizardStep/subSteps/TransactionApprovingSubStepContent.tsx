@@ -50,7 +50,7 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
       <Typography>
         You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
         <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
-          Ether Scan
+          Etherscan
         </a>{' '}
       </Typography>
     </WizardContent>

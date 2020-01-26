@@ -12,7 +12,6 @@ import { useOrbsAccountStore } from '../store/storeHooks';
 import { StakingWizard } from '../wizards/staking/StakingWizard';
 import { UnstakingWizard } from '../wizards/unstaking/UnstakingWizard';
 
-
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
 });
@@ -31,8 +30,8 @@ export const BalancesSection = observer(() => {
       <Grid container direction={'row'} justify={'space-between'} spacing={2}>
         <GridItem>
           <BalanceCard
-            title={'Liquid Orbs in your wallet'}
-            actionButtonTitle={'STAKE YOUR TOKENS'}
+            title={'Unstaked Orbs in your wallet'}
+            actionButtonTitle={'Stake your tokens'}
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
             amount={parseInt(orbsAccountStore.liquidOrbs)}
@@ -53,8 +52,8 @@ export const BalancesSection = observer(() => {
 
         <GridItem>
           <BalanceCard
-            title={'Tokens in cool down'}
-            actionButtonTitle={'Redeem your tokens'}
+            title={'Tokens in cooldown'}
+            actionButtonTitle={'Withdraw your tokens'}
             amount={orbsAccountStore.orbsInCoolDown}
             actionButtonActive={true}
             onActionButtonPressed={() => null}
