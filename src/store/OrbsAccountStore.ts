@@ -10,6 +10,7 @@ export class OrbsAccountStore {
   @observable public stakingContractAllowance = '0';
   @observable public stakedOrbs = 0;
   @observable public orbsInCoolDown = 0;
+  @observable public cooldownReleaseTimestamp = 0;
   @observable public accumulatedRewards: number;
   @observable public selectedGuardianAddress: string;
 
@@ -17,6 +18,7 @@ export class OrbsAccountStore {
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
   private stakedAmountChangeUnsubscribeFunction: () => void;
+  private orbsInCooldownAmountChangeUnsubscribeFunction: () => void;
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
@@ -62,8 +64,9 @@ export class OrbsAccountStore {
   private async reactToConnectedAddressChanged(currentAddress) {
     if (currentAddress) {
       this.setDefaultAccountAddress(currentAddress);
-      await this.readDataForAccount(currentAddress);
       this.refreshAccountListeners(currentAddress);
+
+      await this.readDataForAccount(currentAddress);
     }
   }
 
@@ -79,44 +82,115 @@ export class OrbsAccountStore {
       this.stakingService.getStakingContractAddress(),
     );
     const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
+    const stakedOrbs = await this.stakingService.readStakeBalanceOf(accountAddress);
 
     this.setLiquidOrbs(liquidOrbs);
     this.setStakingContractAllowance(stakingContractAllowance);
     this.setSelectedGuardianAddress(selectedGuardianAddress);
+    this.setStakedOrbs(stakedOrbs);
+
+    await this.readAndSetCooldownStatus(accountAddress);
+  }
+
+  private async readAndSetCooldownStatus(accountAddress: string) {
+    const cooldownStatus = await this.stakingService.readUnstakeStatus(accountAddress);
+
+    const amount = Number.isNaN(cooldownStatus.cooldownAmount) ? 0 : cooldownStatus.cooldownAmount;
+    const releaseTimestamp = Number.isNaN(cooldownStatus.cooldownEndTime) ? 0 : cooldownStatus.cooldownEndTime;
+
+    this.setOrbsInCooldown(amount);
+    this.setCooldownReleaseTimestamp(releaseTimestamp);
   }
 
   private async refreshAccountListeners(accountAddress: string) {
-    // Orbs balance
-    if (this.orbsBalanceChangeUnsubscribeFunction) {
-      this.orbsBalanceChangeUnsubscribeFunction();
-    }
+    this.cancelAllCurrentSubscriptions();
 
+    // Orbs balance
     this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
       accountAddress,
       newBalance => this.setLiquidOrbs(newBalance),
     );
 
     // Staking contract allowance
-    if (this.stakingContractAllowanceChangeUnsubscribeFunction) {
-      this.stakingContractAllowanceChangeUnsubscribeFunction();
-    }
-
     this.stakingContractAllowanceChangeUnsubscribeFunction = this.orbsTokenService.subscribeToAllowanceChange(
       accountAddress,
       this.stakingService.getStakingContractAddress(),
       (error, newAllowance) => this.setStakingContractAllowance(newAllowance),
     );
 
+    // TODO : O.L : Work out the string/number decision.
+    // Staked orbs
+    this.stakedAmountChangeUnsubscribeFunction = this.subscribeToStakeAmountChange(accountAddress);
+
+    // Cooldown status
+    this.orbsInCooldownAmountChangeUnsubscribeFunction = this.subscribeToOrbsInCooldownChange(accountAddress);
+  }
+
+  private cancelAllCurrentSubscriptions() {
+    // Orbs balance
+    if (this.orbsBalanceChangeUnsubscribeFunction) {
+      this.orbsBalanceChangeUnsubscribeFunction();
+    }
+
+    // Staking contract allowance
+    if (this.stakingContractAllowanceChangeUnsubscribeFunction) {
+      this.stakingContractAllowanceChangeUnsubscribeFunction();
+    }
+
     // Staked orbs
     if (this.stakedAmountChangeUnsubscribeFunction) {
       this.stakedAmountChangeUnsubscribeFunction();
     }
 
-    // TODO : O.L : Work out the string/number decision.
-    this.stakedAmountChangeUnsubscribeFunction = this.stakingService.subscribeToStakeAmountChange(
+    // Cooldown status
+    if (this.orbsInCooldownAmountChangeUnsubscribeFunction) {
+      this.orbsInCooldownAmountChangeUnsubscribeFunction();
+    }
+  }
+
+  // Move this out to be more functional and testable
+  private subscribeToOrbsInCooldownChange(accountAddress: string): () => Promise<boolean> {
+    const onCooldownStatusChanged = () => this.readAndSetCooldownStatus(accountAddress);
+
+    const stakeEventUnsubscribe = this.stakingService.subscribeToStakedEvent(accountAddress, onCooldownStatusChanged);
+    const unstakeEventUnsubscribe = this.stakingService.subscribeToUnstakedEvent(
       accountAddress,
-      (error, amount) => this.setStakedOrbs(parseInt(amount)),
+      onCooldownStatusChanged,
     );
+    const restakeEventUnsubscribe = this.stakingService.subscribeToRestakedEvent(
+      accountAddress,
+      onCooldownStatusChanged,
+    );
+
+    return async () => {
+      try {
+        await Promise.all([stakeEventUnsubscribe(), unstakeEventUnsubscribe(), restakeEventUnsubscribe()]);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+  }
+
+  // Move this out to be more functional and testable
+  private subscribeToStakeAmountChange(accountAddress: string): () => Promise<boolean> {
+    const callbackAdapter = (error: Error, stakedAmountInEvent: string, totalStakedAmount: string) => {
+      // TODO : O.L : Handle error
+      this.setStakedOrbs(parseInt(totalStakedAmount));
+    };
+
+    const stakeEventUnsubscribe = this.stakingService.subscribeToStakedEvent(accountAddress, callbackAdapter);
+    const unstakeEventUnsubscribe = this.stakingService.subscribeToUnstakedEvent(accountAddress, callbackAdapter);
+    const restakeEventUnsubscribe = this.stakingService.subscribeToRestakedEvent(accountAddress, callbackAdapter);
+
+    return async () => {
+      try {
+        await Promise.all([stakeEventUnsubscribe(), unstakeEventUnsubscribe(), restakeEventUnsubscribe()]);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
   }
 
   @action('setLiquidOrbs')
@@ -132,6 +206,16 @@ export class OrbsAccountStore {
   @action('setLiquidOrbs')
   private setStakedOrbs(stakedOrbs: number) {
     this.stakedOrbs = stakedOrbs;
+  }
+
+  @action('setOrbsInCooldown')
+  private setOrbsInCooldown(orbsInCooldown: number) {
+    this.orbsInCoolDown = orbsInCooldown;
+  }
+
+  @action('setCooldownReleaseTimestamp')
+  private setCooldownReleaseTimestamp(cooldownReleaseTimestamp: number) {
+    this.cooldownReleaseTimestamp = cooldownReleaseTimestamp;
   }
 
   @action('setAccumulatedRewards')

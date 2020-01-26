@@ -267,7 +267,6 @@ describe('Main User Story', () => {
     //                          line will fix it,
     orbsPOSDataServiceMock.fireORBSBalanceChange((orbsBought - orbsFotStaking).toString());
 
-
     // Third step - Select guardian
     await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
 

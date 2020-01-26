@@ -38,9 +38,9 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
 
   return {
     cryptoWalletConnectionService: new CryptoWalletConnectionService(ethereumProvider),
-    orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient, config.contractsAddressesOverride),
+    orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, config.contractsAddressesOverride),
     stakingService: new StakingService(web3, config.contractsAddressesOverride.stakingContract),
     orbsTokenService: new OrbsTokenService(web3, config.contractsAddressesOverride.erc20Contract),
-    guardiansService: new GuardiansService(web3, orbsClientService, config.contractsAddressesOverride as any), // TODO : O.L : Change this to real service initialization
+    guardiansService: new GuardiansService(web3, orbsClientService, config.contractsAddressesOverride),
   };
 }
