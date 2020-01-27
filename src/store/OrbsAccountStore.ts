@@ -3,7 +3,10 @@ import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
-import { subscribeToOrbsInCooldownChange } from './contractsStateSubscriptions/combinedEventsSubscriptions';
+import {
+  subscribeToOrbsInCooldownChange,
+  subscribeToStakeAmountChange,
+} from './contractsStateSubscriptions/combinedEventsSubscriptions';
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
@@ -121,7 +124,15 @@ export class OrbsAccountStore {
 
     // TODO : O.L : Work out the string/number decision.
     // Staked orbs
-    this.stakedAmountChangeUnsubscribeFunction = this.subscribeToStakeAmountChange(accountAddress);
+    const onStakedAmountChanged = (error: Error, stakedAmountInEvent: string, totalStakedAmount: string) => {
+      // TODO : O.L : Handle error
+      this.setStakedOrbs(parseInt(totalStakedAmount));
+    };
+    this.stakedAmountChangeUnsubscribeFunction = subscribeToStakeAmountChange(
+      this.stakingService,
+      accountAddress,
+      onStakedAmountChanged,
+    );
 
     // Cooldown status
     const onCooldownStatusChanged = () => this.readAndSetCooldownStatus(accountAddress);
@@ -152,27 +163,6 @@ export class OrbsAccountStore {
     if (this.orbsInCooldownAmountChangeUnsubscribeFunction) {
       this.orbsInCooldownAmountChangeUnsubscribeFunction();
     }
-  }
-
-  // Move this out to be more functional and testable
-  private subscribeToStakeAmountChange(accountAddress: string): () => Promise<boolean> {
-    const callbackAdapter = (error: Error, stakedAmountInEvent: string, totalStakedAmount: string) => {
-      // TODO : O.L : Handle error
-      this.setStakedOrbs(parseInt(totalStakedAmount));
-    };
-
-    const stakeEventUnsubscribe = this.stakingService.subscribeToStakedEvent(accountAddress, callbackAdapter);
-    const unstakeEventUnsubscribe = this.stakingService.subscribeToUnstakedEvent(accountAddress, callbackAdapter);
-    const restakeEventUnsubscribe = this.stakingService.subscribeToRestakedEvent(accountAddress, callbackAdapter);
-
-    return async () => {
-      try {
-        await Promise.all([stakeEventUnsubscribe(), unstakeEventUnsubscribe(), restakeEventUnsubscribe()]);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    };
   }
 
   @action('setLiquidOrbs')

@@ -19,3 +19,22 @@ export function subscribeToOrbsInCooldownChange(
     }
   };
 }
+
+export function subscribeToStakeAmountChange(
+  stakingService: IStakingService,
+  accountAddress: string,
+  callback: StakingServiceEventCallback,
+): () => Promise<boolean> {
+  const stakeEventUnsubscribe = stakingService.subscribeToStakedEvent(accountAddress, callback);
+  const unstakedEventUnsubscribe = stakingService.subscribeToUnstakedEvent(accountAddress, callback);
+  const restakedEventUnsubscribe = stakingService.subscribeToRestakedEvent(accountAddress, callback);
+
+  return async () => {
+    try {
+      await Promise.all([stakeEventUnsubscribe(), unstakedEventUnsubscribe(), restakedEventUnsubscribe()]);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+}
