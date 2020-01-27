@@ -40,6 +40,8 @@ export class OrbsAccountStore {
     );
   }
 
+  // **** Contract interactions ****
+
   public setAllowanceForStakingContract(orbsToStake: number): PromiEvent<TransactionReceipt> {
     const stakingContractAddress = this.stakingService.getStakingContractAddress();
     const promivent = this.orbsTokenService.approve(stakingContractAddress, orbsToStake);
@@ -69,6 +71,8 @@ export class OrbsAccountStore {
     return this.stakingService.restake();
   }
 
+  // **** Current address changed ****
+
   private async reactToConnectedAddressChanged(currentAddress) {
     if (currentAddress) {
       this.setDefaultAccountAddress(currentAddress);
@@ -83,21 +87,40 @@ export class OrbsAccountStore {
     this.orbsTokenService.setFromAccount(accountAddress);
   }
 
+  // **** Data reading and setting ****
+
   private async readDataForAccount(accountAddress: string) {
+    // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
+    await this.readAndSetLiquidOrbs(accountAddress);
+    await this.readAndSetStakedOrbs(accountAddress);
+    await this.readAndSetSelectedGuardianAddress(accountAddress);
+    await this.readAndSetStakingContractAllowance(accountAddress);
+    await this.readAndSetCooldownStatus(accountAddress);
+  }
+
+  private async readAndSetLiquidOrbs(accountAddress: string) {
     const liquidOrbs = await this.orbsPOSDataService.readOrbsBalance(accountAddress);
+    this.setLiquidOrbs(liquidOrbs);
+  }
+
+  private async readAndSetSelectedGuardianAddress(accountAddress: string) {
+    const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
+
+    this.setSelectedGuardianAddress(selectedGuardianAddress);
+  }
+
+  private async readAndSetStakedOrbs(accountAddress: string) {
+    const stakedOrbs = await this.stakingService.readStakeBalanceOf(accountAddress);
+    this.setStakedOrbs(parseInt(stakedOrbs));
+  }
+
+  private async readAndSetStakingContractAllowance(accountAddress: string) {
     const stakingContractAllowance = await this.orbsTokenService.readAllowance(
       this.cryptoWalletIntegrationStore.mainAddress,
       this.stakingService.getStakingContractAddress(),
     );
-    const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
-    const stakedOrbs = await this.stakingService.readStakeBalanceOf(accountAddress);
 
-    this.setLiquidOrbs(liquidOrbs);
     this.setStakingContractAllowance(stakingContractAllowance);
-    this.setSelectedGuardianAddress(selectedGuardianAddress);
-    this.setStakedOrbs(parseInt(stakedOrbs));
-
-    await this.readAndSetCooldownStatus(accountAddress);
   }
 
   private async readAndSetCooldownStatus(accountAddress: string) {
@@ -109,6 +132,8 @@ export class OrbsAccountStore {
     this.setOrbsInCooldown(amount);
     this.setCooldownReleaseTimestamp(releaseTimestamp);
   }
+
+  // ****  Subscriptions ****
 
   private async refreshAccountListeners(accountAddress: string) {
     this.cancelAllCurrentSubscriptions();
@@ -168,6 +193,8 @@ export class OrbsAccountStore {
       this.orbsInCooldownAmountChangeUnsubscribeFunction();
     }
   }
+
+  // ****  Observables setter actions ****
 
   @action('setLiquidOrbs')
   private setLiquidOrbs(liquidOrbs: string) {
