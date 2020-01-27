@@ -60,7 +60,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
     );
 
-    const promiEvent = orbsAccountStore.stakeOrbs(orbsForStaking.value);
+    const promiEvent = orbsAccountStore.stakeTokens(orbsForStaking.value);
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsForStaking.value, onPromiEventAction]);
 

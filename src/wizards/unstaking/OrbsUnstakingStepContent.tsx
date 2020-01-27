@@ -60,7 +60,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
     );
 
-    const promiEvent = orbsAccountStore.unlockTokens(orbsForUnstaking.value);
+    const promiEvent = orbsAccountStore.unstakeTokens(orbsForUnstaking.value);
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsForUnstaking.value, onPromiEventAction]);
 

@@ -47,11 +47,11 @@ export class OrbsAccountStore {
     return promivent;
   }
 
-  public stakeOrbs(orbsToStake: number): PromiEvent<TransactionReceipt> {
+  public stakeTokens(orbsToStake: number): PromiEvent<TransactionReceipt> {
     return this.stakingService.stake(orbsToStake);
   }
 
-  public async redeemTokens(): Promise<{ txVerificationListener: TransactionVerificationListener }> {
+  public async withdrawTokens(): Promise<{ txVerificationListener: TransactionVerificationListener }> {
     // return this.orbsPOSDataService.redeemTokens();
 
     const verificationListener = new TransactionVerificationListener(null);
@@ -61,8 +61,12 @@ export class OrbsAccountStore {
     };
   }
 
-  public unlockTokens(orbsToUnlock: number): PromiEvent<TransactionReceipt> {
+  public unstakeTokens(orbsToUnlock: number): PromiEvent<TransactionReceipt> {
     return this.stakingService.unstake(orbsToUnlock);
+  }
+
+  public restakeTokens(): PromiEvent<TransactionReceipt> {
+    return this.stakingService.restake();
   }
 
   private async reactToConnectedAddressChanged(currentAddress) {

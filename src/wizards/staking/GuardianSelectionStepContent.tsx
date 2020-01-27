@@ -1,30 +1,22 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, Input, TextField, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
-import { useNumber, useStateful } from 'react-hanger';
-import { useGuardiansStore, useOrbsAccountStore } from '../../store/storeHooks';
+import { useStateful } from 'react-hanger';
+import { useGuardiansStore } from '../../store/storeHooks';
 import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 
-const inputTestProps = { 'data-testid': 'wizard_sub_step_select_amount_for_staking' };
-
 export const GuardianSelectionStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const guardiansStore = useGuardiansStore();
-  const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by allowance
-  const stakingContractAllowanceAsNumber = parseInt(orbsAccountStore.stakingContractAllowance); // TODO : O.L : Ensure this number converting is valid.
-  const orbsForStaking = useNumber(stakingContractAllowanceAsNumber, {
-    lowerLimit: 0,
-    upperLimit: stakingContractAllowanceAsNumber,
-  });
-  const message = useStateful('Select amount of Orbs to stake');
-  const subMessage = useStateful('Press "Stake" and accept the transaction');
+  const message = useStateful('Select a guardian');
+  const subMessage = useStateful('Press "Select" and accept the transaction');
 
   const errorMessageFromCode = useCallback((errorCode: number) => {
     let errorMessage = '';
@@ -56,16 +48,6 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
       subMessage.setValue(errorSubMessage);
     }
   }, [txError, errorMessageFromCode, message, subMessage]);
-
-  const stakeTokens = useCallback(() => {
-    message.setValue('');
-    subMessage.setValue(
-      'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
-    );
-
-    const promiEvent = orbsAccountStore.stakeOrbs(orbsForStaking.value);
-    onPromiEventAction(promiEvent);
-  }, [message, subMessage, orbsAccountStore, orbsForStaking.value, onPromiEventAction]);
 
   const selectGuardian = useCallback(
     (guardian: TGuardianInfoExtended) => {
