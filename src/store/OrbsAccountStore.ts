@@ -3,6 +3,7 @@ import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
 import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { subscribeToOrbsInCooldownChange } from './contractsStateSubscriptions/combinedEventsSubscriptions';
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
@@ -87,7 +88,7 @@ export class OrbsAccountStore {
     this.setLiquidOrbs(liquidOrbs);
     this.setStakingContractAllowance(stakingContractAllowance);
     this.setSelectedGuardianAddress(selectedGuardianAddress);
-    this.setStakedOrbs(stakedOrbs);
+    this.setStakedOrbs(parseInt(stakedOrbs));
 
     await this.readAndSetCooldownStatus(accountAddress);
   }
@@ -95,8 +96,8 @@ export class OrbsAccountStore {
   private async readAndSetCooldownStatus(accountAddress: string) {
     const cooldownStatus = await this.stakingService.readUnstakeStatus(accountAddress);
 
-    const amount = Number.isNaN(cooldownStatus.cooldownAmount) ? 0 : cooldownStatus.cooldownAmount;
-    const releaseTimestamp = Number.isNaN(cooldownStatus.cooldownEndTime) ? 0 : cooldownStatus.cooldownEndTime;
+    const amount = cooldownStatus.cooldownAmount;
+    const releaseTimestamp = cooldownStatus.cooldownEndTime;
 
     this.setOrbsInCooldown(amount);
     this.setCooldownReleaseTimestamp(releaseTimestamp);
@@ -123,7 +124,12 @@ export class OrbsAccountStore {
     this.stakedAmountChangeUnsubscribeFunction = this.subscribeToStakeAmountChange(accountAddress);
 
     // Cooldown status
-    this.orbsInCooldownAmountChangeUnsubscribeFunction = this.subscribeToOrbsInCooldownChange(accountAddress);
+    const onCooldownStatusChanged = () => this.readAndSetCooldownStatus(accountAddress);
+    this.orbsInCooldownAmountChangeUnsubscribeFunction = subscribeToOrbsInCooldownChange(
+      this.stakingService,
+      accountAddress,
+      onCooldownStatusChanged,
+    );
   }
 
   private cancelAllCurrentSubscriptions() {
@@ -146,30 +152,6 @@ export class OrbsAccountStore {
     if (this.orbsInCooldownAmountChangeUnsubscribeFunction) {
       this.orbsInCooldownAmountChangeUnsubscribeFunction();
     }
-  }
-
-  // Move this out to be more functional and testable
-  private subscribeToOrbsInCooldownChange(accountAddress: string): () => Promise<boolean> {
-    const onCooldownStatusChanged = () => this.readAndSetCooldownStatus(accountAddress);
-
-    const stakeEventUnsubscribe = this.stakingService.subscribeToStakedEvent(accountAddress, onCooldownStatusChanged);
-    const unstakeEventUnsubscribe = this.stakingService.subscribeToUnstakedEvent(
-      accountAddress,
-      onCooldownStatusChanged,
-    );
-    const restakeEventUnsubscribe = this.stakingService.subscribeToRestakedEvent(
-      accountAddress,
-      onCooldownStatusChanged,
-    );
-
-    return async () => {
-      try {
-        await Promise.all([stakeEventUnsubscribe(), unstakeEventUnsubscribe(), restakeEventUnsubscribe()]);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    };
   }
 
   // Move this out to be more functional and testable
