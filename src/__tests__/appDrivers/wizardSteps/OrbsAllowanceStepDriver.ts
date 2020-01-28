@@ -6,7 +6,7 @@ export class OrbsAllowanceStepDriver extends ApprovableStepDriver {
     super(renderResults, 'wizard_sub_step_initiate_allowance_tx');
   }
 
-  setAmountForAllowance(allowanceInOrbs: number) {
+  setAmountForAllowanceAndStaking(allowanceInOrbs: number) {
     fireEvent.change(this.orbsForAllowanceInput, { target: { value: allowanceInOrbs.toString() } });
   }
 

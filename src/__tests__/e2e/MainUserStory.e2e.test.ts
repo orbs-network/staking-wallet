@@ -14,6 +14,7 @@ import {
   OrbsTokenServiceMock,
   StakingServiceMock,
 } from 'orbs-pos-data/dist/testkit';
+import { IGuardianInfo } from 'orbs-pos-data';
 import { DeepPartial } from 'utility-types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { App } from '../../App';
@@ -29,7 +30,6 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { OrbsAllowanceStepDriver } from '../appDrivers/wizardSteps/OrbsAllowanceStepDriver';
 import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStepDriver';
 import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
-import { IGuardianInfo } from 'orbs-pos-data';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -189,9 +189,8 @@ describe('Main User Story', () => {
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
 
     const orbsBought = 10_000;
-    const orbsForAllowance = orbsBought - 1000; // 9,000
-    const orbsFotStaking = orbsForAllowance - 1000; // 8,000
-    const orbsForUnStaking = orbsFotStaking - 2500; // 5,500
+    const orbsForStaking = orbsBought - 1000; // 9,000
+    const orbsForUnStaking = orbsForStaking - 2500; // 6,500
 
     // **************************
     // Chapter 1 - First time staking
@@ -228,7 +227,7 @@ describe('Main User Story', () => {
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
     expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
 
-    orbsAllowanceStepDriver.setAmountForAllowance(orbsForAllowance);
+    orbsAllowanceStepDriver.setAmountForAllowanceAndStaking(orbsForStaking);
 
     // Clicking on 'allow' should move the user to the 'tx confirmation' view
     orbsAllowanceStepDriver.clickOnAllow();
@@ -243,12 +242,6 @@ describe('Main User Story', () => {
 
     // Second step - Stake your orbs
     await waitForElement(() => orbsStakingStepDriver.txCreatingSubStepComponent);
-
-    // Default value should be the maximum value of liquid orbs
-    // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsStakingStepDriver.orbsForStakingInput).toHaveValue(orbsForAllowance);
-
-    orbsStakingStepDriver.setAmountForStaking(orbsFotStaking);
 
     // Clicking on 'stake' should move the user to the 'tx confirmation' view
     orbsStakingStepDriver.clickOnStake();
@@ -265,7 +258,7 @@ describe('Main User Story', () => {
     // IMPORTANT : TEST_HACK : Currently, our stakingServiceMock does not trigger transferring of orbs
     //                          and so, the test state will not get updated with the new balance. This
     //                          line will fix it,
-    orbsPOSDataServiceMock.fireORBSBalanceChange((orbsBought - orbsFotStaking).toString());
+    orbsPOSDataServiceMock.fireORBSBalanceChange((orbsBought - orbsForStaking).toString());
 
     // Third step - Select guardian
     await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
@@ -293,8 +286,8 @@ describe('Main User Story', () => {
     expect(queryByTestId(finishSubStepTestId)).not.toBeInTheDocument();
 
     // Ensure app is displaying the right balances after staking
-    expect(liquidOrbsBalanceCard.balanceText).toBe('2,000');
-    expect(stakedOrbsBalanceCard.balanceText).toBe('8,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('9,000');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
 
     // **************************
@@ -314,7 +307,7 @@ describe('Main User Story', () => {
 
     // Default value should be the maximum value of staked orbs
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsUnStakingStepDriver.orbsForUnstakingInput).toHaveValue(orbsFotStaking);
+    expect(orbsUnStakingStepDriver.orbsForUnstakingInput).toHaveValue(orbsForStaking);
 
     orbsUnStakingStepDriver.setAmountForStaking(orbsForUnStaking);
 
@@ -339,8 +332,8 @@ describe('Main User Story', () => {
     // await forElement('wizard_unstaking').toDisappear();
 
     // Ensure app is displaying the right balances after unstaking
-    expect(liquidOrbsBalanceCard.balanceText).toBe('2,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('1,000');
     expect(stakedOrbsBalanceCard.balanceText).toBe('2,500');
-    expect(coolDownOrbsBalanceCard.balanceText).toBe('5,500');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('6,500');
   });
 });

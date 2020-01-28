@@ -7,7 +7,7 @@ import { JSON_RPC_ERROR_CODES } from '../../constants/ethereumErrorCodes';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 
-const inputTestProps = { 'data-testid': 'wizard_sub_step_select_amount_for_staking' };
+const inputProps = { readOnly: true };
 
 export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -67,24 +67,13 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_initiate_staking_tx'}>
-      <Typography>Staking your tokens in the smart contract</Typography>
+      <Typography>In this step you will stake {orbsForStaking.value} Orbs </Typography>
       <Typography variant={'caption'}>{message.value}</Typography>
       <br />
       <Typography variant={'caption'}>{subMessage.value}</Typography>
 
       <br />
       <br />
-
-      {/* TODO : O.L : Limit the maximum value to the value of the allowance */}
-      {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
-      <TextField
-        id={'orbsStaking'}
-        label={'Staking'}
-        type={'number'}
-        value={orbsForStaking.value}
-        onChange={e => orbsForStaking.setValue(parseInt(e.target.value))}
-      />
 
       <Button disabled={disableInputs} onClick={stakeTokens}>
         Stake
