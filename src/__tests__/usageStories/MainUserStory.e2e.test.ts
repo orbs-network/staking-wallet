@@ -31,6 +31,7 @@ import { OrbsAllowanceStepDriver } from '../appDrivers/wizardSteps/OrbsAllowance
 import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStepDriver';
 import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
 import { OrbsWithdrawingStepDriver } from '../appDrivers/wizardSteps/OrbsWithdrawingStepDriver';
+import { OrbsRestakingStepDriver } from '../appDrivers/wizardSteps/OrbsRestakingStepDriver';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -408,5 +409,76 @@ describe('Main User Story', () => {
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
   });
 
-  it.skip('Restaking (Start with orbs in cooldown (cooldown period not ended) -> restake)', async () => {});
+  it('Restaking (Start with orbs in cooldown (cooldown period not ended) -> restake)', async () => {
+    const UnstakedOrbs = 5_000;
+    const StakedOrbs = 20_000;
+    const OrbsInCooldown = 4_000;
+
+    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, BigInt(UnstakedOrbs));
+    stakingServiceMock.withStakeBalance(userAccountAddress, StakedOrbs);
+    stakingServiceMock.withUnstakeStatus(userAccountAddress, {
+      cooldownAmount: OrbsInCooldown,
+      cooldownEndTime: 0, // We want a timestamp in the past
+    });
+
+    // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
+    storesForTests = getStores(
+      orbsPOSDataServiceMock,
+      stakingServiceMock,
+      orbsTokenServiceMock,
+      cryptoWalletConnectionService,
+      guardiansServiceMock,
+    );
+
+    const renderResults = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, getByText, getByTestId } = renderResults;
+
+    const liquidOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_liquid_orbs');
+    const stakedOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_staked_orbs');
+    const coolDownOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_cool_down_orbs');
+
+    // DEV_NOTE : The appearance of the address signals that the 'OrbsAccountStore' has been initialised.
+    //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
+    await wait(() => getByText(userAccountAddress));
+
+    const orbsRestakingStepDriver = new OrbsRestakingStepDriver(renderResults);
+    let restakingOrbsTxPromievent: PromiEvent<TransactionReceipt>;
+
+    stakingServiceMock.txsMocker.registerToNextTxCreation('restake', promievent => {
+      restakingOrbsTxPromievent = promievent;
+    });
+
+    expect(liquidOrbsBalanceCard.balanceText).toBe('5,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('20,000');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('4,000');
+
+    coolDownOrbsBalanceCard.clickOnActionButton();
+
+    // Wait for the wizard step to apear and click on 'Withdraw'
+    await waitForElement(() => orbsRestakingStepDriver.txCreatingSubStepComponent);
+    orbsRestakingStepDriver.clickOnWRestake();
+
+    // Test the rest of the 'Unstaking' approvable step
+    await testApprovableWizardStepAfterTxWasInitiated(
+      orbsRestakingStepDriver,
+      stakingServiceMock,
+      restakingOrbsTxPromievent,
+      true,
+    );
+
+    // TODO : O.L : Move all of the 'finish sub step' logic to a function or a driver. as it appears for all tests.
+    await waitForElement(() => queryByTestId(finishSubStepTestId));
+    const unstackingWizardFinishSubStep = getByTestId(finishSubStepTestId);
+
+    const unfreezingWizardFinishButton = within(unstackingWizardFinishSubStep).getByText('Finish');
+    fireEvent.click(unfreezingWizardFinishButton);
+
+    // TODO  : O.L : It seems that the 'click' closes the modal before the 'wait for element to disappear' has any chance to find it.
+    // await forElement('wizard_withdrawing').toDisappear();
+
+    // Ensure app is displaying the right balances after unstaking
+    expect(liquidOrbsBalanceCard.balanceText).toBe('9,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('10,000');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
+  });
 });
