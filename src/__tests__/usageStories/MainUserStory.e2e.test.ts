@@ -30,6 +30,7 @@ import { EthereumProviderMock } from '../mocks/EthereumProviderMock';
 import { OrbsAllowanceStepDriver } from '../appDrivers/wizardSteps/OrbsAllowanceStepDriver';
 import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStepDriver';
 import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
+import { OrbsWithdrawingStepDriver } from '../appDrivers/wizardSteps/OrbsWithdrawingStepDriver';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -87,8 +88,10 @@ describe('Main User Story', () => {
   let stakingServiceMock: StakingServiceMock;
   let orbsTokenServiceMock: OrbsTokenServiceMock;
   let guardiansServiceMock: GuardiansServiceMock;
+  let cryptoWalletConnectionService: ICryptoWalletConnectionService;
 
   const userAccountAddress = '0x0afdafad';
+  const finishSubStepTestId = 'wizard_sub_step_finish';
 
   // Refresh test driver and other mocks
   beforeEach(() => {
@@ -103,13 +106,11 @@ describe('Main User Story', () => {
 
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(userAccountAddress);
+
+    cryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
   });
 
-  it('Complete story', async () => {
-    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(
-      ethereumProviderMock,
-    );
-
+  it('Complete story (Clean State -> Purchase -> Stake -> Unstake )', async () => {
     const guardianAAddress = '0xaaaaaaa';
     const guardianAInfo: IGuardianInfo = {
       hasEligibleVote: true,
@@ -180,9 +181,7 @@ describe('Main User Story', () => {
     //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
     await wait(() => getByText(userAccountAddress));
 
-    // **************************
-    // Initial
-    // **************************
+    // ***** Initial *****
     // DEV : Initial
     expect(liquidOrbsBalanceCard.balanceText).toBe('0');
     expect(stakedOrbsBalanceCard.balanceText).toBe('0');
@@ -192,9 +191,7 @@ describe('Main User Story', () => {
     const orbsForStaking = orbsBought - 1000; // 9,000
     const orbsForUnStaking = orbsForStaking - 2500; // 6,500
 
-    // **************************
-    // Chapter 1 - First time staking
-    // **************************
+    // ***** Chapter 1 - First time staking *****
 
     userBoughtOrbs(orbsBought);
 
@@ -274,7 +271,6 @@ describe('Main User Story', () => {
     );
 
     // Close staking wizard after success
-    const finishSubStepTestId = 'wizard_sub_step_finish';
     await forElement(finishSubStepTestId).toAppear();
     const finishSubStep = getByTestId(finishSubStepTestId);
 
@@ -290,9 +286,7 @@ describe('Main User Story', () => {
     expect(stakedOrbsBalanceCard.balanceText).toBe('9,000');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
 
-    // **************************
-    // Chapter 2 - Ask to Un-Stake some orbs
-    // **************************
+    // ***** Chapter 2 - Ask to Un-Stake some orbs *****
     const orbsUnStakingStepDriver = new OrbsUnstakingStepDriver(renderResults);
 
     let unfreezeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
@@ -336,4 +330,83 @@ describe('Main User Story', () => {
     expect(stakedOrbsBalanceCard.balanceText).toBe('2,500');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('6,500');
   });
+
+  it('Withdrawing (Start with orbs in cooldown (cooldown period ended)  -> withdraw orbs)', async () => {
+    const UnstakedOrbs = 6_000;
+    const StakedOrbs = 10_000;
+    const OrbsInCooldown = 7_000;
+
+    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, BigInt(UnstakedOrbs));
+    stakingServiceMock.withStakeBalance(userAccountAddress, StakedOrbs);
+    stakingServiceMock.withUnstakeStatus(userAccountAddress, {
+      cooldownAmount: OrbsInCooldown,
+      cooldownEndTime: 0, // We want a timestamp in the past
+    });
+
+    // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
+    storesForTests = getStores(
+      orbsPOSDataServiceMock,
+      stakingServiceMock,
+      orbsTokenServiceMock,
+      cryptoWalletConnectionService,
+      guardiansServiceMock,
+    );
+
+    const renderResults = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, getByText, getByTestId } = renderResults;
+
+    const liquidOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_liquid_orbs');
+    const stakedOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_staked_orbs');
+    const coolDownOrbsBalanceCard = new BalanceCardDriver(renderResults, 'balance_card_cool_down_orbs');
+
+    // DEV_NOTE : The appearance of the address signals that the 'OrbsAccountStore' has been initialised.
+    //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
+    await wait(() => getByText(userAccountAddress));
+
+    const orbsWithdrawingStepDriver = new OrbsWithdrawingStepDriver(renderResults);
+    let withdrawOrbsTxPromievent: PromiEvent<TransactionReceipt>;
+
+    stakingServiceMock.txsMocker.registerToNextTxCreation('withdraw', promievent => {
+      withdrawOrbsTxPromievent = promievent;
+    });
+
+    expect(liquidOrbsBalanceCard.balanceText).toBe('6,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('10,000');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('7,000');
+
+    coolDownOrbsBalanceCard.clickOnActionButton();
+
+    // Wait for the wizard step to apear and click on 'Withdraw'
+    await waitForElement(() => orbsWithdrawingStepDriver.txCreatingSubStepComponent);
+    orbsWithdrawingStepDriver.clickOnWithdraw();
+
+    // DEV_NOTE : O.L : We have to mimick the 'transfer' event because the mock will not create it
+    // TODO : O.L : Change this to the new API (use the 'transfer' function)
+    orbsPOSDataServiceMock.fireORBSBalanceChange((UnstakedOrbs + OrbsInCooldown).toString());
+
+    // Test the rest of the 'Unstaking' approvable step
+    await testApprovableWizardStepAfterTxWasInitiated(
+      orbsWithdrawingStepDriver,
+      stakingServiceMock,
+      withdrawOrbsTxPromievent,
+      true,
+    );
+
+    // TODO : O.L : Move all of the 'finish sub step' logic to a function or a driver. as it appears for all tests.
+    await waitForElement(() => queryByTestId(finishSubStepTestId));
+    const unstackingWizardFinishSubStep = getByTestId(finishSubStepTestId);
+
+    const unfreezingWizardFinishButton = within(unstackingWizardFinishSubStep).getByText('Finish');
+    fireEvent.click(unfreezingWizardFinishButton);
+
+    // TODO  : O.L : It seems that the 'click' closes the modal before the 'wait for element to disappear' has any chance to find it.
+    // await forElement('wizard_withdrawing').toDisappear();
+
+    // Ensure app is displaying the right balances after unstaking
+    expect(liquidOrbsBalanceCard.balanceText).toBe('13,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('10,000');
+    expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
+  });
+
+  it.skip('Restaking (Start with orbs in cooldown (cooldown period not ended) -> restake)', async () => {});
 });
