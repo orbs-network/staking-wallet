@@ -418,7 +418,7 @@ describe('Main User Story', () => {
     stakingServiceMock.withStakeBalance(userAccountAddress, StakedOrbs);
     stakingServiceMock.withUnstakeStatus(userAccountAddress, {
       cooldownAmount: OrbsInCooldown,
-      cooldownEndTime: 0, // We want a timestamp in the past
+      cooldownEndTime: Number.MAX_SAFE_INTEGER, // We want a timestamp in the future
     });
 
     // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
@@ -477,8 +477,8 @@ describe('Main User Story', () => {
     // await forElement('wizard_withdrawing').toDisappear();
 
     // Ensure app is displaying the right balances after unstaking
-    expect(liquidOrbsBalanceCard.balanceText).toBe('9,000');
-    expect(stakedOrbsBalanceCard.balanceText).toBe('10,000');
+    expect(liquidOrbsBalanceCard.balanceText).toBe('5,000');
+    expect(stakedOrbsBalanceCard.balanceText).toBe('24,000');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
   });
 });

@@ -53,14 +53,8 @@ export class OrbsAccountStore {
     return this.stakingService.stake(orbsToStake);
   }
 
-  public async withdrawTokens(): Promise<{ txVerificationListener: TransactionVerificationListener }> {
-    // return this.orbsPOSDataService.redeemTokens();
-
-    const verificationListener = new TransactionVerificationListener(null);
-
-    return {
-      txVerificationListener: verificationListener,
-    };
+  public withdrawTokens(): PromiEvent<TransactionReceipt> {
+    return this.stakingService.withdraw();
   }
 
   public unstakeTokens(orbsToUnlock: number): PromiEvent<TransactionReceipt> {
