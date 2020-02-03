@@ -14,6 +14,7 @@ import { UnstakingWizard } from '../wizards/unstaking/UnstakingWizard';
 import { WithdrawingWizard } from '../wizards/withdrawing/WithdrawingWizard';
 import { RestakingWizard } from '../wizards/restaking/RestakingWizard';
 import { useOrbsInCooldownState } from '../store/storeStateHooks';
+import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -59,7 +60,7 @@ export const BalancesSection = observer(() => {
             actionButtonTitle={'Stake your tokens'}
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
-            amount={parseInt(orbsAccountStore.liquidOrbs)}
+            amount={fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)}
             balanceCardTestId={'balance_card_liquid_orbs'}
           />
         </GridItem>
@@ -68,7 +69,7 @@ export const BalancesSection = observer(() => {
           <BalanceCard
             title={'Staked Orbs in smart contract'}
             actionButtonTitle={'Unlock your tokens'}
-            amount={orbsAccountStore.stakedOrbs}
+            amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
             actionButtonActive={true}
             onActionButtonPressed={showUnStakingModal.setTrue}
             balanceCardTestId={'balance_card_staked_orbs'}
@@ -79,7 +80,7 @@ export const BalancesSection = observer(() => {
           <BalanceCard
             title={'Tokens in cooldown'}
             actionButtonTitle={orbsInCooldownBoxButtonText}
-            amount={orbsAccountStore.orbsInCoolDown}
+            amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
             actionButtonActive={true}
             onActionButtonPressed={orbsInCooldownBoxButtonAction}
             balanceCardTestId={'balance_card_cool_down_orbs'}

@@ -10,12 +10,12 @@ import {
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
-  @observable public liquidOrbs = '0';
-  @observable public stakingContractAllowance = '0';
-  @observable public stakedOrbs = 0;
-  @observable public orbsInCoolDown = 0;
+  @observable public liquidOrbs = BigInt(0);
+  @observable public stakingContractAllowance = BigInt(0);
+  @observable public stakedOrbs = BigInt(0);
+  @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
-  @observable public accumulatedRewards: number;
+  @observable public accumulatedRewards = BigInt(0);
   @observable public selectedGuardianAddress: string;
 
   private addressChangeReaction: IReactionDisposer;
@@ -42,14 +42,14 @@ export class OrbsAccountStore {
 
   // **** Contract interactions ****
 
-  public setAllowanceForStakingContract(orbsToStake: number): PromiEvent<TransactionReceipt> {
+  public setAllowanceForStakingContract(orbsToStake: bigint): PromiEvent<TransactionReceipt> {
     const stakingContractAddress = this.stakingService.getStakingContractAddress();
     const promivent = this.orbsTokenService.approve(stakingContractAddress, orbsToStake);
 
     return promivent;
   }
 
-  public stakeTokens(orbsToStake: number): PromiEvent<TransactionReceipt> {
+  public stakeTokens(orbsToStake: bigint): PromiEvent<TransactionReceipt> {
     return this.stakingService.stake(orbsToStake);
   }
 
@@ -57,7 +57,7 @@ export class OrbsAccountStore {
     return this.stakingService.withdraw();
   }
 
-  public unstakeTokens(orbsToUnlock: number): PromiEvent<TransactionReceipt> {
+  public unstakeTokens(orbsToUnlock: bigint): PromiEvent<TransactionReceipt> {
     return this.stakingService.unstake(orbsToUnlock);
   }
 
@@ -105,7 +105,7 @@ export class OrbsAccountStore {
 
   private async readAndSetStakedOrbs(accountAddress: string) {
     const stakedOrbs = await this.stakingService.readStakeBalanceOf(accountAddress);
-    this.setStakedOrbs(parseInt(stakedOrbs));
+    this.setStakedOrbs(stakedOrbs);
   }
 
   private async readAndSetStakingContractAllowance(accountAddress: string) {
@@ -147,9 +147,9 @@ export class OrbsAccountStore {
 
     // TODO : O.L : Work out the string/number decision.
     // Staked orbs
-    const onStakedAmountChanged = (error: Error, stakedAmountInEvent: string, totalStakedAmount: string) => {
+    const onStakedAmountChanged = (error: Error, stakedAmountInEvent: bigint, totalStakedAmount: bigint) => {
       // TODO : O.L : Handle error
-      this.setStakedOrbs(parseInt(totalStakedAmount));
+      this.setStakedOrbs(totalStakedAmount);
     };
     this.stakedAmountChangeUnsubscribeFunction = subscribeToStakeAmountChange(
       this.stakingService,
@@ -191,22 +191,22 @@ export class OrbsAccountStore {
   // ****  Observables setter actions ****
 
   @action('setLiquidOrbs')
-  private setLiquidOrbs(liquidOrbs: string) {
+  private setLiquidOrbs(liquidOrbs: bigint) {
     this.liquidOrbs = liquidOrbs;
   }
 
   @action('setStakingContractAllowance')
-  private setStakingContractAllowance(stakingContractAllowance: string) {
+  private setStakingContractAllowance(stakingContractAllowance: bigint) {
     this.stakingContractAllowance = stakingContractAllowance;
   }
 
   @action('setLiquidOrbs')
-  private setStakedOrbs(stakedOrbs: number) {
+  private setStakedOrbs(stakedOrbs: bigint) {
     this.stakedOrbs = stakedOrbs;
   }
 
   @action('setOrbsInCooldown')
-  private setOrbsInCooldown(orbsInCooldown: number) {
+  private setOrbsInCooldown(orbsInCooldown: bigint) {
     this.orbsInCoolDown = orbsInCooldown;
   }
 
@@ -216,7 +216,7 @@ export class OrbsAccountStore {
   }
 
   @action('setAccumulatedRewards')
-  private setAccumulatedRewards(accumulatedRewards: number) {
+  private setAccumulatedRewards(accumulatedRewards: bigint) {
     this.accumulatedRewards = accumulatedRewards;
   }
 

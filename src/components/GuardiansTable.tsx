@@ -1,5 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography } from '@material-ui/core';
-import * as React from 'react';
+import React from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
@@ -40,7 +40,7 @@ interface IProps {
 
 export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect, selectedGuardian }) => {
   const { t } = useTranslation();
-  const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stake - a.stake), [guardians]);
+  const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stakePercent - a.stakePercent), [guardians]);
 
   function getSelectedGuardianCell(g: TGuardianInfoExtended, idx: number) {
     if (onGuardianSelect) {
@@ -106,7 +106,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
                 </a>
               </TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-stake`} align='center'>
-                {asPercent(g.stake)}
+                {asPercent(g.stakePercent)}
               </TableCell>
               <TableCell data-testid={`guardian-${idx + 1}-voted`} align='center'>
                 {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}

@@ -1,5 +1,5 @@
 import { IStakingService } from 'orbs-pos-data';
-import { StakingServiceEventCallback } from 'orbs-pos-data/src/interfaces/IStakingService';
+import { StakingServiceEventCallback } from 'orbs-pos-data/dist/interfaces/IStakingService';
 
 export function subscribeToOrbsInCooldownChange(
   stakingService: IStakingService,
