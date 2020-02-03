@@ -42,23 +42,23 @@ export class OrbsAccountStore {
 
   // **** Contract interactions ****
 
-  public setAllowanceForStakingContract(orbsToStake: bigint): PromiEvent<TransactionReceipt> {
+  public setAllowanceForStakingContract(allowanceForStakingContractInWeiOrbs: bigint): PromiEvent<TransactionReceipt> {
     const stakingContractAddress = this.stakingService.getStakingContractAddress();
-    const promivent = this.orbsTokenService.approve(stakingContractAddress, orbsToStake);
+    const promivent = this.orbsTokenService.approve(stakingContractAddress, allowanceForStakingContractInWeiOrbs);
 
     return promivent;
   }
 
-  public stakeTokens(orbsToStake: bigint): PromiEvent<TransactionReceipt> {
-    return this.stakingService.stake(orbsToStake);
+  public stakeTokens(weiOrbsToStake: bigint): PromiEvent<TransactionReceipt> {
+    return this.stakingService.stake(weiOrbsToStake);
   }
 
   public withdrawTokens(): PromiEvent<TransactionReceipt> {
     return this.stakingService.withdraw();
   }
 
-  public unstakeTokens(orbsToUnlock: bigint): PromiEvent<TransactionReceipt> {
-    return this.stakingService.unstake(orbsToUnlock);
+  public unstakeTokens(weiOrbsToUnstake: bigint): PromiEvent<TransactionReceipt> {
+    return this.stakingService.unstake(weiOrbsToUnstake);
   }
 
   public restakeTokens(): PromiEvent<TransactionReceipt> {
