@@ -5,14 +5,11 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
  * The above notice should be included in all copies or substantial portions of the software.
  */
-import '@testing-library/jest-dom/extend-expect';
-import { IGuardianInfo } from 'orbs-pos-data';
 import { GuardiansSection } from '../../../sections/GuardiansSection';
 import { GuardiansServiceMock, OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
 import { GuardiansStore, TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { getByTestId as getByTestIdWithContainer } from '@testing-library/dom';
-import { createDeflateRaw } from 'zlib';
 import { CryptoWalletConnectionService } from '../../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
 import { EthereumProviderMock } from '../../mocks/EthereumProviderMock';
 import { CryptoWalletConnectionStore } from '../../../store/CryptoWalletConnectionStore';
