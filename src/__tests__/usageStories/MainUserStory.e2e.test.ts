@@ -32,6 +32,7 @@ import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStep
 import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
 import { OrbsWithdrawingStepDriver } from '../appDrivers/wizardSteps/OrbsWithdrawingStepDriver';
 import { OrbsRestakingStepDriver } from '../appDrivers/wizardSteps/OrbsRestakingStepDriver';
+import { weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -60,7 +61,7 @@ async function testApprovableWizardStepAfterTxWasInitiated(
   // DEV_NOTE : This is a bit brittle, as it depends on the mechanism of the tx approval mocking.
   const approveOrbsTxHash = await waitForPromieventTxHash(approveOrbsTxPromievent);
 
-  // Wait for the tx conformation sub-step to apear
+  // Wait for the tx conformation sub-step to appear
   await waitForElement(() => approvableStepDriver.txConformationSubStepComponent);
 
   // Should have a proper link to ether scan
@@ -105,6 +106,10 @@ describe('Main User Story', () => {
     orbsTokenServiceMock = new OrbsTokenServiceMock();
     guardiansServiceMock = new GuardiansServiceMock();
 
+    // TODO : O.L : FUTURE : See if this is still relevant after moving to 'staking only' system.
+    // Set an amount for participating tokens
+    orbsPOSDataServiceMock.withTotalParticipatingTokens(BigInt(500_000_000));
+
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(userAccountAddress);
 
@@ -116,7 +121,7 @@ describe('Main User Story', () => {
     const guardianAInfo: IGuardianInfo = {
       hasEligibleVote: true,
       name: 'Guardian A',
-      stake: 5_000_000,
+      stakePercent: 23,
       voted: true,
       website: 'http:guardianA.com',
     };
@@ -125,7 +130,7 @@ describe('Main User Story', () => {
     const guardianBInfo: IGuardianInfo = {
       hasEligibleVote: true,
       name: 'Guardian B',
-      stake: 3_000_000,
+      stakePercent: 15,
       voted: true,
       website: 'http:guardianB.com',
     };
@@ -134,7 +139,7 @@ describe('Main User Story', () => {
     const guardianCInfo: IGuardianInfo = {
       hasEligibleVote: true,
       name: 'Guardian C',
-      stake: 4_000_120,
+      stakePercent: 40,
       voted: false,
       website: 'http:guardianC.com',
     };
@@ -156,7 +161,7 @@ describe('Main User Story', () => {
     const { queryByTestId, getByText, getByTestId } = renderResults;
 
     function userBoughtOrbs(amount: number): void {
-      orbsPOSDataServiceMock.fireORBSBalanceChange(amount.toString());
+      orbsPOSDataServiceMock.fireORBSBalanceChange(weiOrbsFromFullOrbs(amount));
     }
 
     function forElement(elementTestId: string): { toAppear(): Promise<void>; toDisappear(): Promise<void> } {
@@ -256,7 +261,7 @@ describe('Main User Story', () => {
     // IMPORTANT : TEST_HACK : Currently, our stakingServiceMock does not trigger transferring of orbs
     //                          and so, the test state will not get updated with the new balance. This
     //                          line will fix it,
-    orbsPOSDataServiceMock.fireORBSBalanceChange((orbsBought - orbsForStaking).toString());
+    orbsPOSDataServiceMock.fireORBSBalanceChange(weiOrbsFromFullOrbs(orbsBought - orbsForStaking));
 
     // Third step - Select guardian
     await waitForElement(() => guardianSelectionStepDriver.txCreatingSubStepComponent);
@@ -337,10 +342,10 @@ describe('Main User Story', () => {
     const StakedOrbs = 10_000;
     const OrbsInCooldown = 7_000;
 
-    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, BigInt(UnstakedOrbs));
-    stakingServiceMock.withStakeBalance(userAccountAddress, StakedOrbs);
+    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, weiOrbsFromFullOrbs(UnstakedOrbs));
+    stakingServiceMock.withStakeBalance(userAccountAddress, weiOrbsFromFullOrbs(StakedOrbs));
     stakingServiceMock.withUnstakeStatus(userAccountAddress, {
-      cooldownAmount: OrbsInCooldown,
+      cooldownAmount: weiOrbsFromFullOrbs(OrbsInCooldown),
       cooldownEndTime: 0, // We want a timestamp in the past
     });
 
@@ -383,7 +388,7 @@ describe('Main User Story', () => {
 
     // DEV_NOTE : O.L : We have to mimick the 'transfer' event because the mock will not create it
     // TODO : O.L : Change this to the new API (use the 'transfer' function)
-    orbsPOSDataServiceMock.fireORBSBalanceChange((UnstakedOrbs + OrbsInCooldown).toString());
+    orbsPOSDataServiceMock.fireORBSBalanceChange(weiOrbsFromFullOrbs(UnstakedOrbs + OrbsInCooldown));
 
     // Test the rest of the 'Unstaking' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(
@@ -414,10 +419,10 @@ describe('Main User Story', () => {
     const StakedOrbs = 20_000;
     const OrbsInCooldown = 4_000;
 
-    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, BigInt(UnstakedOrbs));
-    stakingServiceMock.withStakeBalance(userAccountAddress, StakedOrbs);
+    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, weiOrbsFromFullOrbs(UnstakedOrbs));
+    stakingServiceMock.withStakeBalance(userAccountAddress, weiOrbsFromFullOrbs(StakedOrbs));
     stakingServiceMock.withUnstakeStatus(userAccountAddress, {
-      cooldownAmount: OrbsInCooldown,
+      cooldownAmount: weiOrbsFromFullOrbs(OrbsInCooldown),
       cooldownEndTime: Number.MAX_SAFE_INTEGER, // We want a timestamp in the future
     });
 

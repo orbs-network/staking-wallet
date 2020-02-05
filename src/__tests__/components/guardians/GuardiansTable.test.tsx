@@ -9,8 +9,19 @@ import '@testing-library/jest-dom/extend-expect';
 import { GuardiansTable } from '../../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
+import { IGuardianInfo } from 'orbs-pos-data';
+import {
+  guardianAddressTestId,
+  guardianNameTestId,
+  guardianRowTestId,
+  guardianStakeTestId,
+  guardianVotedTestId,
+  guardianWebsiteTestId,
+  selectActionButtonTestId,
+} from './guardiansTestUtils';
 
-const selectActionButtonTestId = (guardian: TGuardianInfoExtended) => `guardian-${guardian.address}-select-action`;
+const testIdForGuardianSelectionStatus = (guardian: TGuardianInfoExtended) =>
+  `guardian-${guardian.address}-selected-status`;
 
 describe('Guardians Table Component', () => {
   let testDriver: ComponentTestDriver;
@@ -21,7 +32,7 @@ describe('Guardians Table Component', () => {
     website: 'http://www.guardian1.com',
     hasEligibleVote: true,
     voted: true,
-    stake: 0.2,
+    stakePercent: 0.2,
   };
 
   const guardian2: TGuardianInfoExtended = {
@@ -30,7 +41,7 @@ describe('Guardians Table Component', () => {
     website: 'http://www.guardian2.com',
     hasEligibleVote: false,
     voted: false,
-    stake: 0.1,
+    stakePercent: 0.1,
   };
 
   const guardian3: TGuardianInfoExtended = {
@@ -39,7 +50,7 @@ describe('Guardians Table Component', () => {
     website: 'http://www.guardian3.com',
     hasEligibleVote: false,
     voted: true,
-    stake: 0.3,
+    stakePercent: 0.3,
   };
 
   const guardian4: TGuardianInfoExtended = {
@@ -48,7 +59,7 @@ describe('Guardians Table Component', () => {
     website: 'http://www.guardian4.com',
     hasEligibleVote: false,
     voted: true,
-    stake: 0.01,
+    stakePercent: 0.01,
   };
 
   beforeEach(() => {
@@ -61,39 +72,48 @@ describe('Guardians Table Component', () => {
     const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
 
     expect(getByTestId('guardians-table')).toBeInTheDocument();
-    expect(getByTestId('guardian-1')).toBeInTheDocument();
-    expect(getByTestId('guardian-2')).toBeInTheDocument();
-    expect(getByTestId('guardian-3')).toBeInTheDocument();
-    expect(getByTestId('guardian-4')).toBeInTheDocument();
+    expect(getByTestId(guardianRowTestId(guardian1))).toBeInTheDocument();
+    expect(getByTestId(guardianRowTestId(guardian2))).toBeInTheDocument();
+    expect(getByTestId(guardianRowTestId(guardian3))).toBeInTheDocument();
+    expect(getByTestId(guardianRowTestId(guardian4))).toBeInTheDocument();
 
-    expect(getByTestId('guardian-1-name')).toHaveTextContent('Guardian 3');
-    expect(getByTestId('guardian-2-name')).toHaveTextContent('Guardian 1');
-    expect(getByTestId('guardian-3-name')).toHaveTextContent('Guardian 2');
-    expect(getByTestId('guardian-4-name')).toHaveTextContent('Guardian 4');
+    expect(getByTestId(guardianNameTestId(guardian1))).toHaveTextContent('Guardian 1');
+    expect(getByTestId(guardianNameTestId(guardian2))).toHaveTextContent('Guardian 2');
+    expect(getByTestId(guardianNameTestId(guardian3))).toHaveTextContent('Guardian 3');
+    expect(getByTestId(guardianNameTestId(guardian4))).toHaveTextContent('Guardian 4');
 
-    expect(getByTestId('guardian-1-address')).toHaveTextContent('0x3333333333333333333333333333333333333333');
-    expect(getByTestId('guardian-2-address')).toHaveTextContent('0x1111111111111111111111111111111111111111');
-    expect(getByTestId('guardian-3-address')).toHaveTextContent('0x2222222222222222222222222222222222222222');
-    expect(getByTestId('guardian-4-address')).toHaveTextContent('0x4444444444444444444444444444444444444444');
+    expect(getByTestId(guardianAddressTestId(guardian1))).toHaveTextContent(
+      '0x1111111111111111111111111111111111111111',
+    );
+    expect(getByTestId(guardianAddressTestId(guardian2))).toHaveTextContent(
+      '0x2222222222222222222222222222222222222222',
+    );
+    expect(getByTestId(guardianAddressTestId(guardian3))).toHaveTextContent(
+      '0x3333333333333333333333333333333333333333',
+    );
+    expect(getByTestId(guardianAddressTestId(guardian4))).toHaveTextContent(
+      '0x4444444444444444444444444444444444444444',
+    );
 
-    expect(getByTestId('guardian-1-website')).toHaveAttribute('href', 'http://www.guardian3.com');
-    expect(getByTestId('guardian-2-website')).toHaveAttribute('href', 'http://www.guardian1.com');
-    expect(getByTestId('guardian-3-website')).toHaveAttribute('href', 'http://www.guardian2.com');
-    expect(getByTestId('guardian-4-website')).toHaveAttribute('href', 'http://www.guardian4.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian1))).toHaveAttribute('href', 'http://www.guardian1.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian2))).toHaveAttribute('href', 'http://www.guardian2.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian3))).toHaveAttribute('href', 'http://www.guardian3.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian4))).toHaveAttribute('href', 'http://www.guardian4.com');
 
-    expect(getByTestId('guardian-1-stake')).toHaveTextContent('30.00%');
-    expect(getByTestId('guardian-2-stake')).toHaveTextContent('20.00%');
-    expect(getByTestId('guardian-3-stake')).toHaveTextContent('10.00%');
-    expect(getByTestId('guardian-4-stake')).toHaveTextContent('1.00%');
+    // TODO : C.F.H : Fix test with total staking numbers
+    expect(getByTestId(guardianStakeTestId(guardian1))).toHaveTextContent('20.00%');
+    expect(getByTestId(guardianStakeTestId(guardian2))).toHaveTextContent('10.00%');
+    expect(getByTestId(guardianStakeTestId(guardian3))).toHaveTextContent('30.00%');
+    expect(getByTestId(guardianStakeTestId(guardian4))).toHaveTextContent('1.00%');
 
-    expect(getByTestId('guardian-1-voted')).toHaveTextContent('Yes');
-    expect(getByTestId('guardian-2-voted')).toHaveTextContent('Yes');
-    expect(getByTestId('guardian-3-voted')).toHaveTextContent('No');
-    expect(getByTestId('guardian-4-voted')).toHaveTextContent('Yes');
+    expect(getByTestId(guardianVotedTestId(guardian1))).toHaveTextContent('Yes');
+    expect(getByTestId(guardianVotedTestId(guardian2))).toHaveTextContent('No');
+    expect(getByTestId(guardianVotedTestId(guardian3))).toHaveTextContent('Yes');
+    expect(getByTestId(guardianVotedTestId(guardian4))).toHaveTextContent('Yes');
   });
 
   it('should have an external link to the guardians website', async () => {
-    const guardians = [
+    const localTestGuardians = [
       {
         address: '0x123',
         name: 'Guardian',
@@ -104,10 +124,12 @@ describe('Guardians Table Component', () => {
       },
     ];
 
-    const { getByTestId } = testDriver.withProps({ guardians, totalParticipatingTokens: 1_000_000 }).render();
+    const { getByTestId } = testDriver
+      .withProps({ guardians: [guardian1], totalParticipatingTokens: 1_000_000 })
+      .render();
 
-    expect(getByTestId('guardian-1-website')).toHaveAttribute('href', 'http://www.guardian.com');
-    expect(getByTestId('guardian-1-website')).toHaveAttribute('target', '_blank');
+    expect(getByTestId(guardianWebsiteTestId(guardian1))).toHaveAttribute('href', 'http://www.guardian1.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian1))).toHaveAttribute('target', '_blank');
   });
 
   describe('Guardians Selection', () => {
@@ -176,13 +198,13 @@ describe('Guardians Table Component', () => {
       expect(queryByTestId(selectActionButtonTestId(guardian3))).not.toBeInTheDocument();
       expect(queryByTestId(selectActionButtonTestId(guardian4))).not.toBeInTheDocument();
 
-      expect(queryByTestId('guardian-1-selected-status')).toHaveTextContent('Selected'); // guardian3
-      expect(queryByTestId('guardian-2-selected-status')).toHaveTextContent('-');
-      expect(queryByTestId('guardian-3-selected-status')).toHaveTextContent('-');
-      expect(queryByTestId('guardian-4-selected-status')).toHaveTextContent('-');
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian3))).toHaveTextContent('Selected'); // guardian3
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian1))).toHaveTextContent('-');
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian2))).toHaveTextContent('-');
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian4))).toHaveTextContent('-');
     });
 
-    it('should NOT display the selected guardian nor the select-button', async () => {
+    it('should NOT display the selected guardian nor the select-button when no guardian is selected', async () => {
       const guardians = [guardian1, guardian2, guardian3, guardian4];
 
       const { queryByTestId } = testDriver
@@ -197,10 +219,10 @@ describe('Guardians Table Component', () => {
       expect(queryByTestId(selectActionButtonTestId(guardian3))).not.toBeInTheDocument();
       expect(queryByTestId(selectActionButtonTestId(guardian4))).not.toBeInTheDocument();
 
-      expect(queryByTestId('guardian-1-selected-status')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-2-selected-status')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-3-selected-status')).not.toBeInTheDocument();
-      expect(queryByTestId('guardian-4-selected-status')).not.toBeInTheDocument();
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian1))).not.toBeInTheDocument();
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian2))).not.toBeInTheDocument();
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian3))).not.toBeInTheDocument();
+      expect(queryByTestId(testIdForGuardianSelectionStatus(guardian4))).not.toBeInTheDocument();
     });
 
     it('should call onGuardianSelect when a guardian was selected', async () => {

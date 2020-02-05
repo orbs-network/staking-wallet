@@ -9,13 +9,22 @@ import '@testing-library/jest-dom/extend-expect';
 import { IGuardianInfo } from 'orbs-pos-data';
 import { GuardiansSection } from '../../../sections/GuardiansSection';
 import { GuardiansServiceMock, OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
-import { GuardiansStore } from '../../../store/GuardiansStore';
+import { GuardiansStore, TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { getByTestId as getByTestIdWithContainer } from '@testing-library/dom';
 import { createDeflateRaw } from 'zlib';
 import { CryptoWalletConnectionService } from '../../../services/cryptoWalletConnectionService/CryptoWalletConnectionService';
 import { EthereumProviderMock } from '../../mocks/EthereumProviderMock';
 import { CryptoWalletConnectionStore } from '../../../store/CryptoWalletConnectionStore';
+import { weiOrbsFromFullOrbs } from '../../../cryptoUtils/unitConverter';
+import {
+  guardianAddressTestId,
+  guardianNameTestId,
+  guardianRowTestId,
+  guardianStakeTestId,
+  guardianVotedTestId,
+  guardianWebsiteTestId,
+} from './guardiansTestUtils';
 
 describe('Guardians Section', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
@@ -27,28 +36,31 @@ describe('Guardians Section', () => {
   const guardian2Address = '0xf257EDE1CE68CA4b94e18eae5CB14942CBfF7D1C';
   const guardian3Address = '0xcB6172196BbCf5b4cf9949D7f2e4Ee802EF2b81D';
 
-  const guardian1: IGuardianInfo = {
+  const guardian1: TGuardianInfoExtended = {
+    address: guardian1Address,
     name: 'Guardian 1',
     website: 'http://www.guardian1.com',
     hasEligibleVote: true,
     voted: true,
-    stake: 0.2,
+    stakePercent: 0.2,
   };
 
-  const guardian2: IGuardianInfo = {
+  const guardian2: TGuardianInfoExtended = {
+    address: guardian2Address,
     name: 'Guardian 2',
     website: 'http://www.guardian2.com',
     hasEligibleVote: false,
     voted: false,
-    stake: 0.1,
+    stakePercent: 0.1,
   };
 
-  const guardian3: IGuardianInfo = {
+  const guardian3: TGuardianInfoExtended = {
+    address: guardian3Address,
     name: 'Guardian 3',
     website: 'http://www.guardian3.com',
     hasEligibleVote: false,
     voted: true,
-    stake: 0.3,
+    stakePercent: 0.3,
   };
 
   beforeEach(async () => {
@@ -60,7 +72,7 @@ describe('Guardians Section', () => {
     orbsPOSDataService = new OrbsPOSDataServiceMock();
     guardianService = new GuardiansServiceMock();
 
-    const participating = await orbsPOSDataService.readTotalParticipatingTokens();
+    orbsPOSDataService.withTotalParticipatingTokens(weiOrbsFromFullOrbs(1_000_000));
   });
 
   it('should display all the given guardians', async () => {
@@ -75,33 +87,32 @@ describe('Guardians Section', () => {
     const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
 
     expect(getByTestId('guardians-table')).toBeDefined();
-    expect(getByTestId('guardian-1')).toBeDefined();
-    expect(getByTestId('guardian-2')).toBeDefined();
-    expect(getByTestId('guardian-3')).toBeDefined();
+    expect(getByTestId(guardianRowTestId(guardian1))).toBeDefined();
+    expect(getByTestId(guardianRowTestId(guardian2))).toBeDefined();
+    expect(getByTestId(guardianRowTestId(guardian3))).toBeDefined();
 
-    expect(getByTestId('guardian-1-name')).toHaveTextContent('Guardian 3');
-    expect(getByTestId('guardian-2-name')).toHaveTextContent('Guardian 1');
-    expect(getByTestId('guardian-3-name')).toHaveTextContent('Guardian 2');
+    expect(getByTestId(guardianNameTestId(guardian1))).toHaveTextContent('Guardian 1');
+    expect(getByTestId(guardianNameTestId(guardian2))).toHaveTextContent('Guardian 2');
+    expect(getByTestId(guardianNameTestId(guardian3))).toHaveTextContent('Guardian 3');
 
-    expect(getByTestId('guardian-1-address')).toHaveTextContent(guardian3Address);
-    expect(getByTestId('guardian-2-address')).toHaveTextContent(guardian1Address);
-    expect(getByTestId('guardian-3-address')).toHaveTextContent(guardian2Address);
+    expect(getByTestId(guardianAddressTestId(guardian1))).toHaveTextContent(guardian1Address);
+    expect(getByTestId(guardianAddressTestId(guardian2))).toHaveTextContent(guardian2Address);
+    expect(getByTestId(guardianAddressTestId(guardian3))).toHaveTextContent(guardian3Address);
 
-    expect(getByTestId('guardian-1-website')).toHaveAttribute('href', 'http://www.guardian3.com');
-    expect(getByTestId('guardian-2-website')).toHaveAttribute('href', 'http://www.guardian1.com');
-    expect(getByTestId('guardian-3-website')).toHaveAttribute('href', 'http://www.guardian2.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian1))).toHaveAttribute('href', 'http://www.guardian1.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian2))).toHaveAttribute('href', 'http://www.guardian2.com');
+    expect(getByTestId(guardianWebsiteTestId(guardian3))).toHaveAttribute('href', 'http://www.guardian3.com');
 
-    expect(getByTestId('guardian-1-stake')).toHaveTextContent('30.00%');
-    expect(getByTestId('guardian-2-stake')).toHaveTextContent('20.00%');
-    expect(getByTestId('guardian-3-stake')).toHaveTextContent('10.00%');
+    expect(getByTestId(guardianStakeTestId(guardian1))).toHaveTextContent('20.00%');
+    expect(getByTestId(guardianStakeTestId(guardian2))).toHaveTextContent('10.00%');
+    expect(getByTestId(guardianStakeTestId(guardian3))).toHaveTextContent('30.00%');
 
-    expect(getByTestId('guardian-1-voted')).toHaveTextContent('Yes');
-    expect(getByTestId('guardian-2-voted')).toHaveTextContent('Yes');
-    expect(getByTestId('guardian-3-voted')).toHaveTextContent('No');
+    expect(getByTestId(guardianVotedTestId(guardian1))).toHaveTextContent('Yes');
+    expect(getByTestId(guardianVotedTestId(guardian2))).toHaveTextContent('No');
+    expect(getByTestId(guardianVotedTestId(guardian3))).toHaveTextContent('Yes');
   });
 
   it('should display the total participating tokens', async () => {
-    orbsPOSDataService.withTotalParticipatingTokens(BigInt(1_000_000));
     guardianService.withGuardian(guardian1Address, guardian1);
     guardianService.withGuardian(guardian2Address, guardian2);
     guardianService.withGuardian(guardian3Address, guardian3);

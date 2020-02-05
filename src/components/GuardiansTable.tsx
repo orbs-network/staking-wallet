@@ -61,7 +61,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
       if (selectedGuardian) {
         return (
           <TableCell align='center'>
-            <Typography data-testid={`guardian-${idx + 1}-selected-status`}>
+            <Typography data-testid={`guardian-${g.address}-selected-status`}>
               {t(g.address === selectedGuardian ? 'Selected' : '-')}
             </Typography>
           </TableCell>
@@ -87,17 +87,17 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
         </TableHead>
         <TableBody>
           {sortedGuardians.map((g, idx) => (
-            <TableRow data-testid={`guardian-${idx + 1}`} key={g.name} hover>
-              <TableCell data-testid={`guardian-${idx + 1}-name`}>
+            <TableRow data-testid={`guardian-${g.address}`} key={g.name} hover>
+              <TableCell data-testid={`guardian-${g.address}-name`}>
                 <NameBox>
                   <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
                   <NameContainer>{g.name}</NameContainer>
                 </NameBox>
               </TableCell>
-              <TableCell data-testid={`guardian-${idx + 1}-address`}>{g.address}</TableCell>
+              <TableCell data-testid={`guardian-${g.address}-address`}>{g.address}</TableCell>
               <TableCell align='center'>
                 <a
-                  data-testid={`guardian-${idx + 1}-website`}
+                  data-testid={`guardian-${g.address}-website`}
                   href={getWebsiteAddress(g.website)}
                   target='_blank'
                   rel='noopener noreferrer'
@@ -105,10 +105,10 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
                   <img src='/assets/globe.svg' />
                 </a>
               </TableCell>
-              <TableCell data-testid={`guardian-${idx + 1}-stake`} align='center'>
+              <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
                 {asPercent(g.stakePercent)}
               </TableCell>
-              <TableCell data-testid={`guardian-${idx + 1}-voted`} align='center'>
+              <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
                 {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
               </TableCell>
               {getSelectedGuardianCell(g, idx)}
