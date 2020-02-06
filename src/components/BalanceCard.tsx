@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Grid, Theme, Typography, Paper } from '@material-ui/core';
 import styled from 'styled-components';
 import { CommonDivider } from './base/CommonDivider';
+import { CommonActionButton } from './base/CommonActionButton';
 
 const StyledGrid = styled(Paper)`
   padding: 1em;
@@ -35,9 +36,9 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
         {amount.toLocaleString()}
       </Typography>
 
-      <Button color={'secondary'} variant={'contained'} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
+      <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
         {actionButtonTitle}
-      </Button>
+      </CommonActionButton>
     </StyledGrid>
   );
 };
