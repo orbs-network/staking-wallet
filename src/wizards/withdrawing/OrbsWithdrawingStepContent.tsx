@@ -38,10 +38,10 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_initiate_withdrawing_tx'}>
-      <Typography>Withdrawing {fullOrbsReadyForWithdrawal} Orbs</Typography>
-      <Typography variant={'caption'}>{message.value}</Typography>
+      <Typography variant={'h5'}>Withdrawing {fullOrbsReadyForWithdrawal} Orbs</Typography>
+      <Typography variant={'body1'}>{message.value}</Typography>
       <br />
-      <Typography variant={'caption'}>{subMessage.value}</Typography>
+      <Typography variant={'body2'}>{subMessage.value}</Typography>
 
       <br />
       <br />

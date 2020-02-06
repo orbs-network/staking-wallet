@@ -13,8 +13,8 @@ export const CongratulationsSubStepContent: React.FC<IProps> = (props: IProps) =
 
   return (
     <WizardContent data-testid={'wizard_sub_step_congratulations'}>
-      <Typography>Congratulations !</Typography>
-      <Typography variant={'caption'}>{`You have successfully ${finishedActionName}`}</Typography>
+      <Typography variant={'h5'}>Congratulations !</Typography>
+      <Typography variant={'body1'}>{`You have successfully ${finishedActionName}`}</Typography>
       <Button onClick={moveToNextStepAction}>{moveToNextStepTitle}</Button>
     </WizardContent>
   );

@@ -42,10 +42,10 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_initiate_unstaking_tx'}>
-      <Typography>Unstaking your tokens</Typography>
-      <Typography variant={'caption'}>{message.value}</Typography>
+      <Typography variant={'h5'}>Unstaking your tokens</Typography>
+      <Typography variant={'body1'}>{message.value}</Typography>
       <br />
-      <Typography variant={'caption'}>{subMessage.value}</Typography>
+      <Typography variant={'body2'}>{subMessage.value}</Typography>
 
       <br />
       <br />

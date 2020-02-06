@@ -32,12 +32,11 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_wait_for_tx_confirmation'}>
-      <Typography>Approving your transaction</Typography>
-      <Typography variant={'caption'}>{message.value}</Typography>
+      <Typography variant={'h5'}>Approving your transaction</Typography>
+      <Typography variant={'body1'}>{message.value}</Typography>
       <br />
-      <Typography variant={'caption'}>{subMessage.value}</Typography>
+      <Typography variant={'body2'}>{subMessage.value}</Typography>
 
-      <div data-testid={'transaction_pending_indicator'}></div>
       {!allowToProceed.value && <Typography variant={'caption'}>This might take a few moments... </Typography>}
       {allowToProceed.value && (
         <Button variant={'outlined'} onClick={onStepFinished}>

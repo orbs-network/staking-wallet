@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useStateful } from 'react-hanger';
 import { useGuardiansStore } from '../../store/storeHooks';
@@ -41,10 +41,10 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_initiate_guardian_selection_tx'}>
-      <Typography>Select your guardian</Typography>
-      <Typography variant={'caption'}>{message.value}</Typography>
+      <Typography variant={'h5'}>Select your guardian</Typography>
+      <Typography variant={'body1'}>{message.value}</Typography>
       <br />
-      <Typography variant={'caption'}>{subMessage.value}</Typography>
+      <Typography variant={'body2'}>{subMessage.value}</Typography>
 
       <br />
       <br />

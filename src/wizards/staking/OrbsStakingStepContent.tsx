@@ -39,10 +39,10 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={'wizard_sub_step_initiate_staking_tx'}>
-      <Typography>In this step you will stake {fullOrbsForStaking} Orbs </Typography>
-      <Typography variant={'caption'}>{message.value}</Typography>
+      <Typography variant={'h5'}>In this step you will stake {fullOrbsForStaking.toLocaleString()} Orbs </Typography>
+      <Typography variant={'body1'}>{message.value}</Typography>
       <br />
-      <Typography variant={'caption'}>{subMessage.value}</Typography>
+      <Typography variant={'body2'}>{subMessage.value}</Typography>
 
       <br />
       <br />

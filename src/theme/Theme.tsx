@@ -15,7 +15,7 @@ export const baseTheme = responsiveFontSizes(
         main: COLOR2,
       },
       text: {
-        primary: '#FFFFFF',
+        primary: '#dbdbdb',
         secondary: '#7B7B7B',
       },
     },
@@ -30,9 +30,9 @@ export const baseTheme = responsiveFontSizes(
       },
       MuiPaper: {
         root: {
-          backgroundColor: COLOR1
-        }
-      }
+          backgroundColor: COLOR1,
+        },
+      },
     },
   }),
 );
