@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { useStateful } from 'react-hanger';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -35,20 +34,22 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, onPromiEventAction]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
+  const actionButtonProps = useMemo<IActionButtonProps>(
+    () => ({
+      onClick: withdrawTokens,
+      title: 'Withdraw',
+    }),
+    [withdrawTokens],
+  );
+
   return (
-    <WizardContent data-testid={'wizard_sub_step_initiate_withdrawing_tx'}>
-      <Typography variant={'h5'}>Withdrawing {fullOrbsReadyForWithdrawal} Orbs</Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
-
-      <br />
-      <br />
-
-      <Button disabled={disableInputs} onClick={withdrawTokens}>
-        Withdraw
-      </Button>
-    </WizardContent>
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={`Withdrawing ${fullOrbsReadyForWithdrawal} Orbs`}
+      disableInputs={disableInputs}
+      contentTestId={'wizard_sub_step_initiate_withdrawing_tx'}
+      actionButtonProps={actionButtonProps}
+    />
   );
 });

@@ -68,7 +68,7 @@ export const BalancesSection = observer(() => {
         <GridItem>
           <BalanceCard
             title={'Staked Orbs in smart contract'}
-            actionButtonTitle={'Unlock your tokens'}
+            actionButtonTitle={'Unstake your tokens'}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
             actionButtonActive={true}
             onActionButtonPressed={showUnStakingModal.setTrue}

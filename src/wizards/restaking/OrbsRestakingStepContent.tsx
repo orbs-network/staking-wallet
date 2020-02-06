@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useStateful } from 'react-hanger';
@@ -7,6 +7,7 @@ import { ITransactionCreationStepProps } from '../approvableWizardStep/Approvabl
 import { observer } from 'mobx-react';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -35,19 +36,22 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, onPromiEventAction]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
-  return (
-    <WizardContent data-testid={'wizard_sub_step_initiate_restaking_tx'}>
-      <Typography variant={'h5'}>Restaking {fullOrbsForRestaking} Orbs</Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
+  const actionButtonProps = useMemo<IActionButtonProps>(
+    () => ({
+      onClick: restakeTokens,
+      title: 'Restake',
+    }),
+    [restakeTokens],
+  );
 
-      <br />
-      <br />
-      <Button disabled={disableInputs} onClick={restakeTokens}>
-        Restake
-      </Button>
-    </WizardContent>
+  return (
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={`Restaking ${fullOrbsForRestaking} Orbs`}
+      disableInputs={disableInputs}
+      contentTestId={'wizard_sub_step_initiate_restaking_tx'}
+      actionButtonProps={actionButtonProps}
+    />
   );
 });

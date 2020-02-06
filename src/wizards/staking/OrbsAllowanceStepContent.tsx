@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect } from 'react';
-import { Button, TextField, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { TextField } from '@material-ui/core';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -19,7 +19,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const message = useStateful('Select amount of Orbs to allow');
   const subMessage = useStateful('Press "Stake" and accept the transaction');
 
-  // Display the proper error message
+  // Calculate the proper error message
   useEffect(() => {
     if (txError) {
       const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
@@ -28,7 +28,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     }
   }, [txError, message, subMessage]);
 
-  const stakeTokens = useCallback(() => {
+  const setTokenAllowanceForStakingContract = useCallback(() => {
     message.setValue('');
     subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
 
@@ -36,19 +36,18 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsAllowance.value, onPromiEventAction]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
-  return (
-    <WizardContent data-testid={'wizard_sub_step_initiate_allowance_tx'}>
-      <Typography variant={'h5'}>Approve the smart contract to use your Orbs</Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
+  const actionButtonProps = useMemo<IActionButtonProps>(
+    () => ({
+      onClick: setTokenAllowanceForStakingContract,
+      title: 'Allow',
+    }),
+    [setTokenAllowanceForStakingContract],
+  );
 
-      <br />
-      <br />
-
-      {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
+  // TODO : O.L : Add a number formatter here to display the sums with proper separation
+  //  https://material-ui.com/components/text-fields/#FormattedInputs.tsx
+  const allowanceInput = useMemo(() => {
+    return (
       <TextField
         id={'orbsAllowance'}
         label={'Allowance'}
@@ -56,10 +55,21 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
         value={orbsAllowance.value}
         onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
       />
+    );
+  }, [orbsAllowance]);
 
-      <Button disabled={disableInputs} onClick={stakeTokens}>
-        Allow
-      </Button>
-    </WizardContent>
+  console.log('Allwoance !!!');
+
+  // TODO : O.L : Use proper grid system instead of the 'br's
+  return (
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={'Approve the smart contract to use your Orbs'}
+      disableInputs={disableInputs}
+      contentTestId={'wizard_sub_step_initiate_allowance_tx'}
+      actionButtonProps={actionButtonProps}
+      innerContent={allowanceInput}
+    />
   );
 });

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, TextField, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useNumber, useStateful } from 'react-hanger';
@@ -7,6 +7,7 @@ import { ITransactionCreationStepProps } from '../approvableWizardStep/Approvabl
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -39,31 +40,38 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsForUnstaking.value, onPromiEventAction]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
-  return (
-    <WizardContent data-testid={'wizard_sub_step_initiate_unstaking_tx'}>
-      <Typography variant={'h5'}>Unstaking your tokens</Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
+  const actionButtonProps = useMemo<IActionButtonProps>(
+    () => ({
+      onClick: unstakeTokens,
+      title: 'Unstake',
+    }),
+    [unstakeTokens],
+  );
 
-      <br />
-      <br />
-
-      {/* TODO : O.L : Limit the maximum value to the value of the allowance */}
-      {/* TODO : O.L : Add a number formatter here to display the sums with proper separation */}
-      {/* https://material-ui.com/components/text-fields/#FormattedInputs.tsx  */}
+  // TODO : O.L : Add a number formatter here to display the sums with proper separation
+  //  https://material-ui.com/components/text-fields/#FormattedInputs.tsx
+  const unstakingInput = useMemo(() => {
+    return (
       <TextField
-        id={'orbsUntaking'}
+        id={'orbsUnstaking'}
         label={'Unstaking'}
         type={'number'}
         value={orbsForUnstaking.value}
         onChange={e => orbsForUnstaking.setValue(parseInt(e.target.value))}
       />
+    );
+  }, [orbsForUnstaking]);
 
-      <Button disabled={disableInputs} onClick={unstakeTokens}>
-        Unstake
-      </Button>
-    </WizardContent>
+  // TODO : O.L : Use proper grid system instead of the 'br's
+  return (
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={'Unstaking your tokens'}
+      disableInputs={disableInputs}
+      contentTestId={'wizard_sub_step_initiate_unstaking_tx'}
+      actionButtonProps={actionButtonProps}
+      innerContent={unstakingInput}
+    />
   );
 });

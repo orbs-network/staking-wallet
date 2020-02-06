@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useStateful } from 'react-hanger';
@@ -7,6 +7,7 @@ import { ITransactionCreationStepProps } from '../approvableWizardStep/Approvabl
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 
 export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -36,20 +37,22 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
     onPromiEventAction(promiEvent);
   }, [message, subMessage, orbsAccountStore, orbsForStaking, onPromiEventAction]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
+  const actionButtonProps = useMemo<IActionButtonProps>(
+    () => ({
+      onClick: stakeTokens,
+      title: 'Stake',
+    }),
+    [stakeTokens],
+  );
+
   return (
-    <WizardContent data-testid={'wizard_sub_step_initiate_staking_tx'}>
-      <Typography variant={'h5'}>In this step you will stake {fullOrbsForStaking.toLocaleString()} Orbs </Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
-
-      <br />
-      <br />
-
-      <Button disabled={disableInputs} onClick={stakeTokens}>
-        Stake
-      </Button>
-    </WizardContent>
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={`In this step you will stake ${fullOrbsForStaking.toLocaleString()} Orbs`}
+      disableInputs={disableInputs}
+      contentTestId={'wizard_sub_step_initiate_staking_tx'}
+      actionButtonProps={actionButtonProps}
+    />
   );
 });

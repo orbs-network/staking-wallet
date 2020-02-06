@@ -1,6 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
-import { Grid, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useStateful } from 'react-hanger';
 import { useGuardiansStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
@@ -8,9 +6,10 @@ import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 
 export const GuardianSelectionStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { onPromiEventAction, txError } = props;
+  const { onPromiEventAction, txError, disableInputs } = props;
 
   const guardiansStore = useGuardiansStore();
 
@@ -38,18 +37,18 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
     [guardiansStore, message, onPromiEventAction, subMessage],
   );
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
+  const guardianSelectionContent = useMemo(() => {
+    return <GuardiansTable guardians={guardiansStore.guardiansList} onGuardianSelect={selectGuardian} />;
+  }, [guardiansStore.guardiansList, selectGuardian]);
+
   return (
-    <WizardContent data-testid={'wizard_sub_step_initiate_guardian_selection_tx'}>
-      <Typography variant={'h5'}>Select your guardian</Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
-
-      <br />
-      <br />
-
-      <GuardiansTable guardians={guardiansStore.guardiansList} onGuardianSelect={selectGuardian} />
-    </WizardContent>
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={'Select your guardian'}
+      disableInputs={disableInputs}
+      contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
+      innerContent={guardianSelectionContent}
+    />
   );
 });
