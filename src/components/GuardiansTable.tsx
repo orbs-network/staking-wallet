@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
 import styled from 'styled-components';
+import { EMPTY_ADDRESS } from '../constants';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -36,11 +37,14 @@ interface IProps {
   guardians: TGuardianInfoExtended[];
   selectedGuardian?: string;
   onGuardianSelect?: (guardian: TGuardianInfoExtended) => void;
+  openSelectedGuardian?: () => void;
 }
 
 export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect, selectedGuardian }) => {
   const { t } = useTranslation();
   const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stakePercent - a.stakePercent), [guardians]);
+
+  const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
 
   function getSelectedGuardianCell(g: TGuardianInfoExtended, idx: number) {
     if (onGuardianSelect) {
@@ -58,7 +62,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
         </TableCell>
       );
     } else {
-      if (selectedGuardian) {
+      if (hasSelectedGuardian) {
         return (
           <TableCell align='center'>
             <Typography data-testid={`guardian-${g.address}-selected-status`}>
@@ -82,7 +86,7 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
             <TableCell align='center'>{t('Website')}</TableCell>
             <TableCell align='center'>{t('Stake')}</TableCell>
             <TableCell align='center'>{t('Voted')}</TableCell>
-            {(onGuardianSelect || selectedGuardian) && <TableCell align='center'>{t('Selection')}</TableCell>}
+            {(onGuardianSelect || hasSelectedGuardian) && <TableCell align='center'>{t('Selection')}</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>

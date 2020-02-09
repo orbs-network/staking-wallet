@@ -1,12 +1,13 @@
-import { action, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
-import { TransactionVerificationListener } from '../transactions/TransactionVerificationListener';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   subscribeToOrbsInCooldownChange,
   subscribeToStakeAmountChange,
 } from './contractsStateSubscriptions/combinedEventsSubscriptions';
+import { EMPTY_ADDRESS } from '../constants';
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
@@ -18,11 +19,15 @@ export class OrbsAccountStore {
   @observable public accumulatedRewards = BigInt(0);
   @observable public selectedGuardianAddress: string;
 
+  @computed get hasSelectedGuardian(): boolean {
+    return !isNil(this.selectedGuardianAddress) && this.selectedGuardianAddress !== EMPTY_ADDRESS;
+  }
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
   private stakedAmountChangeUnsubscribeFunction: () => void;
   private orbsInCooldownAmountChangeUnsubscribeFunction: () => void;
+  private selectedGuardianChangeUnsubscribeFunction: () => void;
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
@@ -145,7 +150,6 @@ export class OrbsAccountStore {
       (error, newAllowance) => this.setStakingContractAllowance(newAllowance),
     );
 
-    // TODO : O.L : Work out the string/number decision.
     // Staked orbs
     const onStakedAmountChanged = (error: Error, stakedAmountInEvent: bigint, totalStakedAmount: bigint) => {
       // TODO : O.L : Handle error
@@ -163,6 +167,12 @@ export class OrbsAccountStore {
       this.stakingService,
       accountAddress,
       onCooldownStatusChanged,
+    );
+
+    // Selected guardian
+    this.selectedGuardianChangeUnsubscribeFunction = this.guardiansService.subscribeToDelegateEvent(
+      accountAddress,
+      (error, delegator, delegatee, delegationCounter) => this.setSelectedGuardianAddress(delegatee),
     );
   }
 

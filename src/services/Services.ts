@@ -41,6 +41,8 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, config.contractsAddressesOverride),
     stakingService: new StakingService(web3, config.contractsAddressesOverride.stakingContract),
     orbsTokenService: new OrbsTokenService(web3, config.contractsAddressesOverride.erc20Contract),
-    guardiansService: new GuardiansService(web3, orbsClientService, config.contractsAddressesOverride),
+    guardiansService: new GuardiansService(web3, orbsClientService, config.contractsAddressesOverride, {
+      earliestBlockForDelegation: config.earliestBlockForDelegationOverride,
+    }),
   };
 }

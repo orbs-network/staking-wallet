@@ -6,7 +6,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 const CenteredContainerGrid = styled(Grid)(({ theme }) => {
   theme = theme as Theme;
-  console.log(theme.palette.primary);
+
   return {
     backgroundColor: Color(theme.palette.primary.dark)
       // .fade(0.1)

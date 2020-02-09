@@ -5,11 +5,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
-import { useGuardiansStore } from '../store/storeHooks';
+import { useGuardiansStore, useOrbsAccountStore } from '../store/storeHooks';
 import { GuardiansTable } from '../components/GuardiansTable';
 
 export const GuardiansSection = observer(() => {
   const guardiansStore = useGuardiansStore();
+  const orbsAccountStore = useOrbsAccountStore();
   const { t } = useTranslation();
 
   if (guardiansStore.guardiansList.length === 0) {
@@ -23,7 +24,10 @@ export const GuardiansSection = observer(() => {
         sideTitle={`${t('Participating stake')}: ${guardiansStore.totalParticipatingTokens.toLocaleString()}`}
         icon={SecurityIcon}
       />
-      <GuardiansTable guardians={guardiansStore.guardiansList} />
+      <GuardiansTable
+        selectedGuardian={orbsAccountStore.selectedGuardianAddress}
+        guardians={guardiansStore.guardiansList}
+      />
     </Section>
   );
 });

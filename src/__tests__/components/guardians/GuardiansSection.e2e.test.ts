@@ -6,7 +6,12 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 import { GuardiansSection } from '../../../sections/GuardiansSection';
-import { GuardiansServiceMock, OrbsPOSDataServiceMock } from 'orbs-pos-data/dist/testkit';
+import {
+  GuardiansServiceMock,
+  OrbsPOSDataServiceMock,
+  OrbsTokenServiceMock,
+  StakingServiceMock,
+} from 'orbs-pos-data/dist/testkit';
 import { GuardiansStore, TGuardianInfoExtended } from '../../../store/GuardiansStore';
 import { ComponentTestDriver } from '../../ComponentTestDriver';
 import { getByTestId as getByTestIdWithContainer } from '@testing-library/dom';
@@ -22,11 +27,14 @@ import {
   guardianVotedTestId,
   guardianWebsiteTestId,
 } from './guardiansTestUtils';
+import { OrbsAccountStore } from '../../../store/OrbsAccountStore';
+import { OrbsTokenService } from 'orbs-pos-data';
 
 describe('Guardians Section', () => {
   let orbsPOSDataService: OrbsPOSDataServiceMock;
   let guardianService: GuardiansServiceMock;
   let cryptoWalletConnectionStore: CryptoWalletConnectionStore;
+  let orbsAccountStore: OrbsAccountStore;
   let testDriver: ComponentTestDriver;
 
   const guardian1Address = '0x0874BC1383958e2475dF73dC68C4F09658E23777';
@@ -63,11 +71,21 @@ describe('Guardians Section', () => {
   beforeEach(async () => {
     const ethereumProviderMock = new EthereumProviderMock();
     const cryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
+    const stakingServiceMock = new StakingServiceMock();
+    const orbsTokenServiceMoc = new OrbsTokenServiceMock();
 
-    testDriver = new ComponentTestDriver(GuardiansSection);
     cryptoWalletConnectionStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
     orbsPOSDataService = new OrbsPOSDataServiceMock();
     guardianService = new GuardiansServiceMock();
+    orbsAccountStore = new OrbsAccountStore(
+      cryptoWalletConnectionStore,
+      orbsPOSDataService,
+      stakingServiceMock,
+      orbsTokenServiceMoc,
+      guardianService,
+    );
+
+    testDriver = new ComponentTestDriver(GuardiansSection);
 
     orbsPOSDataService.withTotalParticipatingTokens(weiOrbsFromFullOrbs(1_000_000));
   });
@@ -81,7 +99,7 @@ describe('Guardians Section', () => {
 
     await guardiansStore.init();
 
-    const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
+    const { getByTestId } = testDriver.withStores({ guardiansStore, orbsAccountStore }).render();
 
     expect(getByTestId('guardians-table')).toBeDefined();
     expect(getByTestId(guardianRowTestId(guardian1))).toBeDefined();
@@ -118,7 +136,7 @@ describe('Guardians Section', () => {
 
     await guardiansStore.init();
 
-    const { getByTestId } = testDriver.withStores({ guardiansStore }).render();
+    const { getByTestId } = testDriver.withStores({ guardiansStore, orbsAccountStore }).render();
     const guardiansSection = getByTestId('guardians-section');
     const sideTitle = getByTestIdWithContainer(guardiansSection, 'side-title');
 
