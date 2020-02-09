@@ -34,7 +34,6 @@ export const BaseStepContent = React.memo<IProps>(props => {
     }
   }, [actionButtonProps, disableInputs]);
 
-  console.log('fjklfdsjkldfsjklsdfjlkfsd', contentTestId);
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={contentTestId}>

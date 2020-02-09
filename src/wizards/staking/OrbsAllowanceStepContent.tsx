@@ -58,8 +58,6 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     );
   }, [orbsAllowance]);
 
-  console.log('Allwoance !!!');
-
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <BaseStepContent

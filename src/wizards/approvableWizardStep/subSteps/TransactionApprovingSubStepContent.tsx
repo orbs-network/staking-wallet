@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import React, { useEffect, useMemo } from 'react';
+import { Button, TextField, Typography } from '@material-ui/core';
 import { WizardContent } from '../../../components/wizards/WizardContent';
 import { useStateful, useBoolean } from 'react-hanger';
+import { BaseStepContent } from '../BaseStepContent';
 
 interface IProps {
   txHash: string;
@@ -29,29 +30,40 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     }
   }, [verificationCount, requiredConfirmations, allowToProceed]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
-  return (
-    <WizardContent data-testid={'wizard_sub_step_wait_for_tx_confirmation'}>
-      <Typography variant={'h5'}>Approving your transaction</Typography>
-      <Typography variant={'body1'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'body2'}>{subMessage.value}</Typography>
-
-      {!allowToProceed.value && <Typography variant={'caption'}>This might take a few moments... </Typography>}
-      {allowToProceed.value && (
+  const allowToProceedValue = allowToProceed.value;
+  const transactionApprovementContent = useMemo(() => {
+    let actionContent = null;
+    if (allowToProceedValue) {
+      actionContent = (
         <Button variant={'outlined'} onClick={onStepFinished}>
           Proceed
         </Button>
-      )}
+      );
+    } else {
+      actionContent = <Typography variant={'caption'}>This might take a few moments... </Typography>;
+    }
 
-      <br />
+    return (
+      <>
+        {actionContent}
+        <Typography>
+          You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
+          <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
+            Etherscan
+          </a>{' '}
+        </Typography>
+      </>
+    );
+  }, [allowToProceedValue, onStepFinished, txHash]);
 
-      <Typography>
-        You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
-        <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
-          Etherscan
-        </a>{' '}
-      </Typography>
-    </WizardContent>
+  return (
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={'Approving your transaction'}
+      disableInputs={false}
+      contentTestId={'wizard_sub_step_wait_for_tx_confirmation'}
+      innerContent={transactionApprovementContent}
+    />
   );
 };
