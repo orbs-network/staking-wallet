@@ -6,6 +6,10 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
 import styled from 'styled-components';
 import { EMPTY_ADDRESS } from '../constants';
+import IconButton from '@material-ui/core/IconButton';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { IGuardianInfo } from 'orbs-pos-data';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -37,40 +41,35 @@ interface IProps {
   guardians: TGuardianInfoExtended[];
   selectedGuardian?: string;
   onGuardianSelect?: (guardian: TGuardianInfoExtended) => void;
-  openSelectedGuardian?: () => void;
 }
 
 export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect, selectedGuardian }) => {
   const { t } = useTranslation();
-  const sortedGuardians = useMemo(() => guardians.slice().sort((a, b) => b.stakePercent - a.stakePercent), [guardians]);
+
+  const sortedGuardians = useMemo(
+    () => guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian)),
+    [guardians, selectedGuardian],
+  );
 
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
 
   function getSelectedGuardianCell(g: TGuardianInfoExtended, idx: number) {
-    if (onGuardianSelect) {
+    if (hasSelectedGuardian) {
+      const isSelectedGuardian = g.address === selectedGuardian;
+
+      const enabled = !!onGuardianSelect;
+      const actionButtonOnClick = () => onGuardianSelect(g);
+      const actionButtonIcon = isSelectedGuardian ? <CheckCircleOutlineIcon /> : <RadioButtonUncheckedIcon />;
+
       return (
         <TableCell align='center'>
-          <SelectButton
-            variant='contained'
-            size='small'
-            disabled={g.address === selectedGuardian}
-            data-testid={`guardian-${g.address}-select-action`}
-            onClick={() => onGuardianSelect(g)}
-          >
-            {t(g.address === selectedGuardian ? 'Selected' : 'Select')}
-          </SelectButton>
+          <Typography data-testid={`guardian-${g.address}-selected-status`}>
+            <IconButton onClick={actionButtonOnClick} disabled={!enabled}>
+              {actionButtonIcon}
+            </IconButton>
+          </Typography>
         </TableCell>
       );
-    } else {
-      if (hasSelectedGuardian) {
-        return (
-          <TableCell align='center'>
-            <Typography data-testid={`guardian-${g.address}-selected-status`}>
-              {t(g.address === selectedGuardian ? 'Selected' : '-')}
-            </Typography>
-          </TableCell>
-        );
-      }
     }
 
     return null;
@@ -123,3 +122,17 @@ export const GuardiansTable = React.memo<IProps>(({ guardians, onGuardianSelect,
     </Paper>
   );
 });
+
+function compareGuardiansBySelectedAndThenStake(
+  a: TGuardianInfoExtended,
+  b: TGuardianInfoExtended,
+  selectedGuardianAddress: string,
+) {
+  if (a.address === selectedGuardianAddress) {
+    return -1;
+  } else if (b.address === selectedGuardianAddress) {
+    return 11;
+  } else {
+    return b.stakePercent - a.stakePercent;
+  }
+}
