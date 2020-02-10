@@ -2,6 +2,7 @@ import React, { ReactNode, useMemo } from 'react';
 import { Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
+import Grid from '@material-ui/core/Grid';
 
 export interface IActionButtonProps {
   title: string;
@@ -37,12 +38,18 @@ export const BaseStepContent = React.memo<IProps>(props => {
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={contentTestId}>
-      <Typography variant={'h5'}>{title}</Typography>
-      <Typography variant={'body1'}>{message}</Typography>
-      <Typography variant={'body2'}>{subMessage}</Typography>
+      <Grid item>
+        <Typography variant={'h5'}>{title}</Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant={'body1'}>{message}</Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant={'body2'}>{subMessage}</Typography>
+      </Grid>
 
-      {innerContent}
-      {actionButton}
+      <Grid item>{innerContent}</Grid>
+      <Grid item>{actionButton}</Grid>
     </WizardContent>
   );
 });

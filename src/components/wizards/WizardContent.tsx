@@ -5,10 +5,10 @@ import { Grid } from '@material-ui/core';
 export const WizardContent = styled(props => (
   <Grid
     container
+    item
     direction={'column'}
     alignItems={'center'}
-    justify={'space-between'}
-    item
+    spacing={1}
     xs={11}
     sm={11}
     md={10}
@@ -16,4 +16,6 @@ export const WizardContent = styled(props => (
     xl={8}
     {...props}
   />
-))({});
+))(() => ({
+  maxWidth: '100%',
+}));
