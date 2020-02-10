@@ -19,7 +19,8 @@ const variantIcon = {
 
 const useStyles = makeStyles((theme: Theme) => ({
   success: {
-    backgroundColor: green[600],
+    backgroundColor: green[700],
+    color: theme.palette.text.primary,
   },
   error: {
     backgroundColor: theme.palette.error.dark,
