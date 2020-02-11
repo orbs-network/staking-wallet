@@ -58,11 +58,13 @@ export const GuardiansTable = React.memo<IProps>(
     );
 
     const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
+    const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
 
     function getSelectedGuardianCell(g: TGuardianInfoExtended, idx: number) {
       let selectedGuardianCell = null;
 
       const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
+      const actionButtonOnClick = () => onGuardianSelect(g);
 
       switch (guardianSelectionMode) {
         case 'Select':
@@ -73,7 +75,7 @@ export const GuardiansTable = React.memo<IProps>(
                 size='small'
                 // disabled={g.address === selectedGuardian}
                 data-testid={actionButtonTestId}
-                onClick={() => onGuardianSelect(g)}
+                onClick={actionButtonOnClick}
               >
                 {t(g.address === selectedGuardian ? 'Keep' : 'Select')}
               </SelectButton>
@@ -84,7 +86,6 @@ export const GuardiansTable = React.memo<IProps>(
           const isSelectedGuardian = g.address === selectedGuardian;
 
           const enabled = !!onGuardianSelect;
-          const actionButtonOnClick = () => onGuardianSelect(g);
           const actionButtonIcon = isSelectedGuardian ? (
             <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
           ) : (
@@ -121,7 +122,7 @@ export const GuardiansTable = React.memo<IProps>(
               <TableCell align='center'>{t('Website')}</TableCell>
               <TableCell align='center'>{t('Stake')}</TableCell>
               <TableCell align='center'>{t('Voted')}</TableCell>
-              {(onGuardianSelect || hasSelectedGuardian) && <TableCell align='center'>{t('Selection')}</TableCell>}
+              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -150,7 +151,7 @@ export const GuardiansTable = React.memo<IProps>(
                 <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
                   {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
                 </TableCell>
-                {getSelectedGuardianCell(g, idx)}
+                {addSelectionColumn && getSelectedGuardianCell(g, idx)}
               </TableRow>
             ))}
           </TableBody>

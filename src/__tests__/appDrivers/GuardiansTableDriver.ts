@@ -1,10 +1,8 @@
 import { RenderResult, within, fireEvent } from '@testing-library/react';
 import {
   guardianRowTestIdFromAddress,
-  selectActionButtonTestId,
   selectActionButtonTestIdFromAddress,
 } from '../components/guardians/guardiansTestUtils';
-import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 
 export class GuardiansTableDriver {
   constructor(protected renderResults: RenderResult, private guardiansTableTestId: string) {}

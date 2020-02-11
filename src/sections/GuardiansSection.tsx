@@ -1,7 +1,7 @@
 import Typography from '@material-ui/core/Typography';
 import SecurityIcon from '@material-ui/icons/Security';
 import { observer } from 'mobx-react';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
@@ -21,11 +21,14 @@ export const GuardiansSection = observer(() => {
   const showGuardianChangingModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
+  const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
+
   const onGuardianSelect = useCallback(
     (guardian: TGuardianInfoExtended) => {
       if (guardian.address === orbsAccountStore.selectedGuardianAddress) {
         showSnackbarMessage.setTrue();
       } else {
+        setSelectedGuardianAddress(guardian.address);
         showGuardianChangingModal.setTrue();
       }
     },
@@ -53,7 +56,10 @@ export const GuardiansSection = observer(() => {
 
       {/* Restaking */}
       <Modal open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
-        <GuardianChangingWizard closeWizard={showGuardianChangingModal.setFalse} />
+        <GuardianChangingWizard
+          closeWizard={showGuardianChangingModal.setFalse}
+          newGuardianAddress={selectedGuardianAddress}
+        />
       </Modal>
 
       <Snackbar

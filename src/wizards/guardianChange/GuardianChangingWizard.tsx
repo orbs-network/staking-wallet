@@ -6,11 +6,7 @@ import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import {
-  GuardianSelectionStepContent,
-  IGuardianSelectionStepContentProps,
-} from '../staking/GuardianSelectionStepContent';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { GuardianChangeStepContent, IGuardianChangeStepContentProps } from './GuardianChangeStepContent';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -19,23 +15,23 @@ const STEPS_INDEXES = {
 
 interface IProps {
   closeWizard(): void;
+  newGuardianAddress: string;
 }
 
 // TODO : O.L : FUTURE : The material-ui Modal requires passing a ref, decide what to do with this ref.
 // Connect to store
 export const GuardianChangingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
-    const { closeWizard } = props;
+    const { closeWizard, newGuardianAddress } = props;
 
-    const orbsAccountStore = useOrbsAccountStore();
     const activeStep = useNumber(0);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
-    const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
+    const extraPropsForGuardianSelection = useMemo<IGuardianChangeStepContentProps>(() => {
       return {
-        selectedGuardianAddress: orbsAccountStore.selectedGuardianAddress,
+        newGuardianAddress,
       };
-    }, [orbsAccountStore.selectedGuardianAddress]);
+    }, [newGuardianAddress]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
@@ -43,7 +39,7 @@ export const GuardianChangingWizard = observer(
         case STEPS_INDEXES.selectGuardian:
           return (
             <ApprovableWizardStep
-              transactionCreationSubStepContent={GuardianSelectionStepContent}
+              transactionCreationSubStepContent={GuardianChangeStepContent}
               finishedActionName={'selected a guardian'}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={'Finish'}
@@ -62,7 +58,7 @@ export const GuardianChangingWizard = observer(
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep]);
+    }, [activeStep.value, closeWizard, extraPropsForGuardianSelection, goToFinishStep]);
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>

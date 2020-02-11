@@ -44,7 +44,7 @@ export const GuardianSelectionStepContent = observer(
           onPromiEventAction(promiEvent);
         }
       },
-      [guardiansStore, message, onPromiEventAction, subMessage],
+      [guardiansStore, message, onPromiEventAction, selectedGuardianAddress, skipToSuccess, subMessage],
     );
 
     const guardianSelectionContent = useMemo(() => {
@@ -57,7 +57,7 @@ export const GuardianSelectionStepContent = observer(
           tableTestId={'guardian_selection_sub_step_guardians_table'}
         />
       );
-    }, [guardiansStore.guardiansList, selectGuardian]);
+    }, [guardiansStore.guardiansList, selectGuardian, selectedGuardianAddress]);
 
     return (
       <BaseStepContent

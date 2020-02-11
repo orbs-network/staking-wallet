@@ -34,6 +34,7 @@ import { OrbsRestakingStepDriver } from '../appDrivers/wizardSteps/OrbsRestaking
 import { GuardiansTableDriver } from '../appDrivers/GuardiansTableDriver';
 import { weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
+import { GuardianChangeStepDriver } from '../appDrivers/wizardSteps/GuardianChangeStepDriver';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -553,7 +554,7 @@ describe('Main User Story', () => {
     const guardiansTableDriver = new GuardiansTableDriver(renderResults, 'guardians-table');
 
     // Driver for the approvable wizard step
-    const guardianSelectionStepDriver = new GuardianSelectionStepDriver(renderResults);
+    const guardianChangeStepDriver = new GuardianChangeStepDriver(renderResults);
 
     let guardianSelectionTxPromievent: PromiEvent<TransactionReceipt>;
 
@@ -572,13 +573,14 @@ describe('Main User Story', () => {
     expect(queryByTestId(guardianSelectedMessageTestId)).toBeDefined();
     expect(getByTestId(guardianSelectedMessageTestId)).toHaveTextContent('Guardian already selected !');
 
-    // Clicking on an unselected guardian 'action button' should open the "select guardian wizard" and auto trigger a tx creating action
+    // Clicking on an unselected guardian 'action button' should open the "select guardian wizard"
     guardiansTableDriver.clickOnActionButtonForGuardian(guardian3Address);
+    guardianChangeStepDriver.clickOnChangeGuardian();
 
     // Clicking on change guardian should try to send the tx automatically (in production, metamask will pop up, here we have it auto-approving)
     // Test the rest of the 'Guardian selection' approvable step
     await testApprovableWizardStepAfterTxWasInitiated(
-      guardianSelectionStepDriver,
+      guardianChangeStepDriver,
       guardiansServiceMock,
       guardianSelectionTxPromievent,
       true,
