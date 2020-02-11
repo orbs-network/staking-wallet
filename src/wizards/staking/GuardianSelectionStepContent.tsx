@@ -38,7 +38,14 @@ export const GuardianSelectionStepContent = observer((props: ITransactionCreatio
   );
 
   const guardianSelectionContent = useMemo(() => {
-    return <GuardiansTable guardians={guardiansStore.guardiansList} onGuardianSelect={selectGuardian} />;
+    return (
+      <GuardiansTable
+        guardianSelectionMode={'Select'}
+        guardians={guardiansStore.guardiansList}
+        onGuardianSelect={selectGuardian}
+        tableTestId={'guardian_selection_sub_step_guardians_table'}
+      />
+    );
   }, [guardiansStore.guardiansList, selectGuardian]);
 
   return (

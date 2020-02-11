@@ -41,9 +41,11 @@ export const GuardiansSection = observer(() => {
         icon={SecurityIcon}
       />
       <GuardiansTable
+        guardianSelectionMode={'Change'}
         selectedGuardian={orbsAccountStore.selectedGuardianAddress}
         guardians={guardiansStore.guardiansList}
         onGuardianSelect={onGuardianSelect}
+        tableTestId={'guardians-table'}
       />
 
       <Snackbar
@@ -59,7 +61,7 @@ export const GuardiansSection = observer(() => {
           variant={'info'}
           message={'Guardian already selected !'}
           onClose={showSnackbarMessage.setFalse}
-          data-testid={'message-address-was-copied'}
+          data-testid={'message-guardian-already-selected'}
         />
       </Snackbar>
     </Section>

@@ -54,7 +54,9 @@ describe('Wallet connection', () => {
   it('Should show "Install Metamask" button when metamask is not installed', async () => {
     const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(undefined);
     const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
-    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore, guardiansStore }).render();
+    const { queryByTestId } = appTestDriver
+      .withStores({ orbsAccountStore, cryptoWalletIntegrationStore, guardiansStore })
+      .render();
 
     expect(queryByTestId('button-install-metamask')).toBeInTheDocument();
   });
@@ -81,7 +83,9 @@ describe('Wallet connection', () => {
   it('Should offer to connect wallet when Metamask is installed but not connected and after connection is NOT approved, stay in the "Connect wallet page"', async () => {
     ethereumProviderMock.rejectNextEnable();
 
-    const { queryByTestId } = appTestDriver.withStores({ cryptoWalletIntegrationStore, guardiansStore }).render();
+    const { queryByTestId } = appTestDriver
+      .withStores({ orbsAccountStore, cryptoWalletIntegrationStore, guardiansStore })
+      .render();
 
     // Ensure we start with the 'Connect wallet page'
     expect(queryByTestId('connect-to-wallet-section')).toBeInTheDocument();

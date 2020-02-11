@@ -31,7 +31,9 @@ import { OrbsStakingStepDriver } from '../appDrivers/wizardSteps/OrbsStakingStep
 import { OrbsUnstakingStepDriver } from '../appDrivers/wizardSteps/OrbsUnStakingStepDriver';
 import { OrbsWithdrawingStepDriver } from '../appDrivers/wizardSteps/OrbsWithdrawingStepDriver';
 import { OrbsRestakingStepDriver } from '../appDrivers/wizardSteps/OrbsRestakingStepDriver';
+import { GuardiansTableDriver } from '../appDrivers/GuardiansTableDriver';
 import { weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
+import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 
 function sendTxConfirmations(
   txServiceMock: ITxCreatingServiceMock,
@@ -97,6 +99,7 @@ describe('Main User Story', () => {
   // Refresh test driver and other mocks
   beforeEach(() => {
     appTestDriver = new ComponentTestDriver(App);
+    storesForTests = {};
 
     ethereumProviderMock = new EthereumProviderMock();
 
@@ -484,5 +487,103 @@ describe('Main User Story', () => {
     expect(liquidOrbsBalanceCard.balanceText).toBe('5,000');
     expect(stakedOrbsBalanceCard.balanceText).toBe('24,000');
     expect(coolDownOrbsBalanceCard.balanceText).toBe('0');
+  });
+
+  it('Changing guardian selection from the guardians table (start with staked orbs and selected guardian -> select a new one)', async () => {
+    const UnstakedOrbs = 5_000;
+    const StakedOrbs = 20_000;
+    const OrbsInCooldown = 4_000;
+
+    const guardian1Address = '0x0874BC1383958e2475dF73dC68C4F09658E23777';
+    const guardian2Address = '0xf257EDE1CE68CA4b94e18eae5CB14942CBfF7D1C';
+    const guardian3Address = '0xcB6172196BbCf5b4cf9949D7f2e4Ee802EF2b81D';
+
+    const guardian1: TGuardianInfoExtended = {
+      address: guardian1Address,
+      name: 'Guardian 1',
+      website: 'http://www.guardian1.com',
+      hasEligibleVote: true,
+      voted: true,
+      stakePercent: 0.2,
+    };
+
+    const guardian2: TGuardianInfoExtended = {
+      address: guardian2Address,
+      name: 'Guardian 2',
+      website: 'http://www.guardian2.com',
+      hasEligibleVote: false,
+      voted: false,
+      stakePercent: 0.1,
+    };
+
+    const guardian3: TGuardianInfoExtended = {
+      address: guardian3Address,
+      name: 'Guardian 3',
+      website: 'http://www.guardian3.com',
+      hasEligibleVote: false,
+      voted: true,
+      stakePercent: 0.3,
+    };
+
+    orbsPOSDataServiceMock.withORBSBalance(userAccountAddress, weiOrbsFromFullOrbs(UnstakedOrbs));
+    stakingServiceMock.withStakeBalance(userAccountAddress, weiOrbsFromFullOrbs(StakedOrbs));
+    stakingServiceMock.withUnstakeStatus(userAccountAddress, {
+      cooldownAmount: weiOrbsFromFullOrbs(OrbsInCooldown),
+      cooldownEndTime: Number.MAX_SAFE_INTEGER, // We want a timestamp in the future
+    });
+
+    guardiansServiceMock.withGuardian(guardian1Address, guardian1);
+    guardiansServiceMock.withGuardian(guardian2Address, guardian2);
+    guardiansServiceMock.withGuardian(guardian3Address, guardian3);
+    guardiansServiceMock.withSelectedGuardian(userAccountAddress, guardian2Address);
+
+    // DEV_NOTE : We are building all of the stores, as we are testing the main usage of the app.
+    storesForTests = getStores(
+      orbsPOSDataServiceMock,
+      stakingServiceMock,
+      orbsTokenServiceMock,
+      cryptoWalletConnectionService,
+      guardiansServiceMock,
+    );
+
+    const renderResults = appTestDriver.withStores(storesForTests).render();
+    const { queryByTestId, getByText, getByTestId } = renderResults;
+
+    // Driver for the main page table
+    const guardiansTableDriver = new GuardiansTableDriver(renderResults, 'guardians-table');
+
+    // Driver for the approvable wizard step
+    const guardianSelectionStepDriver = new GuardianSelectionStepDriver(renderResults);
+
+    let guardianSelectionTxPromievent: PromiEvent<TransactionReceipt>;
+
+    guardiansServiceMock.txsMocker.registerToNextTxCreation('selectGuardian', promievent => {
+      guardianSelectionTxPromievent = promievent;
+    });
+
+    // DEV_NOTE : The appearance of the address signals that the 'OrbsAccountStore' has been initialised.
+    //  If we would not wait for it to initialize, we will get into test race conditions with all kind of listeners and such.
+    await wait(() => getByText(userAccountAddress));
+
+    // Clicking on the selected guardian 'action button' should display a message saying that it is already selected
+    guardiansTableDriver.clickOnActionButtonForGuardian(guardian2Address);
+
+    const guardianSelectedMessageTestId = 'message-guardian-already-selected';
+    expect(queryByTestId(guardianSelectedMessageTestId)).toBeDefined();
+    expect(getByTestId(guardianSelectedMessageTestId)).toHaveTextContent('Guardian already selected !');
+
+    // Clicking on an unselected guardian 'action button' should open the "select guardian wizard" and auto trigger a tx creating action
+    guardiansTableDriver.clickOnActionButtonForGuardian(guardian3Address);
+
+    // Clicking on change guardian should try to send the tx automatically (in production, metamask will pop up, here we have it auto-approving)
+    // Test the rest of the 'Guardian selection' approvable step
+    await testApprovableWizardStepAfterTxWasInitiated(
+      guardianSelectionStepDriver,
+      guardiansServiceMock,
+      guardianSelectionTxPromievent,
+      true,
+    );
+
+    expect(guardiansTableDriver.isGuardianSelected(guardian3Address)).toBe(true);
   });
 });
