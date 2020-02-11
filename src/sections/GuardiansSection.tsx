@@ -11,11 +11,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { useBoolean } from 'react-hanger';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
+import Modal from '@material-ui/core/Modal';
+import { GuardianChangingWizard } from '../wizards/guardianChange/GuardianChangingWizard';
 
 export const GuardiansSection = observer(() => {
   const guardiansStore = useGuardiansStore();
   const orbsAccountStore = useOrbsAccountStore();
   const { t } = useTranslation();
+  const showGuardianChangingModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
   const onGuardianSelect = useCallback(
@@ -23,10 +26,10 @@ export const GuardiansSection = observer(() => {
       if (guardian.address === orbsAccountStore.selectedGuardianAddress) {
         showSnackbarMessage.setTrue();
       } else {
-        console.log(`On Guardian select ${guardian.address}`);
+        showGuardianChangingModal.setTrue();
       }
     },
-    [orbsAccountStore.selectedGuardianAddress, showSnackbarMessage],
+    [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
 
   if (guardiansStore.guardiansList.length === 0) {
@@ -47,6 +50,11 @@ export const GuardiansSection = observer(() => {
         onGuardianSelect={onGuardianSelect}
         tableTestId={'guardians-table'}
       />
+
+      {/* Restaking */}
+      <Modal open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
+        <GuardianChangingWizard closeWizard={showGuardianChangingModal.setFalse} />
+      </Modal>
 
       <Snackbar
         anchorOrigin={{

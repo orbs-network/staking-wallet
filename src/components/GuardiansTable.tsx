@@ -71,11 +71,11 @@ export const GuardiansTable = React.memo<IProps>(
               <SelectButton
                 variant='contained'
                 size='small'
-                disabled={g.address === selectedGuardian}
+                // disabled={g.address === selectedGuardian}
                 data-testid={actionButtonTestId}
                 onClick={() => onGuardianSelect(g)}
               >
-                {t(g.address === selectedGuardian ? 'Selected' : 'Select')}
+                {t(g.address === selectedGuardian ? 'Keep' : 'Select')}
               </SelectButton>
             </TableCell>
           );

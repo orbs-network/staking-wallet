@@ -18,7 +18,7 @@ export class GuardiansTableDriver {
     const actionButton = this.getGuardianActionButton(guardianAddress);
     const selectedGuardianIcon = within(actionButton).queryByTestId('selected-guardian-icon');
 
-    const guardianIsSelected = !!selectedGuardianIcon || actionButton.innerText === 'Selected';
+    const guardianIsSelected = !!selectedGuardianIcon || actionButton.innerText === 'Keep';
 
     return guardianIsSelected;
   }

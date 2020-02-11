@@ -8,54 +8,66 @@ import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 
-export const GuardianSelectionStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { onPromiEventAction, txError, disableInputs } = props;
+export interface IGuardianSelectionStepContentProps {
+  selectedGuardianAddress: string;
+}
 
-  const guardiansStore = useGuardiansStore();
+export const GuardianSelectionStepContent = observer(
+  (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
+    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
 
-  // Start and limit by allowance
-  const message = useStateful('Select a guardian');
-  const subMessage = useStateful('Press "Select" and accept the transaction');
+    const guardiansStore = useGuardiansStore();
 
-  // Display the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-    }
-  }, [txError, message, subMessage]);
+    // Start and limit by allowance
+    const message = useStateful('Select a guardian');
+    const subMessage = useStateful('Press "Select" and accept the transaction');
 
-  const selectGuardian = useCallback(
-    (guardian: TGuardianInfoExtended) => {
-      message.setValue('');
-      subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+    // Display the proper error message
+    useEffect(() => {
+      if (txError) {
+        const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
+        message.setValue(errorMessage);
+        subMessage.setValue(errorSubMessage);
+      }
+    }, [txError, message, subMessage]);
 
-      const promiEvent = guardiansStore.selectGuardian(guardian.address);
-      onPromiEventAction(promiEvent);
-    },
-    [guardiansStore, message, onPromiEventAction, subMessage],
-  );
+    const selectGuardian = useCallback(
+      (guardian: TGuardianInfoExtended) => {
+        message.setValue('');
+        subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
 
-  const guardianSelectionContent = useMemo(() => {
+        // No need to re-select an already selected guardian
+        if (guardian.address === selectedGuardianAddress) {
+          skipToSuccess();
+        } else {
+          const promiEvent = guardiansStore.selectGuardian(guardian.address);
+          onPromiEventAction(promiEvent);
+        }
+      },
+      [guardiansStore, message, onPromiEventAction, subMessage],
+    );
+
+    const guardianSelectionContent = useMemo(() => {
+      return (
+        <GuardiansTable
+          guardianSelectionMode={'Select'}
+          guardians={guardiansStore.guardiansList}
+          onGuardianSelect={selectGuardian}
+          selectedGuardian={selectedGuardianAddress}
+          tableTestId={'guardian_selection_sub_step_guardians_table'}
+        />
+      );
+    }, [guardiansStore.guardiansList, selectGuardian]);
+
     return (
-      <GuardiansTable
-        guardianSelectionMode={'Select'}
-        guardians={guardiansStore.guardiansList}
-        onGuardianSelect={selectGuardian}
-        tableTestId={'guardian_selection_sub_step_guardians_table'}
+      <BaseStepContent
+        message={message.value}
+        subMessage={subMessage.value}
+        title={'Select your guardian'}
+        disableInputs={disableInputs}
+        contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
+        innerContent={guardianSelectionContent}
       />
     );
-  }, [guardiansStore.guardiansList, selectGuardian]);
-
-  return (
-    <BaseStepContent
-      message={message.value}
-      subMessage={subMessage.value}
-      title={'Select your guardian'}
-      disableInputs={disableInputs}
-      contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
-      innerContent={guardianSelectionContent}
-    />
-  );
-});
+  },
+);

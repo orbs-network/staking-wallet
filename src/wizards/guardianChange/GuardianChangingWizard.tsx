@@ -4,11 +4,13 @@ import { useNumber } from 'react-hanger';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
-import { OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
-import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
-import { GuardianSelectionStepContent } from './GuardianSelectionStepContent';
+import {
+  GuardianSelectionStepContent,
+  IGuardianSelectionStepContentProps,
+} from '../staking/GuardianSelectionStepContent';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -25,8 +27,15 @@ export const GuardianChangingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
 
+    const orbsAccountStore = useOrbsAccountStore();
     const activeStep = useNumber(0);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
+
+    const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
+      return {
+        selectedGuardianAddress: orbsAccountStore.selectedGuardianAddress,
+      };
+    }, [orbsAccountStore.selectedGuardianAddress]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
@@ -39,13 +48,14 @@ export const GuardianChangingWizard = observer(
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={'Finish'}
               key={'guardianSelectionStep'}
+              propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
             />
           );
         case STEPS_INDEXES.finish:
           return (
             <WizardContent data-testid={'wizard_sub_step_finish'}>
               <Typography>Awesome !</Typography>
-              <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
+              <Typography> You have selected a new guardian </Typography>
               <Button onClick={closeWizard}>Finish</Button>
             </WizardContent>
           );
