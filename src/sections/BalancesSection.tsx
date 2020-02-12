@@ -15,6 +15,8 @@ import { WithdrawingWizard } from '../wizards/withdrawing/WithdrawingWizard';
 import { RestakingWizard } from '../wizards/restaking/RestakingWizard';
 import { useOrbsInCooldownState } from '../store/storeStateHooks';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
+import Snackbar from '@material-ui/core/Snackbar';
+import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -25,6 +27,7 @@ export const BalancesSection = observer(() => {
 
   const showStakingModal = useBoolean(false);
   const showUnStakingModal = useBoolean(false);
+  const showCannotUnstakeNowSnackbar = useBoolean(false);
   const showRestakingModal = useBoolean(false);
   const showWithdrawingModal = useBoolean(false);
 
@@ -47,6 +50,13 @@ export const BalancesSection = observer(() => {
       orbsInCooldownBoxButtonText,
     };
   }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, showRestakingModal.setTrue, showWithdrawingModal.setTrue]);
+  const onUnstakeTokensClicked = useMemo(() => {
+    if (orbsAccountStore.hasOrbsToWithdraw) {
+      return () => showCannotUnstakeNowSnackbar.setTrue();
+    } else {
+      return () => showUnStakingModal.setTrue();
+    }
+  }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal.setTrue]);
 
   return (
     <Section>
@@ -71,7 +81,7 @@ export const BalancesSection = observer(() => {
             actionButtonTitle={'Unstake your tokens'}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
             actionButtonActive={true}
-            onActionButtonPressed={showUnStakingModal.setTrue}
+            onActionButtonPressed={onUnstakeTokensClicked}
             balanceCardTestId={'balance_card_staked_orbs'}
           />
         </GridItem>
@@ -107,6 +117,24 @@ export const BalancesSection = observer(() => {
       <Modal open={showWithdrawingModal.value} onClose={showWithdrawingModal.setFalse}>
         <WithdrawingWizard closeWizard={showWithdrawingModal.setFalse} />
       </Modal>
+
+      {/* Cannot unstake now snackbar */}
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={showCannotUnstakeNowSnackbar.value}
+        autoHideDuration={2000}
+        onClose={showCannotUnstakeNowSnackbar.setFalse}
+      >
+        <CustomSnackBarContent
+          variant={'warning'}
+          message={'Cannot unstake when there are ORBS to be withdrawn'}
+          onClose={showCannotUnstakeNowSnackbar.setFalse}
+          data-testid={'message-cannot-unstake-when-can-withdraw'}
+        />
+      </Snackbar>
     </Section>
   );
 });

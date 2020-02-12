@@ -8,6 +8,7 @@ import {
   subscribeToStakeAmountChange,
 } from './contractsStateSubscriptions/combinedEventsSubscriptions';
 import { EMPTY_ADDRESS } from '../constants';
+import moment from 'moment';
 
 export class OrbsAccountStore {
   // TODO : O.L : Check if we really need to have a string here.
@@ -21,6 +22,9 @@ export class OrbsAccountStore {
 
   @computed get hasSelectedGuardian(): boolean {
     return !isNil(this.selectedGuardianAddress) && this.selectedGuardianAddress !== EMPTY_ADDRESS;
+  }
+  @computed get hasOrbsToWithdraw(): boolean {
+    return this.orbsInCoolDown > 0 && this.cooldownReleaseTimestamp <= moment.utc().unix();
   }
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
