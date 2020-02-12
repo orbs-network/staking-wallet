@@ -16,7 +16,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
 
   // Start and limit by allowance
   const stakedOrbsNumericalFormat = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
-  const orbsForUnstaking = useNumber(stakedOrbsNumericalFormat, {
+  const orbsForUnstaking = useNumber(0, {
     lowerLimit: 0,
     upperLimit: stakedOrbsNumericalFormat,
   });
