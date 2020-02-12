@@ -18,7 +18,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   const orbsForStaking = orbsAccountStore.stakingContractAllowance;
   const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
   const message = useStateful('');
-  const subMessage = useStateful('Press "Stake" and accept the transaction');
+  const subMessage = useStateful('');
 
   // Display the proper error message
   useEffect(() => {
@@ -49,7 +49,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={`In this step you will stake ${fullOrbsForStaking.toLocaleString()} Orbs`}
+      title={`In this step you will stake ${fullOrbsForStaking.toLocaleString()} ORBS`}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_staking_tx'}
       actionButtonProps={actionButtonProps}

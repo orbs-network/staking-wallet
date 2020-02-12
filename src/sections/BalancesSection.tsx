@@ -56,7 +56,7 @@ export const BalancesSection = observer(() => {
       <Grid container direction={'row'} justify={'space-between'} spacing={2}>
         <GridItem>
           <BalanceCard
-            title={'Unstaked Orbs in your wallet'}
+            title={'Unstaked ORBS in your wallet'}
             actionButtonTitle={'Stake your tokens'}
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
@@ -67,7 +67,7 @@ export const BalancesSection = observer(() => {
 
         <GridItem>
           <BalanceCard
-            title={'Staked Orbs in smart contract'}
+            title={'Staked ORBS in smart contract'}
             actionButtonTitle={'Unstake your tokens'}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
             actionButtonActive={true}

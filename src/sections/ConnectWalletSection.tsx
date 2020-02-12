@@ -12,6 +12,7 @@ import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
 import { CommonDivider } from '../components/base/CommonDivider';
 import Youtube from 'react-youtube';
+import { CommonActionButton } from '../components/base/CommonActionButton';
 
 export const ConnectWalletSection = observer(() => {
   const { t } = useTranslation();
@@ -32,33 +33,37 @@ export const ConnectWalletSection = observer(() => {
   const installOrConnectMetamask = useMemo(() => {
     if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
-        <>
-          <Button data-testid='button-connect-metamask' onClick={handleConnectClicked}>
-            {t('Connect your metamask')}
-          </Button>
-          {rejectedConnection.value && <div data-testid='text-connection-was-not-approved'>{t('Please approve')}</div>}
-        </>
+        <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked}>
+          {t('Connect your account')}
+        </CommonActionButton>
       );
     } else {
       return (
-        <>
-          <Button data-testid='button-install-metamask' onClick={handleInstallClicked}>
-            {t('Install Metamask')}
-          </Button>
-          {pressedOnInstallMetamask.value && (
-            <div data-testid='text-pleaseRefresh'>{t('Please refresh this page after installing Metamask')}</div>
-          )}
-        </>
+        <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
+          {t('Install Metamask')}
+        </CommonActionButton>
       );
     }
-  }, [
-    cryptoWalletIntegrationStore.isMetamaskInstalled,
-    handleConnectClicked,
-    t,
-    rejectedConnection.value,
-    handleInstallClicked,
-    pressedOnInstallMetamask.value,
-  ]);
+  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, handleConnectClicked, t, handleInstallClicked]);
+
+  const messageComponent = useMemo(() => {
+    let testId = null;
+    let messageText = null;
+
+    if (cryptoWalletIntegrationStore.isMetamaskInstalled && rejectedConnection.value) {
+      testId = 'text-connection-was-not-approved';
+      messageText = t('Please approve the account connection');
+    } else if (pressedOnInstallMetamask.value) {
+      testId = 'text-pleaseRefresh';
+      messageText = t('Please refresh this page after installing Metamask');
+    }
+
+    if (messageText) {
+      return <Typography data-testid={testId}>{messageText}</Typography>;
+    } else {
+      return null;
+    }
+  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, pressedOnInstallMetamask.value, rejectedConnection.value, t]);
 
   return (
     <Section data-testid='connect-to-wallet-section'>
@@ -67,15 +72,16 @@ export const ConnectWalletSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid container>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Typography variant={'h4'}>{t('Connect your wallet')}</Typography>
-
-          <br />
           {installOrConnectMetamask}
-          <br />
-
-          <br />
+        </Grid>
+        {messageComponent !== null && (
+          <Grid item xs={12}>
+            {messageComponent}
+          </Grid>
+        )}
+        <Grid item xs={12}>
           <Youtube videoId={'6Gf_kRE4MJU'} />
         </Grid>
       </Grid>

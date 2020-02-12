@@ -10,7 +10,7 @@ export interface IActionButtonProps {
 }
 
 interface IProps {
-  title: string;
+  title: string | React.ElementType;
   message: string;
   subMessage: string;
 
@@ -35,11 +35,20 @@ export const BaseStepContent = React.memo<IProps>(props => {
     }
   }, [actionButtonProps, disableInputs]);
 
+  const titleContent = useMemo(() => {
+    if (typeof title === 'string') {
+      return title;
+    } else {
+      const Title = title;
+      return <Title />;
+    }
+  }, [title]);
+
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <WizardContent data-testid={contentTestId}>
       <Grid item>
-        <Typography variant={'h5'}>{title}</Typography>
+        <Typography variant={'h5'}>{titleContent}</Typography>
       </Grid>
       <Grid item>
         <Typography variant={'body1'}>{message}</Typography>

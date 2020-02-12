@@ -16,8 +16,8 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   // Start and limit by liquid orbs
   const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
   const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
-  const message = useStateful('Select amount of Orbs to allow');
-  const subMessage = useStateful('Press "Stake" and accept the transaction');
+  const message = useStateful('Select the amount of ORBS you would like to stake');
+  const subMessage = useStateful('');
 
   // Calculate the proper error message
   useEffect(() => {
@@ -39,7 +39,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
       onClick: setTokenAllowanceForStakingContract,
-      title: 'Allow',
+      title: 'Approve',
     }),
     [setTokenAllowanceForStakingContract],
   );
@@ -63,7 +63,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={'Approve the smart contract to use your Orbs'}
+      title={'Approve the staking contract to use your Orbs'}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_allowance_tx'}
       actionButtonProps={actionButtonProps}

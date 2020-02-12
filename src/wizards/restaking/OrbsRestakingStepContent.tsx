@@ -48,7 +48,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={`Restaking ${fullOrbsForRestaking} Orbs`}
+      title={`Restaking ${fullOrbsForRestaking} ORBS`}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}
       actionButtonProps={actionButtonProps}

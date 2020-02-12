@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, Link, TextField, Theme, Typography } from '@material-ui/core';
 import { WizardContent } from '../../../components/wizards/WizardContent';
 import { useStateful, useBoolean } from 'react-hanger';
 import { BaseStepContent } from '../BaseStepContent';
+import styled from 'styled-components';
 
 interface IProps {
   txHash: string;
@@ -20,7 +21,8 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
 
   // Update the verification count text
   useEffect(() => {
-    subMessage.setValue(`Got ${verificationCount} verifications out of recommended ${requiredConfirmations}`);
+    // TODO : O.L : FUTURE : Handle plurality
+    subMessage.setValue(`Got ${verificationCount} conformations out of recommended ${requiredConfirmations}`);
   }, [verificationCount, requiredConfirmations, subMessage]);
 
   // Should allow the user to proceed ?
@@ -43,24 +45,24 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
       actionContent = <Typography variant={'caption'}>This might take a few moments... </Typography>;
     }
 
-    return (
-      <>
-        {actionContent}
-        <Typography>
-          You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
-          <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
-            Etherscan
-          </a>{' '}
-        </Typography>
-      </>
+    return actionContent;
+  }, [allowToProceedValue, onStepFinished]);
+
+  const titleFc = useMemo(() => {
+    const titleMessage = verificationCount >= 1 ? 'Transaction Confirmed' : 'Transaction Pending';
+
+    return () => (
+      <Link href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
+        {titleMessage}
+      </Link>
     );
-  }, [allowToProceedValue, onStepFinished, txHash]);
+  }, [txHash, verificationCount]);
 
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={'Approving your transaction'}
+      title={titleFc}
       disableInputs={false}
       contentTestId={'wizard_sub_step_wait_for_tx_confirmation'}
       innerContent={transactionApprovementContent}
