@@ -1,5 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
@@ -51,110 +51,118 @@ export const GuardiansTable = React.memo<IProps>(
   ({ guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId }) => {
     const { t } = useTranslation();
 
+    const getSelectedGuardianCell = useCallback(
+      (g: TGuardianInfoExtended, idx: number) => {
+        let selectedGuardianCell = null;
+
+        const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
+        const actionButtonOnClick = () => onGuardianSelect(g);
+
+        switch (guardianSelectionMode) {
+          case 'Select':
+            selectedGuardianCell = (
+              <TableCell align='center'>
+                <SelectButton
+                  variant='contained'
+                  size='small'
+                  // disabled={g.address === selectedGuardian}
+                  data-testid={actionButtonTestId}
+                  onClick={actionButtonOnClick}
+                >
+                  {t(g.address === selectedGuardian ? 'Keep' : 'Select')}
+                </SelectButton>
+              </TableCell>
+            );
+            break;
+          case 'Change':
+            const isSelectedGuardian = g.address === selectedGuardian;
+
+            const enabled = !!onGuardianSelect;
+            const actionButtonIcon = isSelectedGuardian ? (
+              <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
+            ) : (
+              <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
+            );
+
+            selectedGuardianCell = (
+              <TableCell align='center'>
+                <Typography data-testid={`guardian-${g.address}-selected-status`}>
+                  <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
+                    {actionButtonIcon}
+                  </IconButton>
+                </Typography>
+              </TableCell>
+            );
+            break;
+          case 'None':
+            selectedGuardianCell = null;
+            break;
+          default:
+            throw new Error(`Invalid guardian selection mode of ${guardianSelectionMode}`);
+        }
+
+        return selectedGuardianCell;
+      },
+      [guardianSelectionMode, onGuardianSelect, selectedGuardian, t],
+    );
+
+    const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
+    const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
+
     const sortedGuardians = useMemo(
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       () => guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian)),
       [guardians, selectedGuardian],
     );
 
-    const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
-    const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
-
-    function getSelectedGuardianCell(g: TGuardianInfoExtended, idx: number) {
-      let selectedGuardianCell = null;
-
-      const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
-      const actionButtonOnClick = () => onGuardianSelect(g);
-
-      switch (guardianSelectionMode) {
-        case 'Select':
-          selectedGuardianCell = (
+    const tableRows = useMemo(() => {
+      return sortedGuardians.map((g, idx) => {
+        // TODO : ORL : Pick a better color for marking selected guardian
+        const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? { backgroundColor: '#1D0D0D' } : {};
+        return (
+          <TableRow style={extraStyle} data-testid={`guardian-${g.address}`} key={g.name} hover>
+            {addSelectionColumn && getSelectedGuardianCell(g, idx)}
+            <TableCell data-testid={`guardian-${g.address}-name`}>
+              <NameBox>
+                <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
+                <NameContainer>{g.name}</NameContainer>
+              </NameBox>
+            </TableCell>
+            <TableCell data-testid={`guardian-${g.address}-address`}>{g.address}</TableCell>
             <TableCell align='center'>
-              <SelectButton
-                variant='contained'
-                size='small'
-                // disabled={g.address === selectedGuardian}
-                data-testid={actionButtonTestId}
-                onClick={actionButtonOnClick}
+              <a
+                data-testid={`guardian-${g.address}-website`}
+                href={getWebsiteAddress(g.website)}
+                target='_blank'
+                rel='noopener noreferrer'
               >
-                {t(g.address === selectedGuardian ? 'Keep' : 'Select')}
-              </SelectButton>
+                <img src='/assets/globe.svg' />
+              </a>
             </TableCell>
-          );
-          break;
-        case 'Change':
-          const isSelectedGuardian = g.address === selectedGuardian;
-
-          const enabled = !!onGuardianSelect;
-          const actionButtonIcon = isSelectedGuardian ? (
-            <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
-          ) : (
-            <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
-          );
-
-          selectedGuardianCell = (
-            <TableCell align='center'>
-              <Typography data-testid={`guardian-${g.address}-selected-status`}>
-                <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
-                  {actionButtonIcon}
-                </IconButton>
-              </Typography>
+            <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
+              {asPercent(g.stakePercent)}
             </TableCell>
-          );
-          break;
-        case 'None':
-          selectedGuardianCell = null;
-          break;
-        default:
-          throw new Error(`Invalid guardian selection mode of ${guardianSelectionMode}`);
-      }
-
-      return selectedGuardianCell;
-    }
-
+            <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
+              {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
+            </TableCell>
+          </TableRow>
+        );
+      });
+    }, [addSelectionColumn, getSelectedGuardianCell, hasSelectedGuardian, selectedGuardian, sortedGuardians]);
     return (
       <Paper>
         <Table data-testid={tableTestId}>
           <TableHead>
             <TableRow>
+              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
               <TableCell>{t('Name')}</TableCell>
               <TableCell>{t('Address')}</TableCell>
               <TableCell align='center'>{t('Website')}</TableCell>
-              <TableCell align='center'>{t('Stake')}</TableCell>
-              <TableCell align='center'>{t('Voted')}</TableCell>
-              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
+              <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
+              <TableCell align='center'>{t('Voted in last election')}</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {sortedGuardians.map((g, idx) => (
-              <TableRow data-testid={`guardian-${g.address}`} key={g.name} hover>
-                <TableCell data-testid={`guardian-${g.address}-name`}>
-                  <NameBox>
-                    <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
-                    <NameContainer>{g.name}</NameContainer>
-                  </NameBox>
-                </TableCell>
-                <TableCell data-testid={`guardian-${g.address}-address`}>{g.address}</TableCell>
-                <TableCell align='center'>
-                  <a
-                    data-testid={`guardian-${g.address}-website`}
-                    href={getWebsiteAddress(g.website)}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <img src='/assets/globe.svg' />
-                  </a>
-                </TableCell>
-                <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
-                  {asPercent(g.stakePercent)}
-                </TableCell>
-                <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
-                  {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
-                </TableCell>
-                {addSelectionColumn && getSelectedGuardianCell(g, idx)}
-              </TableRow>
-            ))}
-          </TableBody>
+          <TableBody>{tableRows}</TableBody>
         </Table>
       </Paper>
     );
