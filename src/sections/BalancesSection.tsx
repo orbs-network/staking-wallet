@@ -17,6 +17,8 @@ import { useOrbsInCooldownState } from '../store/storeStateHooks';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
+import moment from 'moment';
+import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -36,6 +38,7 @@ export const BalancesSection = observer(() => {
   const { orbsInCooldownBoxButtonAction, orbsInCooldownBoxButtonText } = useMemo(() => {
     let orbsInCooldownBoxButtonAction;
     let orbsInCooldownBoxButtonText: string;
+    let orbsInCooldownBoxTitle;
 
     if (hasOrbsInCooldown && canWithdrawCooldownOrbs) {
       orbsInCooldownBoxButtonAction = showWithdrawingModal.setTrue;
@@ -50,13 +53,37 @@ export const BalancesSection = observer(() => {
       orbsInCooldownBoxButtonText,
     };
   }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, showRestakingModal.setTrue, showWithdrawingModal.setTrue]);
+
+  const { orbsInCooldownBoxTitle } = useMemo(() => {
+    let orbsInCooldownBoxTitle;
+
+    // We only want to show time left if there is some time left
+    if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
+      const unlockMoment = moment.unix(orbsAccountStore.cooldownReleaseTimestamp).utc();
+      orbsInCooldownBoxTitle = () => (
+        <>
+          {/* TODO : O.L : DESIGN : Decide on how to display how much time is left */}
+          {/*// TODO : translate*/}
+          Tokens in cooldown (<TimeLeftCounter toTimestamp={orbsAccountStore.cooldownReleaseTimestamp} /> left)
+        </>
+      );
+    } else {
+      // TODO : translate
+      orbsInCooldownBoxTitle = 'Tokens ready for withdrawal';
+    }
+
+    return {
+      orbsInCooldownBoxTitle,
+    };
+  }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, orbsAccountStore.cooldownReleaseTimestamp]);
+
   const onUnstakeTokensClicked = useMemo(() => {
     if (orbsAccountStore.hasOrbsToWithdraw) {
       return () => showCannotUnstakeNowSnackbar.setTrue();
     } else {
       return () => showUnStakingModal.setTrue();
     }
-  }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal.setTrue]);
+  }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
 
   return (
     <Section>
@@ -88,7 +115,7 @@ export const BalancesSection = observer(() => {
 
         <GridItem>
           <BalanceCard
-            title={'Tokens in cooldown'}
+            title={orbsInCooldownBoxTitle}
             actionButtonTitle={orbsInCooldownBoxButtonText}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
             actionButtonActive={true}

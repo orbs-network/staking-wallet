@@ -121,7 +121,6 @@ export const GuardiansTable = React.memo<IProps>(
         const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? { backgroundColor: '#1D0D0D' } : {};
         return (
           <TableRow style={extraStyle} data-testid={`guardian-${g.address}`} key={g.name} hover>
-            {addSelectionColumn && getSelectedGuardianCell(g, idx)}
             <TableCell data-testid={`guardian-${g.address}-name`}>
               <NameBox>
                 <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
@@ -145,6 +144,7 @@ export const GuardiansTable = React.memo<IProps>(
             <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
               {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
             </TableCell>
+            {addSelectionColumn && getSelectedGuardianCell(g, idx)}
           </TableRow>
         );
       });
@@ -154,12 +154,12 @@ export const GuardiansTable = React.memo<IProps>(
         <Table data-testid={tableTestId}>
           <TableHead>
             <TableRow>
-              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
               <TableCell>{t('Name')}</TableCell>
               <TableCell>{t('Address')}</TableCell>
               <TableCell align='center'>{t('Website')}</TableCell>
               <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
               <TableCell align='center'>{t('Voted in last election')}</TableCell>
+              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>{tableRows}</TableBody>
