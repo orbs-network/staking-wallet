@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
@@ -83,6 +83,14 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     },
     [disableTxCreationInputs, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
   );
+
+  useEffect(() => {
+    return () => {
+      if (unsubscribeFromAllPromiventListeners.current) {
+        unsubscribeFromAllPromiventListeners.current();
+      }
+    };
+  }, []);
 
   const currentSubStepContent = useMemo(() => {
     switch (stepState.value) {
