@@ -3,7 +3,7 @@ import Modal from '@material-ui/core/Modal';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { observer } from 'mobx-react';
 import React, { useMemo } from 'react';
-import { useBoolean } from 'react-hanger';
+import { useBoolean, useNumber } from 'react-hanger';
 import styled from 'styled-components';
 import { BalanceCard } from '../components/BalanceCard';
 import { Section } from '../components/structure/Section';
@@ -28,6 +28,7 @@ const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} 
 
 export const BalancesSection = observer(() => {
   const { t } = useTranslation();
+  const rerenderNumber = useNumber(0);
   const sectionTitlesTr = useSectionsTitlesTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
@@ -68,12 +69,16 @@ export const BalancesSection = observer(() => {
       orbsInCooldownBoxEnabled = false;
     } else if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
       // We only want to show time left if there is some time left
-      const unlockMoment = moment.unix(orbsAccountStore.cooldownReleaseTimestamp).utc();
       orbsInCooldownBoxTitle = () => (
         <>
           {/* TODO : O.L : DESIGN : Decide on how to display how much time is left */}
           {/*// TODO : translate*/}
-          Tokens in cooldown (<TimeLeftCounter toTimestamp={orbsAccountStore.cooldownReleaseTimestamp} /> left)
+          Tokens in cooldown (
+          <TimeLeftCounter
+            onToMomentReached={rerenderNumber.increase}
+            toTimestamp={orbsAccountStore.cooldownReleaseTimestamp}
+          />{' '}
+          left)
         </>
       );
     } else {
@@ -85,7 +90,7 @@ export const BalancesSection = observer(() => {
       orbsInCooldownBoxTitle,
       orbsInCooldownBoxEnabled,
     };
-  }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, orbsAccountStore.cooldownReleaseTimestamp]);
+  }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, orbsAccountStore.cooldownReleaseTimestamp, rerenderNumber.increase]);
 
   const onUnstakeTokensClicked = useMemo(() => {
     if (orbsAccountStore.hasOrbsToWithdraw) {
