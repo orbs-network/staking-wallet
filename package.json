@@ -46,6 +46,7 @@
     "react-youtube": "^7.9.0",
     "styled-components": "^5.0.1",
     "tslib": "^1.10.0",
+    "use-interval": "^1.2.1",
     "web3": "^1.2.6"
   },
   "devDependencies": {
