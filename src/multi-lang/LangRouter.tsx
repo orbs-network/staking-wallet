@@ -12,7 +12,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import i18n, { Resource } from 'i18next';
 import { PreLangBasenameProvider } from './PreLangBasenameContext';
 import { initReactI18next } from 'react-i18next';
-import { resources } from '../translations';
+import { resources } from '../translations/translations';
 
 function getForcedLanguage() {
   const langMatch = window.location.pathname.match(/\/(en|ko|jp)\//);
@@ -24,7 +24,8 @@ i18n
   .init({
     resources,
     lng: 'en',
-    keySeparator: false, // we do not use keys in form messages.welcome
+    fallbackLng: 'en',
+    keySeparator: '.',
     interpolation: {
       escapeValue: false, // react already safes from xss
     },

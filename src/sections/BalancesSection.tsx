@@ -19,12 +19,16 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import moment from 'moment';
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
+import { useTranslation } from 'react-i18next';
+import { useSectionsTitlesTranslations } from '../translations/translationsHooks';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
 });
 
 export const BalancesSection = observer(() => {
+  const { t } = useTranslation();
+  const sectionTitlesTr = useSectionsTitlesTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   const showStakingModal = useBoolean(false);
@@ -88,7 +92,7 @@ export const BalancesSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={'BALANCE'} icon={AccountBalanceIcon} />
+      <SectionHeader title={sectionTitlesTr('balance')} icon={AccountBalanceIcon} />
 
       <Grid container direction={'row'} justify={'space-between'} spacing={2}>
         <GridItem>

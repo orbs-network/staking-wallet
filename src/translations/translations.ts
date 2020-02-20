@@ -1,10 +1,10 @@
 import { Resource } from 'i18next';
+import { ENGLISH_TEXTS } from './translations.en';
 
 export const resources: Resource = {
   en: {
-    translation: {
-      fontFamily: 'Montserrat',
-    },
+    translation: ENGLISH_TEXTS,
+    shlap: 'Lets see',
   },
   jp: {
     translation: {
