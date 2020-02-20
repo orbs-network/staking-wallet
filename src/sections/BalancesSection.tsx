@@ -58,11 +58,16 @@ export const BalancesSection = observer(() => {
     };
   }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, showRestakingModal.setTrue, showWithdrawingModal.setTrue]);
 
-  const { orbsInCooldownBoxTitle } = useMemo(() => {
+  const { orbsInCooldownBoxTitle, orbsInCooldownBoxEnabled } = useMemo(() => {
     let orbsInCooldownBoxTitle;
+    let orbsInCooldownBoxEnabled = true;
 
-    // We only want to show time left if there is some time left
-    if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
+    // No Tokens in cooldown ? Disable the balance box
+    if (!hasOrbsInCooldown) {
+      orbsInCooldownBoxTitle = 'No Tokens in cooldown';
+      orbsInCooldownBoxEnabled = false;
+    } else if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
+      // We only want to show time left if there is some time left
       const unlockMoment = moment.unix(orbsAccountStore.cooldownReleaseTimestamp).utc();
       orbsInCooldownBoxTitle = () => (
         <>
@@ -78,6 +83,7 @@ export const BalancesSection = observer(() => {
 
     return {
       orbsInCooldownBoxTitle,
+      orbsInCooldownBoxEnabled,
     };
   }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, orbsAccountStore.cooldownReleaseTimestamp]);
 
@@ -122,7 +128,7 @@ export const BalancesSection = observer(() => {
             title={orbsInCooldownBoxTitle}
             actionButtonTitle={orbsInCooldownBoxButtonText}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
-            actionButtonActive={true}
+            actionButtonActive={orbsInCooldownBoxEnabled}
             onActionButtonPressed={orbsInCooldownBoxButtonAction}
             balanceCardTestId={'balance_card_cool_down_orbs'}
           />
