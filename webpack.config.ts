@@ -28,7 +28,7 @@ const config: Configuration = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `[name]-[hash:8]-bundle.js`,
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
@@ -87,7 +87,7 @@ const config: Configuration = {
   },
   plugins,
   devServer: {
-    historyApiFallback: true
+    historyApiFallback: true,
   },
   externals: {
     react: 'React',

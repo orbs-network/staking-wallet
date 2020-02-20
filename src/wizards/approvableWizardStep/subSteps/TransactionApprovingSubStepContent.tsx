@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import React, { useEffect, useMemo } from 'react';
+import { Button, Link, TextField, Theme, Typography } from '@material-ui/core';
 import { WizardContent } from '../../../components/wizards/WizardContent';
 import { useStateful, useBoolean } from 'react-hanger';
+import { BaseStepContent } from '../BaseStepContent';
+import styled from 'styled-components';
 
 interface IProps {
   txHash: string;
@@ -19,7 +21,8 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
 
   // Update the verification count text
   useEffect(() => {
-    subMessage.setValue(`Got ${verificationCount} verifications out of recommended ${requiredConfirmations}`);
+    // TODO : O.L : FUTURE : Handle plurality
+    subMessage.setValue(`Got ${verificationCount} conformations out of recommended ${requiredConfirmations}`);
   }, [verificationCount, requiredConfirmations, subMessage]);
 
   // Should allow the user to proceed ?
@@ -29,30 +32,40 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     }
   }, [verificationCount, requiredConfirmations, allowToProceed]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
-  return (
-    <WizardContent data-testid={'wizard_sub_step_wait_for_tx_confirmation'}>
-      <Typography>Approving your transaction</Typography>
-      <Typography variant={'caption'}>{message.value}</Typography>
-      <br />
-      <Typography variant={'caption'}>{subMessage.value}</Typography>
-
-      <div data-testid={'transaction_pending_indicator'}></div>
-      {!allowToProceed.value && <Typography variant={'caption'}>This might take a few moments... </Typography>}
-      {allowToProceed.value && (
+  const allowToProceedValue = allowToProceed.value;
+  const transactionApprovementContent = useMemo(() => {
+    let actionContent = null;
+    if (allowToProceedValue) {
+      actionContent = (
         <Button variant={'outlined'} onClick={onStepFinished}>
           Proceed
         </Button>
-      )}
+      );
+    } else {
+      actionContent = <Typography variant={'caption'}>This might take a few moments... </Typography>;
+    }
 
-      <br />
+    return actionContent;
+  }, [allowToProceedValue, onStepFinished]);
 
-      <Typography>
-        You can always check the transaction status at {/* eslint-disable-next-line react/jsx-no-target-blank */}
-        <a href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
-          Ether Scan
-        </a>{' '}
-      </Typography>
-    </WizardContent>
+  const titleFc = useMemo(() => {
+    const titleMessage = verificationCount >= 1 ? 'Transaction Confirmed' : 'Transaction Pending';
+
+    return () => (
+      <Link href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
+        {titleMessage}
+      </Link>
+    );
+  }, [txHash, verificationCount]);
+
+  return (
+    <BaseStepContent
+      message={message.value}
+      subMessage={subMessage.value}
+      title={titleFc}
+      disableInputs={false}
+      contentTestId={'wizard_sub_step_wait_for_tx_confirmation'}
+      innerContent={transactionApprovementContent}
+    />
   );
 };

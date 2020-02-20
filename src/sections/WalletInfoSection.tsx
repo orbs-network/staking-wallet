@@ -16,9 +16,28 @@ import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarCont
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
+import { WizardContainer } from '../components/wizards/WizardContainer';
+import Color from 'color';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
+});
+
+const QR_IMAGE_DIMENSION = 400;
+// TODO : FUTURE : O.L : Unify this with the 'Wizard container' (have one basic styled component and extend from it)
+const CenteredContainerGridForQr = styled(props => (
+  <Grid container direction={'column'} alignItems={'center'} {...props} />
+))(({ theme }) => {
+  theme = theme as Theme;
+
+  return {
+    position: 'fixed',
+    top: '35%',
+    left: '50%',
+    transform: 'translate(-50%, -35%)',
+    maxWidth: '100%',
+  };
 });
 
 export const WalletInfoSection = observer(() => {
@@ -53,16 +72,18 @@ export const WalletInfoSection = observer(() => {
       </Grid>
       <CommonDivider />
 
-      <Modal disableEnforceFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
-        <QRCode
-          value={cryptoWalletIntegrationStore.mainAddress}
-          logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
-          logoWidth={100}
-          logoHeight={100}
-          size={400}
-          qrStyle={'dots'}
-          fgColor={'#07142E'}
-        />
+      <Modal disableAutoFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
+        <CenteredContainerGridForQr>
+          <QRCode
+            value={cryptoWalletIntegrationStore.mainAddress}
+            logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
+            logoWidth={100}
+            logoHeight={100}
+            size={QR_IMAGE_DIMENSION}
+            qrStyle={'dots'}
+            fgColor={'#07142E'}
+          />
+        </CenteredContainerGridForQr>
       </Modal>
 
       <Snackbar

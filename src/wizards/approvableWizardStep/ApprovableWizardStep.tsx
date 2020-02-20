@@ -10,18 +10,22 @@ const REQUIRED_CONFIRMATIONS = 6;
 
 export interface ITransactionCreationStepProps {
   onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>): void;
+  skipToSuccess: () => void;
   disableInputs: boolean;
   txError?: Error;
 }
 
-interface IProps {
+interface IProps<T = {}> {
   // Tx creation sub step
-  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps>;
+  transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps & T>;
 
   // Congratulations sub step
   finishedActionName: string;
   moveToNextStepAction: () => void;
   moveToNextStepTitle: string;
+
+  // Extra props for the tx creation step
+  propsForTransactionCreationSubStepContent?: object;
 }
 
 export const ApprovableWizardStep = React.memo<IProps>(props => {
@@ -30,6 +34,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
+    propsForTransactionCreationSubStepContent,
   } = props;
 
   const stepState = useStateful<TStepState>('Action');
@@ -87,6 +92,8 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
             disableInputs={disableTxCreationInputs.value}
             txError={txCreatingError.value}
             onPromiEventAction={txCreationAction}
+            skipToSuccess={goToCongratulationSubStep}
+            {...propsForTransactionCreationSubStepContent}
           />
         );
       case 'Confirmation':
@@ -114,6 +121,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     disableTxCreationInputs.value,
     txCreatingError.value,
     txCreationAction,
+    propsForTransactionCreationSubStepContent,
     txVerificationsCount.value,
     txHash.value,
     goToCongratulationSubStep,

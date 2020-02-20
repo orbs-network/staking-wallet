@@ -5,7 +5,6 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
  * The above notice should be included in all copies or substantial portions of the software.
  */
-import '@testing-library/jest-dom/extend-expect';
 import { fireEvent } from '@testing-library/react';
 import copyMock from 'copy-to-clipboard';
 import { WalletInfoSection } from '../../sections/WalletInfoSection';
@@ -48,7 +47,9 @@ describe('Wallet Info Section', () => {
     // Any test case expects a connected wallet
     ethereumProviderMock.setSelectedAddress(testAddress);
 
-    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProviderMock);
+    const cryptoWalletConnectionService: ICryptoWalletConnectionService = new CryptoWalletConnectionService(
+      ethereumProviderMock,
+    );
     cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService);
   });
 

@@ -1,6 +1,5 @@
-import React from 'react';
-import { Button, Typography } from '@material-ui/core';
-import { WizardContent } from '../../../components/wizards/WizardContent';
+import React, { useMemo } from 'react';
+import { BaseStepContent, IActionButtonProps } from '../BaseStepContent';
 
 interface IProps {
   finishedActionName: string;
@@ -11,11 +10,21 @@ interface IProps {
 export const CongratulationsSubStepContent: React.FC<IProps> = (props: IProps) => {
   const { finishedActionName, moveToNextStepAction, moveToNextStepTitle } = props;
 
+  const actionButtonProps = useMemo<IActionButtonProps>(
+    () => ({
+      onClick: moveToNextStepAction,
+      title: moveToNextStepTitle,
+    }),
+    [moveToNextStepAction, moveToNextStepTitle],
+  );
+
   return (
-    <WizardContent data-testid={'wizard_sub_step_congratulations'}>
-      <Typography>Congratulations !</Typography>
-      <Typography variant={'caption'}>{`You have successfully ${finishedActionName}`}</Typography>
-      <Button onClick={moveToNextStepAction}>{moveToNextStepTitle}</Button>
-    </WizardContent>
+    <BaseStepContent
+      message={`You have successfully ${finishedActionName}`}
+      subMessage={''}
+      title={'Congratulations'}
+      contentTestId={'wizard_sub_step_congratulations'}
+      actionButtonProps={actionButtonProps}
+    />
   );
 };

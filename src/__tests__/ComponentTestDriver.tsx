@@ -8,7 +8,6 @@
 
 import { ThemeProvider } from '@material-ui/styles';
 import { render } from '@testing-library/react';
-import i18n from 'i18next';
 import { Provider } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';

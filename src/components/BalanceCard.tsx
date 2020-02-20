@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Grid, Theme, Typography, Paper } from '@material-ui/core';
 import styled from 'styled-components';
 import { CommonDivider } from './base/CommonDivider';
+import { CommonActionButton } from './base/CommonActionButton';
+import { useStringOrElement } from './hooks/commonHooks';
 
 const StyledGrid = styled(Paper)`
   padding: 1em;
@@ -12,7 +14,7 @@ const StyledGrid = styled(Paper)`
 `;
 
 interface IProps {
-  title: string;
+  title: string | React.ElementType;
   amount: number;
   actionButtonTitle: string;
   actionButtonActive: boolean;
@@ -25,9 +27,11 @@ interface IProps {
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const { title, amount, actionButtonTitle, actionButtonActive, onActionButtonPressed, balanceCardTestId } = props;
 
+  const titleElement = useStringOrElement(title);
+
   return (
     <StyledGrid data-testid={balanceCardTestId}>
-      <Typography variant={'caption'}>{title}</Typography>
+      <Typography variant={'caption'}>{titleElement}</Typography>
 
       <CommonDivider />
 
@@ -35,9 +39,9 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
         {amount.toLocaleString()}
       </Typography>
 
-      <Button color={'secondary'} variant={'contained'} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
+      <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
         {actionButtonTitle}
-      </Button>
+      </CommonActionButton>
     </StyledGrid>
   );
 };

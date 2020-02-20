@@ -6,16 +6,8 @@ export class OrbsStakingStepDriver extends ApprovableStepDriver {
     super(renderResults, 'wizard_sub_step_initiate_staking_tx');
   }
 
-  setAmountForStaking(allowanceInOrbs: number) {
-    fireEvent.change(this.orbsForStakingInput, { target: { value: allowanceInOrbs.toString() } });
-  }
-
   clickOnStake() {
     const orbsStakingActionButton = within(this.txCreatingSubStepComponent).getByText('Stake');
     fireEvent.click(orbsStakingActionButton);
-  }
-
-  public get orbsForStakingInput() {
-    return within(this.txCreatingSubStepComponent).getByLabelText('Staking');
   }
 }

@@ -4,7 +4,7 @@ const OrbsToken = artifacts.require('OrbsToken');
 module.exports = function(deployer, network, accounts) {
   console.log('Orbs token address', OrbsToken.address);
 
-  const cooldownTimeInSeconds = 60 * 1;
+  const cooldownTimeInSeconds = 60 * 1 * 5;
   const account = accounts[0];
 
   const migrationManager = account;

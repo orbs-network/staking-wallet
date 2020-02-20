@@ -8,14 +8,14 @@ export type TGuardianInfoExtended = IGuardianInfo & { address: string };
 
 export interface IGuardiansStoreState {
   guardiansList: TGuardianInfoExtended[];
-  totalParticipatingTokens: number;
+  totalParticipatingTokens: bigint;
 }
 
 export type TGuardiansStore = IGuardiansStoreState;
 
 export class GuardiansStore implements TGuardiansStore {
   @observable public guardiansList: TGuardianInfoExtended[];
-  @observable public totalParticipatingTokens: number;
+  @observable public totalParticipatingTokens: bigint;
 
   private addressChangeReaction: IReactionDisposer;
 
@@ -25,7 +25,7 @@ export class GuardiansStore implements TGuardiansStore {
     private guardiansService: IGuardiansService,
   ) {
     this.guardiansList = [];
-    this.totalParticipatingTokens = 0;
+    this.totalParticipatingTokens = BigInt(0);
 
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -73,7 +73,7 @@ export class GuardiansStore implements TGuardiansStore {
   }
 
   @action('setTotalParticipatingTokens')
-  private setTotalParticipatingTokens(totalParticipatingTokens: number) {
+  private setTotalParticipatingTokens(totalParticipatingTokens: bigint) {
     this.totalParticipatingTokens = totalParticipatingTokens;
   }
 }

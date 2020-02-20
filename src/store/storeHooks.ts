@@ -1,7 +1,7 @@
 import React from 'react';
 import { MobXProviderContext } from 'mobx-react';
 import { IStores } from './stores';
-import { GuardiansStore, TGuardiansStore } from './GuardiansStore';
+import { GuardiansStore } from './GuardiansStore';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { OrbsAccountStore } from './OrbsAccountStore';
 

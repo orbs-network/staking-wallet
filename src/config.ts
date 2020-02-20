@@ -12,10 +12,12 @@ import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
 interface IConfig {
   contractsAddressesOverride: Partial<IOrbsPosContractsAddresses & { stakingContract: string }>;
   ETHEREUM_PROVIDER_WS: string;
+  earliestBlockForDelegationOverride: number;
 }
 const config: IConfig = {
   contractsAddressesOverride: {},
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+  earliestBlockForDelegationOverride: null,
 };
 
 // Webpack will remove this section on production build //
@@ -31,6 +33,8 @@ if (process.env.NODE_ENV !== 'production') {
   config.contractsAddressesOverride.erc20Contract = OrbsTokenContractJSON.networks['5777'].address;
   config.contractsAddressesOverride.guardiansContract = OrbsGuardiansContractJSON.networks['5777'].address;
   config.contractsAddressesOverride.votingContract = VotingContractJSON.networks['5777'].address;
-} 
+
+  config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
+}
 
 export default config;
