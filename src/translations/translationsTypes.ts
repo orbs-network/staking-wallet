@@ -16,3 +16,10 @@ export interface IWalletInfoSectionTranslations {
   copy: string;
   qr: string;
 }
+
+export interface IBalanceSectionTranslations {
+  title_unstakedOrbsInYourWallet: 'Unstaked ORBS in your wallet';
+  title_stakedOrbsInSmartContract: 'Staked ORBS in smart contract';
+  title_tokensReadyForWithdrawal: 'Tokens ready for withdrawal';
+  action_stakeYOurTokens: 'Stake your tokens';
+}
