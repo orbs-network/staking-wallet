@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
-import { IBalancesSectionTranslations, ISectionTitlesTranslations } from './translationsTypes';
+import { IAlertsTranslations, IBalancesSectionTranslations, ISectionTitlesTranslations } from './translationsTypes';
 
 function useSpecificTypeSafeTFunction<T>(prefix: string) {
   const { t } = useTranslation();
@@ -21,4 +21,8 @@ export function useSectionsTitlesTranslations() {
 
 export function useBalancesSectionTranslations() {
   return useSpecificTypeSafeTFunction<IBalancesSectionTranslations>('balancesSection');
+}
+
+export function useAlertsTranslations() {
+  return useSpecificTypeSafeTFunction<IAlertsTranslations>('alerts');
 }

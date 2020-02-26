@@ -3,6 +3,7 @@ export interface IAppTranslations {
   sectionTitles: ISectionTitlesTranslations;
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
+  alerts: IAlertsTranslations;
 }
 
 export interface ISectionTitlesTranslations {
@@ -27,4 +28,8 @@ export interface IBalancesSectionTranslations {
   action_unstakeYourTokens: string;
   action_restakeYourTokens: string;
   action_withdrawYourTokens: string;
+}
+
+export interface IAlertsTranslations {
+  cannotUnstakeWhenThereAreOrbsReadyToWithdraw: string;
 }

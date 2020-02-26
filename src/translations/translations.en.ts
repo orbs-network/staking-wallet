@@ -24,4 +24,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     action_restakeYourTokens: 'Restake your tokens',
     action_withdrawYourTokens: 'Withdraw your tokens',
   },
+  alerts: {
+    cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
+  },
 };

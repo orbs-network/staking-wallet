@@ -20,17 +20,21 @@ import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarCont
 import moment from 'moment';
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
 import { useTranslation } from 'react-i18next';
-import { useBalancesSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import {
+  useAlertsTranslations,
+  useBalancesSectionTranslations,
+  useSectionsTitlesTranslations,
+} from '../translations/translationsHooks';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
 });
 
 export const BalancesSection = observer(() => {
-  const { t } = useTranslation();
-  const balancesSectionTranslations = useBalancesSectionTranslations();
   const rerenderNumber = useNumber(0);
   const sectionTitlesTr = useSectionsTitlesTranslations();
+  const balancesSectionTranslations = useBalancesSectionTranslations();
+  const alertsTranslations = useAlertsTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   const showStakingModal = useBoolean(false);
@@ -184,7 +188,7 @@ export const BalancesSection = observer(() => {
       >
         <CustomSnackBarContent
           variant={'warning'}
-          message={'Cannot unstake when there are ORBS to be withdrawn'}
+          message={alertsTranslations('cannotUnstakeWhenThereAreOrbsReadyToWithdraw')}
           onClose={showCannotUnstakeNowSnackbar.setFalse}
           data-testid={'message-cannot-unstake-when-can-withdraw'}
         />
