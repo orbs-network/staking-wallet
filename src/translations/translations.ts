@@ -4,7 +4,6 @@ import { ENGLISH_TEXTS } from './translations.en';
 export const resources: Resource = {
   en: {
     translation: ENGLISH_TEXTS,
-    shlap: 'Lets see',
   },
   jp: {
     translation: {

@@ -20,7 +20,7 @@ import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarCont
 import moment from 'moment';
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
 import { useTranslation } from 'react-i18next';
-import { useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import { useBalancesSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
 
 const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -28,6 +28,7 @@ const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} 
 
 export const BalancesSection = observer(() => {
   const { t } = useTranslation();
+  const balancesSectionTranslations = useBalancesSectionTranslations();
   const rerenderNumber = useNumber(0);
   const sectionTitlesTr = useSectionsTitlesTranslations();
   const orbsAccountStore = useOrbsAccountStore();
@@ -43,21 +44,26 @@ export const BalancesSection = observer(() => {
   const { orbsInCooldownBoxButtonAction, orbsInCooldownBoxButtonText } = useMemo(() => {
     let orbsInCooldownBoxButtonAction;
     let orbsInCooldownBoxButtonText: string;
-    let orbsInCooldownBoxTitle;
 
     if (hasOrbsInCooldown && canWithdrawCooldownOrbs) {
       orbsInCooldownBoxButtonAction = showWithdrawingModal.setTrue;
-      orbsInCooldownBoxButtonText = 'Withdraw your tokens';
+      orbsInCooldownBoxButtonText = balancesSectionTranslations('action_withdrawYourTokens');
     } else {
       orbsInCooldownBoxButtonAction = showRestakingModal.setTrue;
-      orbsInCooldownBoxButtonText = 'Restake your tokens';
+      orbsInCooldownBoxButtonText = balancesSectionTranslations('action_restakeYourTokens');
     }
 
     return {
       orbsInCooldownBoxButtonAction,
       orbsInCooldownBoxButtonText,
     };
-  }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, showRestakingModal.setTrue, showWithdrawingModal.setTrue]);
+  }, [
+    balancesSectionTranslations,
+    canWithdrawCooldownOrbs,
+    hasOrbsInCooldown,
+    showRestakingModal.setTrue,
+    showWithdrawingModal.setTrue,
+  ]);
 
   const { orbsInCooldownBoxTitle, orbsInCooldownBoxEnabled } = useMemo(() => {
     let orbsInCooldownBoxTitle;
@@ -65,14 +71,14 @@ export const BalancesSection = observer(() => {
 
     // No Tokens in cooldown ? Disable the balance box
     if (!hasOrbsInCooldown) {
-      orbsInCooldownBoxTitle = 'No Tokens in cooldown';
+      orbsInCooldownBoxTitle = balancesSectionTranslations('title_noTokensInCooldown');
       orbsInCooldownBoxEnabled = false;
     } else if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
       // We only want to show time left if there is some time left
       orbsInCooldownBoxTitle = () => (
         <>
           {/* TODO : O.L : DESIGN : Decide on how to display how much time is left */}
-          {/*// TODO : translate*/}
+          {/*// TODO : ORL : translate and understand how to display this data properly */}
           Tokens in cooldown (
           <TimeLeftCounter
             onToMomentReached={rerenderNumber.increase}
@@ -83,14 +89,20 @@ export const BalancesSection = observer(() => {
       );
     } else {
       // TODO : translate
-      orbsInCooldownBoxTitle = 'Tokens ready for withdrawal';
+      orbsInCooldownBoxTitle = balancesSectionTranslations('title_tokensReadyForWithdrawal');
     }
 
     return {
       orbsInCooldownBoxTitle,
       orbsInCooldownBoxEnabled,
     };
-  }, [canWithdrawCooldownOrbs, hasOrbsInCooldown, orbsAccountStore.cooldownReleaseTimestamp, rerenderNumber.increase]);
+  }, [
+    balancesSectionTranslations,
+    canWithdrawCooldownOrbs,
+    hasOrbsInCooldown,
+    orbsAccountStore.cooldownReleaseTimestamp,
+    rerenderNumber.increase,
+  ]);
 
   const onUnstakeTokensClicked = useMemo(() => {
     if (orbsAccountStore.hasOrbsToWithdraw) {
@@ -108,8 +120,8 @@ export const BalancesSection = observer(() => {
       <Grid container direction={'row'} justify={'space-between'} spacing={2}>
         <GridItem>
           <BalanceCard
-            title={'Unstaked ORBS in your wallet'}
-            actionButtonTitle={'Stake your tokens'}
+            title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
+            actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
             actionButtonActive={true}
             onActionButtonPressed={showStakingModal.setTrue}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)}
@@ -119,8 +131,8 @@ export const BalancesSection = observer(() => {
 
         <GridItem>
           <BalanceCard
-            title={'Staked ORBS in smart contract'}
-            actionButtonTitle={'Unstake your tokens'}
+            title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
+            actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
             amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
             actionButtonActive={true}
             onActionButtonPressed={onUnstakeTokensClicked}
