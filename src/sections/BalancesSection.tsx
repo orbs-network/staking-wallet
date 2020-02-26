@@ -32,7 +32,7 @@ const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} 
 
 export const BalancesSection = observer(() => {
   const rerenderNumber = useNumber(0);
-  const sectionTitlesTr = useSectionsTitlesTranslations();
+  const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const balancesSectionTranslations = useBalancesSectionTranslations();
   const alertsTranslations = useAlertsTranslations();
   const orbsAccountStore = useOrbsAccountStore();
@@ -119,7 +119,7 @@ export const BalancesSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTr('balance')} icon={AccountBalanceIcon} />
+      <SectionHeader title={sectionTitlesTranslations('balance')} icon={AccountBalanceIcon} />
 
       <Grid container direction={'row'} justify={'space-between'} spacing={2}>
         <GridItem>

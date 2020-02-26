@@ -7,7 +7,6 @@ import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
 import React, { useCallback } from 'react';
 import { useBoolean } from 'react-hanger';
-import { useTranslation } from 'react-i18next';
 import Modal from '@material-ui/core/Modal';
 import { QRCode } from 'react-qrcode-logo';
 import styled from 'styled-components';
@@ -16,9 +15,8 @@ import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarCont
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
-import { WizardContainer } from '../components/wizards/WizardContainer';
-import Color from 'color';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { useAlertsTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -41,7 +39,8 @@ const CenteredContainerGridForQr = styled(props => (
 });
 
 export const WalletInfoSection = observer(() => {
-  const { t } = useTranslation();
+  const sectionTitlesTranslations = useSectionsTitlesTranslations();
+  const alertsTranslations = useAlertsTranslations();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const showSnackbarMessage = useBoolean(false);
   const showQrModal = useBoolean(false);
@@ -54,7 +53,7 @@ export const WalletInfoSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={'WALLET INFO'} icon={AccountBalanceWalletIcon} />
+      <SectionHeader title={sectionTitlesTranslations('walletInfo')} icon={AccountBalanceWalletIcon} />
 
       <CommonDivider />
 
@@ -97,7 +96,7 @@ export const WalletInfoSection = observer(() => {
       >
         <CustomSnackBarContent
           variant={'success'}
-          message={'Copied Address !'}
+          message={alertsTranslations('walletAddressWasCopied')}
           onClose={showSnackbarMessage.setFalse}
           data-testid={'message-address-was-copied'}
         />

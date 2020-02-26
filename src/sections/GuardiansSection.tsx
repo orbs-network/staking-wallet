@@ -2,7 +2,6 @@ import Typography from '@material-ui/core/Typography';
 import SecurityIcon from '@material-ui/icons/Security';
 import { observer } from 'mobx-react';
 import React, { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useGuardiansStore, useOrbsAccountStore } from '../store/storeHooks';
@@ -13,11 +12,18 @@ import { useBoolean } from 'react-hanger';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
 import Modal from '@material-ui/core/Modal';
 import { GuardianChangingWizard } from '../wizards/guardianChange/GuardianChangingWizard';
+import {
+  useAlertsTranslations,
+  useCommonsTranslations,
+  useSectionsTitlesTranslations,
+} from '../translations/translationsHooks';
 
 export const GuardiansSection = observer(() => {
+  const sectionTitlesTranslations = useSectionsTitlesTranslations();
+  const alertsTranslations = useAlertsTranslations();
+  const commonsTranslations = useCommonsTranslations();
   const guardiansStore = useGuardiansStore();
   const orbsAccountStore = useOrbsAccountStore();
-  const { t } = useTranslation();
   const showGuardianChangingModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
@@ -36,14 +42,16 @@ export const GuardiansSection = observer(() => {
   );
 
   if (guardiansStore.guardiansList.length === 0) {
-    return <Typography>{t('Loading...')}</Typography>;
+    return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 
   return (
     <Section data-testid='guardians-section'>
       <SectionHeader
-        title='ALL GUARDIANS'
-        sideTitle={`${t('Participating stake')}: ${guardiansStore.totalParticipatingTokens.toLocaleString()}`}
+        title={sectionTitlesTranslations('allGuardians')}
+        sideTitle={sectionTitlesTranslations('allGuardians_sideTitle', {
+          totalParticipatingTokens: guardiansStore.totalParticipatingTokens.toLocaleString(),
+        })}
         icon={SecurityIcon}
       />
       <GuardiansTable
@@ -73,7 +81,7 @@ export const GuardiansSection = observer(() => {
       >
         <CustomSnackBarContent
           variant={'info'}
-          message={'Guardian already selected !'}
+          message={alertsTranslations('guardianAlreadySelected')}
           onClose={showSnackbarMessage.setFalse}
           data-testid={'message-guardian-already-selected'}
         />

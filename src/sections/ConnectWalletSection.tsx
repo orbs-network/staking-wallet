@@ -3,19 +3,18 @@ import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { Button, Divider } from '@material-ui/core';
 import { useBoolean } from 'react-hanger';
-import { useTranslation } from 'react-i18next';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
 import { CommonDivider } from '../components/base/CommonDivider';
 import Youtube from 'react-youtube';
 import { CommonActionButton } from '../components/base/CommonActionButton';
+import { useConnectWalletSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
 
 export const ConnectWalletSection = observer(() => {
-  const { t } = useTranslation();
+  const sectionTitlesTranslations = useSectionsTitlesTranslations();
+  const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
@@ -30,21 +29,26 @@ export const ConnectWalletSection = observer(() => {
     pressedOnInstallMetamask.setTrue();
   }, [pressedOnInstallMetamask]);
 
-  const installOrConnectMetamask = useMemo(() => {
+  const installOrConnectMetamaskButton = useMemo(() => {
     if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
         <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked}>
-          {t('Connect your account')}
+          {connectWalletSectionTranslations('connectYourAccount')}
         </CommonActionButton>
       );
     } else {
       return (
         <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
-          {t('Install Metamask')}
+          {connectWalletSectionTranslations('installMetamask')}
         </CommonActionButton>
       );
     }
-  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, handleConnectClicked, t, handleInstallClicked]);
+  }, [
+    connectWalletSectionTranslations,
+    cryptoWalletIntegrationStore.isMetamaskInstalled,
+    handleConnectClicked,
+    handleInstallClicked,
+  ]);
 
   const messageComponent = useMemo(() => {
     let testId = null;
@@ -52,10 +56,10 @@ export const ConnectWalletSection = observer(() => {
 
     if (cryptoWalletIntegrationStore.isMetamaskInstalled && rejectedConnection.value) {
       testId = 'text-connection-was-not-approved';
-      messageText = t('Please approve the account connection');
+      messageText = connectWalletSectionTranslations('pleaseApproveAccountConnection');
     } else if (pressedOnInstallMetamask.value) {
       testId = 'text-pleaseRefresh';
-      messageText = t('Please refresh this page after installing Metamask');
+      messageText = connectWalletSectionTranslations('refreshPageAfterInstallingMetamask');
     }
 
     if (messageText) {
@@ -63,18 +67,18 @@ export const ConnectWalletSection = observer(() => {
     } else {
       return null;
     }
-  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, pressedOnInstallMetamask.value, rejectedConnection.value, t]);
+  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, pressedOnInstallMetamask.value, rejectedConnection.value]);
 
   return (
     <Section data-testid='connect-to-wallet-section'>
       {/* Balance */}
-      <SectionHeader title={'Connect your wallet'} icon={AccountBalanceWalletIcon} />
+      <SectionHeader title={sectionTitlesTranslations('connectWallet')} icon={AccountBalanceWalletIcon} />
 
       <CommonDivider />
 
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          {installOrConnectMetamask}
+          {installOrConnectMetamaskButton}
         </Grid>
         {messageComponent !== null && (
           <Grid item xs={12}>

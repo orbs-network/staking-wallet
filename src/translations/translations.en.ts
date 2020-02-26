@@ -5,9 +5,17 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',
   sectionTitles: {
     allGuardians: 'All guardians',
+    allGuardians_sideTitle: 'Participating stake: {{totalParticipatingTokens}}',
     balance: 'Balance',
     rewards: 'Rewards',
+    connectWallet: 'Connect your wallet',
     walletInfo: 'Wallet Info',
+  },
+  connectWalletSection: {
+    connectYourAccount: 'Connect your account',
+    installMetamask: 'Install Metamask',
+    pleaseApproveAccountConnection: 'Please approve the account connection',
+    refreshPageAfterInstallingMetamask: 'Please refresh this page after installing Metamask',
   },
   walletInfoSection: {
     address: 'Address',
@@ -26,5 +34,10 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
+    walletAddressWasCopied: 'Copied address !',
+    guardianAlreadySelected: 'Guardian already selected !',
+  },
+  commons: {
+    loading: 'Loading ...',
   },
 };
