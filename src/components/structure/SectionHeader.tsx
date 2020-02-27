@@ -10,6 +10,7 @@ const SectionHeaderGrid = styled.div`
 
 const Title = styled(Typography)`
   margin-left: 0.5em;
+  text-transform: uppercase;
 `;
 
 const SideTitle = styled(Typography)`

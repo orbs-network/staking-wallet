@@ -14,8 +14,7 @@ export const TimeLeftCounter = React.memo<IProps>(props => {
   const num = useNumber(0);
   useInterval(() => num.setValue(Date.now), 1000);
 
-  const toMoment = useMemo(() => moment.unix(toTimestamp).utc(), [props.toTimestamp]);
-  const nowMoment = moment.utc();
+  const toMoment = useMemo(() => moment.unix(toTimestamp).utc(), [toTimestamp]);
   const nowMomentTimestamp = moment.utc().unix();
 
   useEffect(() => {
