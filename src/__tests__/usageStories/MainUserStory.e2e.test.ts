@@ -308,9 +308,9 @@ describe('Main User Story', () => {
     // TODO : O.L : use real test id
     await forElement('wizard_unstaking').toAppear();
 
-    // Default value should be the maximum value of staked orbs
+    // Default value should be 0
     // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsUnStakingStepDriver.orbsForUnstakingInput).toHaveValue(orbsForStaking);
+    expect(orbsUnStakingStepDriver.orbsForUnstakingInput).toHaveValue(0);
 
     orbsUnStakingStepDriver.setAmountForStaking(orbsForUnStaking);
 

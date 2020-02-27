@@ -70,7 +70,7 @@ describe('Wallet Info Section', () => {
     fireEvent.click(copyAddressButton);
 
     expect(queryByTestId(TEST_IDS.addressCopiedMessage)).toBeDefined();
-    expect(getByTestId(TEST_IDS.addressCopiedMessage)).toHaveTextContent('Copied Address !');
+    expect(getByTestId(TEST_IDS.addressCopiedMessage)).toHaveTextContent('Copied address !');
     expect(getByTestId(TEST_IDS.activeAddress)).toHaveTextContent(testAddress);
 
     expect(copyMock).toBeCalledTimes(1);

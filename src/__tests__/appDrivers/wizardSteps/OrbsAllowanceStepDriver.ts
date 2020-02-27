@@ -11,7 +11,7 @@ export class OrbsAllowanceStepDriver extends ApprovableStepDriver {
   }
 
   clickOnAllow() {
-    const setOrbsAllowanceButton = within(this.txCreatingSubStepComponent).getByText('Allow');
+    const setOrbsAllowanceButton = within(this.txCreatingSubStepComponent).getByText('Approve');
     fireEvent.click(setOrbsAllowanceButton);
   }
 
