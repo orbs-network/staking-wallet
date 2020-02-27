@@ -6,7 +6,7 @@ import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStep
 
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
-const REQUIRED_CONFIRMATIONS = 6;
+const REQUIRED_CONFIRMATIONS = 7;
 
 export interface ITransactionCreationStepProps {
   onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>): void;

@@ -41,7 +41,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
   },
   approvableWizardStep: {
-    waitingToReceiveEnoughConfirmations: 'Waiting to receive enough confirmations',
+    weRecommendWaitingToReceiveEnoughConfirmations: 'We recommend waiting until getting enough confirmations',
     thisMightTakeAFewMoments: 'This might take a few moments...',
     gotXConfirmationsOutOfRecommendedY: 'Got {{count}} conformation out of recommended {{recommended}}',
     gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} conformations out of recommended {{recommended}}',

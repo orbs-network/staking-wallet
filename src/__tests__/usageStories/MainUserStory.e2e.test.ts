@@ -69,8 +69,8 @@ async function testApprovableWizardStepAfterTxWasInitiated(
   // Should have a proper link to ether scan
   expect(approvableStepDriver.txConfirmationLinkHref).toBe(`https://etherscan.com/tx/${approveOrbsTxHash}`);
 
-  // The 'proceed' button should appear only after 6 confirmations
-  expect(approvableStepDriver.queryProceedButton).not.toBeInTheDocument();
+  // The 'proceed' button should always be visible  (we recommend waiting until after getting 7 confirmations)
+  expect(approvableStepDriver.queryProceedButton).toBeInTheDocument();
   sendTxConfirmations(txServiceMock, approveOrbsTxPromievent, 1, 6);
   await waitForElement(() => approvableStepDriver.queryProceedButton);
 

@@ -45,7 +45,7 @@ export interface IWizardsCommonsTranslations {
 }
 
 export interface IApprovableWizardStepTranslations {
-  waitingToReceiveEnoughConfirmations: string;
+  weRecommendWaitingToReceiveEnoughConfirmations: string;
   thisMightTakeAFewMoments: string;
   gotXConfirmationsOutOfRecommendedY: string;
   gotXConfirmationsOutOfRecommendedY_plural: string;

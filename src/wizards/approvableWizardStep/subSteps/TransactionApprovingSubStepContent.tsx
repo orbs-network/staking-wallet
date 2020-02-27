@@ -15,9 +15,11 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
   const { onStepFinished, txHash, confirmationsCount, requiredConfirmations } = props;
 
   const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
-  const allowToProceed = useBoolean(false);
-  const message = useStateful(approvableWizardStepTranslations('waitingToReceiveEnoughConfirmations'));
+  const allowToProceed = useBoolean(true);
+  const message = useStateful(approvableWizardStepTranslations('weRecommendWaitingToReceiveEnoughConfirmations'));
   const subMessage = useStateful('');
+
+  const isTxConfirmed = confirmationsCount >= 1;
 
   // Update the verification count text
   useEffect(() => {
@@ -30,11 +32,11 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
   }, [approvableWizardStepTranslations, confirmationsCount, requiredConfirmations, subMessage]);
 
   // Should allow the user to proceed ?
-  useEffect(() => {
-    if (confirmationsCount >= requiredConfirmations) {
-      allowToProceed.setTrue();
-    }
-  }, [confirmationsCount, requiredConfirmations, allowToProceed]);
+  // useEffect(() => {
+  //   if (confirmationsCount >= requiredConfirmations) {
+  //     allowToProceed.setTrue();
+  //   }
+  // }, [confirmationsCount, requiredConfirmations, allowToProceed]);
 
   const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
@@ -55,17 +57,16 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
   }, [allowToProceedValue, approvableWizardStepTranslations, onStepFinished]);
 
   const titleFc = useMemo(() => {
-    const titleMessage =
-      confirmationsCount >= 1
-        ? approvableWizardStepTranslations('txConfirmed')
-        : approvableWizardStepTranslations('txPending');
+    const titleMessage = isTxConfirmed
+      ? approvableWizardStepTranslations('txConfirmed')
+      : approvableWizardStepTranslations('txPending');
 
     return () => (
       <Link href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
         {titleMessage}
       </Link>
     );
-  }, [approvableWizardStepTranslations, txHash, confirmationsCount]);
+  }, [isTxConfirmed, approvableWizardStepTranslations, txHash]);
 
   return (
     <BaseStepContent
