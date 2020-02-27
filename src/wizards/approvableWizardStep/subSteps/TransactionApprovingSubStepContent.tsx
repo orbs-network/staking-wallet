@@ -1,36 +1,40 @@
 import React, { useEffect, useMemo } from 'react';
-import { Button, Link, TextField, Theme, Typography } from '@material-ui/core';
-import { WizardContent } from '../../../components/wizards/WizardContent';
+import { Button, Link, Typography } from '@material-ui/core';
 import { useStateful, useBoolean } from 'react-hanger';
 import { BaseStepContent } from '../BaseStepContent';
-import styled from 'styled-components';
+import { useApprovableWizardStepTranslations } from '../../../translations/translationsHooks';
 
 interface IProps {
   txHash: string;
-  verificationCount: number;
+  confirmationsCount: number;
   onStepFinished(): void;
   requiredConfirmations: number;
 }
 
 export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished, txHash, verificationCount, requiredConfirmations } = props;
+  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations } = props;
 
+  const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
   const allowToProceed = useBoolean(false);
-  const message = useStateful('Waiting to receive enough confirmations');
+  const message = useStateful(approvableWizardStepTranslations('waitingToReceiveEnoughConfirmations'));
   const subMessage = useStateful('');
 
   // Update the verification count text
   useEffect(() => {
-    // TODO : O.L : FUTURE : Handle plurality
-    subMessage.setValue(`Got ${verificationCount} conformations out of recommended ${requiredConfirmations}`);
-  }, [verificationCount, requiredConfirmations, subMessage]);
+    subMessage.setValue(
+      approvableWizardStepTranslations('gotXConfirmationsOutOfRecommendedY', {
+        count: confirmationsCount,
+        recommended: requiredConfirmations,
+      }),
+    );
+  }, [approvableWizardStepTranslations, confirmationsCount, requiredConfirmations, subMessage]);
 
   // Should allow the user to proceed ?
   useEffect(() => {
-    if (verificationCount >= requiredConfirmations) {
+    if (confirmationsCount >= requiredConfirmations) {
       allowToProceed.setTrue();
     }
-  }, [verificationCount, requiredConfirmations, allowToProceed]);
+  }, [confirmationsCount, requiredConfirmations, allowToProceed]);
 
   const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
@@ -42,21 +46,26 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
         </Button>
       );
     } else {
-      actionContent = <Typography variant={'caption'}>This might take a few moments... </Typography>;
+      actionContent = (
+        <Typography variant={'caption'}>{approvableWizardStepTranslations('thisMightTakeAFewMoments')}</Typography>
+      );
     }
 
     return actionContent;
-  }, [allowToProceedValue, onStepFinished]);
+  }, [allowToProceedValue, approvableWizardStepTranslations, onStepFinished]);
 
   const titleFc = useMemo(() => {
-    const titleMessage = verificationCount >= 1 ? 'Transaction Confirmed' : 'Transaction Pending';
+    const titleMessage =
+      confirmationsCount >= 1
+        ? approvableWizardStepTranslations('txConfirmed')
+        : approvableWizardStepTranslations('txPending');
 
     return () => (
       <Link href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
         {titleMessage}
       </Link>
     );
-  }, [txHash, verificationCount]);
+  }, [approvableWizardStepTranslations, txHash, confirmationsCount]);
 
   return (
     <BaseStepContent

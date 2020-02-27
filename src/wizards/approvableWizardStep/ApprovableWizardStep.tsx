@@ -50,7 +50,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
 
   const disableTxCreationInputs = useBoolean(false);
   const txHash = useStateful<string>('');
-  const txVerificationsCount = useNumber(-1);
+  const txConfirmationsCount = useNumber(-1);
   const txCreatingError = useStateful<Error>(null);
 
   const txCreationAction = useCallback<(promiEvent: PromiEvent<TransactionReceipt>) => void>(
@@ -62,7 +62,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
       };
 
       promiEvent.on('confirmation', confirmation => {
-        txVerificationsCount.setValue(confirmation);
+        txConfirmationsCount.setValue(confirmation);
 
         // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
         if (confirmation >= 10) {
@@ -81,7 +81,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
         disableTxCreationInputs.setFalse();
       });
     },
-    [disableTxCreationInputs, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
+    [disableTxCreationInputs, txConfirmationsCount, txHash, goToApprovalSubStep, txCreatingError],
   );
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
         return (
           <TransactionApprovingSubStepContent
             requiredConfirmations={REQUIRED_CONFIRMATIONS}
-            verificationCount={txVerificationsCount.value}
+            confirmationsCount={txConfirmationsCount.value}
             txHash={txHash.value}
             onStepFinished={goToCongratulationSubStep}
           />
@@ -130,7 +130,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     txCreatingError.value,
     txCreationAction,
     propsForTransactionCreationSubStepContent,
-    txVerificationsCount.value,
+    txConfirmationsCount.value,
     txHash.value,
     goToCongratulationSubStep,
     finishedActionName,

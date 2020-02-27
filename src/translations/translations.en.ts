@@ -40,6 +40,14 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     subMessage_pleaseApproveTransactionWithExplanation:
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
   },
+  approvableWizardStep: {
+    waitingToReceiveEnoughConfirmations: 'Waiting to receive enough confirmations',
+    thisMightTakeAFewMoments: 'This might take a few moments...',
+    gotXConfirmationsOutOfRecommendedY: 'Got {{count}} conformation out of recommended {{recommended}}',
+    gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} conformations out of recommended {{recommended}}',
+    txConfirmed: 'Transaction Confirmed',
+    txPending: 'Transaction Pending',
+  },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
     walletAddressWasCopied: 'Copied address !',

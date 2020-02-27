@@ -5,6 +5,7 @@ export interface IAppTranslations {
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
   wizardsCommons: IWizardsCommonsTranslations;
+  approvableWizardStep: IApprovableWizardStepTranslations;
   alerts: IAlertsTranslations;
   commons: ICommonsTranslations;
 }
@@ -41,6 +42,15 @@ export interface IWizardsCommonsTranslations {
   message_errorOccurred: string;
   subMessage_pleaseTryAgain: string;
   subMessage_pleaseApproveTransactionWithExplanation: string;
+}
+
+export interface IApprovableWizardStepTranslations {
+  waitingToReceiveEnoughConfirmations: string;
+  thisMightTakeAFewMoments: string;
+  gotXConfirmationsOutOfRecommendedY: string;
+  gotXConfirmationsOutOfRecommendedY_plural: string;
+  txPending: string;
+  txConfirmed: string;
 }
 
 export interface IBalancesSectionTranslations {

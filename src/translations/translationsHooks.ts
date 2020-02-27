@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import {
-  IAlertsTranslations,
+  IAlertsTranslations, IApprovableWizardStepTranslations,
   IAppTranslations,
   IBalancesSectionTranslations,
   ICommonsTranslations,
@@ -9,7 +9,7 @@ import {
   ISectionTitlesTranslations,
   IWizardsCommonsTranslations,
 } from './translationsTypes';
-import { TFunction, TOptions } from 'i18next';
+import { TOptions } from 'i18next';
 
 function useSpecificTypeSafeTFunction<T>(prefix: keyof IAppTranslations) {
   const { t } = useTranslation();
@@ -38,6 +38,10 @@ export function useConnectWalletSectionTranslations() {
 
 export function useWizardsCommonTranslations() {
   return useSpecificTypeSafeTFunction<IWizardsCommonsTranslations>('wizardsCommons');
+}
+
+export function useApprovableWizardStepTranslations() {
+  return useSpecificTypeSafeTFunction<IApprovableWizardStepTranslations>('approvableWizardStep');
 }
 
 export function useAlertsTranslations() {
