@@ -4,6 +4,7 @@ export interface IAppTranslations {
   connectWalletSection: IConnectWalletSectionTranslations;
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
+  wizardsCommons: IWizardsCommonsTranslations;
   alerts: IAlertsTranslations;
   commons: ICommonsTranslations;
 }
@@ -32,6 +33,14 @@ export interface IConnectWalletSectionTranslations {
   installMetamask: string;
   pleaseApproveAccountConnection: string;
   refreshPageAfterInstallingMetamask: string;
+}
+
+export interface IWizardsCommonsTranslations {
+  message_userCanceledTransactions: string;
+  subMessage_tryAgainAndApprove: string;
+  message_errorOccurred: string;
+  subMessage_pleaseTryAgain: string;
+  message_pleaseApproveTransactionWithExplanation: string;
 }
 
 export interface IBalancesSectionTranslations {

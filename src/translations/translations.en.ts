@@ -32,6 +32,14 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     action_restakeYourTokens: 'Restake your tokens',
     action_withdrawYourTokens: 'Withdraw your tokens',
   },
+  wizardsCommons: {
+    message_userCanceledTransactions: 'You have canceled the transaction.',
+    subMessage_tryAgainAndApprove: 'In order to continue, please try again and approve the transaction',
+    message_errorOccurred: 'An error occurred while trying to send transaction to the staking wallet.',
+    subMessage_pleaseTryAgain: 'please try again',
+    message_pleaseApproveTransactionWithExplanation:
+      'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
+  },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
     walletAddressWasCopied: 'Copied address !',
