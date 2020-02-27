@@ -37,7 +37,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     subMessage_tryAgainAndApprove: 'In order to continue, please try again and approve the transaction',
     message_errorOccurred: 'An error occurred while trying to send transaction to the staking wallet.',
     subMessage_pleaseTryAgain: 'please try again',
-    message_pleaseApproveTransactionWithExplanation:
+    subMessage_pleaseApproveTransactionWithExplanation:
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
   },
   alerts: {

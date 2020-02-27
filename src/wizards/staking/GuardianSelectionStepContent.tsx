@@ -5,8 +5,9 @@ import { ITransactionCreationStepProps } from '../approvableWizardStep/Approvabl
 import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
+import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -16,6 +17,7 @@ export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardiansStore = useGuardiansStore();
 
     // Start and limit by allowance
@@ -34,7 +36,7 @@ export const GuardianSelectionStepContent = observer(
     const selectGuardian = useCallback(
       (guardian: TGuardianInfoExtended) => {
         message.setValue('');
-        subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+        subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
         // No need to re-select an already selected guardian
         if (guardian.address === selectedGuardianAddress) {
@@ -44,7 +46,15 @@ export const GuardianSelectionStepContent = observer(
           onPromiEventAction(promiEvent);
         }
       },
-      [guardiansStore, message, onPromiEventAction, selectedGuardianAddress, skipToSuccess, subMessage],
+      [
+        guardiansStore,
+        message,
+        onPromiEventAction,
+        selectedGuardianAddress,
+        skipToSuccess,
+        subMessage,
+        wizardsCommonTranslations,
+      ],
     );
 
     const guardianSelectionContent = useMemo(() => {

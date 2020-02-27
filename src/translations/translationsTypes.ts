@@ -40,7 +40,7 @@ export interface IWizardsCommonsTranslations {
   subMessage_tryAgainAndApprove: string;
   message_errorOccurred: string;
   subMessage_pleaseTryAgain: string;
-  message_pleaseApproveTransactionWithExplanation: string;
+  subMessage_pleaseApproveTransactionWithExplanation: string;
 }
 
 export interface IBalancesSectionTranslations {

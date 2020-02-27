@@ -6,12 +6,14 @@ import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
+import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
 
+  const wizardsCommonTranslations = useWizardsCommonTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by allowance
@@ -34,11 +36,11 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
 
   const unstakeTokens = useCallback(() => {
     message.setValue('');
-    subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
     const promiEvent = orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking.value));
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, orbsAccountStore, orbsForUnstaking.value, onPromiEventAction]);
+  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, orbsForUnstaking.value, onPromiEventAction]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({

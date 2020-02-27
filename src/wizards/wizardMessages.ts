@@ -21,7 +21,3 @@ export function messageFromTxCreationSubStepError(error: Error): { errorMessage:
     errorSubMessage,
   };
 }
-
-// TODO : O.L : Use proper translation mechanism instead of this const message.
-export const PLEASE_APPROVE_TX_MESSAGE =
-  'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed';

@@ -3,10 +3,11 @@ import { useStateful } from 'react-hanger';
 import { useGuardiansStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useTranslation } from 'react-i18next';
+import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -16,6 +17,7 @@ export const GuardianChangeStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianChangeStepContentProps) => {
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardiansStore = useGuardiansStore();
     const [t] = useTranslation();
 
@@ -34,11 +36,11 @@ export const GuardianChangeStepContent = observer(
 
     const changeSelectedGuardian = useCallback(() => {
       message.setValue('');
-      subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
       const promiEvent = guardiansStore.selectGuardian(newGuardianAddress);
       onPromiEventAction(promiEvent);
-    }, [guardiansStore, message, onPromiEventAction, newGuardianAddress, subMessage]);
+    }, [message, subMessage, wizardsCommonTranslations, guardiansStore, newGuardianAddress, onPromiEventAction]);
 
     const guardianSelectionContent = useMemo(() => {
       return <CommonActionButton onClick={changeSelectedGuardian}>{t('Change')}</CommonActionButton>;
