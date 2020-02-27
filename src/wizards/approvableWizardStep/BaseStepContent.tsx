@@ -66,9 +66,9 @@ export const BaseStepContent = React.memo<IProps>(props => {
     } else {
       return null;
     }
-  }, []);
+  }, [infoTitle]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
+  // TODO : ORL : Fix centering of texts
   return (
     <WizardContent data-testid={contentTestId}>
       <Grid item>
