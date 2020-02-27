@@ -9,7 +9,7 @@ export const MainAppPage = observer(() => {
   return (
     <Grid container direction={'column'}>
       <WalletSectionsWrapper />
-      <RewardsSection />
+      {/*<RewardsSection />*/}
       <GuardiansSection />
     </Grid>
   );
