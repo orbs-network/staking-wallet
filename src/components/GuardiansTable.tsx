@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography } from '@material-ui/core';
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Theme } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,17 @@ const NoContainer = styled.span`
 const NameContainer = styled.span(({ theme }) => ({
   paddingLeft: theme.spacing(2),
 }));
+
+const StyledTableHead = styled(TableHead)((themeProps: { theme: Theme }) => ({
+  backgroundColor: themeProps.theme.palette.primary.dark,
+}));
+
+const StyledTableBody = styled(TableBody)((themeProps: { theme: Theme }) => ({
+  backgroundColor: themeProps.theme.palette.primary.main,
+}));
+
+// TODO : ORL : Pick a better color for marking selected guardian
+const selectedGuardianRowStyle: React.CSSProperties = { backgroundColor: '#1D0D0D' };
 
 type TGuardianSelectionMode = 'Select' | 'Change' | 'None';
 
@@ -119,8 +130,7 @@ export const GuardiansTable = React.memo<IProps>(
 
     const tableRows = useMemo(() => {
       return sortedGuardians.map((g, idx) => {
-        // TODO : ORL : Pick a better color for marking selected guardian
-        const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? { backgroundColor: '#1D0D0D' } : {};
+        const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? selectedGuardianRowStyle : null;
         return (
           <TableRow style={extraStyle} data-testid={`guardian-${g.address}`} key={g.name} hover>
             <TableCell data-testid={`guardian-${g.address}-name`}>
@@ -155,21 +165,19 @@ export const GuardiansTable = React.memo<IProps>(
     // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
     return (
       <Grid item style={extraStyle}>
-        <Paper>
-          <Table data-testid={tableTestId}>
-            <TableHead>
-              <TableRow>
-                <TableCell>{t('Name')}</TableCell>
-                <TableCell>{t('Address')}</TableCell>
-                <TableCell align='center'>{t('Website')}</TableCell>
-                <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
-                <TableCell align='center'>{t('Voted in last election')}</TableCell>
-                {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
-              </TableRow>
-            </TableHead>
-            <TableBody>{tableRows}</TableBody>
-          </Table>
-        </Paper>
+        <Table data-testid={tableTestId}>
+          <StyledTableHead>
+            <TableRow>
+              <TableCell>{t('Name')}</TableCell>
+              <TableCell>{t('Address')}</TableCell>
+              <TableCell align='center'>{t('Website')}</TableCell>
+              <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
+              <TableCell align='center'>{t('Voted in last election')}</TableCell>
+              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
+            </TableRow>
+          </StyledTableHead>
+          <StyledTableBody>{tableRows}</StyledTableBody>
+        </Table>
       </Grid>
     );
   },
