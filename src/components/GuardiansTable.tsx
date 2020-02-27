@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { selectActionButtonTestIdFromAddress } from '../__tests__/components/guardians/guardiansTestUtils';
+import Grid from '@material-ui/core/Grid';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -45,10 +46,11 @@ interface IProps {
   selectedGuardian?: string;
   onGuardianSelect?: (guardian: TGuardianInfoExtended) => void;
   tableTestId?: string;
+  extraStyle?: React.CSSProperties;
 }
 
 export const GuardiansTable = React.memo<IProps>(
-  ({ guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId }) => {
+  ({ guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle }) => {
     const { t } = useTranslation();
 
     const getSelectedGuardianCell = useCallback(
@@ -149,22 +151,26 @@ export const GuardiansTable = React.memo<IProps>(
         );
       });
     }, [addSelectionColumn, getSelectedGuardianCell, hasSelectedGuardian, selectedGuardian, sortedGuardians]);
+
+    // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
     return (
-      <Paper>
-        <Table data-testid={tableTestId}>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('Name')}</TableCell>
-              <TableCell>{t('Address')}</TableCell>
-              <TableCell align='center'>{t('Website')}</TableCell>
-              <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
-              <TableCell align='center'>{t('Voted in last election')}</TableCell>
-              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
-            </TableRow>
-          </TableHead>
-          <TableBody>{tableRows}</TableBody>
-        </Table>
-      </Paper>
+      <Grid item style={extraStyle}>
+        <Paper>
+          <Table data-testid={tableTestId}>
+            <TableHead>
+              <TableRow>
+                <TableCell>{t('Name')}</TableCell>
+                <TableCell>{t('Address')}</TableCell>
+                <TableCell align='center'>{t('Website')}</TableCell>
+                <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
+                <TableCell align='center'>{t('Voted in last election')}</TableCell>
+                {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
+              </TableRow>
+            </TableHead>
+            <TableBody>{tableRows}</TableBody>
+          </Table>
+        </Paper>
+      </Grid>
     );
   },
 );
