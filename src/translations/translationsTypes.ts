@@ -51,6 +51,8 @@ export interface IApprovableWizardStepTranslations {
   gotXConfirmationsOutOfRecommendedY_plural: string;
   txPending: string;
   txConfirmed: string;
+  youHaveDoneActionSuccessfully: string;
+  congratulations: string;
 }
 
 export interface IBalancesSectionTranslations {

@@ -47,6 +47,8 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} conformations out of recommended {{recommended}}',
     txConfirmed: 'Transaction Confirmed',
     txPending: 'Transaction Pending',
+    youHaveDoneActionSuccessfully: `You have successfully {{finishedActionName}}`,
+    congratulations: 'Congratulations',
   },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
