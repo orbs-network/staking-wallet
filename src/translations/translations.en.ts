@@ -41,6 +41,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
     stepLabel_finish: 'Finish',
     action_finish: 'Finish',
+    moveToStep_finish: 'Finish',
     stepDoneExclamation: 'Awesome !',
   },
   approvableWizardStep: {
@@ -61,6 +62,8 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     finishedAction_approved: 'allowed the staking contract to use your tokens',
     finishedAction_staked: 'staked your tokens',
     finishedAction_selectedGuardian: 'selected a guardian',
+    moveToStep_stake: 'Stake your ORBs',
+    moveToStep_selectGuardian: 'Select a Guardian',
     afterSuccessStateExplanation: 'Your Orbs are now staked and are assigned to a guardian',
 
     // Allowance approval selection sub step
@@ -85,6 +88,8 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   },
   guardianChangingWizard: {
     stepLabel_changeGuardian: 'Change selected guardian',
+    afterSuccessStateExplanation: 'You have selected a new guardian',
+    finishedAction_selectedGuardian: 'selected a guardian',
   },
   restakingWizard: {
 

@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Step, StepLabel, Typography } from '@material-ui/core';
+import { Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
@@ -11,6 +10,7 @@ import { observer } from 'mobx-react';
 import { GuardianSelectionStepContent, IGuardianSelectionStepContentProps } from './GuardianSelectionStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -52,7 +52,7 @@ export const StakingWizard = observer(
               transactionCreationSubStepContent={OrbsAllowanceStepContent}
               finishedActionName={stakingWizardTranslations('finishedAction_approved')}
               moveToNextStepAction={goToStakeOrbsStep}
-              moveToNextStepTitle={'Stake your ORBs'}
+              moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
               key={'approvingStep'}
             />
           );
@@ -63,7 +63,7 @@ export const StakingWizard = observer(
               transactionCreationSubStepContent={OrbsStakingStepContent}
               finishedActionName={stakingWizardTranslations('finishedAction_staked')}
               moveToNextStepAction={goToSelectGuardianStep}
-              moveToNextStepTitle={'Select a Guardian'}
+              moveToNextStepTitle={stakingWizardTranslations('moveToStep_selectGuardian')}
               key={'stakingStep'}
             />
           );
@@ -74,18 +74,17 @@ export const StakingWizard = observer(
               transactionCreationSubStepContent={GuardianSelectionStepContent}
               finishedActionName={stakingWizardTranslations('stepLabel_selectGuardian')}
               moveToNextStepAction={goToFinishStep}
-              moveToNextStepTitle={'Finish'}
+              moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
             />
           );
         case STEPS_INDEXES.finish:
           return (
-            <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>{wizardsCommonTranslations('stepDoneExclamation')}</Typography>
-              <Typography>{stakingWizardTranslations('afterSuccessStateExplanation')}</Typography>
-              <Button onClick={closeWizard}>{wizardsCommonTranslations('stepLabel_finish')}</Button>
-            </WizardContent>
+            <WizardFinishStep
+              finishedActionDescription={stakingWizardTranslations('afterSuccessStateExplanation')}
+              onFinishClicked={closeWizard}
+            />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);

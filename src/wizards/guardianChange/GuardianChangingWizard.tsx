@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Step, StepLabel, Typography } from '@material-ui/core';
+import { Step, StepLabel} from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
@@ -11,6 +10,7 @@ import {
   useGuardianChangingWizardTranslations,
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
+import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -46,25 +46,31 @@ export const GuardianChangingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianChangeStepContent}
-              finishedActionName={'selected a guardian'}
+              finishedActionName={guardianChangingWizardTranslations('finishedAction_selectedGuardian')}
               moveToNextStepAction={goToFinishStep}
-              moveToNextStepTitle={'Finish'}
+              moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
             />
           );
         case STEPS_INDEXES.finish:
           return (
-            <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>{wizardsCommonTranslations('stepDoneExclamation')}</Typography>
-              <Typography> You have selected a new guardian </Typography>
-              <Button onClick={closeWizard}>Finish</Button>
-            </WizardContent>
+            <WizardFinishStep
+              finishedActionDescription={guardianChangingWizardTranslations('afterSuccessStateExplanation')}
+              onFinishClicked={closeWizard}
+            />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, extraPropsForGuardianSelection, goToFinishStep]);
+    }, [
+      activeStep.value,
+      closeWizard,
+      extraPropsForGuardianSelection,
+      goToFinishStep,
+      guardianChangingWizardTranslations,
+      wizardsCommonTranslations,
+    ]);
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>

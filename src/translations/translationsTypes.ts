@@ -48,6 +48,7 @@ export interface IWizardsCommonsTranslations {
   subMessage_pleaseTryAgain: string;
   subMessage_pleaseApproveTransactionWithExplanation: string;
   stepLabel_finish: string;
+  moveToStep_finish: string;
   action_finish: string;
   stepDoneExclamation: string;
 }
@@ -70,6 +71,8 @@ export interface IStakingWizardTranslations {
   finishedAction_approved: string;
   finishedAction_staked: string;
   finishedAction_selectedGuardian: string;
+  moveToStep_stake: string;
+  moveToStep_selectGuardian: string;
   afterSuccessStateExplanation: string;
 
   // Allowance approval selection sub step
@@ -92,6 +95,8 @@ export interface IStakingWizardTranslations {
 
 export interface IGuardianChangingWizardTranslation {
   stepLabel_changeGuardian: string;
+  afterSuccessStateExplanation: string;
+  finishedAction_selectedGuardian: string;
 }
 
 export interface IRestakingWizardTranslation {
