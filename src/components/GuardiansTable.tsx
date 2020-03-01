@@ -1,7 +1,6 @@
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Theme } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Theme } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
 import styled from 'styled-components';
@@ -11,6 +10,7 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { selectActionButtonTestIdFromAddress } from '../__tests__/components/guardians/guardiansTestUtils';
 import Grid from '@material-ui/core/Grid';
+import { useGuardiansTableTranslations } from '../translations/translationsHooks';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -62,7 +62,7 @@ interface IProps {
 
 export const GuardiansTable = React.memo<IProps>(
   ({ guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle }) => {
-    const { t } = useTranslation();
+    const guardiansTableTranslations = useGuardiansTableTranslations();
 
     const getSelectedGuardianCell = useCallback(
       (g: TGuardianInfoExtended, idx: number) => {
@@ -82,7 +82,7 @@ export const GuardiansTable = React.memo<IProps>(
                   data-testid={actionButtonTestId}
                   onClick={actionButtonOnClick}
                 >
-                  {t(g.address === selectedGuardian ? 'Keep' : 'Select')}
+                  {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
                 </SelectButton>
               </TableCell>
             );
@@ -116,7 +116,7 @@ export const GuardiansTable = React.memo<IProps>(
 
         return selectedGuardianCell;
       },
-      [guardianSelectionMode, onGuardianSelect, selectedGuardian, t],
+      [guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
     );
 
     const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
@@ -154,13 +154,24 @@ export const GuardiansTable = React.memo<IProps>(
               {asPercent(g.stakePercent)}
             </TableCell>
             <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
-              {g.voted ? <YesContainer>Yes</YesContainer> : <NoContainer>No</NoContainer>}
+              {g.voted ? (
+                <YesContainer>{guardiansTableTranslations('didVote_yes')}</YesContainer>
+              ) : (
+                <NoContainer>{guardiansTableTranslations('didVote_no')}</NoContainer>
+              )}
             </TableCell>
             {addSelectionColumn && getSelectedGuardianCell(g, idx)}
           </TableRow>
         );
       });
-    }, [addSelectionColumn, getSelectedGuardianCell, hasSelectedGuardian, selectedGuardian, sortedGuardians]);
+    }, [
+      addSelectionColumn,
+      getSelectedGuardianCell,
+      guardiansTableTranslations,
+      hasSelectedGuardian,
+      selectedGuardian,
+      sortedGuardians,
+    ]);
 
     // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
     return (
@@ -168,12 +179,16 @@ export const GuardiansTable = React.memo<IProps>(
         <Table data-testid={tableTestId}>
           <StyledTableHead>
             <TableRow>
-              <TableCell>{t('Name')}</TableCell>
-              <TableCell>{t('Address')}</TableCell>
-              <TableCell align='center'>{t('Website')}</TableCell>
-              <TableCell align='center'>{t('Staking % in last elections')}</TableCell>
-              <TableCell align='center'>{t('Voted in last election')}</TableCell>
-              {addSelectionColumn && <TableCell align='center'>{t('Selection')}</TableCell>}
+              <TableCell>{guardiansTableTranslations('columnHeader_name')}</TableCell>
+              <TableCell>{guardiansTableTranslations('columnHeader_address')}</TableCell>
+              <TableCell align='center'>{guardiansTableTranslations('columnHeader_website')}</TableCell>
+              <TableCell align='center'>
+                {guardiansTableTranslations('columnHeader_stakingPercentageInLastElections')}
+              </TableCell>
+              <TableCell align='center'>{guardiansTableTranslations('columnHeader_votedInLastElection')}</TableCell>
+              {addSelectionColumn && (
+                <TableCell align='center'>{guardiansTableTranslations('columnHeader_selection')}</TableCell>
+              )}
             </TableRow>
           </StyledTableHead>
           <StyledTableBody>{tableRows}</StyledTableBody>

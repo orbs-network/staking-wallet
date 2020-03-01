@@ -4,6 +4,7 @@ export interface IAppTranslations {
   connectWalletSection: IConnectWalletSectionTranslations;
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
+  guardiansTable: IGuardiansTableTranslations;
   wizardsCommons: IWizardsCommonsTranslations;
   approvableWizardStep: IApprovableWizardStepTranslations;
   stakingWizard: IStakingWizardTranslations;
@@ -57,6 +58,19 @@ export interface IWizardsCommonsTranslations {
   txCreationError_userCanceled_subMessage: string;
   txCreationError_generalError_message: string;
   txCreationError_generalError_subMessage: string;
+}
+
+export interface IGuardiansTableTranslations {
+  action_keep: string;
+  action_select: string;
+  didVote_yes: string;
+  didVote_no: string;
+  columnHeader_name: string;
+  columnHeader_address: string;
+  columnHeader_website: string;
+  columnHeader_stakingPercentageInLastElections: string;
+  columnHeader_votedInLastElection: string;
+  columnHeader_selection: string;
 }
 
 export interface IApprovableWizardStepTranslations {

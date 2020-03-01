@@ -6,7 +6,7 @@ import {
   IAppTranslations,
   IBalancesSectionTranslations,
   ICommonsTranslations,
-  IConnectWalletSectionTranslations, IGuardianChangingWizardTranslation,
+  IConnectWalletSectionTranslations, IGuardianChangingWizardTranslation, IGuardiansTableTranslations,
   IRestakingWizardTranslation,
   ISectionTitlesTranslations,
   IStakingWizardTranslations,
@@ -39,6 +39,10 @@ export function useBalancesSectionTranslations() {
 
 export function useConnectWalletSectionTranslations() {
   return useSpecificTypeSafeTFunction<IConnectWalletSectionTranslations>('connectWalletSection');
+}
+
+export function useGuardiansTableTranslations() {
+  return useSpecificTypeSafeTFunction<IGuardiansTableTranslations>('guardiansTable');
 }
 
 export function useWizardsCommonTranslations() {

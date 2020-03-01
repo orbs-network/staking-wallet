@@ -32,6 +32,18 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     action_restakeYourTokens: 'Restake your tokens',
     action_withdrawYourTokens: 'Withdraw your tokens',
   },
+  guardiansTable: {
+    action_keep: 'Keep',
+    action_select: 'Select',
+    didVote_yes: 'Yes',
+    didVote_no: 'No',
+    columnHeader_name: 'Name',
+    columnHeader_address: 'Address',
+    columnHeader_website: 'Website',
+    columnHeader_stakingPercentageInLastElections: 'Staking % in last elections',
+    columnHeader_votedInLastElection: 'Voted in last election',
+    columnHeader_selection: 'Selection',
+  },
   wizardsCommons: {
     message_userCanceledTransactions: 'You have canceled the transaction.',
     subMessage_tryAgainAndApprove: 'In order to continue, please try again and approve the transaction',
