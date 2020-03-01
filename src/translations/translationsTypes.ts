@@ -106,7 +106,15 @@ export interface IGuardianChangingWizardTranslation {
 }
 
 export interface IRestakingWizardTranslation {
+  stepLabel_restake: string;
+  finishedAction_restaked: string;
+  afterSuccessStateExplanation: string;
 
+  // Restaking sub step
+  restakingSubStep_subMessage_pressRestakeAndApprove: string;
+  restakingSubStep_stepTitle: string;
+  restakingSubStep_stepExplanation: string;
+  restakingSubStep_action_restake: string;
 }
 
 export interface IUnstakingWizardTranslation {

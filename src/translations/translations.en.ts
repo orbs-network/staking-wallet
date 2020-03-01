@@ -98,14 +98,18 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     guardianSelectionSubStep_action_change: 'Change',
   },
   restakingWizard: {
+    stepLabel_restake: 'Restake Orbs',
+    finishedAction_restaked: 'restaked your tokens',
+    afterSuccessStateExplanation: 'Your orbs staked once again ! ',
 
+    restakingSubStep_subMessage_pressRestakeAndApprove: 'Press "Restake" and accept the transaction',
+    restakingSubStep_stepTitle: 'Restaking {{orbsForRestaking}} ORBS',
+    restakingSubStep_stepExplanation:
+      'This will stop the process of cooldown and will return all of the ORBS tokens back to the staked state.',
+    restakingSubStep_action_restake: 'Restake',
   },
-  unstakingWizard: {
-
-  },
-  withdrawingWizard: {
-
-  },
+  unstakingWizard: {},
+  withdrawingWizard: {},
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
     walletAddressWasCopied: 'Copied address !',
