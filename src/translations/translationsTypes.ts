@@ -44,6 +44,8 @@ export interface IWizardsCommonsTranslations {
   subMessage_pleaseTryAgain: string;
   subMessage_pleaseApproveTransactionWithExplanation: string;
   stepLabel_finish: string;
+  action_finish: string;
+  stepDoneExclamation: string;
 }
 
 export interface IApprovableWizardStepTranslations {
@@ -61,6 +63,10 @@ export interface IStakingWizardTranslations {
   stepLabel_approve: string;
   stepLabel_stake: string;
   stepLabel_selectGuardian: string;
+  finishedAction_approved: string;
+  finishedAction_staked: string;
+  finishedAction_selectedGuardian: string;
+  afterSuccessStateExplanation: string;
 }
 
 export interface IBalancesSectionTranslations {

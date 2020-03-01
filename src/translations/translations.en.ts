@@ -40,6 +40,8 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     subMessage_pleaseApproveTransactionWithExplanation:
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
     stepLabel_finish: 'Finish',
+    action_finish: 'Finish',
+    stepDoneExclamation: 'Awesome !',
   },
   approvableWizardStep: {
     weRecommendWaitingToReceiveEnoughConfirmations:
@@ -56,6 +58,10 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     stepLabel_approve: 'Approve usage of Orbs',
     stepLabel_stake: 'Stake your tokens',
     stepLabel_selectGuardian: 'Select a guardian',
+    finishedAction_approved: 'allowed the staking contract to use your tokens',
+    finishedAction_staked: 'staked your tokens',
+    finishedAction_selectedGuardian: 'selected a guardian',
+    afterSuccessStateExplanation: 'Your Orbs are now staked and are assigned to a guardian',
   },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',

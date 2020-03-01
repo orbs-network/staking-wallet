@@ -50,7 +50,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsAllowanceStepContent}
-              finishedActionName={'allowed the staking contract to use your tokens'}
+              finishedActionName={stakingWizardTranslations('finishedAction_approved')}
               moveToNextStepAction={goToStakeOrbsStep}
               moveToNextStepTitle={'Stake your ORBs'}
               key={'approvingStep'}
@@ -61,7 +61,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsStakingStepContent}
-              finishedActionName={'staked your tokens'}
+              finishedActionName={stakingWizardTranslations('finishedAction_staked')}
               moveToNextStepAction={goToSelectGuardianStep}
               moveToNextStepTitle={'Select a Guardian'}
               key={'stakingStep'}
@@ -72,7 +72,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianSelectionStepContent}
-              finishedActionName={'selected a guardian'}
+              finishedActionName={stakingWizardTranslations('stepLabel_selectGuardian')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={'Finish'}
               key={'guardianSelectionStep'}
@@ -82,9 +82,9 @@ export const StakingWizard = observer(
         case STEPS_INDEXES.finish:
           return (
             <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>Awesome !</Typography>
-              <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
-              <Button onClick={closeWizard}>Finish</Button>
+              <Typography>{wizardsCommonTranslations('stepDoneExclamation')}</Typography>
+              <Typography>{stakingWizardTranslations('afterSuccessStateExplanation')}</Typography>
+              <Button onClick={closeWizard}>{wizardsCommonTranslations('stepLabel_finish')}</Button>
             </WizardContent>
           );
         default:
@@ -97,6 +97,8 @@ export const StakingWizard = observer(
       goToFinishStep,
       goToSelectGuardianStep,
       goToStakeOrbsStep,
+      stakingWizardTranslations,
+      wizardsCommonTranslations,
     ]);
 
     return (
