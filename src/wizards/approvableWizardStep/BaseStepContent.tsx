@@ -59,7 +59,7 @@ export const BaseStepContent = React.memo<IProps>(props => {
   const infoTooltippedIcon = useMemo(() => {
     if (infoTitle) {
       return (
-        <HtmlTooltip title={'Test'} arrow interactive>
+        <HtmlTooltip title={infoTitle} arrow interactive>
           <HelpOutlineIcon />
         </HtmlTooltip>
       );

@@ -66,6 +66,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       message={message.value}
       subMessage={subMessage.value}
       title={'Approve the staking contract to use your Orbs'}
+      infoTitle={'This step will approve the Staking contract to transfer your ORBS tokens into the contract in order to be staked (up to the approved amount).'}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_allowance_tx'}
       actionButtonProps={actionButtonProps}

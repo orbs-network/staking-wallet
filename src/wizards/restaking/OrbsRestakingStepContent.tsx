@@ -51,6 +51,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       message={message.value}
       subMessage={subMessage.value}
       title={`Restaking ${fullOrbsForRestaking} ORBS`}
+      infoTitle={'This will stop the process of cooldown and will return all of the ORBS tokens back to the staked state. '}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}
       actionButtonProps={actionButtonProps}

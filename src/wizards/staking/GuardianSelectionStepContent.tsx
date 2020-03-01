@@ -75,6 +75,9 @@ export const GuardianSelectionStepContent = observer(
         message={message.value}
         subMessage={subMessage.value}
         title={'Select your guardian'}
+        infoTitle={
+          'This step selects which Guardian you would like to delegate to, adding your staked ORBS tokens to their influence.'
+        }
         disableInputs={disableInputs}
         contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
         innerContent={guardianSelectionContent}

@@ -70,6 +70,9 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       message={message.value}
       subMessage={subMessage.value}
       title={'Unstaking your tokens'}
+      infoTitle={
+        'This will take your ORBS tokens out of their staked state and will start a cooldown period of 30 days, after which you will be able to withdraw the tokens to your wallet. During those 30 days you may choose to re-stake your tokens.'
+      }
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}
       actionButtonProps={actionButtonProps}

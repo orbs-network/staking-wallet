@@ -49,6 +49,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       message={message.value}
       subMessage={subMessage.value}
       title={`Withdrawing ${fullOrbsReadyForWithdrawal} Orbs`}
+      infoTitle={'This will transfer all of the ORBS tokens that completed cooldown to your address.'}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_withdrawing_tx'}
       actionButtonProps={actionButtonProps}

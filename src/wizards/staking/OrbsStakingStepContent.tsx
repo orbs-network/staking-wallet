@@ -52,6 +52,9 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       message={message.value}
       subMessage={subMessage.value}
       title={`In this step you will stake ${fullOrbsForStaking.toLocaleString()} ORBS`}
+      infoTitle={
+        'This step will transfer your ORBS tokens to the staking contract and stake them. Staking makes the Orbs network more secure and incentivizes the Delegators, Guardians and Validators to participate.'
+      }
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_staking_tx'}
       actionButtonProps={actionButtonProps}
