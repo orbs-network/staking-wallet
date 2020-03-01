@@ -108,7 +108,20 @@ export const ENGLISH_TEXTS: IAppTranslations = {
       'This will stop the process of cooldown and will return all of the ORBS tokens back to the staked state.',
     restakingSubStep_action_restake: 'Restake',
   },
-  unstakingWizard: {},
+  unstakingWizard: {
+    stepLabel_unstake: 'Unstake',
+    finishedAction_unstaked: 'unstaked your tokens',
+    afterSuccessStateExplanation: 'Your unstaked Orbs will be available after the unfreezing period',
+
+    // Unstaking sub step
+    unstakingSubStep_message_selectAmountOfOrbs: 'Select amount of Orbs to unstake',
+    unstakingSubStep_subMessage_pressUnstakeAndApprove: 'Press "Unstake" and accept the transaction',
+    unstakingSubStep_stepTitle: 'Unstaking your tokens',
+    unstakingSubStep_stepExplanation:
+      'This will take your ORBS tokens out of their staked state and will start a cooldown period of 30 days, after which you will be able to withdraw the tokens to your wallet. During those 30 days you may choose to re-stake your tokens.',
+    unstakingSubStep_action_unstake: 'Unstake',
+    unstakingSubStep_inputLabel: 'Unstaking',
+  },
   withdrawingWizard: {},
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',

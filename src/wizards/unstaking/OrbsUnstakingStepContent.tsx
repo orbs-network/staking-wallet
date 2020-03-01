@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { Button, TextField, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
+import { TextField } from '@material-ui/core';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
@@ -8,12 +7,13 @@ import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
-import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
 
   const wizardsCommonTranslations = useWizardsCommonTranslations();
+  const unstakingWizardTranslations = useUnstakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by allowance
@@ -22,8 +22,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     lowerLimit: 0,
     upperLimit: stakedOrbsNumericalFormat,
   });
-  const message = useStateful('Select amount of Orbs to unstake');
-  const subMessage = useStateful('Press "Unstake" and accept the transaction');
+  const message = useStateful(unstakingWizardTranslations('unstakingSubStep_message_selectAmountOfOrbs'));
+  const subMessage = useStateful(unstakingWizardTranslations('unstakingSubStep_subMessage_pressUnstakeAndApprove'));
 
   // Display the proper error message
   useEffect(() => {
@@ -45,9 +45,9 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
       onClick: unstakeTokens,
-      title: 'Unstake',
+      title: unstakingWizardTranslations('unstakingSubStep_action_unstake'),
     }),
-    [unstakeTokens],
+    [unstakeTokens, unstakingWizardTranslations],
   );
 
   // TODO : O.L : Add a number formatter here to display the sums with proper separation
@@ -56,23 +56,21 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     return (
       <TextField
         id={'orbsUnstaking'}
-        label={'Unstaking'}
+        label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
         type={'number'}
         value={orbsForUnstaking.value}
         onChange={e => orbsForUnstaking.setValue(parseInt(e.target.value))}
       />
     );
-  }, [orbsForUnstaking]);
+  }, [orbsForUnstaking, unstakingWizardTranslations]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={'Unstaking your tokens'}
-      infoTitle={
-        'This will take your ORBS tokens out of their staked state and will start a cooldown period of 30 days, after which you will be able to withdraw the tokens to your wallet. During those 30 days you may choose to re-stake your tokens.'
-      }
+      title={unstakingWizardTranslations('unstakingSubStep_stepTitle')}
+      infoTitle={unstakingWizardTranslations('unstakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}
       actionButtonProps={actionButtonProps}

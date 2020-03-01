@@ -118,7 +118,17 @@ export interface IRestakingWizardTranslation {
 }
 
 export interface IUnstakingWizardTranslation {
+  stepLabel_unstake: string;
+  finishedAction_unstaked: string;
+  afterSuccessStateExplanation: string;
 
+  // Unstaking sub step
+  unstakingSubStep_message_selectAmountOfOrbs: string;
+  unstakingSubStep_subMessage_pressUnstakeAndApprove: string;
+  unstakingSubStep_stepTitle: string;
+  unstakingSubStep_stepExplanation: string;
+  unstakingSubStep_action_unstake: string;
+  unstakingSubStep_inputLabel: string;
 }
 
 export interface IWithdrawingWizardTranslation {
