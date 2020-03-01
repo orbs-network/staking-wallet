@@ -97,6 +97,12 @@ export interface IGuardianChangingWizardTranslation {
   stepLabel_changeGuardian: string;
   afterSuccessStateExplanation: string;
   finishedAction_selectedGuardian: string;
+
+  // Guardian change sub step
+  guardianSelectionSubStep_message_changeGuardian: string;
+  guardianSelectionSubStep_subMessage_pressChangeAndApprove: string;
+  guardianSelectionSubStep_stepTitle: string;
+  guardianSelectionSubStep_action_change: string;
 }
 
 export interface IRestakingWizardTranslation {

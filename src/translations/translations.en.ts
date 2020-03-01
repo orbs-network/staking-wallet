@@ -90,6 +90,12 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     stepLabel_changeGuardian: 'Change selected guardian',
     afterSuccessStateExplanation: 'You have selected a new guardian',
     finishedAction_selectedGuardian: 'selected a guardian',
+
+    // Guardian change sub step
+    guardianSelectionSubStep_message_changeGuardian: 'Change selected guardian to {{newGuardianAddress}}',
+    guardianSelectionSubStep_subMessage_pressChangeAndApprove: 'Press "Change" and accept the transaction',
+    guardianSelectionSubStep_stepTitle: 'Change selected guardian',
+    guardianSelectionSubStep_action_change: 'Change',
   },
   restakingWizard: {
 

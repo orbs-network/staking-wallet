@@ -7,7 +7,10 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useTranslation } from 'react-i18next';
-import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import {
+  useGuardianChangingWizardTranslations,
+  useWizardsCommonTranslations,
+} from '../../translations/translationsHooks';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -18,12 +21,17 @@ export const GuardianChangeStepContent = observer(
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
     const guardiansStore = useGuardiansStore();
     const [t] = useTranslation();
 
     // Start and limit by allowance
-    const message = useStateful(`Change selected guardian to ${newGuardianAddress}`);
-    const subMessage = useStateful('Press "Change" and accept the transaction');
+    const message = useStateful(
+      guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
+    );
+    const subMessage = useStateful(
+      guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
+    );
 
     // Display the proper error message
     useEffect(() => {
@@ -43,14 +51,18 @@ export const GuardianChangeStepContent = observer(
     }, [message, subMessage, wizardsCommonTranslations, guardiansStore, newGuardianAddress, onPromiEventAction]);
 
     const guardianSelectionContent = useMemo(() => {
-      return <CommonActionButton onClick={changeSelectedGuardian}>{t('Change')}</CommonActionButton>;
-    }, [changeSelectedGuardian, t]);
+      return (
+        <CommonActionButton onClick={changeSelectedGuardian}>
+          {guardianChangingWizardTranslations('guardianSelectionSubStep_action_change')}
+        </CommonActionButton>
+      );
+    }, [changeSelectedGuardian, guardianChangingWizardTranslations]);
 
     return (
       <BaseStepContent
         message={message.value}
         subMessage={subMessage.value}
-        title={'Change selected guardian'}
+        title={guardianChangingWizardTranslations('guardianSelectionSubStep_stepTitle')}
         disableInputs={disableInputs}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
         innerContent={guardianSelectionContent}
