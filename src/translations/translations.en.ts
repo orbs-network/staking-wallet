@@ -43,6 +43,12 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     action_finish: 'Finish',
     moveToStep_finish: 'Finish',
     stepDoneExclamation: 'Awesome !',
+
+    // Message for TX errors
+    txCreationError_userCanceled_message: 'You have canceled the transaction.',
+    txCreationError_userCanceled_subMessage: 'In order to continue, please try again and approve the transaction',
+    txCreationError_generalError_message: 'An error occurred while trying to send transaction to the staking wallet.',
+    txCreationError_generalError_subMessage: 'please try again',
   },
   approvableWizardStep: {
     weRecommendWaitingToReceiveEnoughConfirmations:

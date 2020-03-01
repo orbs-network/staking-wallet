@@ -1,18 +1,22 @@
 import { JSON_RPC_ERROR_CODES } from '../constants/ethereumErrorCodes';
+import { useWizardsCommonTranslations } from '../translations/translationsHooks';
 
-export function messageFromTxCreationSubStepError(error: Error): { errorMessage: string; errorSubMessage: string } {
+export function messageFromTxCreationSubStepError(
+  error: Error,
+  wizardsCommonTranslations: ReturnType<typeof useWizardsCommonTranslations>,
+): { errorMessage: string; errorSubMessage: string } {
   const errorCode = (error as any).code;
   let errorMessage = '';
   let errorSubMessage = '';
 
   switch (errorCode) {
     case JSON_RPC_ERROR_CODES.provider.userRejectedRequest:
-      errorMessage = 'You have canceled the transaction.';
-      errorSubMessage = 'In order to continue, please try again and approve the transaction';
+      errorMessage = wizardsCommonTranslations('txCreationError_userCanceled_message');
+      errorSubMessage = wizardsCommonTranslations('txCreationError_userCanceled_subMessage');
       break;
     default:
-      errorMessage = 'An error occurred while trying to send transaction to the staking wallet.';
-      errorSubMessage = 'please try again';
+      errorMessage = wizardsCommonTranslations('txCreationError_generalError_message');
+      errorSubMessage = wizardsCommonTranslations('txCreationError_generalError_subMessage');
       break;
   }
 

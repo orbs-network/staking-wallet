@@ -25,11 +25,11 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   // Calculate the proper error message
   useEffect(() => {
     if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
+      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
       message.setValue(errorMessage);
       subMessage.setValue(errorSubMessage);
     }
-  }, [txError, message, subMessage]);
+  }, [txError, message, subMessage, wizardsCommonTranslations]);
 
   const setTokenAllowanceForStakingContract = useCallback(() => {
     message.setValue('');

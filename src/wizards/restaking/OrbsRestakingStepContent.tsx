@@ -23,11 +23,11 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
   // Display the proper error message
   useEffect(() => {
     if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
+      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
       message.setValue(errorMessage);
       subMessage.setValue(errorSubMessage);
     }
-  }, [txError, message, subMessage]);
+  }, [txError, message, subMessage, wizardsCommonTranslations]);
 
   const restakeTokens = useCallback(() => {
     message.setValue('');

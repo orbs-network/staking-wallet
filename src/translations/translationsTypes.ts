@@ -51,6 +51,12 @@ export interface IWizardsCommonsTranslations {
   moveToStep_finish: string;
   action_finish: string;
   stepDoneExclamation: string;
+
+  // Message for TX errors
+  txCreationError_userCanceled_message: string;
+  txCreationError_userCanceled_subMessage: string;
+  txCreationError_generalError_message: string;
+  txCreationError_generalError_subMessage: string;
 }
 
 export interface IApprovableWizardStepTranslations {
