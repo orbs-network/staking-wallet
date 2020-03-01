@@ -83,6 +83,18 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     guardianSelectionSubStep_stepExplanation:
       'This step selects which Guardian you would like to delegate to, adding your staked ORBS tokens to their influence.',
   },
+  guardianChangingWizard: {
+    stepLabel_changeGuardian: 'Change selected guardian',
+  },
+  restakingWizard: {
+
+  },
+  unstakingWizard: {
+
+  },
+  withdrawingWizard: {
+
+  },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
     walletAddressWasCopied: 'Copied address !',

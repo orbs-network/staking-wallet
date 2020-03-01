@@ -7,6 +7,10 @@ import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardianChangeStepContent, IGuardianChangeStepContentProps } from './GuardianChangeStepContent';
+import {
+  useGuardianChangingWizardTranslations,
+  useWizardsCommonTranslations,
+} from '../../translations/translationsHooks';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -24,6 +28,8 @@ export const GuardianChangingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard, newGuardianAddress } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
     const activeStep = useNumber(0);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
@@ -50,7 +56,7 @@ export const GuardianChangingWizard = observer(
         case STEPS_INDEXES.finish:
           return (
             <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>Awesome !</Typography>
+              <Typography>{wizardsCommonTranslations('stepDoneExclamation')}</Typography>
               <Typography> You have selected a new guardian </Typography>
               <Button onClick={closeWizard}>Finish</Button>
             </WizardContent>
@@ -64,11 +70,11 @@ export const GuardianChangingWizard = observer(
       <WizardContainer data-testid={'wizard_staking'}>
         <WizardStepper activeStep={activeStep.value} alternativeLabel>
           <Step>
-            <StepLabel>Change selected guardian</StepLabel>
+            <StepLabel>{guardianChangingWizardTranslations('stepLabel_changeGuardian')}</StepLabel>
           </Step>
 
           <Step>
-            <StepLabel>Finish</StepLabel>
+            <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
           </Step>
         </WizardStepper>
 

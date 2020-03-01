@@ -7,6 +7,10 @@ export interface IAppTranslations {
   wizardsCommons: IWizardsCommonsTranslations;
   approvableWizardStep: IApprovableWizardStepTranslations;
   stakingWizard: IStakingWizardTranslations;
+  guardianChangingWizard: IGuardianChangingWizardTranslation;
+  restakingWizard: IRestakingWizardTranslation;
+  unstakingWizard: IUnstakingWizardTranslation;
+  withdrawingWizard: IWithdrawingWizardTranslation;
   alerts: IAlertsTranslations;
   commons: ICommonsTranslations;
 }
@@ -84,6 +88,22 @@ export interface IStakingWizardTranslations {
   guardianSelectionSubStep_subMessage_pressSelectAndApprove: string;
   guardianSelectionSubStep_stepTitle: string;
   guardianSelectionSubStep_stepExplanation: string;
+}
+
+export interface IGuardianChangingWizardTranslation {
+  stepLabel_changeGuardian: string;
+}
+
+export interface IRestakingWizardTranslation {
+
+}
+
+export interface IUnstakingWizardTranslation {
+
+}
+
+export interface IWithdrawingWizardTranslation {
+
 }
 
 export interface IBalancesSectionTranslations {

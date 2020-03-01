@@ -1,12 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import {
-  IAlertsTranslations, IApprovableWizardStepTranslations,
+  IAlertsTranslations,
+  IApprovableWizardStepTranslations,
   IAppTranslations,
   IBalancesSectionTranslations,
   ICommonsTranslations,
-  IConnectWalletSectionTranslations,
-  ISectionTitlesTranslations, IStakingWizardTranslations,
+  IConnectWalletSectionTranslations, IGuardianChangingWizardTranslation,
+  IRestakingWizardTranslation,
+  ISectionTitlesTranslations,
+  IStakingWizardTranslations,
+  IUnstakingWizardTranslation,
+  IWithdrawingWizardTranslation,
   IWizardsCommonsTranslations,
 } from './translationsTypes';
 import { TOptions } from 'i18next';
@@ -46,6 +51,22 @@ export function useApprovableWizardStepTranslations() {
 
 export function useStakingWizardTranslations() {
   return useSpecificTypeSafeTFunction<IStakingWizardTranslations>('stakingWizard');
+}
+
+export function useGuardianChangingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IGuardianChangingWizardTranslation>('guardianChangingWizard');
+}
+
+export function useRestakingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IRestakingWizardTranslation>('restakingWizard');
+}
+
+export function useUnstakingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IUnstakingWizardTranslation>('unstakingWizard');
+}
+
+export function useWithdrawingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IWithdrawingWizardTranslation>('withdrawingWizard');
 }
 
 export function useAlertsTranslations() {
