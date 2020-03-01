@@ -62,6 +62,26 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     finishedAction_staked: 'staked your tokens',
     finishedAction_selectedGuardian: 'selected a guardian',
     afterSuccessStateExplanation: 'Your Orbs are now staked and are assigned to a guardian',
+
+    // Allowance approval selection sub step
+    allowanceSubStep_message_selectAmountOfOrbs: 'Select the amount of ORBS you would like to stake',
+    allowanceSubStep_action_approve: 'Approve',
+    allowanceSubStep_label_allowance: 'Allowance',
+    allowanceSubStep_stepTitle: 'Approve the staking contract to use your Orbs',
+    allowanceSubStep_stepExplanation:
+      'This step will approve the Staking contract to transfer your ORBS tokens into the contract in order to be staked (up to the approved amount).',
+
+    // Staking sub step
+    stakingSubStep_stepTitle: 'In this step you will stake {{orbsForStaking}} ORBS',
+    stakingSubStep_stepExplanation:
+      'This step will transfer your ORBS tokens to the staking contract and stake them. Staking makes the Orbs network more secure and incentivizes the Delegators, Guardians and Validators to participate.',
+
+    // Guardian selection sub step
+    guardianSelectionSubStep_message_selectGuardian: 'Select a guardian',
+    guardianSelectionSubStep_subMessage_pressSelectAndApprove: 'Press "Select" and accept the transaction',
+    guardianSelectionSubStep_stepTitle: 'Select your guardian',
+    guardianSelectionSubStep_stepExplanation:
+      'This step selects which Guardian you would like to delegate to, adding your staked ORBS tokens to their influence.',
   },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',

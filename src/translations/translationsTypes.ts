@@ -67,6 +67,23 @@ export interface IStakingWizardTranslations {
   finishedAction_staked: string;
   finishedAction_selectedGuardian: string;
   afterSuccessStateExplanation: string;
+
+  // Allowance approval selection sub step
+  allowanceSubStep_message_selectAmountOfOrbs: string;
+  allowanceSubStep_action_approve: string;
+  allowanceSubStep_label_allowance: string;
+  allowanceSubStep_stepTitle: string;
+  allowanceSubStep_stepExplanation: string;
+
+  // Staking sub step
+  stakingSubStep_stepTitle: string;
+  stakingSubStep_stepExplanation: string;
+
+  // Guardian selection sub step
+  guardianSelectionSubStep_message_selectGuardian: string;
+  guardianSelectionSubStep_subMessage_pressSelectAndApprove: string;
+  guardianSelectionSubStep_stepTitle: string;
+  guardianSelectionSubStep_stepExplanation: string;
 }
 
 export interface IBalancesSectionTranslations {

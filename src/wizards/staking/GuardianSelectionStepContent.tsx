@@ -7,7 +7,7 @@ import { GuardiansTable } from '../../components/GuardiansTable';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
-import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -18,11 +18,14 @@ export const GuardianSelectionStepContent = observer(
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const stakingWizardTranslations = useStakingWizardTranslations();
     const guardiansStore = useGuardiansStore();
 
     // Start and limit by allowance
-    const message = useStateful('Select a guardian');
-    const subMessage = useStateful('Press "Select" and accept the transaction');
+    const message = useStateful(stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'));
+    const subMessage = useStateful(
+      stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
+    );
 
     // Display the proper error message
     useEffect(() => {
@@ -60,8 +63,8 @@ export const GuardianSelectionStepContent = observer(
     const guardianSelectionContent = useMemo(() => {
       return (
         <GuardiansTable
-          guardianSelectionMode={'Select'}
           guardians={guardiansStore.guardiansList}
+          guardianSelectionMode={'Select'}
           onGuardianSelect={selectGuardian}
           selectedGuardian={selectedGuardianAddress}
           tableTestId={'guardian_selection_sub_step_guardians_table'}
@@ -74,10 +77,8 @@ export const GuardianSelectionStepContent = observer(
       <BaseStepContent
         message={message.value}
         subMessage={subMessage.value}
-        title={'Select your guardian'}
-        infoTitle={
-          'This step selects which Guardian you would like to delegate to, adding your staked ORBS tokens to their influence.'
-        }
+        title={stakingWizardTranslations('guardianSelectionSubStep_stepTitle')}
+        infoTitle={stakingWizardTranslations('guardianSelectionSubStep_stepExplanation')}
         disableInputs={disableInputs}
         contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
         innerContent={guardianSelectionContent}
