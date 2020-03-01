@@ -122,7 +122,18 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     unstakingSubStep_action_unstake: 'Unstake',
     unstakingSubStep_inputLabel: 'Unstaking',
   },
-  withdrawingWizard: {},
+  withdrawingWizard: {
+    stepLabel_withdraw: 'Withdraw Orbs',
+    finishedAction_withdrew: 'Withdrew your cooled down tokens',
+    afterSuccessStateExplanation: 'Your unstaked Orbs will be available after the unfreezing period',
+
+    // Withdrawing sub step
+    withdrawingSubStep_subMessage_pressWithdrawAndApprove: 'Press "Withdraw" and accept the transaction',
+    withdrawingSubStep_stepTitle: 'Withdrawing {{orbsForWithdrawal}} Orbs',
+    withdrawingSubStep_stepExplanation:
+      'This will transfer all of the ORBS tokens that completed cooldown to your address.',
+    withdrawingSubStep_action_withdraw: 'Withdraw',
+  },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
     walletAddressWasCopied: 'Copied address !',

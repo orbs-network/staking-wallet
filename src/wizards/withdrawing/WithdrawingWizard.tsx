@@ -7,6 +7,8 @@ import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { OrbsWithdrawingStepContent } from './OrbsWithdrawingStepContent';
+import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 
 const STEPS_INDEXES = {
   withdrawOrbs: 0,
@@ -23,6 +25,8 @@ export const WithdrawingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const withdrawingWizardTranslations = useWithdrawingWizardTranslations();
     const activeStep = useNumber(0);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
@@ -33,34 +37,33 @@ export const WithdrawingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsWithdrawingStepContent}
-              finishedActionName={'selected a guardian'}
+              finishedActionName={withdrawingWizardTranslations('finishedAction_withdrew')}
               moveToNextStepAction={goToFinishStep}
-              moveToNextStepTitle={'Finish'}
+              moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
             />
           );
         case STEPS_INDEXES.finish:
           return (
-            <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>Awesome !</Typography>
-              <Typography> Your unstaked Orbs will be available after the unfreezing period </Typography>
-              <Button onClick={closeWizard}>Finish</Button>
-            </WizardContent>
+            <WizardFinishStep
+              finishedActionDescription={withdrawingWizardTranslations('afterSuccessStateExplanation')}
+              onFinishClicked={closeWizard}
+            />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep]);
+    }, [activeStep.value, closeWizard, goToFinishStep, withdrawingWizardTranslations, wizardsCommonTranslations]);
 
     return (
       <WizardContainer data-testid={'wizard_withdrawing'}>
         <WizardStepper activeStep={activeStep.value} alternativeLabel>
           <Step>
-            <StepLabel>Withdraw Orbs</StepLabel>
+            <StepLabel>{withdrawingWizardTranslations('stepLabel_withdraw')}</StepLabel>
           </Step>
 
           <Step>
-            <StepLabel>Finish</StepLabel>
+            <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
           </Step>
         </WizardStepper>
 

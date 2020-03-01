@@ -132,7 +132,15 @@ export interface IUnstakingWizardTranslation {
 }
 
 export interface IWithdrawingWizardTranslation {
+  stepLabel_withdraw: string;
+  finishedAction_withdrew: string;
+  afterSuccessStateExplanation: string;
 
+  // Withdrawing sub step
+  withdrawingSubStep_subMessage_pressWithdrawAndApprove: string;
+  withdrawingSubStep_stepTitle: string;
+  withdrawingSubStep_stepExplanation: string;
+  withdrawingSubStep_action_withdraw: string;
 }
 
 export interface IBalancesSectionTranslations {
