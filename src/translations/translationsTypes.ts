@@ -6,6 +6,7 @@ export interface IAppTranslations {
   balancesSection: IBalancesSectionTranslations;
   wizardsCommons: IWizardsCommonsTranslations;
   approvableWizardStep: IApprovableWizardStepTranslations;
+  stakingWizard: IStakingWizardTranslations;
   alerts: IAlertsTranslations;
   commons: ICommonsTranslations;
 }
@@ -42,6 +43,7 @@ export interface IWizardsCommonsTranslations {
   message_errorOccurred: string;
   subMessage_pleaseTryAgain: string;
   subMessage_pleaseApproveTransactionWithExplanation: string;
+  stepLabel_finish: string;
 }
 
 export interface IApprovableWizardStepTranslations {
@@ -53,6 +55,12 @@ export interface IApprovableWizardStepTranslations {
   txConfirmed: string;
   youHaveDoneActionSuccessfully: string;
   congratulations: string;
+}
+
+export interface IStakingWizardTranslations {
+  stepLabel_approve: string;
+  stepLabel_stake: string;
+  stepLabel_selectGuardian: string;
 }
 
 export interface IBalancesSectionTranslations {

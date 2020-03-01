@@ -39,9 +39,11 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     subMessage_pleaseTryAgain: 'please try again',
     subMessage_pleaseApproveTransactionWithExplanation:
       'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
+    stepLabel_finish: 'Finish',
   },
   approvableWizardStep: {
-    weRecommendWaitingToReceiveEnoughConfirmations: 'We recommend waiting until getting enough confirmations',
+    weRecommendWaitingToReceiveEnoughConfirmations:
+      'We recommend waiting until enough confirmations have been received',
     thisMightTakeAFewMoments: 'This might take a few moments...',
     gotXConfirmationsOutOfRecommendedY: 'Got {{count}} conformation out of recommended {{recommended}}',
     gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} conformations out of recommended {{recommended}}',
@@ -49,6 +51,11 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     txPending: 'Transaction Pending',
     youHaveDoneActionSuccessfully: `You have successfully {{finishedActionName}}`,
     congratulations: 'Congratulations',
+  },
+  stakingWizard: {
+    stepLabel_approve: 'Approve usage of Orbs',
+    stepLabel_stake: 'Stake your tokens',
+    stepLabel_selectGuardian: 'Select a guardian',
   },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',

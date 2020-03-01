@@ -10,6 +10,7 @@ import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
 import { GuardianSelectionStepContent, IGuardianSelectionStepContentProps } from './GuardianSelectionStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -28,6 +29,8 @@ export const StakingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
     const activeStep = useNumber(0);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
@@ -87,25 +90,32 @@ export const StakingWizard = observer(
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep, goToSelectGuardianStep, goToStakeOrbsStep]);
+    }, [
+      activeStep.value,
+      closeWizard,
+      extraPropsForGuardianSelection,
+      goToFinishStep,
+      goToSelectGuardianStep,
+      goToStakeOrbsStep,
+    ]);
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>
         <WizardStepper activeStep={activeStep.value} alternativeLabel>
           <Step>
-            <StepLabel>Approve usage of Orbs</StepLabel>
+            <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
           </Step>
 
           <Step>
-            <StepLabel>Stake your tokens</StepLabel>
+            <StepLabel>{stakingWizardTranslations('stepLabel_stake')}</StepLabel>
           </Step>
 
           <Step>
-            <StepLabel>Select a guardian</StepLabel>
+            <StepLabel>{stakingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
           </Step>
 
           <Step>
-            <StepLabel>Finish</StepLabel>
+            <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
           </Step>
         </WizardStepper>
 

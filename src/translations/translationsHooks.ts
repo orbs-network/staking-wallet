@@ -6,7 +6,7 @@ import {
   IBalancesSectionTranslations,
   ICommonsTranslations,
   IConnectWalletSectionTranslations,
-  ISectionTitlesTranslations,
+  ISectionTitlesTranslations, IStakingWizardTranslations,
   IWizardsCommonsTranslations,
 } from './translationsTypes';
 import { TOptions } from 'i18next';
@@ -42,6 +42,10 @@ export function useWizardsCommonTranslations() {
 
 export function useApprovableWizardStepTranslations() {
   return useSpecificTypeSafeTFunction<IApprovableWizardStepTranslations>('approvableWizardStep');
+}
+
+export function useStakingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IStakingWizardTranslations>('stakingWizard');
 }
 
 export function useAlertsTranslations() {
