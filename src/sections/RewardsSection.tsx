@@ -1,7 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
-import StarIcon from '@material-ui/icons/Star';
+// @ts-ignore
+import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
 import { useSectionsTitlesTranslations } from '../translations/translationsHooks';
@@ -11,7 +12,7 @@ export const RewardsSection = observer(() => {
 
   return (
     <Section>
-      <SectionHeader title={sectionTitlesTranslations('rewards')} icon={StarIcon} />
+      <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} />
     </Section>
   );
 });

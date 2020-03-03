@@ -10,7 +10,7 @@ import {
   IRestakingWizardTranslation,
   ISectionTitlesTranslations,
   IStakingWizardTranslations,
-  IUnstakingWizardTranslation,
+  IUnstakingWizardTranslation, IWalletInfoSectionTranslations,
   IWithdrawingWizardTranslation,
   IWizardsCommonsTranslations,
 } from './translationsTypes';
@@ -39,6 +39,10 @@ export function useBalancesSectionTranslations() {
 
 export function useConnectWalletSectionTranslations() {
   return useSpecificTypeSafeTFunction<IConnectWalletSectionTranslations>('connectWalletSection');
+}
+
+export function useWalletInfoSectionTranslations() {
+  return useSpecificTypeSafeTFunction<IWalletInfoSectionTranslations>('walletInfoSection');
 }
 
 export function useGuardiansTableTranslations() {

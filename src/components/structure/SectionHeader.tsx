@@ -1,12 +1,14 @@
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridTypeMap } from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
-const SectionHeaderGrid = styled.div`
-  display: flex;
-  margin-bottom: 0.5em;
-`;
+const SectionHeaderGrid = styled<typeof Grid>(props => (
+  <Grid item container direction={'row'} alignItems={'center'} {...props}></Grid>
+))(() => ({
+  marginBottom: '0.5em',
+}));
 
 const Title = styled(Typography)`
   margin-left: 0.5em;
@@ -30,8 +32,9 @@ export const SectionHeader: React.FC<IProps> = props => {
 
   return (
     <SectionHeaderGrid>
-      {/* TODO : O.L : Make this Icon adhere to the page font-size */}
-      <MyIcon></MyIcon>
+      <SvgIcon>
+        <MyIcon />
+      </SvgIcon>
       <Title variant={'h5'}>{title}</Title>
       {sideTitle && (
         <SideTitle data-testid='side-title' variant={'h6'}>

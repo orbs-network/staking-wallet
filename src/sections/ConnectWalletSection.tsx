@@ -4,7 +4,8 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+// @ts-ignore
+import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
 import { CommonDivider } from '../components/base/CommonDivider';
@@ -32,13 +33,13 @@ export const ConnectWalletSection = observer(() => {
   const installOrConnectMetamaskButton = useMemo(() => {
     if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
-        <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked}>
+        <CommonActionButton fullWidth data-testid='button-connect-metamask' onClick={handleConnectClicked}>
           {connectWalletSectionTranslations('connectYourAccount')}
         </CommonActionButton>
       );
     } else {
       return (
-        <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
+        <CommonActionButton fullWidth data-testid='button-install-metamask' onClick={handleInstallClicked}>
           {connectWalletSectionTranslations('installMetamask')}
         </CommonActionButton>
       );
@@ -67,26 +68,28 @@ export const ConnectWalletSection = observer(() => {
     } else {
       return null;
     }
-  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, pressedOnInstallMetamask.value, rejectedConnection.value]);
+  }, [
+    connectWalletSectionTranslations,
+    cryptoWalletIntegrationStore.isMetamaskInstalled,
+    pressedOnInstallMetamask.value,
+    rejectedConnection.value,
+  ]);
 
   return (
     <Section data-testid='connect-to-wallet-section'>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('connectWallet')} icon={AccountBalanceWalletIcon} />
+      <SectionHeader title={sectionTitlesTranslations('connectWallet')} icon={walletIcon} />
 
       <CommonDivider />
 
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
+      <Grid container spacing={1} direction={'column'} alignContent={'center'}>
+        <Typography variant={'h6'}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
+        <Grid item xs={12} md={4}>
           {installOrConnectMetamaskButton}
         </Grid>
-        {messageComponent !== null && (
-          <Grid item xs={12}>
-            {messageComponent}
-          </Grid>
-        )}
-        <Grid item xs={12}>
-          <Youtube videoId={'6Gf_kRE4MJU'} />
+        {messageComponent !== null && <Grid item>{messageComponent}</Grid>}
+        <Grid item xs={8}>
+          {/*<Youtube videoId={'6Gf_kRE4MJU'} />*/}
         </Grid>
       </Grid>
     </Section>

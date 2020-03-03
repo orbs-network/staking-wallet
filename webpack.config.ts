@@ -80,8 +80,12 @@ const config: Configuration = {
         ],
       },
       {
-        test: /.jpe?g$|.gif$|.png$|.svg$|.woff$|.woff2$|.ttf$|.eot$/,
+        test: /.jpe?g$|.gif$|.png$|.woff$|.woff2$|.ttf$|.eot$/,
         use: 'url-loader?limit=10000',
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack', 'url-loader?limit=10000'],
       },
     ],
   },

@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+// @ts-ignore
+import { ReactComponent as BalanceIcon } from '../../assets/balance.svg';
 import { observer } from 'mobx-react';
 import React, { useMemo } from 'react';
 import { useBoolean, useNumber } from 'react-hanger';
@@ -17,9 +18,7 @@ import { useOrbsInCooldownState } from '../store/storeStateHooks';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
-import moment from 'moment';
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
-import { useTranslation } from 'react-i18next';
 import {
   useAlertsTranslations,
   useBalancesSectionTranslations,
@@ -119,7 +118,7 @@ export const BalancesSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('balance')} icon={AccountBalanceIcon} />
+      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
 
       <Grid container direction={'row'} justify={'space-between'} spacing={2}>
         <GridItem>

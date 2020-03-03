@@ -1,5 +1,6 @@
 import Typography from '@material-ui/core/Typography';
-import SecurityIcon from '@material-ui/icons/Security';
+// @ts-ignore
+import { ReactComponent as ShielIcon } from '../../assets/shield.svg';
 import { observer } from 'mobx-react';
 import React, { useCallback, useState } from 'react';
 import { Section } from '../components/structure/Section';
@@ -52,7 +53,7 @@ export const GuardiansSection = observer(() => {
         sideTitle={sectionTitlesTranslations('allGuardians_sideTitle', {
           totalParticipatingTokens: guardiansStore.totalParticipatingTokens.toLocaleString(),
         })}
-        icon={SecurityIcon}
+        icon={ShielIcon}
       />
       <GuardiansTable
         guardianSelectionMode={'Change'}

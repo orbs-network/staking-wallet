@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="31px" viewBox="0 0 30 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>qr-code 2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="wallet-new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-copy" transform="translate(-1389.000000, -271.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group-12" transform="translate(1270.000000, 265.000000)">
+                <g id="qr-code-2" transform="translate(119.000000, 6.500000)">
+                    <g id="qr-code">
+                        <path d="M0,30 L13.6708861,30 L13.6708861,16.3291139 L0,16.3291139 L0,30 Z M2.73396773,19.0635006 L10.9366191,19.0635006 L10.9366191,27.2448144 L2.73396773,27.2448144 L2.73396773,19.0635006 Z" id="Shape"></path>
+                        <rect id="Rectangle" x="5.3164557" y="22.0253165" width="2.65822785" height="2.65822785"></rect>
+                        <rect id="Rectangle" x="22.0253165" y="27.3417722" width="2.65822785" height="2.65822785"></rect>
+                        <rect id="Rectangle" x="27.3417722" y="27.3417722" width="2.65822785" height="2.65822785"></rect>
+                        <polygon id="Path" points="27.2658377 19.0635006 24.5318999 19.0635006 24.5318999 16.3291139 16.3291139 16.3291139 16.3291139 30 19.0635006 30 19.0635006 21.7974384 21.797214 21.7974384 21.797214 24.5318999 30 24.5318999 30 16.3291139 30 16.3291139 27.2658377 16.3291139"></polygon>
+                        <path d="M0,13.6708861 L13.6708861,13.6708861 L13.6708861,0 L0,0 L0,13.6708861 Z M2.73396773,2.73390788 L10.9366191,2.73390788 L10.9366191,10.9363797 L2.73396773,10.9363797 L2.73396773,2.73390788 Z" id="Shape"></path>
+                        <rect id="Rectangle" x="5.3164557" y="5.3164557" width="2.65822785" height="2.65822785"></rect>
+                        <path d="M16.3291139,0 L16.3291139,13.6708861 L30,13.6708861 L30,0 L16.3291139,0 Z M27.2656582,10.9363797 L19.0634557,10.9363797 L19.0634557,2.73390788 L27.2656582,2.73390788 L27.2656582,10.9363797 L27.2656582,10.9363797 Z" id="Shape"></path>
+                        <rect id="Rectangle" x="22.0253165" y="5.3164557" width="2.65822785" height="2.65822785"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -8,13 +8,14 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 
 export const MainAppPage = observer(() => {
   const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
-  const canDisplayGuardians = cryptoWalletConnectionStore.isMetamaskInstalled;
+  const canAndShouldDisplayGuardians =
+    cryptoWalletConnectionStore.isMetamaskInstalled && cryptoWalletConnectionStore.isConnectedToWallet;
 
   return (
     <Grid container direction={'column'}>
       <WalletSectionsWrapper />
       {/*<RewardsSection />*/}
-      {canDisplayGuardians && <GuardiansSection />}
+      {canAndShouldDisplayGuardians && <GuardiansSection />}
     </Grid>
   );
 });

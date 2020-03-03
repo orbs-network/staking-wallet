@@ -40,6 +40,7 @@ export interface IConnectWalletSectionTranslations {
   installMetamask: string;
   pleaseApproveAccountConnection: string;
   refreshPageAfterInstallingMetamask: string;
+  initialGreeting: string;
 }
 
 export interface IWizardsCommonsTranslations {

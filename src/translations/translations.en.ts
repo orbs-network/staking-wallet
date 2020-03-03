@@ -16,6 +16,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     installMetamask: 'Install Metamask',
     pleaseApproveAccountConnection: 'Please approve the account connection',
     refreshPageAfterInstallingMetamask: 'Please refresh this page after installing Metamask',
+    initialGreeting: 'To begin, we need to connect your wallet',
   },
   walletInfoSection: {
     address: 'Address',

@@ -1,8 +1,12 @@
-import { Button } from '@material-ui/core';
+import { Button, Divider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+// @ts-ignore
+import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
+// @ts-ignore
+import { ReactComponent as CopyIcon } from '../../assets/copy.svg';
+import { ReactComponent as QrIcon } from '../../assets/qr.svg';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
 import React, { useCallback } from 'react';
@@ -16,7 +20,11 @@ import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { useAlertsTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import {
+  useAlertsTranslations,
+  useSectionsTitlesTranslations,
+  useWalletInfoSectionTranslations,
+} from '../translations/translationsHooks';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -40,6 +48,7 @@ const CenteredContainerGridForQr = styled(props => (
 
 export const WalletInfoSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
+  const walletInfoSectionTranslations = useWalletInfoSectionTranslations();
   const alertsTranslations = useAlertsTranslations();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const showSnackbarMessage = useBoolean(false);
@@ -53,21 +62,29 @@ export const WalletInfoSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('walletInfo')} icon={AccountBalanceWalletIcon} />
+      <SectionHeader title={sectionTitlesTranslations('walletInfo')} icon={walletIcon} />
 
       <CommonDivider />
 
       <Grid item xs={12}>
-        <Typography>Address</Typography>
+        <Typography>{walletInfoSectionTranslations('address')}</Typography>
       </Grid>
       <Grid container direction={'row'} justify={'space-between'}>
-        <Typography variant={'h4'} data-testid={'text-active-address'}>
-          {cryptoWalletIntegrationStore.mainAddress}
-        </Typography>
-        <div>
-          <LoweCaseButton onClick={copyAddress}> Copy </LoweCaseButton>
-          <LoweCaseButton onClick={showQrModal.setTrue}> QR </LoweCaseButton>
-        </div>
+        <Grid item>
+          <Typography variant={'h4'} data-testid={'text-active-address'}>
+            {cryptoWalletIntegrationStore.mainAddress}
+          </Typography>
+        </Grid>
+
+        <Grid item>
+          <LoweCaseButton onClick={copyAddress} startIcon={<CopyIcon />}>
+            {walletInfoSectionTranslations('copy')}
+          </LoweCaseButton>
+          {'  '}
+          <LoweCaseButton onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
+            {walletInfoSectionTranslations('qr')}
+          </LoweCaseButton>
+        </Grid>
       </Grid>
       <CommonDivider />
 
