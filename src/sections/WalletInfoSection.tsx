@@ -85,7 +85,7 @@ export const WalletInfoSection = observer(() => {
       <Grid item xs={12}>
         <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
       </Grid>
-      <Grid container direction={'row'}>
+      <Grid container item direction={'row'} spacing={2}>
         {/* Address */}
         <Grid item sm={12} lg={8}>
           <Typography variant={smOrLarger ? 'h4' : 'body2'} data-testid={'text-active-address'}>
