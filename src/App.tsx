@@ -5,21 +5,13 @@ import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
-
-const ContentContainer = styled(Container)(({ theme }) => {
-  return {
-    [theme.breakpoints.down('sm')]: {},
-    [theme.breakpoints.up('sm')]: {},
-    [theme.breakpoints.up('md')]: {},
-    [theme.breakpoints.up('lg')]: {},
-  };
-});
+import { ContentContainer } from './components/structure/ContentContainer';
 
 export const App = observer(() => {
   return (
     <>
       <Header />
-      <ContentContainer maxWidth={'xl'}>
+      <ContentContainer>
         <Switch>
           <Route exact path='/' component={MainAppPage} />
         </Switch>
