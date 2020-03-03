@@ -22,16 +22,15 @@ export const baseTheme = responsiveFontSizes(
         // primary: PRIMARY_TEXT,
         // secondary: SECONDARY_TEXT,
       },
+      background: {
+        // DEV_NOTE : This sets the app background color
+        default: 'black',
+      },
     },
     typography: {
       fontFamily: 'Montserrat',
     },
     overrides: {
-      MuiContainer: {
-        root: {
-          backgroundColor: 'black',
-        },
-      },
       MuiPaper: {
         root: {
           backgroundColor: COLOR1,
