@@ -68,7 +68,9 @@ export const WalletInfoSection = observer(() => {
   }, [cryptoWalletIntegrationStore.mainAddress, showSnackbarMessage]);
 
   const theme = useTheme();
+  const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const mediumOrLarger = useMediaQuery(theme.breakpoints.up('md'));
+  const largeOrLarger = useMediaQuery(theme.breakpoints.up('lg'));
 
   const qrDimensions = mediumOrLarger ? QR_IMAGE_DIMENSION_MD : QR_IMAGE_DIMENSION_XS;
   const logoDimensions = mediumOrLarger ? LOGO_DIMENSIONS_MD : LOGO_DIMENSIONS_XS;
@@ -81,23 +83,28 @@ export const WalletInfoSection = observer(() => {
       <CommonDivider />
 
       <Grid item xs={12}>
-        <Typography>{walletInfoSectionTranslations('address')}</Typography>
+        <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
       </Grid>
-      <Grid container direction={'row'} justify={'space-between'}>
-        <Grid item>
-          <Typography variant={'h4'} data-testid={'text-active-address'}>
+      <Grid container direction={'row'}>
+        {/* Address */}
+        <Grid item sm={12} lg={8}>
+          <Typography variant={smOrLarger ? 'h4' : 'body2'} data-testid={'text-active-address'}>
             {cryptoWalletIntegrationStore.mainAddress}
           </Typography>
         </Grid>
 
-        <Grid item>
-          <LoweCaseButton onClick={copyAddress} startIcon={<CopyIcon />}>
-            {walletInfoSectionTranslations('copy')}
-          </LoweCaseButton>
-          {'  '}
-          <LoweCaseButton onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
-            {walletInfoSectionTranslations('qr')}
-          </LoweCaseButton>
+        {/* Buttons */}
+        <Grid container direction={'row'} item sm={12} lg={4} justify={'flex-end'}>
+          <Grid item xs={6} lg={3}>
+            <LoweCaseButton fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
+              {walletInfoSectionTranslations('copy')}
+            </LoweCaseButton>
+          </Grid>
+          <Grid item xs={6} lg={3}>
+            <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
+              {walletInfoSectionTranslations('qr')}
+            </LoweCaseButton>
+          </Grid>
         </Grid>
       </Grid>
       <CommonDivider />
