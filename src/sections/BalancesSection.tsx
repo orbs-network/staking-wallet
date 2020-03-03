@@ -25,7 +25,7 @@ import {
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
 
-const GridItem = styled(props => <Grid item xs={11} sm={6} md={4} lg={4} xl={4} {...props} />)(styledProps => {
+const GridItem = styled(props => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
 });
 
@@ -120,7 +120,7 @@ export const BalancesSection = observer(() => {
       {/* Balance */}
       <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
 
-      <Grid container direction={'row'} justify={'space-between'} spacing={2}>
+      <Grid container direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
           <BalanceCard
             title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}

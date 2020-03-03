@@ -7,11 +7,10 @@ import { useStringOrElement } from './hooks/commonHooks';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   backgroundColor: 'rgba(33,33, 33, 0.55)',
-  padding: '1em',
-  paddingRight: '1.5em',
-  paddingLeft: '1.5em',
-  display: 'flex',
-  flexDirection: 'column',
+  paddingTop: '0.5em',
+  paddingRight: '0.75em',
+  paddingLeft: '0.75em',
+  paddingBottom: '1.5em',
 }));
 
 interface IProps {
@@ -31,18 +30,23 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const titleElement = useStringOrElement(title);
 
   return (
-    <StyledGrid data-testid={balanceCardTestId}>
+    <StyledGrid container spacing={1} direction={'column'} data-testid={balanceCardTestId}>
+      <Grid item>
         <Typography variant={'caption'}>{titleElement}</Typography>
-
         <CommonDivider />
+      </Grid>
 
-        <Typography variant={'h6'} data-testid={'balance_text'}>
+      <Grid item>
+        <Typography variant={'h4'} style={{ marginBottom: '0.5em' }} data-testid={'balance_text'}>
           {amount.toLocaleString()}
         </Typography>
+      </Grid>
 
+      <Grid item>
         <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
           {actionButtonTitle}
         </CommonActionButton>
+      </Grid>
     </StyledGrid>
   );
 };

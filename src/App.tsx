@@ -19,7 +19,7 @@ export const App = observer(() => {
   return (
     <>
       <Header />
-      <ContentContainer>
+      <ContentContainer maxWidth={'xl'}>
         <Switch>
           <Route exact path='/' component={MainAppPage} />
         </Switch>

@@ -7,5 +7,6 @@ export const CommonActionButton = styled((props: ButtonProps) => (
 ))(({ theme }) => {
   return {
     fontWeight: 'bold',
+    height: '4em',
   };
 });

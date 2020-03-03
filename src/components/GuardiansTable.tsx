@@ -11,6 +11,8 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { selectActionButtonTestIdFromAddress } from '../__tests__/components/guardians/guardiansTestUtils';
 import Grid from '@material-ui/core/Grid';
 import { useGuardiansTableTranslations } from '../translations/translationsHooks';
+import TableContainer from '@material-ui/core/TableContainer';
+import Paper from '@material-ui/core/Paper';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -177,7 +179,7 @@ export const GuardiansTable = React.memo<IProps>(
 
     // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
     return (
-      <Grid item style={extraStyle}>
+      <TableContainer component={Paper} style={extraStyle}>
         <Table data-testid={tableTestId}>
           <StyledTableHead>
             <TableRow>
@@ -195,7 +197,7 @@ export const GuardiansTable = React.memo<IProps>(
           </StyledTableHead>
           <StyledTableBody>{tableRows}</StyledTableBody>
         </Table>
-      </Grid>
+      </TableContainer>
     );
   },
 );

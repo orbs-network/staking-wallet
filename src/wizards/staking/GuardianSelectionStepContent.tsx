@@ -8,6 +8,7 @@ import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { Grid } from '@material-ui/core';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -62,14 +63,16 @@ export const GuardianSelectionStepContent = observer(
 
     const guardianSelectionContent = useMemo(() => {
       return (
-        <GuardiansTable
-          guardians={guardiansStore.guardiansList}
-          guardianSelectionMode={'Select'}
-          onGuardianSelect={selectGuardian}
-          selectedGuardian={selectedGuardianAddress}
-          tableTestId={'guardian_selection_sub_step_guardians_table'}
-          extraStyle={{ marginLeft: '1em', marginRight: '1em' }}
-        />
+        <Grid item style={{ marginLeft: '1em', marginRight: '1em' }}>
+          <GuardiansTable
+            guardians={guardiansStore.guardiansList}
+            guardianSelectionMode={'Select'}
+            onGuardianSelect={selectGuardian}
+            selectedGuardian={selectedGuardianAddress}
+            tableTestId={'guardian_selection_sub_step_guardians_table'}
+            // extraStyle={{ marginLeft: '1em', marginRight: '1em' }}
+          />
+        </Grid>
       );
     }, [guardiansStore.guardiansList, selectGuardian, selectedGuardianAddress]);
 

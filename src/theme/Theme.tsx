@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 import { blue } from '@material-ui/core/colors';
 
 const COLOR1 = '#0D0D0D'; // dark gray
-const COLOR2 = '#6FC7D9'; // bluish
+const COLOR2 = '#6ec6d8'; // bluish
 
 const PRIMARY_TEXT = '#dbdbdb';
 const SECONDARY_TEXT = '#7B7B7B';

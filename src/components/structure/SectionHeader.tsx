@@ -35,7 +35,7 @@ export const SectionHeader: React.FC<IProps> = props => {
       <SvgIcon>
         <MyIcon />
       </SvgIcon>
-      <Title variant={'h5'}>{title}</Title>
+      <Title variant={'h6'}>{title}</Title>
       {sideTitle && (
         <SideTitle data-testid='side-title' variant={'h6'}>
           {sideTitle}

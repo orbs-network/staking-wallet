@@ -18,6 +18,7 @@ import {
   useCommonsTranslations,
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
+import { Grid } from '@material-ui/core';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -55,13 +56,15 @@ export const GuardiansSection = observer(() => {
         })}
         icon={ShielIcon}
       />
-      <GuardiansTable
-        guardianSelectionMode={'Change'}
-        selectedGuardian={orbsAccountStore.selectedGuardianAddress}
-        guardians={guardiansStore.guardiansList}
-        onGuardianSelect={onGuardianSelect}
-        tableTestId={'guardians-table'}
-      />
+      <Grid item xs={12}>
+        <GuardiansTable
+          guardianSelectionMode={'Change'}
+          selectedGuardian={orbsAccountStore.selectedGuardianAddress}
+          guardians={guardiansStore.guardiansList}
+          onGuardianSelect={onGuardianSelect}
+          tableTestId={'guardians-table'}
+        />
+      </Grid>
 
       {/* Restaking */}
       <Modal open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
