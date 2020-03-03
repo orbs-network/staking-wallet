@@ -24,7 +24,7 @@ export const baseTheme = responsiveFontSizes(
       },
       background: {
         // DEV_NOTE : This sets the app background color
-        default: 'black',
+        default: '#000000',
       },
     },
     typography: {
