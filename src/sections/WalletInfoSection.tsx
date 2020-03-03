@@ -26,12 +26,19 @@ import {
   useSectionsTitlesTranslations,
   useWalletInfoSectionTranslations,
 } from '../translations/translationsHooks';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
 
-const QR_IMAGE_DIMENSION = 400;
+const QR_IMAGE_DIMENSION_MD = 400;
+const LOGO_DIMENSIONS_MD = 100;
+
+const QR_IMAGE_DIMENSION_XS = 250;
+const LOGO_DIMENSIONS_XS = 50;
+
 // TODO : FUTURE : O.L : Unify this with the 'Wizard container' (have one basic styled component and extend from it)
 const CenteredContainerGridForQr = styled(props => (
   <Grid container direction={'column'} alignItems={'center'} {...props} />
@@ -43,7 +50,7 @@ const CenteredContainerGridForQr = styled(props => (
     top: '35%',
     left: '50%',
     transform: 'translate(-50%, -35%)',
-    maxWidth: '100%',
+    width: 'min-content',
   };
 });
 
@@ -59,6 +66,12 @@ export const WalletInfoSection = observer(() => {
     copy(cryptoWalletIntegrationStore.mainAddress);
     showSnackbarMessage.setTrue();
   }, [cryptoWalletIntegrationStore.mainAddress, showSnackbarMessage]);
+
+  const theme = useTheme();
+  const mediumOrLarger = useMediaQuery(theme.breakpoints.up('md'));
+
+  const qrDimensions = mediumOrLarger ? QR_IMAGE_DIMENSION_MD : QR_IMAGE_DIMENSION_XS;
+  const logoDimensions = mediumOrLarger ? LOGO_DIMENSIONS_MD : LOGO_DIMENSIONS_XS;
 
   return (
     <Section>
@@ -94,9 +107,9 @@ export const WalletInfoSection = observer(() => {
           <QRCode
             value={cryptoWalletIntegrationStore.mainAddress}
             logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
-            logoWidth={100}
-            logoHeight={100}
-            size={QR_IMAGE_DIMENSION}
+            logoWidth={logoDimensions}
+            logoHeight={logoDimensions}
+            size={qrDimensions}
             qrStyle={'dots'}
             fgColor={'#07142E'}
           />
