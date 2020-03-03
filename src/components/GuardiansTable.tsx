@@ -40,10 +40,12 @@ const NameContainer = styled.span(({ theme }) => ({
 
 const StyledTableHead = styled(TableHead)((themeProps: { theme: Theme }) => ({
   backgroundColor: themeProps.theme.palette.primary.dark,
+  // backgroundColor: 'rgba(33,33, 33, 0.55)',
 }));
 
 const StyledTableBody = styled(TableBody)((themeProps: { theme: Theme }) => ({
-  backgroundColor: themeProps.theme.palette.primary.main,
+  // backgroundColor: themeProps.theme.palette.primary.main,
+  backgroundColor: 'rgba(33,33, 33, 0.55)',
 }));
 
 // TODO : ORL : Pick a better color for marking selected guardian

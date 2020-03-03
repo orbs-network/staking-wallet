@@ -5,13 +5,14 @@ import { CommonDivider } from './base/CommonDivider';
 import { CommonActionButton } from './base/CommonActionButton';
 import { useStringOrElement } from './hooks/commonHooks';
 
-const StyledGrid = styled(Paper)`
-  padding: 1em;
-  padding-right: 1.5em;
-  padding-left: 1.5em;
-  display: flex;
-  flex-direction: column;
-`;
+const StyledGrid = styled(Grid)(({ theme }) => ({
+  backgroundColor: 'rgba(33,33, 33, 0.55)',
+  padding: '1em',
+  paddingRight: '1.5em',
+  paddingLeft: '1.5em',
+  display: 'flex',
+  flexDirection: 'column',
+}));
 
 interface IProps {
   title: string | React.ElementType;
@@ -31,17 +32,17 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
 
   return (
     <StyledGrid data-testid={balanceCardTestId}>
-      <Typography variant={'caption'}>{titleElement}</Typography>
+        <Typography variant={'caption'}>{titleElement}</Typography>
 
-      <CommonDivider />
+        <CommonDivider />
 
-      <Typography variant={'h6'} data-testid={'balance_text'}>
-        {amount.toLocaleString()}
-      </Typography>
+        <Typography variant={'h6'} data-testid={'balance_text'}>
+          {amount.toLocaleString()}
+        </Typography>
 
-      <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
-        {actionButtonTitle}
-      </CommonActionButton>
+        <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
+          {actionButtonTitle}
+        </CommonActionButton>
     </StyledGrid>
   );
 };
