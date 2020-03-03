@@ -43,7 +43,7 @@ export const GuardiansSection = observer(() => {
     [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
 
-  if (guardiansStore.guardiansList.length === 0) {
+  if (!guardiansStore.doneLoading || !orbsAccountStore.doneLoading) {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 

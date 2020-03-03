@@ -14,6 +14,7 @@ export interface IGuardiansStoreState {
 export type TGuardiansStore = IGuardiansStoreState;
 
 export class GuardiansStore implements TGuardiansStore {
+  @observable public doneLoading: boolean = false;
   @observable public guardiansList: TGuardianInfoExtended[];
   @observable public totalParticipatingTokens: bigint;
 
@@ -48,6 +49,8 @@ export class GuardiansStore implements TGuardiansStore {
       const guardiansInfo = await Promise.all(promises);
       const guardiansInfoExtended = guardiansInfo.map((g, idx) => ({ ...g, address: guardiansAddresses[idx] }));
       this.setGuardiansList(guardiansInfoExtended);
+
+      this.setDoneLoading(true);
     } catch (e) {
       console.log(e);
     }
@@ -75,5 +78,10 @@ export class GuardiansStore implements TGuardiansStore {
   @action('setTotalParticipatingTokens')
   private setTotalParticipatingTokens(totalParticipatingTokens: bigint) {
     this.totalParticipatingTokens = totalParticipatingTokens;
+  }
+
+  @action('setDoneLoading')
+  private setDoneLoading(doneLoading: boolean) {
+    this.doneLoading = doneLoading;
   }
 }

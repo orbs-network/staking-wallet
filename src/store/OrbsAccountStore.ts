@@ -11,7 +11,7 @@ import { EMPTY_ADDRESS } from '../constants';
 import moment from 'moment';
 
 export class OrbsAccountStore {
-  // TODO : O.L : Check if we really need to have a string here.
+  @observable public doneLoading: boolean = false;
   @observable public liquidOrbs = BigInt(0);
   @observable public stakingContractAllowance = BigInt(0);
   @observable public stakedOrbs = BigInt(0);
@@ -42,7 +42,11 @@ export class OrbsAccountStore {
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
-      async address => await this.reactToConnectedAddressChanged(address),
+      async address => {
+        this.setDoneLoading(false);
+        await this.reactToConnectedAddressChanged(address);
+        this.setDoneLoading(true);
+      },
       {
         fireImmediately: true,
       },
@@ -237,5 +241,10 @@ export class OrbsAccountStore {
   @action('setSelectedGuardianAddress')
   private setSelectedGuardianAddress(selectedGuardianAddress: string) {
     this.selectedGuardianAddress = selectedGuardianAddress;
+  }
+
+  @action('setDoneLoading')
+  private setDoneLoading(doneLoading: boolean) {
+    this.doneLoading = doneLoading;
   }
 }

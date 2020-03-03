@@ -21,9 +21,10 @@ import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarCont
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
 import {
   useAlertsTranslations,
-  useBalancesSectionTranslations,
+  useBalancesSectionTranslations, useCommonsTranslations,
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
+import Typography from '@material-ui/core/Typography';
 
 const GridItem = styled(props => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -33,6 +34,7 @@ export const BalancesSection = observer(() => {
   const rerenderNumber = useNumber(0);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const balancesSectionTranslations = useBalancesSectionTranslations();
+  const commonsTranslations = useCommonsTranslations();
   const alertsTranslations = useAlertsTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
@@ -114,6 +116,10 @@ export const BalancesSection = observer(() => {
       return () => showUnStakingModal.setTrue();
     }
   }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
+
+  if (!orbsAccountStore.doneLoading) {
+    return <Typography>{commonsTranslations('loading')}</Typography>;
+  }
 
   return (
     <Section>
