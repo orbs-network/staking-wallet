@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
 // @ts-ignore
 import { ReactComponent as CopyIcon } from '../../assets/copy.svg';
+// @ts-ignore
 import { ReactComponent as QrIcon } from '../../assets/qr.svg';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';

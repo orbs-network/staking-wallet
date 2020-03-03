@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
@@ -7,8 +7,6 @@ import styled from 'styled-components';
 
 const StyledAppBar = styled(AppBar)({
   borderBottom: '2px solid #363636',
-  paddingRight: '10%',
-  paddingLeft: '10%',
 });
 
 const StyledToolBar = styled(Toolbar)({
@@ -18,11 +16,13 @@ const StyledToolBar = styled(Toolbar)({
 
 export const Header = () => {
   return (
-    <StyledAppBar position='static'>
-      <StyledToolBar>
-        <Typography>ORBS</Typography>
-        <LanguagesSelector />
-      </StyledToolBar>
-    </StyledAppBar>
+      <StyledAppBar position='static'>
+        <Container maxWidth={'xl'}>
+        <StyledToolBar>
+          <Typography>ORBS</Typography>
+          <LanguagesSelector />
+        </StyledToolBar>
+        </Container>
+      </StyledAppBar>
   );
 };
