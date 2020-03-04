@@ -1,6 +1,6 @@
 import Grid, { GridTypeMap } from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import React, { SVGProps } from 'react';
 import styled from 'styled-components';
 import SvgIcon from '@material-ui/core/SvgIcon';
 
@@ -24,7 +24,7 @@ const SideTitle = styled(Typography)`
 interface IProps {
   title: string;
   sideTitle?: string;
-  icon: React.ElementType;
+  icon: React.ElementType<SVGProps<SVGSVGElement>>;
 }
 
 export const SectionHeader: React.FC<IProps> = props => {
@@ -32,9 +32,7 @@ export const SectionHeader: React.FC<IProps> = props => {
 
   return (
     <SectionHeaderGrid>
-      <SvgIcon>
-        <MyIcon />
-      </SvgIcon>
+      <SvgIcon component={MyIcon} />
       <Title variant={'h6'}>{title}</Title>
       {sideTitle && (
         <SideTitle data-testid='side-title' variant={'h6'}>
