@@ -1,4 +1,4 @@
-import { Button, Divider } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +10,7 @@ import { ReactComponent as CopyIcon } from '../../assets/copy.svg';
 import { ReactComponent as QrIcon } from '../../assets/qr.svg';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useBoolean } from 'react-hanger';
 import Modal from '@material-ui/core/Modal';
 import { QRCode } from 'react-qrcode-logo';
@@ -75,6 +75,17 @@ export const WalletInfoSection = observer(() => {
   const qrDimensions = mediumOrLarger ? QR_IMAGE_DIMENSION_MD : QR_IMAGE_DIMENSION_XS;
   const logoDimensions = mediumOrLarger ? LOGO_DIMENSIONS_MD : LOGO_DIMENSIONS_XS;
 
+  const walletAddressExtraStyle = useMemo<React.CSSProperties>(() => {
+    const extraStyle: React.CSSProperties = {};
+
+    // For smaller screens we want to emphasize the text
+    if (!smOrLarger) {
+      extraStyle.fontWeight = 'bold';
+    }
+
+    return extraStyle;
+  }, [smOrLarger]);
+
   return (
     <Section>
       {/* Balance */}
@@ -88,7 +99,11 @@ export const WalletInfoSection = observer(() => {
       <Grid container item direction={'row'} spacing={2}>
         {/* Address */}
         <Grid item sm={12} lg={8}>
-          <Typography variant={smOrLarger ? 'h4' : 'body2'} data-testid={'text-active-address'}>
+          <Typography
+            variant={smOrLarger ? 'h4' : 'body2'}
+            data-testid={'text-active-address'}
+            style={walletAddressExtraStyle}
+          >
             {cryptoWalletIntegrationStore.mainAddress}
           </Typography>
         </Grid>
@@ -107,7 +122,6 @@ export const WalletInfoSection = observer(() => {
           </Grid>
         </Grid>
       </Grid>
-      <CommonDivider />
 
       <Modal disableAutoFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
         <CenteredContainerGridForQr>

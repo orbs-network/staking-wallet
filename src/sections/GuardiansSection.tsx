@@ -19,6 +19,7 @@ import {
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
+import { CommonDivider } from '../components/base/CommonDivider';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -56,6 +57,9 @@ export const GuardiansSection = observer(() => {
         })}
         icon={ShielIcon}
       />
+
+      <CommonDivider />
+
       <Grid item xs={12}>
         <GuardiansTable
           guardianSelectionMode={'Change'}
