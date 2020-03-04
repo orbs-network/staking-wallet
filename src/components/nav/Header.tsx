@@ -11,19 +11,24 @@ const StyledAppBar = styled(AppBar)({
 });
 
 const StyledToolBar = styled(Toolbar)({
+  // DEV_NOTE : Padding 0 keeps the Toolbar aligned with the body (via 'ContentContainer')
   paddingRight: 0,
   paddingLeft: 0,
 });
 
 export const Header = () => {
   return (
-    <StyledAppBar position='static'>
-      <ContentContainer>
-        <StyledToolBar>
-          <Typography>ORBS</Typography>
-          <LanguagesSelector />
-        </StyledToolBar>
-      </ContentContainer>
-    </StyledAppBar>
+    <>
+      <StyledAppBar position='fixed'>
+        <ContentContainer>
+          <StyledToolBar>
+            <Typography>ORBS</Typography>
+            <LanguagesSelector />
+          </StyledToolBar>
+        </ContentContainer>
+      </StyledAppBar>
+      {/* DEV_NOTE : Second 'Toolbar' is a trick offered by MUI to keep the content properly below the AppBar */}
+      <Toolbar />
+    </>
   );
 };

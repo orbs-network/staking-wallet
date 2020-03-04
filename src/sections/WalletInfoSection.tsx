@@ -71,7 +71,6 @@ export const WalletInfoSection = observer(() => {
   const theme = useTheme();
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const mediumOrLarger = useMediaQuery(theme.breakpoints.up('md'));
-  const largeOrLarger = useMediaQuery(theme.breakpoints.up('lg'));
 
   const qrDimensions = mediumOrLarger ? QR_IMAGE_DIMENSION_MD : QR_IMAGE_DIMENSION_XS;
   const logoDimensions = mediumOrLarger ? LOGO_DIMENSIONS_MD : LOGO_DIMENSIONS_XS;
