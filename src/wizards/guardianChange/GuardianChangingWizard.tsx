@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Step, StepLabel} from '@material-ui/core';
+import { Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';

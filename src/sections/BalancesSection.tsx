@@ -21,7 +21,8 @@ import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarCont
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
 import {
   useAlertsTranslations,
-  useBalancesSectionTranslations, useCommonsTranslations,
+  useBalancesSectionTranslations,
+  useCommonsTranslations,
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
 import Typography from '@material-ui/core/Typography';
