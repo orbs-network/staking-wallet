@@ -40,7 +40,7 @@ export const ConnectWalletSection = observer(() => {
     } else {
       return (
         <CommonActionButton fullWidth data-testid='button-install-metamask' onClick={handleInstallClicked}>
-          {connectWalletSectionTranslations('installMetamask')}
+          {connectWalletSectionTranslations('installMetaMask')}
         </CommonActionButton>
       );
     }
@@ -60,7 +60,7 @@ export const ConnectWalletSection = observer(() => {
       messageText = connectWalletSectionTranslations('pleaseApproveAccountConnection');
     } else if (pressedOnInstallMetamask.value) {
       testId = 'text-pleaseRefresh';
-      messageText = connectWalletSectionTranslations('refreshPageAfterInstallingMetamask');
+      messageText = connectWalletSectionTranslations('refreshPageAfterInstallingMetaMask');
     }
 
     if (messageText) {

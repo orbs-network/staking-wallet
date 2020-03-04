@@ -37,9 +37,9 @@ export interface IWalletInfoSectionTranslations {
 
 export interface IConnectWalletSectionTranslations {
   connectYourAccount: string;
-  installMetamask: string;
+  installMetaMask: string;
   pleaseApproveAccountConnection: string;
-  refreshPageAfterInstallingMetamask: string;
+  refreshPageAfterInstallingMetaMask: string;
   initialGreeting: string;
 }
 

@@ -4,18 +4,18 @@ import { IAppTranslations } from './translationsTypes';
 export const ENGLISH_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',
   sectionTitles: {
-    allGuardians: 'All guardians',
+    allGuardians: 'All Guardians',
     allGuardians_sideTitle: 'Participating stake: {{totalParticipatingTokens}}',
     balance: 'Balance',
     rewards: 'Rewards',
     connectWallet: 'Connect your wallet',
-    walletInfo: 'Wallet Info',
+    walletInfo: 'Wallet info',
   },
   connectWalletSection: {
     connectYourAccount: 'Connect your account',
-    installMetamask: 'Install Metamask',
+    installMetaMask: 'Install MetaMask',
     pleaseApproveAccountConnection: 'Please approve the account connection',
-    refreshPageAfterInstallingMetamask: 'Please refresh this page after installing Metamask',
+    refreshPageAfterInstallingMetaMask: 'Please refresh this page after installing MetaMask',
     initialGreeting: 'To begin, we need to connect your wallet',
   },
   walletInfoSection: {
@@ -42,84 +42,84 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     columnHeader_address: 'Address',
     columnHeader_website: 'Website',
     columnHeader_stakingPercentageInLastElections: 'Staking % in last elections',
-    columnHeader_votedInLastElection: 'Voted in last election',
+    columnHeader_votedInLastElection: 'Voted in previous election',
     columnHeader_selection: 'Selection',
   },
   wizardsCommons: {
     message_userCanceledTransactions: 'You have canceled the transaction.',
-    subMessage_tryAgainAndApprove: 'In order to continue, please try again and approve the transaction',
+    subMessage_tryAgainAndApprove: 'In order to continue, please try again and approve the transaction.',
     message_errorOccurred: 'An error occurred while trying to send transaction to the staking wallet.',
     subMessage_pleaseTryAgain: 'please try again',
     subMessage_pleaseApproveTransactionWithExplanation:
-      'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed',
+      'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed.',
     stepLabel_finish: 'Finish',
     action_finish: 'Finish',
     moveToStep_finish: 'Finish',
-    stepDoneExclamation: 'Awesome !',
+    stepDoneExclamation: 'Awesome!',
 
     // Message for TX errors
     txCreationError_userCanceled_message: 'You have canceled the transaction.',
-    txCreationError_userCanceled_subMessage: 'In order to continue, please try again and approve the transaction',
+    txCreationError_userCanceled_subMessage: 'In order to continue, please try again and approve the transaction.',
     txCreationError_generalError_message: 'An error occurred while trying to send transaction to the staking wallet.',
-    txCreationError_generalError_subMessage: 'please try again',
+    txCreationError_generalError_subMessage: 'Please try again',
   },
   approvableWizardStep: {
     weRecommendWaitingToReceiveEnoughConfirmations:
-      'We recommend waiting until enough confirmations have been received',
+      'We recommend waiting until enough confirmations have been received.',
     thisMightTakeAFewMoments: 'This might take a few moments...',
-    gotXConfirmationsOutOfRecommendedY: 'Got {{count}} conformation out of recommended {{recommended}}',
-    gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} conformations out of recommended {{recommended}}',
+    gotXConfirmationsOutOfRecommendedY: 'Got {{count}} confirmation out of recommended {{recommended}}',
+    gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} confirmations out of recommended. {{recommended}}',
     txConfirmed: 'Transaction Confirmed',
     txPending: 'Transaction Pending',
     youHaveDoneActionSuccessfully: `You have successfully {{finishedActionName}}`,
     congratulations: 'Congratulations',
   },
   stakingWizard: {
-    stepLabel_approve: 'Approve usage of Orbs',
+    stepLabel_approve: 'Approve usage of ORBS',
     stepLabel_stake: 'Stake your tokens',
-    stepLabel_selectGuardian: 'Select a guardian',
+    stepLabel_selectGuardian: 'Select a Guardian',
     finishedAction_approved: 'allowed the staking contract to use your tokens',
     finishedAction_staked: 'staked your tokens',
-    finishedAction_selectedGuardian: 'selected a guardian',
-    moveToStep_stake: 'Stake your ORBs',
+    finishedAction_selectedGuardian: 'selected a Guardian',
+    moveToStep_stake: 'Stake your ORBS',
     moveToStep_selectGuardian: 'Select a Guardian',
-    afterSuccessStateExplanation: 'Your Orbs are now staked and are assigned to a guardian',
+    afterSuccessStateExplanation: 'Your ORBS are now staked and are assigned to a Guardian',
 
     // Allowance approval selection sub step
-    allowanceSubStep_message_selectAmountOfOrbs: 'Select the amount of ORBS you would like to stake',
+    allowanceSubStep_message_selectAmountOfOrbs: 'Select the amount of ORBS you would like to stake:',
     allowanceSubStep_action_approve: 'Approve',
     allowanceSubStep_label_allowance: 'Allowance',
-    allowanceSubStep_stepTitle: 'Approve the staking contract to use your Orbs',
+    allowanceSubStep_stepTitle: 'Approve the staking contract to use your ORBS',
     allowanceSubStep_stepExplanation:
       'This step will approve the Staking contract to transfer your ORBS tokens into the contract in order to be staked (up to the approved amount).',
 
     // Staking sub step
     stakingSubStep_stepTitle: 'In this step you will stake {{orbsForStaking}} ORBS',
     stakingSubStep_stepExplanation:
-      'This step will transfer your ORBS tokens to the staking contract and stake them. Staking makes the Orbs network more secure and incentivizes the Delegators, Guardians and Validators to participate.',
+      'This step will transfer your ORBS tokens to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators, Guardians and Validators to participate.',
 
     // Guardian selection sub step
-    guardianSelectionSubStep_message_selectGuardian: 'Select a guardian',
+    guardianSelectionSubStep_message_selectGuardian: 'Select a Guardian',
     guardianSelectionSubStep_subMessage_pressSelectAndApprove: 'Press "Select" and accept the transaction',
-    guardianSelectionSubStep_stepTitle: 'Select your guardian',
+    guardianSelectionSubStep_stepTitle: 'Select your Guardian',
     guardianSelectionSubStep_stepExplanation:
       'This step selects which Guardian you would like to delegate to, adding your staked ORBS tokens to their influence.',
   },
   guardianChangingWizard: {
-    stepLabel_changeGuardian: 'Change selected guardian',
-    afterSuccessStateExplanation: 'You have selected a new guardian',
-    finishedAction_selectedGuardian: 'selected a guardian',
+    stepLabel_changeGuardian: 'Change selected Guardian',
+    afterSuccessStateExplanation: 'You have selected a new Guardian',
+    finishedAction_selectedGuardian: 'Guardian selected',
 
     // Guardian change sub step
-    guardianSelectionSubStep_message_changeGuardian: 'Change selected guardian to {{newGuardianAddress}}',
+    guardianSelectionSubStep_message_changeGuardian: 'Change selected Guardian to {{newGuardianAddress}}',
     guardianSelectionSubStep_subMessage_pressChangeAndApprove: 'Press "Change" and accept the transaction',
-    guardianSelectionSubStep_stepTitle: 'Change selected guardian',
+    guardianSelectionSubStep_stepTitle: 'Change selected Guardian',
     guardianSelectionSubStep_action_change: 'Change',
   },
   restakingWizard: {
-    stepLabel_restake: 'Restake Orbs',
+    stepLabel_restake: 'Restake ORBS',
     finishedAction_restaked: 'restaked your tokens',
-    afterSuccessStateExplanation: 'Your orbs staked once again ! ',
+    afterSuccessStateExplanation: 'Your ORBSstaked once again!',
 
     restakingSubStep_subMessage_pressRestakeAndApprove: 'Press "Restake" and accept the transaction',
     restakingSubStep_stepTitle: 'Restaking {{orbsForRestaking}} ORBS',
@@ -130,10 +130,10 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   unstakingWizard: {
     stepLabel_unstake: 'Unstake',
     finishedAction_unstaked: 'unstaked your tokens',
-    afterSuccessStateExplanation: 'Your unstaked Orbs will be available after the unfreezing period',
+    afterSuccessStateExplanation: 'Your unstaked ORBS will be available after the unfreezing period.',
 
     // Unstaking sub step
-    unstakingSubStep_message_selectAmountOfOrbs: 'Select amount of Orbs to unstake',
+    unstakingSubStep_message_selectAmountOfOrbs: 'Select amount of ORBS to unstake',
     unstakingSubStep_subMessage_pressUnstakeAndApprove: 'Press "Unstake" and accept the transaction',
     unstakingSubStep_stepTitle: 'Unstaking your tokens',
     unstakingSubStep_stepExplanation:
@@ -142,23 +142,23 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     unstakingSubStep_inputLabel: 'Unstaking',
   },
   withdrawingWizard: {
-    stepLabel_withdraw: 'Withdraw Orbs',
+    stepLabel_withdraw: 'Withdraw ORBS',
     finishedAction_withdrew: 'Withdrew your cooled down tokens',
-    afterSuccessStateExplanation: 'Your unstaked Orbs will be available after the unfreezing period',
+    afterSuccessStateExplanation: 'Your unstaked ORBS will be available after the cooldown period',
 
     // Withdrawing sub step
     withdrawingSubStep_subMessage_pressWithdrawAndApprove: 'Press "Withdraw" and accept the transaction',
-    withdrawingSubStep_stepTitle: 'Withdrawing {{orbsForWithdrawal}} Orbs',
+    withdrawingSubStep_stepTitle: 'Withdrawing {{orbsForWithdrawal}} ORBS',
     withdrawingSubStep_stepExplanation:
       'This will transfer all of the ORBS tokens that completed cooldown to your address.',
     withdrawingSubStep_action_withdraw: 'Withdraw',
   },
   alerts: {
     cannotUnstakeWhenThereAreOrbsReadyToWithdraw: 'Cannot unstake when there are ORBS to be withdrawn',
-    walletAddressWasCopied: 'Copied address !',
-    guardianAlreadySelected: 'Guardian already selected !',
+    walletAddressWasCopied: 'Copied address!',
+    guardianAlreadySelected: 'Guardian already selected!',
   },
   commons: {
-    loading: 'Loading ...',
+    loading: 'Loading...',
   },
 };
