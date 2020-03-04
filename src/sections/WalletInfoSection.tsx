@@ -33,11 +33,12 @@ const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
 
+// DEV_NOTE : It seems that keeping a 1/4 ratio keeps the logo well placed.
 const QR_IMAGE_DIMENSION_MD = 400;
 const LOGO_DIMENSIONS_MD = 100;
 
-const QR_IMAGE_DIMENSION_XS = 250;
-const LOGO_DIMENSIONS_XS = 50;
+const QR_IMAGE_DIMENSION_XS = 240;
+const LOGO_DIMENSIONS_XS = 60;
 
 // TODO : FUTURE : O.L : Unify this with the 'Wizard container' (have one basic styled component and extend from it)
 const CenteredContainerGridForQr = styled(props => (
