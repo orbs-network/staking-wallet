@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Step, StepLabel, Typography } from '@material-ui/core';
+import { Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';

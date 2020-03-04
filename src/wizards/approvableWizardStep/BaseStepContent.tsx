@@ -59,7 +59,7 @@ export const BaseStepContent = React.memo<IProps>(props => {
   const infoTooltippedIcon = useMemo(() => {
     if (infoTitle) {
       return (
-        <HtmlTooltip title={infoTitle} arrow interactive>
+        <HtmlTooltip enterTouchDelay={50} leaveTouchDelay={4000} title={infoTitle} arrow interactive>
           <HelpOutlineIcon />
         </HtmlTooltip>
       );
@@ -71,11 +71,11 @@ export const BaseStepContent = React.memo<IProps>(props => {
   // TODO : ORL : Fix centering of texts
   return (
     <WizardContent data-testid={contentTestId}>
-      <Grid item>
-        <Typography variant={'h5'}>
+      <Grid container item direction={'row'} justify={'center'} alignItems={'center'}>
+        <Typography variant={'h5'} style={{ fontWeight: 'bold' }}>
           {titleContent}
-          {infoTooltippedIcon}
         </Typography>
+        {infoTooltippedIcon}
       </Grid>
       <Grid item>
         <Typography variant={'body1'}>{message}</Typography>

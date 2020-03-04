@@ -4,28 +4,46 @@ import { Grid } from '@material-ui/core';
 import Color from 'color';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
-const CenteredContainerGrid = styled(Grid)(({ theme }) => {
+const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
   theme = theme as Theme;
 
   return {
-    backgroundColor: Color(theme.palette.primary.dark)
-      // .fade(0.1)
-      .toString(),
+    // Position
     position: 'fixed',
     top: '35%',
     left: '50%',
     transform: 'translate(-50%, -35%)',
-    minWidth: '40em',
-    maxWidth: '80%',
-    width: 'min-content',
+
+    // Colors
+    backgroundColor: Color(theme.palette.primary.dark)
+      // .fade(0.1)
+      .toString(),
+
+    // Box Effect
     border: '2px solid #E0E0E0',
     borderRadius: 5,
     boxShadow: theme.shadows[2],
-    paddingTop: '0.5em',
-    paddingBottom: '1.5em',
+
+    // Handles width of wizards
+    width: 'fit-content',
+    [theme.breakpoints.up('sm')]: {
+      minWidth: '50%',
+      maxWidth: '80%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      minWidth: '40%',
+      maxWidth: '80%',
+    },
+    [theme.breakpoints.up('xl')]: {
+      minWidth: '30%',
+      maxWidth: '80%',
+    },
+
+    // Keeps space between the contents and the border
+    padding: '1em',
   };
 });
 
 export const WizardContainer = props => (
-  <CenteredContainerGrid container direction={'column'} alignItems={'center'} {...props} />
+  <CenteredContainerGrid container direction={'column'} justify={'space-around'} {...props} />
 );

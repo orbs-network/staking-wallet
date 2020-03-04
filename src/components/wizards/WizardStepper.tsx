@@ -9,4 +9,5 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
     },
     color: theme.palette.secondary.main, // Affects the circles
   },
+  padding: 0, // Removes the excessive padding
 }));
