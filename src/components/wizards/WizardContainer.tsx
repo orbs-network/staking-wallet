@@ -20,7 +20,7 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
       .toString(),
 
     // Box Effect
-    border: '2px solid #E0E0E0',
+    border: '1px solid #979797',
     borderRadius: 5,
     boxShadow: theme.shadows[2],
 
@@ -40,7 +40,12 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
     },
 
     // Keeps space between the contents and the border
-    padding: '1em',
+    [theme.breakpoints.up('sm')]: {
+      padding: '1em',
+    },
+    [theme.breakpoints.up('md')]: {
+      padding: '3em',
+    },
   };
 });
 
