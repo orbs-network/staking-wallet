@@ -68,6 +68,9 @@ export const BaseStepContent = React.memo<IProps>(props => {
     }
   }, [infoTitle]);
 
+  const hasMessage = message && message.length > 0;
+  const hasSubMessage = subMessage && subMessage.length > 0;
+
   // TODO : ORL : Fix centering of texts
   return (
     <WizardContent data-testid={contentTestId}>
@@ -77,10 +80,10 @@ export const BaseStepContent = React.memo<IProps>(props => {
         </Typography>
         {infoTooltippedIcon}
       </Grid>
-      <Grid item>
+      <Grid item hidden={!hasMessage}>
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
-      <Grid item>
+      <Grid item hidden={!hasSubMessage}>
         <Typography variant={'body2'}>{subMessage}</Typography>
       </Grid>
 
