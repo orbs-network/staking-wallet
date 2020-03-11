@@ -28,7 +28,7 @@ interface IProps {
 }
 
 const stylingForActionButtons: React.CSSProperties = {
-  width: '7em',
+  width: '8em',
 };
 
 export const BaseStepContent = React.memo<IProps>(props => {

@@ -28,6 +28,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     title_stakedOrbsInSmartContract: 'Staked ORBS in smart contract',
     title_tokensReadyForWithdrawal: 'Tokens ready for withdrawal',
     title_noTokensInCooldown: 'No tokens in cooldown',
+    title_tokensInCooldown: 'Tokens in cooldown',
     action_stakeYourTokens: 'Stake your tokens',
     action_unstakeYourTokens: 'Unstake your tokens',
     action_restakeYourTokens: 'Restake your tokens',
@@ -163,5 +164,6 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   },
   commons: {
     loading: 'Loading...',
+    left: 'left',
   },
 };

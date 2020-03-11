@@ -18,6 +18,8 @@ export interface IAppTranslations {
 
 export interface ICommonsTranslations {
   loading: string;
+  // As in "5 Days -left- for something"
+  left: string;
 }
 
 export interface ISectionTitlesTranslations {
@@ -172,6 +174,7 @@ export interface IBalancesSectionTranslations {
   title_stakedOrbsInSmartContract: string;
   title_tokensReadyForWithdrawal: string;
   title_noTokensInCooldown: string;
+  title_tokensInCooldown: string;
   action_stakeYourTokens: string;
   action_unstakeYourTokens: string;
   action_restakeYourTokens: string;

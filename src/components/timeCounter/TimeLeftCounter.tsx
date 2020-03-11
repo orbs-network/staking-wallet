@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import moment from 'moment';
 import { useNumber } from 'react-hanger';
 import useInterval from 'use-interval';
+import { useCommonsTranslations } from '../../translations/translationsHooks';
 
 interface IProps {
   toTimestamp: number;
@@ -14,6 +15,8 @@ export const TimeLeftCounter = React.memo<IProps>(props => {
   const num = useNumber(0);
   useInterval(() => num.setValue(Date.now), 1000);
 
+  const commonsTranslations = useCommonsTranslations();
+
   const toMoment = useMemo(() => moment.unix(toTimestamp).utc(), [toTimestamp]);
   const nowMomentTimestamp = moment.utc().unix();
 
@@ -25,5 +28,9 @@ export const TimeLeftCounter = React.memo<IProps>(props => {
     }
   }, [nowMomentTimestamp, onToMomentReached, toTimestamp]);
 
-  return <>{toMoment.fromNow(true)}</>;
+  return (
+    <>
+      {toMoment.fromNow(true)} {commonsTranslations('left')}
+    </>
+  );
 });

@@ -84,14 +84,13 @@ export const BalancesSection = observer(() => {
       // We only want to show time left if there is some time left
       orbsInCooldownBoxTitle = () => (
         <>
-          {/* TODO : O.L : DESIGN : Decide on how to display how much time is left */}
-          {/*// TODO : ORL : translate and understand how to display this data properly */}
-          Tokens in cooldown (
+          {balancesSectionTranslations('title_tokensInCooldown')}
+          {' ('}
           <TimeLeftCounter
             onToMomentReached={rerenderNumber.increase}
             toTimestamp={orbsAccountStore.cooldownReleaseTimestamp}
-          />{' '}
-          left)
+          />
+          {')'}
         </>
       );
     } else {
