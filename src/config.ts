@@ -24,6 +24,8 @@ const config: IConfig = {
   earliestBlockForDelegationOverride: null,
 };
 
+console.log('ethereumNetwork', ethereumNetwork);
+
 // Distinguish local network and ropsten
 if (ethereumNetwork === 'local') {
   const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
