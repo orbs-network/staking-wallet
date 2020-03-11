@@ -40,9 +40,7 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
     },
 
     // Keeps space between the contents and the border
-    [theme.breakpoints.up('sm')]: {
-      padding: '1em',
-    },
+    padding: '1.5em',
     [theme.breakpoints.up('md')]: {
       padding: '3em',
     },
