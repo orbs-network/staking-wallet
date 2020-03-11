@@ -12,6 +12,7 @@ export interface ITransactionCreationStepProps {
   onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>): void;
   skipToSuccess: () => void;
   disableInputs: boolean;
+  closeWizard?: () => void;
   txError?: Error;
 }
 
@@ -24,6 +25,9 @@ interface IProps<T = {}> {
   moveToNextStepAction: () => void;
   moveToNextStepTitle: string;
 
+  // Wizard interaction
+  closeWizard: () => void;
+
   // Extra props for the tx creation step
   propsForTransactionCreationSubStepContent?: object;
 }
@@ -35,6 +39,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     moveToNextStepAction,
     moveToNextStepTitle,
     propsForTransactionCreationSubStepContent,
+    closeWizard,
   } = props;
 
   const stepState = useStateful<TStepState>('Action');
@@ -101,6 +106,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
             txError={txCreatingError.value}
             onPromiEventAction={txCreationAction}
             skipToSuccess={goToCongratulationSubStep}
+            closeWizard={closeWizard}
             {...propsForTransactionCreationSubStepContent}
           />
         );

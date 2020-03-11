@@ -10,7 +10,7 @@ import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/Bas
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { disableInputs, onPromiEventAction, txError } = props;
+  const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const unstakingWizardTranslations = useUnstakingWizardTranslations();
@@ -75,6 +75,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}
       actionButtonProps={actionButtonProps}
       innerContent={unstakingInput}
+      addCancelButton
+      onCancelButtonClicked={closeWizard}
     />
   );
 });

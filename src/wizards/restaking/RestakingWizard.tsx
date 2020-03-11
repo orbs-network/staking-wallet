@@ -40,6 +40,7 @@ export const RestakingWizard = observer(
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'orbsRestakingStep'}
+              closeWizard={closeWizard}
             />
           );
         case STEPS_INDEXES.finish:

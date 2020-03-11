@@ -40,6 +40,7 @@ export const UnstakingWizard = observer(
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
+              closeWizard={closeWizard}
             />
           );
         case STEPS_INDEXES.finish:

@@ -5,6 +5,8 @@ import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { HtmlTooltip } from '../../components/base/HtmlTooltip';
+import Button from '@material-ui/core/Button';
+import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export interface IActionButtonProps {
   title: string;
@@ -20,8 +22,14 @@ interface IProps {
   infoTitle?: string;
   actionButtonProps?: IActionButtonProps;
   disableInputs?: boolean;
+  addCancelButton?: boolean;
+  onCancelButtonClicked?: () => void;
   contentTestId?: string;
 }
+
+const stylingForActionButtons: React.CSSProperties = {
+  width: '7em',
+};
 
 export const BaseStepContent = React.memo<IProps>(props => {
   const {
@@ -32,13 +40,21 @@ export const BaseStepContent = React.memo<IProps>(props => {
     contentTestId,
     innerContent,
     actionButtonProps,
+    addCancelButton,
+    onCancelButtonClicked,
     infoTitle,
   } = props;
+
+  const wizardsCommonTranslations = useWizardsCommonTranslations();
 
   const actionButton = useMemo(() => {
     if (actionButtonProps) {
       return (
-        <CommonActionButton disabled={disableInputs} onClick={actionButtonProps.onClick}>
+        <CommonActionButton
+          style={stylingForActionButtons}
+          disabled={disableInputs}
+          onClick={actionButtonProps.onClick}
+        >
           {actionButtonProps.title}
         </CommonActionButton>
       );
@@ -80,15 +96,27 @@ export const BaseStepContent = React.memo<IProps>(props => {
         </Typography>
         {infoTooltippedIcon}
       </Grid>
+      {/* Message */}
       <Grid item hidden={!hasMessage}>
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
+
+      {/* Sub Message */}
       <Grid item hidden={!hasSubMessage}>
         <Typography variant={'body2'}>{subMessage}</Typography>
       </Grid>
 
       <Grid item>{innerContent}</Grid>
-      <Grid item>{actionButton}</Grid>
+      <Grid item container justify={'center'} spacing={2}>
+        {addCancelButton && (
+          <Grid item>
+            <CommonActionButton style={stylingForActionButtons} onClick={onCancelButtonClicked}>
+              {wizardsCommonTranslations('action_close')}
+            </CommonActionButton>
+          </Grid>
+        )}
+        <Grid item>{actionButton}</Grid>
+      </Grid>
     </WizardContent>
   );
 });

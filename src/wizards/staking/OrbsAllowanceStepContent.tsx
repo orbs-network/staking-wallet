@@ -10,7 +10,7 @@ import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/Bas
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { disableInputs, onPromiEventAction, txError } = props;
+  const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const stakingWizardTranslations = useStakingWizardTranslations();
@@ -72,6 +72,8 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       contentTestId={'wizard_sub_step_initiate_allowance_tx'}
       actionButtonProps={actionButtonProps}
       innerContent={allowanceInput}
+      addCancelButton
+      onCancelButtonClicked={closeWizard}
     />
   );
 });

@@ -54,6 +54,9 @@ export interface IWizardsCommonsTranslations {
   action_finish: string;
   stepDoneExclamation: string;
 
+  // Modal managing
+  action_close: string;
+
   // Message for TX errors
   txCreationError_userCanceled_message: string;
   txCreationError_userCanceled_subMessage: string;

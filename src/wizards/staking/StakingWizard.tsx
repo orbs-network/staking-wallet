@@ -53,6 +53,7 @@ export const StakingWizard = observer(
               finishedActionName={stakingWizardTranslations('finishedAction_approved')}
               moveToNextStepAction={goToStakeOrbsStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
+              closeWizard={closeWizard}
               key={'approvingStep'}
             />
           );
@@ -64,6 +65,7 @@ export const StakingWizard = observer(
               finishedActionName={stakingWizardTranslations('finishedAction_staked')}
               moveToNextStepAction={goToSelectGuardianStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_selectGuardian')}
+              closeWizard={closeWizard}
               key={'stakingStep'}
             />
           );
@@ -76,6 +78,7 @@ export const StakingWizard = observer(
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
+              closeWizard={closeWizard}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
             />
           );

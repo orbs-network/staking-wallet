@@ -51,6 +51,7 @@ export const GuardianChangingWizard = observer(
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
+              closeWizard={closeWizard}
             />
           );
         case STEPS_INDEXES.finish:

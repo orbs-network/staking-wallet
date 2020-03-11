@@ -57,6 +57,9 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     moveToStep_finish: 'Finish',
     stepDoneExclamation: 'Awesome!',
 
+    // Modal managing
+    action_close: 'Close',
+
     // Message for TX errors
     txCreationError_userCanceled_message: 'You have canceled the transaction.',
     txCreationError_userCanceled_subMessage: 'In order to continue, please try again and approve the transaction.',

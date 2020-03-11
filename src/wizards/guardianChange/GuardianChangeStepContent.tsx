@@ -18,7 +18,7 @@ export interface IGuardianChangeStepContentProps {
 
 export const GuardianChangeStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianChangeStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress } = props;
+    const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress, closeWizard } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
@@ -66,6 +66,8 @@ export const GuardianChangeStepContent = observer(
         disableInputs={disableInputs}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
         innerContent={guardianSelectionContent}
+        addCancelButton
+        onCancelButtonClicked={closeWizard}
       />
     );
   },
