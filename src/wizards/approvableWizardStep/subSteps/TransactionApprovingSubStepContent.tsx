@@ -3,6 +3,7 @@ import { Button, Link, Typography } from '@material-ui/core';
 import { useStateful, useBoolean } from 'react-hanger';
 import { BaseStepContent } from '../BaseStepContent';
 import { useApprovableWizardStepTranslations } from '../../../translations/translationsHooks';
+import { CommonActionButton } from '../../../components/base/CommonActionButton';
 
 interface IProps {
   txHash: string;
@@ -43,9 +44,9 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     let actionContent = null;
     if (allowToProceedValue) {
       actionContent = (
-        <Button variant={'outlined'} onClick={onStepFinished}>
-          Proceed
-        </Button>
+        <CommonActionButton onClick={onStepFinished}>
+          {approvableWizardStepTranslations('action_proceed')}
+        </CommonActionButton>
       );
     } else {
       actionContent = (

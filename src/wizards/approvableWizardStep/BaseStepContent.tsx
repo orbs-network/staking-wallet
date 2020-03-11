@@ -27,9 +27,11 @@ interface IProps {
   contentTestId?: string;
 }
 
-const stylingForActionButtons: React.CSSProperties = {
+const stylingForTwoActionButtons: React.CSSProperties = {
   width: '8em',
 };
+
+const stylingForSingleActionButton: React.CSSProperties = {};
 
 export const BaseStepContent = React.memo<IProps>(props => {
   const {
@@ -47,11 +49,13 @@ export const BaseStepContent = React.memo<IProps>(props => {
 
   const wizardsCommonTranslations = useWizardsCommonTranslations();
 
+  const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
   const actionButton = useMemo(() => {
+    console.log(relevantStylingForActionButtons);
     if (actionButtonProps) {
       return (
         <CommonActionButton
-          style={stylingForActionButtons}
+          style={relevantStylingForActionButtons}
           disabled={disableInputs}
           onClick={actionButtonProps.onClick}
         >
@@ -61,7 +65,7 @@ export const BaseStepContent = React.memo<IProps>(props => {
     } else {
       return null;
     }
-  }, [actionButtonProps, disableInputs]);
+  }, [actionButtonProps, disableInputs, relevantStylingForActionButtons]);
 
   const titleContent = useMemo(() => {
     if (typeof title === 'string') {
@@ -110,7 +114,7 @@ export const BaseStepContent = React.memo<IProps>(props => {
       <Grid item container justify={'center'} spacing={2}>
         {addCancelButton && (
           <Grid item>
-            <CommonActionButton style={stylingForActionButtons} onClick={onCancelButtonClicked}>
+            <CommonActionButton style={relevantStylingForActionButtons} onClick={onCancelButtonClicked}>
               {wizardsCommonTranslations('action_close')}
             </CommonActionButton>
           </Grid>

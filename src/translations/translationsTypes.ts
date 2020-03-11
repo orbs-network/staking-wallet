@@ -88,6 +88,7 @@ export interface IApprovableWizardStepTranslations {
   txConfirmed: string;
   youHaveDoneActionSuccessfully: string;
   congratulations: string;
+  action_proceed: string;
 }
 
 export interface IStakingWizardTranslations {

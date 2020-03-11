@@ -77,6 +77,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     txPending: 'Transaction Pending',
     youHaveDoneActionSuccessfully: `You have successfully {{finishedActionName}}`,
     congratulations: 'Congratulations',
+    action_proceed: 'Proceed',
   },
   stakingWizard: {
     stepLabel_approve: 'Approve usage of ORBS',
