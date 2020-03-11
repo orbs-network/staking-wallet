@@ -1,8 +1,15 @@
+import webpack from 'webpack';
 import path from 'path';
+import dotenv from 'dotenv';
 import { Configuration } from 'webpack';
 import cssnano from 'cssnano';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import { createEnvObjectForWebpack, getEnvFilePath, overrideEnvFileValuesWithRuntimeEnv } from './webpackUtils';
+
+const envFilePath = getEnvFilePath(process.env);
+const envFromFile = dotenv.config({ path: envFilePath }).parsed;
+const envFromPathMergedWithRuntime = overrideEnvFileValuesWithRuntimeEnv(envFromFile, process.env);
 
 const plugins = [
   new ForkTsCheckerWebpackPlugin({
@@ -12,6 +19,8 @@ const plugins = [
     title: 'ORBS Staking Wallet',
     template: 'index.html',
   }),
+  // add the plugin to your plugins array
+  new webpack.DefinePlugin(createEnvObjectForWebpack(envFromPathMergedWithRuntime)),
 ];
 
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';

@@ -1,8 +1,6 @@
-import { Container } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import styled from 'styled-components';
 import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
 import { ContentContainer } from './components/structure/ContentContainer';

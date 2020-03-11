@@ -8,6 +8,10 @@ import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
+type TSupportedNets = 'local' | 'ropsten' | 'mainnet';
+// @ts-ignore
+const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
+
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
   contractsAddressesOverride: Partial<IOrbsPosContractsAddresses & { stakingContract: string }>;
@@ -20,34 +24,28 @@ const config: IConfig = {
   earliestBlockForDelegationOverride: null,
 };
 
-// Webpack will remove this section on production build //
-if (process.env.NODE_ENV !== 'production') {
+// Distinguish local network and ropsten
+if (ethereumNetwork === 'local') {
+  const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
+  const OrbsTokenContractJSON = require('../ganache-env/build/contracts/OrbsToken.json');
+  const StakingContractJSON = require('../ganache-env/build/contracts/StakingContract.json');
+  const VotingContractJSON = require('../ganache-env/build/contracts/OrbsVoting.json');
+
   config.ETHEREUM_PROVIDER_WS = 'ws://localhost:8545';
 
-  type TSupportedNets = 'local' | 'ropsten';
-  const ethereumNetwork: TSupportedNets = 'local';
+  config.contractsAddressesOverride.stakingContract = StakingContractJSON.networks['5777'].address;
+  config.contractsAddressesOverride.erc20Contract = OrbsTokenContractJSON.networks['5777'].address;
+  config.contractsAddressesOverride.guardiansContract = OrbsGuardiansContractJSON.networks['5777'].address;
+  config.contractsAddressesOverride.votingContract = VotingContractJSON.networks['5777'].address;
 
-  // Distinguish local network and ropsten
-  if (ethereumNetwork === 'local') {
-    const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
-    const OrbsTokenContractJSON = require('../ganache-env/build/contracts/OrbsToken.json');
-    const StakingContractJSON = require('../ganache-env/build/contracts/StakingContract.json');
-    const VotingContractJSON = require('../ganache-env/build/contracts/OrbsVoting.json');
+  config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
+} else if (ethereumNetwork === 'ropsten') {
+  config.contractsAddressesOverride.stakingContract = '0x88287444f10709f9531D11e08DCd692deccd1d63';
+  config.contractsAddressesOverride.erc20Contract = '0xeD0Aa9A4F9e5ae9092994f4B86F6AAa89944939b';
+  config.contractsAddressesOverride.guardiansContract = '0x636315bcD912B1DbFe38E6b75f5B6AEE4Cd63B30';
+  config.contractsAddressesOverride.votingContract = '0xF90a738CA659Fe99E357cB7F47Aaa5cB9b5724a2';
 
-    config.contractsAddressesOverride.stakingContract = StakingContractJSON.networks['5777'].address;
-    config.contractsAddressesOverride.erc20Contract = OrbsTokenContractJSON.networks['5777'].address;
-    config.contractsAddressesOverride.guardiansContract = OrbsGuardiansContractJSON.networks['5777'].address;
-    config.contractsAddressesOverride.votingContract = VotingContractJSON.networks['5777'].address;
-
-    config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
-  } else if (ethereumNetwork === 'ropsten') {
-    config.contractsAddressesOverride.stakingContract = '0x88287444f10709f9531D11e08DCd692deccd1d63';
-    config.contractsAddressesOverride.erc20Contract = '0xeD0Aa9A4F9e5ae9092994f4B86F6AAa89944939b';
-    config.contractsAddressesOverride.guardiansContract = '0x636315bcD912B1DbFe38E6b75f5B6AEE4Cd63B30';
-    config.contractsAddressesOverride.votingContract = '0xF90a738CA659Fe99E357cB7F47Aaa5cB9b5724a2';
-
-    config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
-  }
+  config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
 }
 
 export default config;
