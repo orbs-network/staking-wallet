@@ -8,6 +8,7 @@ import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unit
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { NumberFormatCustom } from '../../components/inputs/NumberFormatInput';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -54,9 +55,11 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       <TextField
         id={'orbsAllowance'}
         label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
-        type={'number'}
         value={orbsAllowance.value}
         onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
+        InputProps={{
+          inputComponent: NumberFormatCustom as any,
+        }}
       />
     );
   }, [orbsAllowance, stakingWizardTranslations]);
