@@ -18,6 +18,7 @@ export interface IAppTranslations {
 
 export interface ICommonsTranslations {
   loading: string;
+  loadingFailed: string;
   // As in "5 Days -left- for something"
   left: string;
 }

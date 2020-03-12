@@ -12,6 +12,8 @@ import moment from 'moment';
 
 export class OrbsAccountStore {
   @observable public doneLoading: boolean = false;
+  @observable public errorLoading: boolean = false;
+
   @observable public liquidOrbs = BigInt(0);
   @observable public stakingContractAllowance = BigInt(0);
   @observable public stakedOrbs = BigInt(0);
@@ -85,7 +87,12 @@ export class OrbsAccountStore {
       this.setDefaultAccountAddress(currentAddress);
       this.refreshAccountListeners(currentAddress);
 
-      await this.readDataForAccount(currentAddress);
+      try {
+        await this.readDataForAccount(currentAddress);
+      } catch (e) {
+        this.failLoadingProcess(e);
+        console.error('Error in reacting to address change in Orbs Account Store', e);
+      }
     }
   }
 
@@ -206,6 +213,12 @@ export class OrbsAccountStore {
     }
   }
 
+  // ****  Complex setters ****
+  private failLoadingProcess(error: Error) {
+    this.setErrorLoading(true);
+    this.setDoneLoading(true);
+  }
+
   // ****  Observables setter actions ****
 
   @action('setLiquidOrbs')
@@ -246,5 +259,10 @@ export class OrbsAccountStore {
   @action('setDoneLoading')
   private setDoneLoading(doneLoading: boolean) {
     this.doneLoading = doneLoading;
+  }
+
+  @action('setErrorLoading')
+  private setErrorLoading(errorLoading: boolean) {
+    this.errorLoading = errorLoading;
   }
 }

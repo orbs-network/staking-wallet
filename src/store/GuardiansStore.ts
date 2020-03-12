@@ -15,6 +15,7 @@ export type TGuardiansStore = IGuardiansStoreState;
 
 export class GuardiansStore implements TGuardiansStore {
   @observable public doneLoading: boolean = false;
+  @observable public errorLoading: boolean = false;
   @observable public guardiansList: TGuardianInfoExtended[];
   @observable public totalParticipatingTokens: bigint;
 
@@ -30,7 +31,14 @@ export class GuardiansStore implements TGuardiansStore {
 
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
-      async address => await this.reactToConnectedAddressChanged(address),
+      async address => {
+        try {
+          await this.reactToConnectedAddressChanged(address);
+        } catch (e) {
+          this.failLoadingProcess(e);
+          console.error(e);
+        }
+      },
       {
         fireImmediately: true,
       },
@@ -52,7 +60,8 @@ export class GuardiansStore implements TGuardiansStore {
 
       this.setDoneLoading(true);
     } catch (e) {
-      console.log(e);
+      this.failLoadingProcess(e);
+      console.error('Error while initialising Guardians store', e);
     }
   }
 
@@ -62,6 +71,13 @@ export class GuardiansStore implements TGuardiansStore {
     }
   }
 
+  // ****  Complex setters ****
+  private failLoadingProcess(error: Error) {
+    this.setErrorLoading(true);
+    this.setDoneLoading(true);
+  }
+
+  // ****  Observables setter actions ****
   private setDefaultAccountAddress(accountAddress: string) {
     this.guardiansService.setFromAccount(accountAddress);
   }
@@ -83,5 +99,10 @@ export class GuardiansStore implements TGuardiansStore {
   @action('setDoneLoading')
   private setDoneLoading(doneLoading: boolean) {
     this.doneLoading = doneLoading;
+  }
+
+  @action('setErrorLoading')
+  private setErrorLoading(errorLoading: boolean) {
+    this.errorLoading = errorLoading;
   }
 }

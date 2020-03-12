@@ -165,6 +165,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   },
   commons: {
     loading: 'Loading...',
+    loadingFailed: 'Loading failed',
     left: 'left',
   },
 };

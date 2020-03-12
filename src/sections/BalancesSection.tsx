@@ -129,78 +129,84 @@ export const BalancesSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid container direction={'row'} justify={'space-between'} spacing={3}>
-        <GridItem>
-          <BalanceCard
-            title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
-            actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
-            actionButtonActive={true}
-            onActionButtonPressed={showStakingModal.setTrue}
-            amount={fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)}
-            balanceCardTestId={'balance_card_liquid_orbs'}
-          />
-        </GridItem>
+      {/* TODO : O.L : Find a better mechanism to display error vs content*/}
+      {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
+      {!orbsAccountStore.errorLoading && (
+        <>
+          <Grid container direction={'row'} justify={'space-between'} spacing={3}>
+            <GridItem>
+              <BalanceCard
+                title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
+                actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
+                actionButtonActive={true}
+                onActionButtonPressed={showStakingModal.setTrue}
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)}
+                balanceCardTestId={'balance_card_liquid_orbs'}
+              />
+            </GridItem>
 
-        <GridItem>
-          <BalanceCard
-            title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
-            actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
-            amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
-            actionButtonActive={true}
-            onActionButtonPressed={onUnstakeTokensClicked}
-            balanceCardTestId={'balance_card_staked_orbs'}
-          />
-        </GridItem>
+            <GridItem>
+              <BalanceCard
+                title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
+                actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
+                actionButtonActive={true}
+                onActionButtonPressed={onUnstakeTokensClicked}
+                balanceCardTestId={'balance_card_staked_orbs'}
+              />
+            </GridItem>
 
-        <GridItem>
-          <BalanceCard
-            title={orbsInCooldownBoxTitle}
-            actionButtonTitle={orbsInCooldownBoxButtonText}
-            amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
-            actionButtonActive={orbsInCooldownBoxEnabled}
-            onActionButtonPressed={orbsInCooldownBoxButtonAction}
-            balanceCardTestId={'balance_card_cool_down_orbs'}
-          />
-        </GridItem>
-      </Grid>
+            <GridItem>
+              <BalanceCard
+                title={orbsInCooldownBoxTitle}
+                actionButtonTitle={orbsInCooldownBoxButtonText}
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
+                actionButtonActive={orbsInCooldownBoxEnabled}
+                onActionButtonPressed={orbsInCooldownBoxButtonAction}
+                balanceCardTestId={'balance_card_cool_down_orbs'}
+              />
+            </GridItem>
+          </Grid>
 
-      {/* Staking */}
-      <Modal open={showStakingModal.value} onClose={showStakingModal.setFalse}>
-        <StakingWizard closeWizard={showStakingModal.setFalse} />
-      </Modal>
+          {/* Staking */}
+          <Modal open={showStakingModal.value} onClose={showStakingModal.setFalse}>
+            <StakingWizard closeWizard={showStakingModal.setFalse} />
+          </Modal>
 
-      {/* Unstaking */}
-      <Modal open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
-        <UnstakingWizard closeWizard={showUnStakingModal.setFalse} />
-      </Modal>
+          {/* Unstaking */}
+          <Modal open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
+            <UnstakingWizard closeWizard={showUnStakingModal.setFalse} />
+          </Modal>
 
-      {/* Restaking */}
-      <Modal open={showRestakingModal.value} onClose={showRestakingModal.setFalse}>
-        <RestakingWizard closeWizard={showRestakingModal.setFalse} />
-      </Modal>
+          {/* Restaking */}
+          <Modal open={showRestakingModal.value} onClose={showRestakingModal.setFalse}>
+            <RestakingWizard closeWizard={showRestakingModal.setFalse} />
+          </Modal>
 
-      {/* Withdrawing */}
-      <Modal open={showWithdrawingModal.value} onClose={showWithdrawingModal.setFalse}>
-        <WithdrawingWizard closeWizard={showWithdrawingModal.setFalse} />
-      </Modal>
+          {/* Withdrawing */}
+          <Modal open={showWithdrawingModal.value} onClose={showWithdrawingModal.setFalse}>
+            <WithdrawingWizard closeWizard={showWithdrawingModal.setFalse} />
+          </Modal>
 
-      {/* Cannot unstake now snackbar */}
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={showCannotUnstakeNowSnackbar.value}
-        autoHideDuration={2000}
-        onClose={showCannotUnstakeNowSnackbar.setFalse}
-      >
-        <CustomSnackBarContent
-          variant={'warning'}
-          message={alertsTranslations('cannotUnstakeWhenThereAreOrbsReadyToWithdraw')}
-          onClose={showCannotUnstakeNowSnackbar.setFalse}
-          data-testid={'message-cannot-unstake-when-can-withdraw'}
-        />
-      </Snackbar>
+          {/* Cannot unstake now snackbar */}
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={showCannotUnstakeNowSnackbar.value}
+            autoHideDuration={2000}
+            onClose={showCannotUnstakeNowSnackbar.setFalse}
+          >
+            <CustomSnackBarContent
+              variant={'warning'}
+              message={alertsTranslations('cannotUnstakeWhenThereAreOrbsReadyToWithdraw')}
+              onClose={showCannotUnstakeNowSnackbar.setFalse}
+              data-testid={'message-cannot-unstake-when-can-withdraw'}
+            />
+          </Snackbar>
+        </>
+      )}
     </Section>
   );
 });

@@ -44,6 +44,7 @@ export const GuardiansSection = observer(() => {
     [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
 
+  // Before data was loaded
   if (!guardiansStore.doneLoading || !orbsAccountStore.doneLoading) {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
@@ -60,40 +61,46 @@ export const GuardiansSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid item xs={12}>
-        <GuardiansTable
-          guardianSelectionMode={'Change'}
-          selectedGuardian={orbsAccountStore.selectedGuardianAddress}
-          guardians={guardiansStore.guardiansList}
-          onGuardianSelect={onGuardianSelect}
-          tableTestId={'guardians-table'}
-        />
-      </Grid>
+      {/* TODO : O.L : Find a better mechanism to display error vs content*/}
+      {guardiansStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
+      {!guardiansStore.errorLoading && (
+        <>
+          <Grid item xs={12}>
+            <GuardiansTable
+              guardianSelectionMode={'Change'}
+              selectedGuardian={orbsAccountStore.selectedGuardianAddress}
+              guardians={guardiansStore.guardiansList}
+              onGuardianSelect={onGuardianSelect}
+              tableTestId={'guardians-table'}
+            />
+          </Grid>
 
-      {/* Restaking */}
-      <Modal open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
-        <GuardianChangingWizard
-          closeWizard={showGuardianChangingModal.setFalse}
-          newGuardianAddress={selectedGuardianAddress}
-        />
-      </Modal>
+          {/* Restaking */}
+          <Modal open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
+            <GuardianChangingWizard
+              closeWizard={showGuardianChangingModal.setFalse}
+              newGuardianAddress={selectedGuardianAddress}
+            />
+          </Modal>
 
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={showSnackbarMessage.value}
-        autoHideDuration={1500}
-        onClose={showSnackbarMessage.setFalse}
-      >
-        <CustomSnackBarContent
-          variant={'info'}
-          message={alertsTranslations('guardianAlreadySelected')}
-          onClose={showSnackbarMessage.setFalse}
-          data-testid={'message-guardian-already-selected'}
-        />
-      </Snackbar>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={showSnackbarMessage.value}
+            autoHideDuration={1500}
+            onClose={showSnackbarMessage.setFalse}
+          >
+            <CustomSnackBarContent
+              variant={'info'}
+              message={alertsTranslations('guardianAlreadySelected')}
+              onClose={showSnackbarMessage.setFalse}
+              data-testid={'message-guardian-already-selected'}
+            />
+          </Snackbar>
+        </>
+      )}
     </Section>
   );
 });
