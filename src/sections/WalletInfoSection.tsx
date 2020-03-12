@@ -2,12 +2,11 @@ import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
-// @ts-ignore
+
 import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
-// @ts-ignore
 import { ReactComponent as CopyIcon } from '../../assets/copy.svg';
-// @ts-ignore
 import { ReactComponent as QrIcon } from '../../assets/qr.svg';
+
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
 import React, { useCallback, useMemo } from 'react';

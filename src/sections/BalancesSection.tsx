@@ -1,6 +1,5 @@
 import { Grid } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
-// @ts-ignore
 import { ReactComponent as BalanceIcon } from '../../assets/balance.svg';
 import { observer } from 'mobx-react';
 import React, { useMemo } from 'react';

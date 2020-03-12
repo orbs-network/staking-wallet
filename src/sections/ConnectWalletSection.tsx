@@ -4,7 +4,6 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
-// @ts-ignore
 import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';

@@ -10,6 +10,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export const MainAppPage = observer(() => {
   const theme = useTheme();
+  // TODO : O.L : Remove this limitation after fixing the table section styling
   const largerThanSmall = useMediaQuery(theme.breakpoints.up('sm'));
 
   const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();

@@ -51,7 +51,6 @@ export const BaseStepContent = React.memo<IProps>(props => {
 
   const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
   const actionButton = useMemo(() => {
-    console.log(relevantStylingForActionButtons);
     if (actionButtonProps) {
       return (
         <CommonActionButton

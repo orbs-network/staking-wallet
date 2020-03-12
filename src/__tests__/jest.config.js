@@ -12,7 +12,10 @@ module.exports = {
   testRegex: '.*test.tsx?$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js',
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js',
+    // SVGs are handled separatley because of the 'svgr' import mechanism
+    // TAKEN_FROM : https://medium.com/@karllsonVomDach/jest-typescript-and-svgs-44b4333a1164
+    '\\.(svg)$': '<rootDir>/__mocks__/svgFileMock.js',
   },
   setupFilesAfterEnv: ['jest-expect-message', './setupTests.ts'],
 };

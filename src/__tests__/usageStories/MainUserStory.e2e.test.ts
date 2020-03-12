@@ -571,7 +571,7 @@ describe('Main User Story', () => {
 
     const guardianSelectedMessageTestId = 'message-guardian-already-selected';
     expect(queryByTestId(guardianSelectedMessageTestId)).toBeDefined();
-    expect(getByTestId(guardianSelectedMessageTestId)).toHaveTextContent('Guardian already selected !');
+    expect(getByTestId(guardianSelectedMessageTestId)).toHaveTextContent('Guardian already selected!');
 
     // Clicking on an unselected guardian 'action button' should open the "select guardian wizard"
     guardiansTableDriver.clickOnActionButtonForGuardian(guardian3Address);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
-// @ts-ignore
 import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';

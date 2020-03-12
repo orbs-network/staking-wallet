@@ -1,5 +1,4 @@
 import Typography from '@material-ui/core/Typography';
-// @ts-ignore
 import { ReactComponent as ShielIcon } from '../../assets/shield.svg';
 import { observer } from 'mobx-react';
 import React, { useCallback, useState } from 'react';
