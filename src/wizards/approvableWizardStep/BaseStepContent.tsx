@@ -110,7 +110,7 @@ export const BaseStepContent = React.memo<IProps>(props => {
 
       {/* Inner Content */}
       {/* DEV_NOTE : 'container' handles taking the full width*/}
-      <Grid item container>
+      <Grid item container justify={'center'}>
         {innerContent}
       </Grid>
 

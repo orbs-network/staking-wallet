@@ -32,17 +32,10 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     );
   }, [approvableWizardStepTranslations, confirmationsCount, requiredConfirmations, subMessage]);
 
-  // Should allow the user to proceed ?
-  // useEffect(() => {
-  //   if (confirmationsCount >= requiredConfirmations) {
-  //     allowToProceed.setTrue();
-  //   }
-  // }, [confirmationsCount, requiredConfirmations, allowToProceed]);
-
   const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
     let actionContent = null;
-    if (allowToProceedValue) {
+    if (allowToProceedValue && isTxConfirmed) {
       actionContent = (
         <CommonActionButton onClick={onStepFinished}>
           {approvableWizardStepTranslations('action_proceed')}
@@ -55,7 +48,7 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     }
 
     return actionContent;
-  }, [allowToProceedValue, approvableWizardStepTranslations, onStepFinished]);
+  }, [allowToProceedValue, approvableWizardStepTranslations, isTxConfirmed, onStepFinished]);
 
   const titleFc = useMemo(() => {
     const titleMessage = isTxConfirmed

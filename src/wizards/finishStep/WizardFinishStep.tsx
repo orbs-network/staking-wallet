@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { Button, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { CommonActionButton } from '../../components/base/CommonActionButton';
 
 interface IProps {
   finishedActionDescription: string;
@@ -18,7 +19,7 @@ export const WizardFinishStep = observer((props: IProps) => {
     <WizardContent data-testid={'wizard_sub_step_finish'}>
       <Typography>{wizardsCommonTranslations('stepDoneExclamation')}</Typography>
       <Typography>{finishedActionDescription}</Typography>
-      <Button onClick={onFinishClicked}>{wizardsCommonTranslations('action_finish')}</Button>
+      <CommonActionButton onClick={onFinishClicked}>{wizardsCommonTranslations('action_finish')}</CommonActionButton>
     </WizardContent>
   );
 });
