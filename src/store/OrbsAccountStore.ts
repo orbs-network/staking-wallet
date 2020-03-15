@@ -28,6 +28,9 @@ export class OrbsAccountStore {
   @computed get hasOrbsToWithdraw(): boolean {
     return this.orbsInCoolDown > 0 && this.cooldownReleaseTimestamp <= moment.utc().unix();
   }
+  @computed get hasStakedOrbs(): boolean {
+    return this.stakedOrbs > 0;
+  }
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;

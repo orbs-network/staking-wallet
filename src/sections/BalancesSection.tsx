@@ -149,7 +149,7 @@ export const BalancesSection = observer(() => {
                 title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
                 amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
-                actionButtonActive={true}
+                actionButtonActive={orbsAccountStore.hasStakedOrbs}
                 onActionButtonPressed={onUnstakeTokensClicked}
                 balanceCardTestId={'balance_card_staked_orbs'}
               />
