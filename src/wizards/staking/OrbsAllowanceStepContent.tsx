@@ -9,6 +9,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { NumberFormatCustom } from '../../components/inputs/NumberFormatInput';
+import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -48,18 +49,13 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     [setTokenAllowanceForStakingContract, stakingWizardTranslations],
   );
 
-  // TODO : O.L : Add a number formatter here to display the sums with proper separation
-  //  https://material-ui.com/components/text-fields/#FormattedInputs.tsx
   const allowanceInput = useMemo(() => {
     return (
-      <TextField
+      <FullWidthOrbsInputField
         id={'orbsAllowance'}
         label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
         value={orbsAllowance.value}
-        onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
-        InputProps={{
-          inputComponent: NumberFormatCustom as any,
-        }}
+        onChange={value => orbsAllowance.setValue(value)}
       />
     );
   }, [orbsAllowance, stakingWizardTranslations]);

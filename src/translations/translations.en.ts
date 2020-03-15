@@ -94,7 +94,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     allowanceSubStep_message_selectAmountOfOrbs: 'Select the amount of ORBS you would like to stake:',
     allowanceSubStep_action_approve: 'Approve',
     allowanceSubStep_label_allowance: 'Allowance',
-    allowanceSubStep_stepTitle: 'Approve the staking contract to use your ORBS',
+    allowanceSubStep_stepTitle: 'Approve usage of your ORBS',
     allowanceSubStep_stepExplanation:
       'This step will approve the Staking contract to transfer your ORBS tokens into the contract in order to be staked (up to the approved amount).',
 

@@ -94,12 +94,11 @@ export const BaseStepContent = React.memo<IProps>(props => {
   return (
     <WizardContent data-testid={contentTestId}>
       <Grid container item direction={'row'} justify={'center'} alignItems={'center'}>
-        <Typography variant={'h5'} style={{ fontWeight: 'bold' }}>
+        <Typography variant={'h5'} style={{ fontWeight: 'bold', paddingRight: '0.25em' }}>
           {titleContent}
         </Typography>
         {infoTooltippedIcon}
       </Grid>
-      {/* Message */}
       <Grid item hidden={!hasMessage}>
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
@@ -109,8 +108,14 @@ export const BaseStepContent = React.memo<IProps>(props => {
         <Typography variant={'body2'}>{subMessage}</Typography>
       </Grid>
 
-      <Grid item>{innerContent}</Grid>
-      <Grid item container justify={'center'} spacing={2}>
+      {/* Inner Content */}
+      {/* DEV_NOTE : 'container' handles taking the full width*/}
+      <Grid item container>
+        {innerContent}
+      </Grid>
+
+      {/* Action Buttons */}
+      <Grid item container justify={'center'} direction={'row'} spacing={2}>
         {addCancelButton && (
           <Grid item>
             <CommonActionButton style={relevantStylingForActionButtons} onClick={onCancelButtonClicked}>
