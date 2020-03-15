@@ -49,7 +49,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={restakingWizardTranslations('restakingSubStep_stepTitle', { orbsForRestaking: fullOrbsForRestaking })}
+      title={restakingWizardTranslations('restakingSubStep_stepTitle', { orbsForRestaking: fullOrbsForRestaking.toLocaleString() })}
       infoTitle={restakingWizardTranslations('restakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}

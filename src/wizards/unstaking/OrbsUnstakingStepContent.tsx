@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { TextField } from '@material-ui/core';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
@@ -8,6 +7,7 @@ import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unit
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -50,16 +50,13 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     [unstakeTokens, unstakingWizardTranslations],
   );
 
-  // TODO : O.L : Add a number formatter here to display the sums with proper separation
-  //  https://material-ui.com/components/text-fields/#FormattedInputs.tsx
   const unstakingInput = useMemo(() => {
     return (
-      <TextField
+      <FullWidthOrbsInputField
         id={'orbsUnstaking'}
         label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
-        type={'number'}
         value={orbsForUnstaking.value}
-        onChange={e => orbsForUnstaking.setValue(parseInt(e.target.value))}
+        onChange={value => orbsForUnstaking.setValue(value)}
       />
     );
   }, [orbsForUnstaking, unstakingWizardTranslations]);

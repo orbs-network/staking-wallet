@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { TextField } from '@material-ui/core';
 import { useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
@@ -8,7 +7,6 @@ import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unit
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { NumberFormatCustom } from '../../components/inputs/NumberFormatInput';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
