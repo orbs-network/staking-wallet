@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-		<meta charset="UTF-8">
-		<title><%= htmlWebpackPlugin.options.title %></title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	  <style>
-	  </style>
+	  <meta charset="UTF-8">
+	  <title><%= htmlWebpackPlugin.options.title %></title>
+	  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-	<div id="app"">Loading...</div>
+	<div id="app">Loading...</div>
 	<% if (process.env.NODE_ENV === 'production') { %>
 		<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
 		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
