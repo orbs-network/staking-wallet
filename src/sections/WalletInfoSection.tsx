@@ -115,8 +115,10 @@ export const WalletInfoSection = observer(() => {
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
           </Grid>
+          {/* TODO : FUTURE : O.L : Make the divider work in smaller screens as well*/}
+          {/* DEV_NOTE : we hide the divider in smaller viewports because of the flex (we want the buttons to have the width equals to half the viewport) */}
           <Hidden mdDown>
-              <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }}></Divider>
+            <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }}></Divider>
           </Hidden>
           <Grid item xs={6} lg={4}>
             <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>

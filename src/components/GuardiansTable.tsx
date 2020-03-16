@@ -13,6 +13,8 @@ import Grid from '@material-ui/core/Grid';
 import { useGuardiansTableTranslations } from '../translations/translationsHooks';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
+import { ReactComponent as GlobeIcon } from '../../assets/globe.svg';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -151,7 +153,7 @@ export const GuardiansTable = React.memo<IProps>(
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                <img src='/assets/globe.svg' />
+                <SvgIcon component={GlobeIcon} />
               </a>
             </TableCell>
             <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
