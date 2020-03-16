@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="29px" viewBox="0 0 24 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>shield</title>
+    <desc>Created with Sketch.</desc>
+    <g id="wallet-new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="wallet-final" transform="translate(-161.000000, -1133.000000)" fill-rule="nonzero">
+            <g id="shield" transform="translate(161.000000, 1133.000000)">
+                <path d="M0,0 L0,22.2410176 L12,29 L24,22.2410176 L24,0 L0,0 Z M23.0736013,11.1877695 L12.4632284,11.1877695 L12.4632284,0.904041016 L23.0736013,0.904041016 L23.0736013,11.1877695 Z M11.5367716,0.904041016 L11.5367716,11.1877129 L0.926398677,11.1877129 L0.926398677,0.904041016 L11.5367716,0.904041016 Z M0.926398677,12.0918105 L11.5367716,12.0918105 L11.5367716,27.6953398 L0.926398677,21.7189043 L0.926398677,12.0918105 Z M12.4632284,27.6953398 L12.4632284,12.0918105 L23.0736013,12.0918105 L23.0736013,21.7189043 L12.4632284,27.6953398 Z" id="Shape" fill="#FFFFFF"></path>
+                <g id="Group" transform="translate(2.000000, 2.000000)" fill="#6EC6D8">
+                    <rect id="Rectangle" x="11.7708876" y="0.0526376812" width="8.21976331" height="7.98069565"></rect>
+                    <polygon id="Path" points="8.22911243 11.5031884 0.00940828402 11.5031884 0.00940828402 19.3496812 8.22911243 23.9975652"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

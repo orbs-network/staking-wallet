@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="30px" height="31px" viewBox="0 0 30 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-    <title>qr-code 2</title>
-    <desc>Created with Sketch.</desc>
-    <g id="wallet-new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="1-copy" transform="translate(-1389.000000, -271.000000)" fill="#FFFFFF" fill-rule="nonzero">
-            <g id="Group-12" transform="translate(1270.000000, 265.000000)">
-                <g id="qr-code-2" transform="translate(119.000000, 6.500000)">
-                    <g id="qr-code">
-                        <path d="M0,30 L13.6708861,30 L13.6708861,16.3291139 L0,16.3291139 L0,30 Z M2.73396773,19.0635006 L10.9366191,19.0635006 L10.9366191,27.2448144 L2.73396773,27.2448144 L2.73396773,19.0635006 Z" id="Shape"></path>
-                        <rect id="Rectangle" x="5.3164557" y="22.0253165" width="2.65822785" height="2.65822785"></rect>
-                        <rect id="Rectangle" x="22.0253165" y="27.3417722" width="2.65822785" height="2.65822785"></rect>
-                        <rect id="Rectangle" x="27.3417722" y="27.3417722" width="2.65822785" height="2.65822785"></rect>
-                        <polygon id="Path" points="27.2658377 19.0635006 24.5318999 19.0635006 24.5318999 16.3291139 16.3291139 16.3291139 16.3291139 30 19.0635006 30 19.0635006 21.7974384 21.797214 21.7974384 21.797214 24.5318999 30 24.5318999 30 16.3291139 30 16.3291139 27.2658377 16.3291139"></polygon>
-                        <path d="M0,13.6708861 L13.6708861,13.6708861 L13.6708861,0 L0,0 L0,13.6708861 Z M2.73396773,2.73390788 L10.9366191,2.73390788 L10.9366191,10.9363797 L2.73396773,10.9363797 L2.73396773,2.73390788 Z" id="Shape"></path>
-                        <rect id="Rectangle" x="5.3164557" y="5.3164557" width="2.65822785" height="2.65822785"></rect>
-                        <path d="M16.3291139,0 L16.3291139,13.6708861 L30,13.6708861 L30,0 L16.3291139,0 Z M27.2656582,10.9363797 L19.0634557,10.9363797 L19.0634557,2.73390788 L27.2656582,2.73390788 L27.2656582,10.9363797 L27.2656582,10.9363797 Z" id="Shape"></path>
-                        <rect id="Rectangle" x="22.0253165" y="5.3164557" width="2.65822785" height="2.65822785"></rect>
-                    </g>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24pt" height="24pt" viewBox="0 0 24 24" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 0 23.613281 L 10.9375 23.613281 L 10.9375 13.027344 L 0 13.027344 Z M 2.1875 15.144531 L 8.75 15.144531 L 8.75 21.480469 L 2.1875 21.480469 Z M 2.1875 15.144531 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 4.253906 17.4375 L 6.378906 17.4375 L 6.378906 19.496094 L 4.253906 19.496094 Z M 4.253906 17.4375 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 17.621094 21.554688 L 19.746094 21.554688 L 19.746094 23.613281 L 17.621094 23.613281 Z M 17.621094 21.554688 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 21.875 21.554688 L 24 21.554688 L 24 23.613281 L 21.875 23.613281 Z M 21.875 21.554688 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 21.8125 15.144531 L 19.625 15.144531 L 19.625 13.027344 L 13.0625 13.027344 L 13.0625 23.613281 L 15.25 23.613281 L 15.25 17.261719 L 17.4375 17.261719 L 17.4375 19.378906 L 24 19.378906 L 24 13.027344 L 21.8125 13.027344 Z M 21.8125 15.144531 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 0 10.972656 L 10.9375 10.972656 L 10.9375 0.386719 L 0 0.386719 Z M 2.1875 2.503906 L 8.75 2.503906 L 8.75 8.855469 L 2.1875 8.855469 Z M 2.1875 2.503906 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 4.253906 4.503906 L 6.378906 4.503906 L 6.378906 6.5625 L 4.253906 6.5625 Z M 4.253906 4.503906 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 13.0625 0.386719 L 13.0625 10.972656 L 24 10.972656 L 24 0.386719 Z M 21.8125 8.855469 L 15.25 8.855469 L 15.25 2.503906 L 21.8125 2.503906 Z M 21.8125 8.855469 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 17.621094 4.503906 L 19.746094 4.503906 L 19.746094 6.5625 L 17.621094 6.5625 Z M 17.621094 4.503906 "/>
+</g>
 </svg>

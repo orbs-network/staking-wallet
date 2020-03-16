@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="29px" viewBox="0 0 24 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-    <title>shield</title>
-    <desc>Created with Sketch.</desc>
-    <g id="wallet-new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="wallet-final" transform="translate(-161.000000, -1133.000000)" fill-rule="nonzero">
-            <g id="shield" transform="translate(161.000000, 1133.000000)">
-                <path d="M0,0 L0,22.2410176 L12,29 L24,22.2410176 L24,0 L0,0 Z M23.0736013,11.1877695 L12.4632284,11.1877695 L12.4632284,0.904041016 L23.0736013,0.904041016 L23.0736013,11.1877695 Z M11.5367716,0.904041016 L11.5367716,11.1877129 L0.926398677,11.1877129 L0.926398677,0.904041016 L11.5367716,0.904041016 Z M0.926398677,12.0918105 L11.5367716,12.0918105 L11.5367716,27.6953398 L0.926398677,21.7189043 L0.926398677,12.0918105 Z M12.4632284,27.6953398 L12.4632284,12.0918105 L23.0736013,12.0918105 L23.0736013,21.7189043 L12.4632284,27.6953398 Z" id="Shape" fill="#FFFFFF"></path>
-                <g id="Group" transform="translate(2.000000, 2.000000)" fill="#6EC6D8">
-                    <rect id="Rectangle" x="11.7708876" y="0.0526376812" width="8.21976331" height="7.98069565"></rect>
-                    <polygon id="Path" points="8.22911243 11.5031884 0.00940828402 11.5031884 0.00940828402 19.3496812 8.22911243 23.9975652"></polygon>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24pt" height="24pt" viewBox="0 0 24 24" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 0 0 L 0 18.40625 L 12 24 L 24 18.40625 L 24 0 Z M 23.074219 9.257812 L 12.464844 9.257812 L 12.464844 0.75 L 23.074219 0.75 Z M 11.535156 0.75 L 11.535156 9.257812 L 0.925781 9.257812 L 0.925781 0.75 Z M 0.925781 10.007812 L 11.535156 10.007812 L 11.535156 22.921875 L 0.925781 17.972656 Z M 12.464844 22.921875 L 12.464844 10.007812 L 23.074219 10.007812 L 23.074219 17.972656 Z M 12.464844 22.921875 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(43.137255%,77.647059%,84.705882%);fill-opacity:1;" d="M 13.769531 1.699219 L 21.992188 1.699219 L 21.992188 8.304688 L 13.769531 8.304688 Z M 13.769531 1.699219 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(43.137255%,77.647059%,84.705882%);fill-opacity:1;" d="M 10.230469 11.175781 L 2.007812 11.175781 L 2.007812 17.667969 L 10.230469 21.515625 Z M 10.230469 11.175781 "/>
+</g>
 </svg>
