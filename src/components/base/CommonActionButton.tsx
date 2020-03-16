@@ -8,5 +8,6 @@ export const CommonActionButton = styled((props: ButtonProps) => (
   return {
     fontWeight: 'bold',
     height: '4em',
+    boxShadow: '0.15em 0.2em #469daf',
   };
 });

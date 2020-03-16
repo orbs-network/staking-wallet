@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button, Divider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
@@ -27,6 +27,7 @@ import {
 } from '../translations/translationsHooks';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Hidden from '@material-ui/core/Hidden';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -109,12 +110,15 @@ export const WalletInfoSection = observer(() => {
 
         {/* Buttons */}
         <Grid container direction={'row'} item sm={12} lg={4} justify={'flex-end'}>
-          <Grid item xs={6} lg={3}>
+          <Grid item xs={6} lg={4}>
             <LoweCaseButton fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
           </Grid>
-          <Grid item xs={6} lg={3}>
+          <Hidden mdDown>
+              <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }}></Divider>
+          </Hidden>
+          <Grid item xs={6} lg={4}>
             <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
               {walletInfoSectionTranslations('qr')}
             </LoweCaseButton>
