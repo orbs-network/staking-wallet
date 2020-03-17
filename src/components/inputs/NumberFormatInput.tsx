@@ -18,16 +18,10 @@ interface INumberFormatCustomProps {
 export function NumberFormatCustom(props: INumberFormatCustomProps) {
   const { inputRef, onChange, allowNegative, suffix, fontSize, ...others } = props;
 
-  const theme = useTheme();
-  console.log(theme.typography.h3);
-  console.log(others);
-
   const style = useMemo<React.CSSProperties>(() => {
     const styleObject: React.CSSProperties = {
       textAlign: 'center',
     };
-
-    console.log(fontSize);
 
     if (fontSize) {
       styleObject.fontSize = fontSize;
@@ -41,7 +35,6 @@ export function NumberFormatCustom(props: INumberFormatCustomProps) {
       {...others}
       getInputRef={inputRef}
       onValueChange={values => {
-        console.log(values);
         onChange({
           target: {
             value: values.value,

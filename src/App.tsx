@@ -7,13 +7,13 @@ import { ContentContainer } from './components/structure/ContentContainer';
 
 export const App = observer(() => {
   return (
-    <>
+    <main>
       <Header />
       <ContentContainer>
         <Switch>
           <Route exact path='/' component={MainAppPage} />
         </Switch>
       </ContentContainer>
-    </>
+    </main>
   );
 });

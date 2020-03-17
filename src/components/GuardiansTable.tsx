@@ -66,143 +66,142 @@ interface IProps {
   extraStyle?: React.CSSProperties;
 }
 
-export const GuardiansTable = React.memo<IProps>(
-  ({ guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle }) => {
-    const guardiansTableTranslations = useGuardiansTableTranslations();
+export const GuardiansTable = React.memo<IProps>(props => {
+  const { guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle } = props;
+  const guardiansTableTranslations = useGuardiansTableTranslations();
 
-    const getSelectedGuardianCell = useCallback(
-      (g: TGuardianInfoExtended, idx: number) => {
-        let selectedGuardianCell = null;
+  const getSelectedGuardianCell = useCallback(
+    (g: TGuardianInfoExtended, idx: number) => {
+      let selectedGuardianCell = null;
 
-        const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
-        const actionButtonOnClick = () => onGuardianSelect(g);
+      const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
+      const actionButtonOnClick = () => onGuardianSelect(g);
 
-        switch (guardianSelectionMode) {
-          case 'Select':
-            selectedGuardianCell = (
-              <TableCell align='center'>
-                <SelectButton
-                  variant='contained'
-                  size='small'
-                  // disabled={g.address === selectedGuardian}
-                  data-testid={actionButtonTestId}
-                  onClick={actionButtonOnClick}
-                >
-                  {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
-                </SelectButton>
-              </TableCell>
-            );
-            break;
-          case 'Change':
-            const isSelectedGuardian = g.address === selectedGuardian;
-
-            const enabled = !!onGuardianSelect;
-            const actionButtonIcon = isSelectedGuardian ? (
-              <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
-            ) : (
-              <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
-            );
-
-            selectedGuardianCell = (
-              <TableCell align='center'>
-                <Typography data-testid={`guardian-${g.address}-selected-status`}>
-                  <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
-                    {actionButtonIcon}
-                  </IconButton>
-                </Typography>
-              </TableCell>
-            );
-            break;
-          case 'None':
-            selectedGuardianCell = null;
-            break;
-          default:
-            throw new Error(`Invalid guardian selection mode of ${guardianSelectionMode}`);
-        }
-
-        return selectedGuardianCell;
-      },
-      [guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
-    );
-
-    const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
-    const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
-
-    const sortedGuardians = useMemo(
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      () => guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian)),
-      [guardians, selectedGuardian],
-    );
-
-    const tableRows = useMemo(() => {
-      return sortedGuardians.map((g, idx) => {
-        const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? selectedGuardianRowStyle : null;
-        return (
-          <TableRow style={extraStyle} data-testid={`guardian-${g.address}`} key={g.name} hover>
-            <TableCell data-testid={`guardian-${g.address}-name`}>
-              <NameBox>
-                <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
-                <NameContainer>{g.name}</NameContainer>
-              </NameBox>
-            </TableCell>
-            <TableCell data-testid={`guardian-${g.address}-address`}>{g.address}</TableCell>
+      switch (guardianSelectionMode) {
+        case 'Select':
+          selectedGuardianCell = (
             <TableCell align='center'>
-              <a
-                data-testid={`guardian-${g.address}-website`}
-                href={getWebsiteAddress(g.website)}
-                target='_blank'
-                rel='noopener noreferrer'
+              <SelectButton
+                variant='contained'
+                size='small'
+                // disabled={g.address === selectedGuardian}
+                data-testid={actionButtonTestId}
+                onClick={actionButtonOnClick}
               >
-                <SvgIcon component={GlobeIcon} />
-              </a>
+                {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
+              </SelectButton>
             </TableCell>
-            <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
-              {asPercent(g.stakePercent)}
-            </TableCell>
-            <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
-              {g.voted ? (
-                <YesContainer>{guardiansTableTranslations('didVote_yes')}</YesContainer>
-              ) : (
-                <NoContainer>{guardiansTableTranslations('didVote_no')}</NoContainer>
-              )}
-            </TableCell>
-            {addSelectionColumn && getSelectedGuardianCell(g, idx)}
-          </TableRow>
-        );
-      });
-    }, [
-      addSelectionColumn,
-      getSelectedGuardianCell,
-      guardiansTableTranslations,
-      hasSelectedGuardian,
-      selectedGuardian,
-      sortedGuardians,
-    ]);
+          );
+          break;
+        case 'Change':
+          const isSelectedGuardian = g.address === selectedGuardian;
 
-    // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
-    return (
-      <TableContainer component={Paper} style={extraStyle}>
-        <Table data-testid={tableTestId}>
-          <StyledTableHead>
-            <TableRow>
-              <TableCell>{guardiansTableTranslations('columnHeader_name')}</TableCell>
-              <TableCell>{guardiansTableTranslations('columnHeader_address')}</TableCell>
-              <TableCell align='center'>{guardiansTableTranslations('columnHeader_website')}</TableCell>
-              <TableCell align='center'>
-                {guardiansTableTranslations('columnHeader_stakingPercentageInLastElections')}
-              </TableCell>
-              <TableCell align='center'>{guardiansTableTranslations('columnHeader_votedInLastElection')}</TableCell>
-              {addSelectionColumn && (
-                <TableCell align='center'>{guardiansTableTranslations('columnHeader_selection')}</TableCell>
-              )}
-            </TableRow>
-          </StyledTableHead>
-          <StyledTableBody>{tableRows}</StyledTableBody>
-        </Table>
-      </TableContainer>
-    );
-  },
-);
+          const enabled = !!onGuardianSelect;
+          const actionButtonIcon = isSelectedGuardian ? (
+            <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
+          ) : (
+            <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
+          );
+
+          selectedGuardianCell = (
+            <TableCell align='center'>
+              <Typography data-testid={`guardian-${g.address}-selected-status`}>
+                <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
+                  {actionButtonIcon}
+                </IconButton>
+              </Typography>
+            </TableCell>
+          );
+          break;
+        case 'None':
+          selectedGuardianCell = null;
+          break;
+        default:
+          throw new Error(`Invalid guardian selection mode of ${guardianSelectionMode}`);
+      }
+
+      return selectedGuardianCell;
+    },
+    [guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
+  );
+
+  const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
+  const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
+
+  const sortedGuardians = useMemo(
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    () => guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian)),
+    [guardians, selectedGuardian],
+  );
+
+  const tableRows = useMemo(() => {
+    return sortedGuardians.map((g, idx) => {
+      const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? selectedGuardianRowStyle : null;
+      return (
+        <TableRow style={extraStyle} data-testid={`guardian-${g.address}`} key={g.name} hover>
+          <TableCell data-testid={`guardian-${g.address}-name`}>
+            <NameBox>
+              <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
+              <NameContainer>{g.name}</NameContainer>
+            </NameBox>
+          </TableCell>
+          <TableCell data-testid={`guardian-${g.address}-address`}>{g.address}</TableCell>
+          <TableCell align='center'>
+            <a
+              data-testid={`guardian-${g.address}-website`}
+              href={getWebsiteAddress(g.website)}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <SvgIcon component={GlobeIcon} />
+            </a>
+          </TableCell>
+          <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
+            {asPercent(g.stakePercent)}
+          </TableCell>
+          <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
+            {g.voted ? (
+              <YesContainer>{guardiansTableTranslations('didVote_yes')}</YesContainer>
+            ) : (
+              <NoContainer>{guardiansTableTranslations('didVote_no')}</NoContainer>
+            )}
+          </TableCell>
+          {addSelectionColumn && getSelectedGuardianCell(g, idx)}
+        </TableRow>
+      );
+    });
+  }, [
+    addSelectionColumn,
+    getSelectedGuardianCell,
+    guardiansTableTranslations,
+    hasSelectedGuardian,
+    selectedGuardian,
+    sortedGuardians,
+  ]);
+
+  // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
+  return (
+    <TableContainer component={Paper} style={extraStyle}>
+      <Table data-testid={tableTestId}>
+        <StyledTableHead>
+          <TableRow>
+            <TableCell>{guardiansTableTranslations('columnHeader_name')}</TableCell>
+            <TableCell>{guardiansTableTranslations('columnHeader_address')}</TableCell>
+            <TableCell align='center'>{guardiansTableTranslations('columnHeader_website')}</TableCell>
+            <TableCell align='center'>
+              {guardiansTableTranslations('columnHeader_stakingPercentageInLastElections')}
+            </TableCell>
+            <TableCell align='center'>{guardiansTableTranslations('columnHeader_votedInLastElection')}</TableCell>
+            {addSelectionColumn && (
+              <TableCell align='center'>{guardiansTableTranslations('columnHeader_selection')}</TableCell>
+            )}
+          </TableRow>
+        </StyledTableHead>
+        <StyledTableBody>{tableRows}</StyledTableBody>
+      </Table>
+    </TableContainer>
+  );
+});
 
 function compareGuardiansBySelectedAndThenStake(
   a: TGuardianInfoExtended,
