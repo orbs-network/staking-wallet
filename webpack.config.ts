@@ -22,7 +22,7 @@ const plugins = [
     template: 'index.html',
   }),
   // Adds the favicon to the dist
-  new FaviconsWebpackPlugin('./favicon.png'),
+  new FaviconsWebpackPlugin('./assets/orbs_logo.png'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.
   new webpack.DefinePlugin(createEnvObjectForWebpack(envFromPathMergedWithRuntime)),
 ];
