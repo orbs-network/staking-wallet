@@ -5,6 +5,7 @@ import { Configuration } from 'webpack';
 import cssnano from 'cssnano';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 import { createEnvObjectForWebpack, getEnvFilePath, overrideEnvFileValuesWithRuntimeEnv } from './webpackUtils';
 
 const envFilePath = getEnvFilePath(process.env);
@@ -15,11 +16,14 @@ const plugins = [
   new ForkTsCheckerWebpackPlugin({
     tsconfig: path.join(__dirname, 'src', 'tsconfig.json'),
   }),
+  // Adds the index.html to the dist
   new HtmlWebpackPlugin({
     title: 'ORBS Staking Wallet',
     template: 'index.html',
   }),
-  // add the plugin to your plugins array
+  // Adds the favicon to the dist
+  new FaviconsWebpackPlugin('./favicon.png'),
+  // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.
   new webpack.DefinePlugin(createEnvObjectForWebpack(envFromPathMergedWithRuntime)),
 ];
 
