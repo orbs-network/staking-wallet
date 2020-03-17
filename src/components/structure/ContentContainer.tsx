@@ -8,12 +8,16 @@ export const ContentContainer = styled<typeof Container>(props => <Container max
       [theme.breakpoints.down('sm')]: {},
       [theme.breakpoints.up('sm')]: {},
       [theme.breakpoints.up('md')]: {
-        paddingRight: '2em',
-        paddingLeft: '2em',
+        paddingRight: '3em',
+        paddingLeft: '3em',
       },
       [theme.breakpoints.up('lg')]: {
-        paddingRight: '5em',
-        paddingLeft: '5em',
+        paddingRight: '6em',
+        paddingLeft: '6em',
+      },
+      [theme.breakpoints.up('xl')]: {
+        paddingRight: '10em',
+        paddingLeft: '10em',
       },
     };
   },
