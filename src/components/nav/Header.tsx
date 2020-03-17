@@ -5,6 +5,9 @@ import React from 'react';
 import { LanguagesSelector } from './LanguagesSelector';
 import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import { ReactComponent as OrbsLogoIcon } from '../../../assets/orbs_logo_24.svg';
+import Grid from '@material-ui/core/Grid';
 
 const StyledAppBar = styled(AppBar)({
   borderBottom: '2px solid #363636',
@@ -22,12 +25,21 @@ export const Header = () => {
       <StyledAppBar position='fixed'>
         <ContentContainer>
           <StyledToolBar>
-            <Typography>ORBS</Typography>
-            <LanguagesSelector />
+            <Grid container spacing={2} direction={'row'} alignItems={'center'}>
+              <Grid item>
+                <SvgIcon component={OrbsLogoIcon} />
+              </Grid>
+              <Grid item>
+                <Typography>ORBS</Typography>
+              </Grid>
+              <Grid item>
+                <LanguagesSelector />
+              </Grid>
+            </Grid>
           </StyledToolBar>
         </ContentContainer>
       </StyledAppBar>
-      {/* DEV_NOTE : Second 'Toolbar' is a trick offered by MUI to keep the content properly below the AppBar */}
+      {/* DEV_NOTE : Second 'Toolbar' is a trick offered by MUI to keep the content properly below the fixed AppBar */}
       <Toolbar />
     </>
   );

@@ -5,50 +5,39 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
  * The above notice should be included in all copies or substantial portions of the software.
  */
-
-import { withStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { ChangeLangLink } from '../../multi-lang/ChangeLangLink';
 import EN_FLAG from './en-us.png';
 import JP_FLAG from './jp.png';
 import KO_FLAG from './ko.png';
+import Grid from '@material-ui/core/Grid';
+import styled from 'styled-components';
 
-const styles = () => ({
-  list: {
-    padding: 0,
-    margin: 0,
-    display: 'inherit',
-    listStyle: 'none',
-    justifyContent: 'flex-end',
-  },
-  item: {
-    padding: '0 10px',
-    '&:hover': {
-      opacity: 0.8,
-    },
-  },
-});
 
-const LanguagesSelectorImpl = ({ classes }) => {
+const ButtonChangeLangLink = styled(ChangeLangLink)(() => ({
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
+
+export const LanguagesSelector = React.memo(props => {
   return (
-    <ul className={classes.list}>
-      <li className={classes.item}>
-        <ChangeLangLink lang='en'>
+    <Grid container alignItems={'center'} spacing={2} >
+      <Grid item>
+        <ButtonChangeLangLink lang='en'>
           <img src={EN_FLAG} alt='English' />
-        </ChangeLangLink>
-      </li>
-      <li className={classes.item}>
-        <ChangeLangLink lang='jp'>
+        </ButtonChangeLangLink>
+      </Grid>
+      <Grid item>
+        <ButtonChangeLangLink lang='jp'>
           <img src={JP_FLAG} alt='Japanese' />
-        </ChangeLangLink>
-      </li>
-      <li className={classes.item}>
-        <ChangeLangLink lang='ko'>
+        </ButtonChangeLangLink>
+      </Grid>
+      <Grid item>
+        <ButtonChangeLangLink lang='ko'>
           <img src={KO_FLAG} alt='Korean' />
-        </ChangeLangLink>
-      </li>
-    </ul>
+        </ButtonChangeLangLink>
+      </Grid>
+    </Grid>
   );
-};
-
-export const LanguagesSelector = withStyles(styles)(LanguagesSelectorImpl);
+});
