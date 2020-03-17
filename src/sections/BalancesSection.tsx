@@ -126,13 +126,13 @@ export const BalancesSection = observer(() => {
       {/* Balance */}
       <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
 
-      <CommonDivider />
+      <Grid item> <CommonDivider /> </Grid>
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
       {!orbsAccountStore.errorLoading && (
         <>
-          <Grid container direction={'row'} justify={'space-between'} spacing={3}>
+          <Grid container item direction={'row'} justify={'space-between'} spacing={2}>
             <GridItem>
               <BalanceCard
                 title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}

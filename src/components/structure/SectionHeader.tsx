@@ -1,4 +1,4 @@
-import Grid, { GridTypeMap } from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React, { SVGProps } from 'react';
 import styled from 'styled-components';
@@ -8,9 +8,7 @@ import { useTheme } from '@material-ui/core/styles';
 
 const SectionHeaderGrid = styled<typeof Grid>(props => (
   <Grid item container direction={'row'} alignItems={'center'} {...props}></Grid>
-))(() => ({
-  marginBottom: '0.5em',
-}));
+))(() => ({}));
 
 const Title = styled(Typography)`
   margin-left: 0.5em;
