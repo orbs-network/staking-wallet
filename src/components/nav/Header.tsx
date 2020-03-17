@@ -19,6 +19,12 @@ const StyledToolBar = styled(Toolbar)({
   paddingLeft: 0,
 });
 
+const HoverableScgIcon = styled(SvgIcon)(() => ({
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
+
 export const Header = () => {
   return (
     <>
@@ -27,7 +33,9 @@ export const Header = () => {
           <StyledToolBar>
             <Grid container spacing={2} direction={'row'} alignItems={'center'}>
               <Grid item>
-                <SvgIcon component={OrbsLogoIcon} />
+                <a href={'https://www.orbs.com'} target={'blank'}>
+                  <HoverableScgIcon component={OrbsLogoIcon} />
+                </a>
               </Grid>
               <Grid item>
                 <Typography>ORBS</Typography>
