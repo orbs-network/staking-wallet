@@ -63,7 +63,7 @@ export const GuardianSelectionStepContent = observer(
 
     const guardianSelectionContent = useMemo(() => {
       return (
-        <Grid item style={{ marginLeft: '1em', marginRight: '1em' }}>
+        <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
             guardians={guardiansStore.guardiansList}
             guardianSelectionMode={'Select'}
