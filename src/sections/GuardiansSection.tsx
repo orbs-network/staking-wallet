@@ -10,7 +10,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { useBoolean } from 'react-hanger';
 import { TGuardianInfoExtended } from '../store/GuardiansStore';
-import Modal from '@material-ui/core/Modal';
 import { GuardianChangingWizard } from '../wizards/guardianChange/GuardianChangingWizard';
 import {
   useAlertsTranslations,
@@ -19,6 +18,7 @@ import {
 } from '../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
 import { CommonDivider } from '../components/base/CommonDivider';
+import { CommonDialog } from '../components/modal/CommonDialog';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -75,12 +75,12 @@ export const GuardiansSection = observer(() => {
           </Grid>
 
           {/* Restaking */}
-          <Modal open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
+          <CommonDialog open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
             <GuardianChangingWizard
               closeWizard={showGuardianChangingModal.setFalse}
               newGuardianAddress={selectedGuardianAddress}
             />
-          </Modal>
+          </CommonDialog>
 
           <Snackbar
             anchorOrigin={{

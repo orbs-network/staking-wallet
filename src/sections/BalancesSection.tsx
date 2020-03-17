@@ -1,5 +1,4 @@
-import { Grid } from '@material-ui/core';
-import Modal from '@material-ui/core/Modal';
+import Grid from '@material-ui/core/Grid';
 import { ReactComponent as BalanceIcon } from '../../assets/balance.svg';
 import { observer } from 'mobx-react';
 import React, { useMemo } from 'react';
@@ -26,6 +25,7 @@ import {
 } from '../translations/translationsHooks';
 import Typography from '@material-ui/core/Typography';
 import { CommonDivider } from '../components/base/CommonDivider';
+import { CommonDialog } from '../components/modal/CommonDialog';
 
 const GridItem = styled(props => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)(styledProps => {
   return {};
@@ -168,24 +168,24 @@ export const BalancesSection = observer(() => {
           </Grid>
 
           {/* Staking */}
-          <Modal open={showStakingModal.value} onClose={showStakingModal.setFalse}>
+          <CommonDialog open={showStakingModal.value} onClose={showStakingModal.setFalse}>
             <StakingWizard closeWizard={showStakingModal.setFalse} />
-          </Modal>
+          </CommonDialog>
 
           {/* Unstaking */}
-          <Modal open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
+          <CommonDialog open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
             <UnstakingWizard closeWizard={showUnStakingModal.setFalse} />
-          </Modal>
+          </CommonDialog>
 
           {/* Restaking */}
-          <Modal open={showRestakingModal.value} onClose={showRestakingModal.setFalse}>
+          <CommonDialog open={showRestakingModal.value} onClose={showRestakingModal.setFalse}>
             <RestakingWizard closeWizard={showRestakingModal.setFalse} />
-          </Modal>
+          </CommonDialog>
 
           {/* Withdrawing */}
-          <Modal open={showWithdrawingModal.value} onClose={showWithdrawingModal.setFalse}>
+          <CommonDialog open={showWithdrawingModal.value} onClose={showWithdrawingModal.setFalse}>
             <WithdrawingWizard closeWizard={showWithdrawingModal.setFalse} />
-          </Modal>
+          </CommonDialog>
 
           {/* Cannot unstake now snackbar */}
           <Snackbar

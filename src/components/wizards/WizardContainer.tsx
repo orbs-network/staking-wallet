@@ -26,7 +26,7 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
 
     // Handles width of wizards
     width: 'fit-content',
-    maxWidth: '100%',
+    maxWidth: '95%',
     [theme.breakpoints.up('sm')]: {
       minWidth: '50%',
       maxWidth: '80%',

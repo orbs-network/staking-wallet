@@ -11,7 +11,6 @@ import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
 import React, { useCallback, useMemo } from 'react';
 import { useBoolean } from 'react-hanger';
-import Modal from '@material-ui/core/Modal';
 import { QRCode } from 'react-qrcode-logo';
 import styled from 'styled-components';
 import { CommonDivider } from '../components/base/CommonDivider';
@@ -28,6 +27,7 @@ import {
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
+import { CommonDialog } from '../components/modal/CommonDialog';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -118,7 +118,7 @@ export const WalletInfoSection = observer(() => {
           {/* TODO : FUTURE : O.L : Make the divider work in smaller screens as well*/}
           {/* DEV_NOTE : we hide the divider in smaller viewports because of the flex (we want the buttons to have the width equals to half the viewport) */}
           <Hidden mdDown>
-            <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }}></Divider>
+            <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }} />
           </Hidden>
           <Grid item xs={6} lg={4}>
             <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
@@ -128,7 +128,7 @@ export const WalletInfoSection = observer(() => {
         </Grid>
       </Grid>
 
-      <Modal disableAutoFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
+      <CommonDialog disableBackdropClick={false} disableAutoFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
         <CenteredContainerGridForQr>
           <QRCode
             value={cryptoWalletIntegrationStore.mainAddress}
@@ -140,7 +140,7 @@ export const WalletInfoSection = observer(() => {
             fgColor={'#07142E'}
           />
         </CenteredContainerGridForQr>
-      </Modal>
+      </CommonDialog>
 
       <Snackbar
         anchorOrigin={{
