@@ -4,7 +4,7 @@ import { useGuardiansStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
-import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useTranslation } from 'react-i18next';
 import {
@@ -50,12 +50,11 @@ export const GuardianChangeStepContent = observer(
       onPromiEventAction(promiEvent);
     }, [message, subMessage, wizardsCommonTranslations, guardiansStore, newGuardianAddress, onPromiEventAction]);
 
-    const guardianSelectionContent = useMemo(() => {
-      return (
-        <CommonActionButton onClick={changeSelectedGuardian}>
-          {guardianChangingWizardTranslations('guardianSelectionSubStep_action_change')}
-        </CommonActionButton>
-      );
+    const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
+      return {
+        title: guardianChangingWizardTranslations('guardianSelectionSubStep_action_change'),
+        onClick: changeSelectedGuardian
+      };
     }, [changeSelectedGuardian, guardianChangingWizardTranslations]);
 
     return (
@@ -65,7 +64,8 @@ export const GuardianChangeStepContent = observer(
         title={guardianChangingWizardTranslations('guardianSelectionSubStep_stepTitle')}
         disableInputs={disableInputs}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
-        innerContent={guardianSelectionContent}
+        innerContent={null}
+        actionButtonProps={changeGuardianActionButtonProps}
         addCancelButton
         onCancelButtonClicked={closeWizard}
       />
