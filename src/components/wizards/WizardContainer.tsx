@@ -27,6 +27,8 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
     // Handles width of wizards
     width: 'fit-content',
     maxWidth: '95%',
+
+    // Adjusts max size for larger screens
     [theme.breakpoints.up('sm')]: {
       minWidth: '50%',
       maxWidth: '80%',
@@ -45,6 +47,10 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
     [theme.breakpoints.up('md')]: {
       padding: '3em',
     },
+
+    // Removes the negative side margin added by the "spacing" prop
+    marginRight: 0,
+    marginLeft: 0,
   };
 });
 
