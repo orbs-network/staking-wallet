@@ -25,6 +25,9 @@ const plugins = [
   new FaviconsWebpackPlugin('./assets/orbs_logo.png'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.
   new webpack.DefinePlugin(createEnvObjectForWebpack(envFromPathMergedWithRuntime)),
+
+  // DEV_NOTE : Ignore all locale files of moment.js (will include required ones manually)
+  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 ];
 
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
@@ -56,6 +59,7 @@ const config: Configuration = {
         },
       },
     },
+    usedExports: true,
   },
   module: {
     rules: [

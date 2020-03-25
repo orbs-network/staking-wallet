@@ -1,7 +1,8 @@
 import React from 'react';
 import { NumberFormatCustom } from './NumberFormatInput';
-import { TextField, useTheme } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useTheme from '@material-ui/core/styles/useTheme';
 
 interface IProps {
   id: string;

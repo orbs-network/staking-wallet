@@ -66,7 +66,7 @@ interface IProps {
   extraStyle?: React.CSSProperties;
 }
 
-export const GuardiansTable = React.memo<IProps>(props => {
+export const GuardiansTable = React.memo<IProps>((props) => {
   const { guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
 
@@ -145,7 +145,9 @@ export const GuardiansTable = React.memo<IProps>(props => {
               <NameContainer>{g.name}</NameContainer>
             </NameBox>
           </TableCell>
-          <TableCell data-testid={`guardian-${g.address}-address`}>{g.address}</TableCell>
+          <TableCell data-testid={`guardian-${g.address}-address`} style={{ fontFamily: 'monospace' }}>
+            {g.address}
+          </TableCell>
           <TableCell align='center'>
             <a
               data-testid={`guardian-${g.address}-website`}
