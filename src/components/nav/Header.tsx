@@ -1,44 +1,45 @@
-import { Typography } from '@material-ui/core';
+import { AppBarProps, Grid, ToolbarProps, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
 import { LanguagesSelector } from './LanguagesSelector';
 import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
-import SvgIcon from '@material-ui/core/SvgIcon';
-import { ReactComponent as OrbsLogoIcon } from '../../../assets/orbs_logo_24.svg';
-import Grid from '@material-ui/core/Grid';
+import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/logo_with_icon.svg';
 
-const StyledAppBar = styled(AppBar)({
+const StyledAppBar = styled(AppBar)<AppBarProps>({
   borderBottom: '2px solid #363636',
 });
 
-const StyledToolBar = styled(Toolbar)({
+const StyledToolBar = styled(Toolbar)<ToolbarProps>({
   // DEV_NOTE : Padding 0 keeps the Toolbar aligned with the body (via 'ContentContainer')
   paddingRight: 0,
   paddingLeft: 0,
 });
 
-const HoverableScgIcon = styled(SvgIcon)(() => ({
-  '&:hover': {
+const HoverableLogoAndIcon = styled(OrbsLogoAndIconSvg)(({ theme }) => ({
+  ':hover': {
     opacity: 0.8,
   },
+  height: '1.75em',
+  [theme.breakpoints.down('md')]: {
+    height: '2.0em',
+  },
 }));
+
+// TODO : C.F.H : Make sure the responsivness of the logo and languages is kept.
 
 export const Header = () => {
   return (
     <>
-      <StyledAppBar position='fixed'>
-        <ContentContainer>
+      <StyledAppBar position='fixed'><ContentContainer>
           <StyledToolBar>
             <Grid container spacing={2} direction={'row'} alignItems={'center'}>
               <Grid item>
-                <a href={'https://www.orbs.com'} target={'blank'}>
-                  <HoverableScgIcon component={OrbsLogoIcon} />
+                {/* DEV_NOTE : Adding 'flex' to the anchor element keeps it stretched by its child */}
+                <a href={'https://www.orbs.com'} target={'blank'} style={{ display: 'flex' }}>
+                  <HoverableLogoAndIcon />
                 </a>
-              </Grid>
-              <Grid item>
-                <Typography>ORBS</Typography>
               </Grid>
               <Grid item>
                 <LanguagesSelector />
