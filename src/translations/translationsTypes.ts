@@ -158,6 +158,8 @@ export interface IUnstakingWizardTranslation {
   unstakingSubStep_stepExplanation: string;
   unstakingSubStep_action_unstake: string;
   unstakingSubStep_inputLabel: string;
+  unstakingSubStep_warning_thereAreOrbsInCooldownHeader: string;
+  unstakingSubStep_warning_thereAreOrbsInCooldownBody: string;
 }
 
 export interface IWithdrawingWizardTranslation {

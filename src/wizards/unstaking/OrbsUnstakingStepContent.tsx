@@ -8,6 +8,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
+import { Typography } from '@material-ui/core';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -51,15 +52,25 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   );
 
   const unstakingInput = useMemo(() => {
+    const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
+      <>
+        <Typography style={{ color: 'orange', textAlign: 'center' }}>{unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownHeader')} </Typography>
+        <Typography style={{ color: 'orange', textAlign: 'center' }}>{unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownBody')} </Typography>
+      </>
+    ) : null;
+
     return (
-      <FullWidthOrbsInputField
-        id={'orbsUnstaking'}
-        label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
-        value={orbsForUnstaking.value}
-        onChange={value => orbsForUnstaking.setValue(value)}
-      />
+      <>
+        {orbsInCooldownWarning}
+        <FullWidthOrbsInputField
+          id={'orbsUnstaking'}
+          label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
+          value={orbsForUnstaking.value}
+          onChange={(value) => orbsForUnstaking.setValue(value)}
+        />
+      </>
     );
-  }, [orbsForUnstaking, unstakingWizardTranslations]);
+  }, [orbsForUnstaking, unstakingWizardTranslations, orbsAccountStore.hasOrbsInCooldown]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (

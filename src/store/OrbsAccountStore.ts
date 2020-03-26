@@ -31,6 +31,10 @@ export class OrbsAccountStore {
   @computed get hasStakedOrbs(): boolean {
     return this.stakedOrbs > 0;
   }
+  @computed get hasOrbsInCooldown(): boolean {
+    return this.orbsInCoolDown > 0;
+  }
+
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
@@ -47,7 +51,7 @@ export class OrbsAccountStore {
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
-      async address => {
+      async (address) => {
         this.setDoneLoading(false);
         await this.reactToConnectedAddressChanged(address);
         this.setDoneLoading(true);
@@ -158,7 +162,7 @@ export class OrbsAccountStore {
     // Orbs balance
     this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
       accountAddress,
-      newBalance => this.setLiquidOrbs(newBalance),
+      (newBalance) => this.setLiquidOrbs(newBalance),
     );
 
     // Staking contract allowance
