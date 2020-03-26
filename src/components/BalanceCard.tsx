@@ -30,7 +30,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const titleElement = useStringOrElement(title);
 
   return (
-    <StyledGrid container spacing={1} direction={'column'} data-testid={balanceCardTestId}>
+    <StyledGrid container direction={'column'} data-testid={balanceCardTestId}>
       <Grid item>
         <Typography variant={'caption'}>{titleElement}</Typography>
         <CommonDivider />
