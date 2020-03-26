@@ -15,8 +15,8 @@ export interface IActionButtonProps {
 
 interface IProps {
   title: string | React.ElementType;
-  message: string;
-  subMessage: string;
+  message?: string;
+  subMessage?: string;
 
   innerContent?: ReactNode;
   infoTitle?: string;
@@ -33,7 +33,7 @@ const stylingForTwoActionButtons: React.CSSProperties = {
 
 const stylingForSingleActionButton: React.CSSProperties = {};
 
-export const BaseStepContent = React.memo<IProps>(props => {
+export const BaseStepContent = React.memo<IProps>((props) => {
   const {
     title,
     message,

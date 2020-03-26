@@ -4,6 +4,7 @@ import { Button, Typography } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
+import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 
 interface IProps {
   finishedActionDescription: string;
@@ -16,10 +17,15 @@ export const WizardFinishStep = observer((props: IProps) => {
   const wizardsCommonTranslations = useWizardsCommonTranslations();
 
   return (
-    <WizardContent data-testid={'wizard_sub_step_finish'}>
-      <Typography>{wizardsCommonTranslations('stepDoneExclamation')}</Typography>
-      <Typography>{finishedActionDescription}</Typography>
-      <CommonActionButton onClick={onFinishClicked}>{wizardsCommonTranslations('action_finish')}</CommonActionButton>
-    </WizardContent>
+    <BaseStepContent
+      contentTestId={'wizard_sub_step_finish'}
+      title={wizardsCommonTranslations('stepDoneExclamation')}
+      message={finishedActionDescription}
+      subMessage={''}
+      actionButtonProps={{
+        title: wizardsCommonTranslations('action_finish'),
+        onClick: onFinishClicked,
+      }}
+    />
   );
 });
