@@ -53,7 +53,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
         id={'orbsAllowance'}
         label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
         value={orbsAllowance.value}
-        onChange={value => orbsAllowance.setValue(value)}
+        onChange={(value) => orbsAllowance.setValue(value)}
       />
     );
   }, [orbsAllowance, stakingWizardTranslations]);

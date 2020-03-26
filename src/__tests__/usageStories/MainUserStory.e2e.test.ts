@@ -48,7 +48,7 @@ function sendTxConfirmations(
 }
 
 async function waitForPromieventTxHash(promievent: PromiEvent<TransactionReceipt>): Promise<string> {
-  return new Promise(resolve => promievent.once('transactionHash', resolve));
+  return new Promise((resolve) => promievent.once('transactionHash', resolve));
 }
 
 /**
@@ -214,15 +214,15 @@ describe('Main User Story', () => {
     let stakeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
     let guardianSelectionTxPromievent: PromiEvent<TransactionReceipt>;
 
-    orbsTokenServiceMock.txsMocker.registerToNextTxCreation('approve', promievent => {
+    orbsTokenServiceMock.txsMocker.registerToNextTxCreation('approve', (promievent) => {
       approveOrbsTxPromievent = promievent;
     });
 
-    stakingServiceMock.txsMocker.registerToNextTxCreation('stake', promievent => {
+    stakingServiceMock.txsMocker.registerToNextTxCreation('stake', (promievent) => {
       stakeOrbsTxPromievent = promievent;
     });
 
-    guardiansServiceMock.txsMocker.registerToNextTxCreation('selectGuardian', promievent => {
+    guardiansServiceMock.txsMocker.registerToNextTxCreation('selectGuardian', (promievent) => {
       guardianSelectionTxPromievent = promievent;
     });
 
@@ -230,8 +230,9 @@ describe('Main User Story', () => {
 
     // Default value should be the maximum value of liquid orbs
     await waitForElement(() => orbsAllowanceStepDriver.txCreatingSubStepComponent);
-    // // TODO : O.L : Change text to comma separated after finishing the main test story.
-    expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(orbsBought);
+
+    // DEV_NOTE : The default value will be all of the amount available
+    expect(orbsAllowanceStepDriver.orbsForAllowanceInput).toHaveValue(`${orbsBought.toLocaleString()} ORBS`);
 
     orbsAllowanceStepDriver.setAmountForAllowanceAndStaking(orbsForStaking);
 
@@ -286,8 +287,8 @@ describe('Main User Story', () => {
     const wizardFinishButton = within(finishSubStep).getByText('Finish');
     fireEvent.click(wizardFinishButton);
 
-    // TODO  : O.L : It seems that the 'click' closes the modal before the 'wait for element to disappear' has any chance to find it.
-    // await forElement(finishSubStepTestId).toDisappear();
+    // DEV_NOTE : It takes a moment for the wizard to close.
+    await forElement(finishSubStepTestId).toDisappear();
     expect(queryByTestId(finishSubStepTestId)).not.toBeInTheDocument();
 
     // Ensure app is displaying the right balances after staking
@@ -299,7 +300,7 @@ describe('Main User Story', () => {
     const orbsUnStakingStepDriver = new OrbsUnstakingStepDriver(renderResults);
 
     let unfreezeOrbsTxPromievent: PromiEvent<TransactionReceipt>;
-    stakingServiceMock.txsMocker.registerToNextTxCreation('unstake', promievent => {
+    stakingServiceMock.txsMocker.registerToNextTxCreation('unstake', (promievent) => {
       unfreezeOrbsTxPromievent = promievent;
     });
 
@@ -375,7 +376,7 @@ describe('Main User Story', () => {
     const orbsWithdrawingStepDriver = new OrbsWithdrawingStepDriver(renderResults);
     let withdrawOrbsTxPromievent: PromiEvent<TransactionReceipt>;
 
-    stakingServiceMock.txsMocker.registerToNextTxCreation('withdraw', promievent => {
+    stakingServiceMock.txsMocker.registerToNextTxCreation('withdraw', (promievent) => {
       withdrawOrbsTxPromievent = promievent;
     });
 
@@ -452,7 +453,7 @@ describe('Main User Story', () => {
     const orbsRestakingStepDriver = new OrbsRestakingStepDriver(renderResults);
     let restakingOrbsTxPromievent: PromiEvent<TransactionReceipt>;
 
-    stakingServiceMock.txsMocker.registerToNextTxCreation('restake', promievent => {
+    stakingServiceMock.txsMocker.registerToNextTxCreation('restake', (promievent) => {
       restakingOrbsTxPromievent = promievent;
     });
 
@@ -558,7 +559,7 @@ describe('Main User Story', () => {
 
     let guardianSelectionTxPromievent: PromiEvent<TransactionReceipt>;
 
-    guardiansServiceMock.txsMocker.registerToNextTxCreation('selectGuardian', promievent => {
+    guardiansServiceMock.txsMocker.registerToNextTxCreation('selectGuardian', (promievent) => {
       guardianSelectionTxPromievent = promievent;
     });
 
