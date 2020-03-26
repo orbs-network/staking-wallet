@@ -36,6 +36,7 @@ export const UnstakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsUntakingStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={unstakingWizardTranslations('finishedAction_unstaked')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}

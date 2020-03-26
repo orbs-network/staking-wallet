@@ -21,6 +21,7 @@ interface IProps<T = {}> {
   transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps & T>;
 
   // Congratulations sub step
+  displayCongratulationsSubStep: boolean;
   finishedActionName: string;
   moveToNextStepAction: () => void;
   moveToNextStepTitle: string;
@@ -32,9 +33,10 @@ interface IProps<T = {}> {
   propsForTransactionCreationSubStepContent?: object;
 }
 
-export const ApprovableWizardStep = React.memo<IProps>(props => {
+export const ApprovableWizardStep = React.memo<IProps>((props) => {
   const {
     transactionCreationSubStepContent: TransactionCreationSubStepContent,
+    displayCongratulationsSubStep,
     finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
@@ -44,14 +46,32 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
 
   const stepState = useStateful<TStepState>('Action');
 
-  const unsubscribeFromAllPromiventListeners = useRef<() => void>(null);
+  const unsubscribeFromAllPromiventListenersRef = useRef<() => void>(null);
   const goToApprovalSubStep = useCallback(() => stepState.setValue('Confirmation'), [stepState]);
-  const goToCongratulationSubStep = useCallback(() => {
-    if (unsubscribeFromAllPromiventListeners.current) {
-      unsubscribeFromAllPromiventListeners.current();
+  const goToCongratulationSubStep = useCallback(() => stepState.setValue('Success'), [stepState]);
+
+  const unsubscribeFromAllPromiventListeners = useCallback(() => {
+    if (unsubscribeFromAllPromiventListenersRef.current) {
+      unsubscribeFromAllPromiventListenersRef.current();
     }
-    stepState.setValue('Success');
-  }, [stepState, unsubscribeFromAllPromiventListeners]);
+  }, [unsubscribeFromAllPromiventListenersRef]);
+
+  const onTransactionApprovingSubStepFinished = useCallback(() => {
+    // First, unsubscribe
+    unsubscribeFromAllPromiventListeners();
+
+    // Do we want to display the congratulations sub step ?
+    if (displayCongratulationsSubStep) {
+      goToCongratulationSubStep();
+    } else {
+      moveToNextStepAction();
+    }
+  }, [
+    unsubscribeFromAllPromiventListeners,
+    goToCongratulationSubStep,
+    moveToNextStepAction,
+    displayCongratulationsSubStep,
+  ]);
 
   const disableTxCreationInputs = useBoolean(false);
   const txHash = useStateful<string>('');
@@ -59,14 +79,14 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
   const txCreatingError = useStateful<Error>(null);
 
   const txCreationAction = useCallback<(promiEvent: PromiEvent<TransactionReceipt>) => void>(
-    promiEvent => {
+    (promiEvent) => {
       disableTxCreationInputs.setTrue();
 
-      unsubscribeFromAllPromiventListeners.current = () => {
+      unsubscribeFromAllPromiventListenersRef.current = () => {
         return (promiEvent as any).removeAllListeners();
       };
 
-      promiEvent.on('confirmation', confirmation => {
+      promiEvent.on('confirmation', (confirmation) => {
         txConfirmationsCount.setValue(confirmation);
 
         // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
@@ -74,12 +94,12 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
           disableTxCreationInputs.setFalse();
         }
       });
-      promiEvent.once('receipt', receipt => {
+      promiEvent.once('receipt', (receipt) => {
         txHash.setValue(receipt.transactionHash);
         goToApprovalSubStep();
         disableTxCreationInputs.setFalse();
       });
-      promiEvent.on('error', error => {
+      promiEvent.on('error', (error) => {
         txCreatingError.setValue(error);
 
         (promiEvent as any).removeAllListeners();
@@ -91,8 +111,8 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
 
   useEffect(() => {
     return () => {
-      if (unsubscribeFromAllPromiventListeners.current) {
-        unsubscribeFromAllPromiventListeners.current();
+      if (unsubscribeFromAllPromiventListenersRef.current) {
+        unsubscribeFromAllPromiventListenersRef.current();
       }
     };
   }, []);
@@ -116,7 +136,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
             requiredConfirmations={REQUIRED_CONFIRMATIONS}
             confirmationsCount={txConfirmationsCount.value}
             txHash={txHash.value}
-            onStepFinished={goToCongratulationSubStep}
+            onStepFinished={onTransactionApprovingSubStepFinished}
           />
         );
       case 'Success':
@@ -142,6 +162,8 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
+    closeWizard,
+    onTransactionApprovingSubStepFinished,
   ]);
 
   return currentSubStepContent;

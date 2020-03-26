@@ -24,5 +24,6 @@ interface IProps {
 export const ChangeLangLink: React.FC<IProps> = ({ lang, children, ...others }) => {
   const location = useLocation();
   const preLangBasename = useContext(PreLangBasenameContext);
+  // TODO : FUTURE : O.L : Change this 'a' to 'Link'
   return <a href={addLangToCurrentLocation(location, preLangBasename, lang)} {...others}>{children}</a>;
 };

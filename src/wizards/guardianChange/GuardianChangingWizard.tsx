@@ -46,6 +46,7 @@ export const GuardianChangingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianChangeStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={guardianChangingWizardTranslations('finishedAction_selectedGuardian')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}

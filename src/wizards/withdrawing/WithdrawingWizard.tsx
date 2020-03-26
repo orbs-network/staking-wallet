@@ -36,6 +36,7 @@ export const WithdrawingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsWithdrawingStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={withdrawingWizardTranslations('finishedAction_withdrew')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}

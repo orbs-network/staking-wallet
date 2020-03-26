@@ -16,7 +16,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by allowance
-  const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
+  const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
   const message = useStateful('');
   const subMessage = useStateful(restakingWizardTranslations('restakingSubStep_subMessage_pressRestakeAndApprove'));
 

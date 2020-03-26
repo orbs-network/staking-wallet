@@ -50,6 +50,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsAllowanceStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={stakingWizardTranslations('finishedAction_approved')}
               moveToNextStepAction={goToStakeOrbsStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
@@ -62,6 +63,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsStakingStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={stakingWizardTranslations('finishedAction_staked')}
               moveToNextStepAction={goToSelectGuardianStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_selectGuardian')}
@@ -74,6 +76,7 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianSelectionStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={stakingWizardTranslations('stepLabel_selectGuardian')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}

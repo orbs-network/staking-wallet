@@ -36,6 +36,7 @@ export const RestakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsRestakingStepContent}
+              displayCongratulationsSubStep={false}
               finishedActionName={restakingWizardTranslations('finishedAction_restaked')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}

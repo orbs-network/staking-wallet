@@ -10,13 +10,14 @@ import { configureMobx, getStores } from './store/storesInitialization';
 import { LangRouter } from './multi-lang/LangRouter';
 
 // TODO : O.L : FUTURE : Consider moving this language initialization
+//                       + Change the locale when switching language
 // DEV_NOTE : This is where we define the used locales for moment.js
 import 'moment/locale/ja';
 import 'moment/locale/ko';
 import moment from 'moment';
-moment.locale('en');
 moment.locale('ja');
 moment.locale('ko');
+moment.locale('en');
 
 configureMobx();
 
