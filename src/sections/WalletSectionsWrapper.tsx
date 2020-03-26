@@ -4,6 +4,7 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { ConnectWalletSection } from './ConnectWalletSection';
 import { WalletInfoSection } from './WalletInfoSection';
 import { BalancesSection } from '../sections/BalancesSection';
+import { RewardsSection } from './RewardsSection';
 
 export const WalletSectionsWrapper = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
@@ -13,6 +14,7 @@ export const WalletSectionsWrapper = observer(() => {
       <span data-testid='wallet-information-sections'>
         <WalletInfoSection />
         <BalancesSection />
+        <RewardsSection />
       </span>
     );
   } else {

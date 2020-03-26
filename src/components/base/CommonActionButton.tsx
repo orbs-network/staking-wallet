@@ -4,7 +4,7 @@ import Button, { ButtonProps } from '@material-ui/core/Button';
 
 export const CommonActionButton = styled((props: ButtonProps) => (
   <Button color={'secondary'} variant={'contained'} {...props} />
-))(({ theme }) => {
+))<ButtonProps>(({ theme }) => {
   return {
     fontWeight: 'bold',
     height: '4em',
