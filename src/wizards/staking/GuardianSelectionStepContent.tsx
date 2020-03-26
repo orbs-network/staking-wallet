@@ -70,7 +70,6 @@ export const GuardianSelectionStepContent = observer(
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
-            // extraStyle={{ marginLeft: '1em', marginRight: '1em' }}
           />
         </Grid>
       );
