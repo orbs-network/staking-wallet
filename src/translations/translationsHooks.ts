@@ -10,6 +10,7 @@ import {
   IGuardianChangingWizardTranslation,
   IGuardiansTableTranslations,
   IRestakingWizardTranslation,
+  IRewardsSectionTranslations,
   ISectionTitlesTranslations,
   IStakingWizardTranslations,
   IUnstakingWizardTranslation,
@@ -38,6 +39,10 @@ export function useSectionsTitlesTranslations() {
 
 export function useBalancesSectionTranslations() {
   return useSpecificTypeSafeTFunction<IBalancesSectionTranslations>('balancesSection');
+}
+
+export function useRewardsSectionTranslations() {
+  return useSpecificTypeSafeTFunction<IRewardsSectionTranslations>('rewardsSection');
 }
 
 export function useConnectWalletSectionTranslations() {

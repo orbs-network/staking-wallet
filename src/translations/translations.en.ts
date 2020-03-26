@@ -34,6 +34,10 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     action_restakeYourTokens: 'Restake your tokens',
     action_withdrawYourTokens: 'Withdraw your tokens',
   },
+  rewardsSection: {
+    text_visitThe: 'Visit the',
+    linkText_rewardsPage: 'rewards page',
+  },
   guardiansTable: {
     action_keep: 'Keep',
     action_select: 'Select',

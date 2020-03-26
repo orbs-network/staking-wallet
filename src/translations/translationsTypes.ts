@@ -4,6 +4,7 @@ export interface IAppTranslations {
   connectWalletSection: IConnectWalletSectionTranslations;
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
+  rewardsSection: IRewardsSectionTranslations;
   guardiansTable: IGuardiansTableTranslations;
   wizardsCommons: IWizardsCommonsTranslations;
   approvableWizardStep: IApprovableWizardStepTranslations;
@@ -181,6 +182,11 @@ export interface IBalancesSectionTranslations {
   action_unstakeYourTokens: string;
   action_restakeYourTokens: string;
   action_withdrawYourTokens: string;
+}
+
+export interface IRewardsSectionTranslations {
+  text_visitThe: 'Visit the';
+  linkText_rewardsPage: 'rewards page';
 }
 
 export interface IAlertsTranslations {
