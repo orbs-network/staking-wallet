@@ -7,6 +7,9 @@
  */
 import React from 'react';
 import { ChangeLangLink } from '../../multi-lang/ChangeLangLink';
+import { ReactComponent as UsCountryIconSvg } from '../../../assets/countryIcons/us.svg';
+import { ReactComponent as JpCountryIconSvg } from '../../../assets/countryIcons/jp.svg';
+import { ReactComponent as KrCountryIconSvg } from '../../../assets/countryIcons/kr.svg';
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 
@@ -20,7 +23,21 @@ const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const CountrySvgImg = styled('img')(({ theme }) => ({
+const StyledUsCountryIconSvg = styled(UsCountryIconSvg)(({ theme }) => ({
+  height: '1.25em',
+  [theme.breakpoints.down('md')]: {
+    height: '1.5em',
+  },
+}));
+
+const StyledJpCountryIconSvg = styled(JpCountryIconSvg)(({ theme }) => ({
+  height: '1.25em',
+  [theme.breakpoints.down('md')]: {
+    height: '1.5em',
+  },
+}));
+
+const StyledKrCountryIconSvg = styled(KrCountryIconSvg)(({ theme }) => ({
   height: '1.25em',
   [theme.breakpoints.down('md')]: {
     height: '1.5em',
@@ -32,17 +49,17 @@ export const LanguagesSelector = React.memo((props) => {
     <Grid container alignItems={'center'} justify={'flex-end'} spacing={2}>
       <Grid item>
         <ButtonChangeLangLink lang='en'>
-          <CountrySvgImg src='/assets/countryIcons/us.svg' />
+          <StyledUsCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
       <Grid item>
         <ButtonChangeLangLink lang='jp'>
-          <CountrySvgImg src='/assets/countryIcons/jp.svg' />
+          <StyledJpCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
       <Grid item>
         <ButtonChangeLangLink lang='kr'>
-          <CountrySvgImg src='/assets/countryIcons/kr.svg' />
+          <StyledKrCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
     </Grid>
