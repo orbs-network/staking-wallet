@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { selectActionButtonTestIdFromAddress } from '../__tests__/components/guardians/guardiansTestUtils';
-import Grid from '@material-ui/core/Grid';
 import { useGuardiansTableTranslations } from '../translations/translationsHooks';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
@@ -248,7 +247,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   const theme = useTheme();
 
   const getSelectedGuardianCell = useCallback(
-    (g: TGuardianInfoExtended, idx: number) => {
+    (g: TGuardianInfoExtended) => {
       let selectedGuardianCell = null;
 
       const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
@@ -331,9 +330,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       title: guardiansTableTranslations('columnHeader_address'),
       field: 'address',
       render: (extendedGuardianInfo) => (
-        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>
-          {extendedGuardianInfo.address}
-        </Typography>
+        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>{extendedGuardianInfo.address}</Typography>
       ),
       // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
       cellStyle: {
@@ -389,6 +386,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     columns.push({
       title: guardiansTableTranslations('columnHeader_selection'),
       field: '',
+      render: (extendedGuardianInfo) => {
+        return getSelectedGuardianCell(extendedGuardianInfo);
+      },
       cellStyle: {
         textAlign: 'center',
       },

@@ -5,13 +5,14 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
  * The above notice should be included in all copies or substantial portions of the software.
  */
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { ChangeLangLink } from '../../multi-lang/ChangeLangLink';
 import { ReactComponent as UsCountryIconSvg } from '../../../assets/countryIcons/us.svg';
 import { ReactComponent as JpCountryIconSvg } from '../../../assets/countryIcons/jp.svg';
 import { ReactComponent as KrCountryIconSvg } from '../../../assets/countryIcons/kr.svg';
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
+import { Theme } from '@material-ui/core';
 
 const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
   '&:hover': {
@@ -23,36 +24,28 @@ const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const StyledUsCountryIconSvg = styled(UsCountryIconSvg)(({ theme }) => ({
-  height: '1.25em',
-  [theme.breakpoints.down('md')]: {
-    height: '1.5em',
-  },
-}));
+function buildStyleForCountryIcon({ theme }: { theme: Theme }): CSSProperties {
+  return {
+    height: '1em',
+  };
+}
 
-const StyledJpCountryIconSvg = styled(JpCountryIconSvg)(({ theme }) => ({
-  height: '1.25em',
-  [theme.breakpoints.down('md')]: {
-    height: '1.5em',
-  },
-}));
-
-const StyledKrCountryIconSvg = styled(KrCountryIconSvg)(({ theme }) => ({
-  height: '1.25em',
-  [theme.breakpoints.down('md')]: {
-    height: '1.5em',
-  },
-}));
+// @ts-ignore
+const StyledUsCountryIconSvg = styled(UsCountryIconSvg)(buildStyleForCountryIcon);
+// @ts-ignore
+const StyledJpCountryIconSvg = styled(JpCountryIconSvg)(buildStyleForCountryIcon);
+// @ts-ignore
+const StyledKrCountryIconSvg = styled(KrCountryIconSvg)(buildStyleForCountryIcon);
 
 export const LanguagesSelector = React.memo((props) => {
   return (
-    <Grid container alignItems={'center'} justify={'flex-end'} spacing={2}>
-      <Grid item>
+    <Grid container alignItems={'center'} justify={'flex-end'} spacing={1}>
+      <Grid item >
         <ButtonChangeLangLink lang='en'>
           <StyledUsCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
-      <Grid item>
+      <Grid item >
         <ButtonChangeLangLink lang='jp'>
           <StyledJpCountryIconSvg />
         </ButtonChangeLangLink>
