@@ -33,10 +33,12 @@ const NameBox = styled('div')(() => ({
   justifyItems: 'center',
 }));
 
+const yesColor = '#00ff11';
 const YesContainer = styled.span`
   color: #00ff11;
 `;
 
+const noColor = 'red';
 const NoContainer = styled.span`
   color: red;
 `;
@@ -246,7 +248,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const getSelectedGuardianCell = useCallback(
+  const getGuardianSelectionCellContent = useCallback(
     (g: TGuardianInfoExtended) => {
       let selectedGuardianCell = null;
 
@@ -256,7 +258,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       switch (guardianSelectionMode) {
         case 'Select':
           selectedGuardianCell = (
-            <TableCell align='center'>
+            // <TableCell align='center'>
               <SelectButton
                 variant='contained'
                 size='small'
@@ -266,7 +268,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               >
                 {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
               </SelectButton>
-            </TableCell>
+            // </TableCell>
           );
           break;
         case 'Change':
@@ -280,13 +282,13 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           );
 
           selectedGuardianCell = (
-            <TableCell align='center'>
+            // <TableCell align='center'>
               <Typography data-testid={`guardian-${g.address}-selected-status`}>
                 <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
                   {actionButtonIcon}
                 </IconButton>
               </Typography>
-            </TableCell>
+            // </TableCell>
           );
           break;
         case 'None':
@@ -369,12 +371,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     {
       title: guardiansTableTranslations('columnHeader_votedInLastElection'),
       field: 'voted',
-      render: (extendedGuardianInfo) =>
-        extendedGuardianInfo.voted ? (
-          <YesContainer>{guardiansTableTranslations('didVote_yes')}</YesContainer>
-        ) : (
-          <NoContainer>{guardiansTableTranslations('didVote_no')}</NoContainer>
-        ),
+      render: (extendedGuardianInfo) => {
+        const textColor = extendedGuardianInfo.voted ? yesColor : noColor;
+        const text = extendedGuardianInfo.voted
+          ? guardiansTableTranslations('didVote_yes')
+          : guardiansTableTranslations('didVote_no');
+
+        return <Typography style={{ color: textColor }}>{text}</Typography>;
+      },
       cellStyle: {
         textAlign: 'center',
       },
@@ -387,7 +391,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       title: guardiansTableTranslations('columnHeader_selection'),
       field: '',
       render: (extendedGuardianInfo) => {
-        return getSelectedGuardianCell(extendedGuardianInfo);
+        return getGuardianSelectionCellContent(extendedGuardianInfo);
       },
       cellStyle: {
         textAlign: 'center',
