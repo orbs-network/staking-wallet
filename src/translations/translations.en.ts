@@ -76,7 +76,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
       'We recommend waiting until enough confirmations have been received.',
     thisMightTakeAFewMoments: 'This might take a few moments...',
     gotXConfirmationsOutOfRecommendedY: 'Got {{count}} confirmation out of recommended {{recommended}}',
-    gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} confirmations out of recommended. {{recommended}}',
+    gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} confirmations out of recommended {{recommended}}',
     txConfirmed: 'Transaction Confirmed',
     txPending: 'Transaction Pending',
     youHaveDoneActionSuccessfully: `You have successfully {{finishedActionName}}`,
@@ -149,7 +149,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
       'This will take your ORBS tokens out of their staked state and will start a cooldown period of 30 days, after which you will be able to withdraw the tokens to your wallet. During those 30 days you may choose to re-stake your tokens.',
     unstakingSubStep_action_unstake: 'Unstake',
     unstakingSubStep_inputLabel: 'Unstaking',
-    unstakingSubStep_warning_thereAreOrbsInCooldownHeader: 'Warning - There are currently tokens in cooldown.',
+    unstakingSubStep_warning_thereAreOrbsInCooldownHeader: 'Warning : There are currently tokens in cooldown.',
     unstakingSubStep_warning_thereAreOrbsInCooldownBody:
       'Unstaking more tokens now will reset the cooldown timer to 30 days for the whole sum.',
   },
