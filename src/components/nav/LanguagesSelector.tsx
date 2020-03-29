@@ -26,7 +26,7 @@ const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
 
 function buildStyleForCountryIcon({ theme }: { theme: Theme }): CSSProperties {
   return {
-    height: '1em',
+    height: '1.25em',
   };
 }
 

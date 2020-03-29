@@ -9,6 +9,8 @@ import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
+  paddingTop: '1em',
+  paddingBottom: '1em',
   borderBottom: '2px solid #363636',
 });
 
@@ -33,7 +35,8 @@ export const Header = () => {
         </ContentContainer>
       </StyledAppBar>
       {/* DEV_NOTE : Second 'Toolbar' is a trick offered by MUI to keep the content properly below the fixed AppBar */}
-      <Toolbar />
+      {/* DEV_NOTE : We should add any 'bottom padding/margin' of the 'StyledAppBar' to the value we want to have from the page content*/}
+      <Toolbar style={{ marginBottom: '2.5em' }} />
     </>
   );
 };
