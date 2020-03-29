@@ -21,8 +21,8 @@ const plugins = [
     title: 'ORBS Staking Wallet',
     template: 'index.html',
   }),
-  // Adds the favicon to the dist
-  new FaviconsWebpackPlugin('./assets/orbs_logo.png'),
+  // Adds the favicons to the dist
+  new FaviconsWebpackPlugin('./assets/favicons/tetra_favicon.svg'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.
   new webpack.DefinePlugin(createEnvObjectForWebpack(envFromPathMergedWithRuntime)),
 

@@ -5,6 +5,7 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 const COLOR1 = '#0D0D0D'; // dark gray
 const COLOR2 = '#6ec6d8'; // bluish
+const COLOR3 = '#03FCF5'; // bright bluish- Tetra
 
 const PRIMARY_TEXT = '#dbdbdb';
 const SECONDARY_TEXT = '#7B7B7B';
@@ -17,7 +18,7 @@ export const baseTheme = responsiveFontSizes(
         main: COLOR1,
       },
       secondary: {
-        main: COLOR2,
+        main: COLOR3,
       },
       text: {
         // primary: PRIMARY_TEXT,

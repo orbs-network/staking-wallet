@@ -9,12 +9,15 @@ import { CommonDivider } from '../components/base/CommonDivider';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
+import useTheme from '@material-ui/core/styles/useTheme';
 
 export const RewardsSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
 
   const rewardsSectionTranslations = useRewardsSectionTranslations();
   const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
+
+  const theme = useTheme();
 
   return (
     <Section>
@@ -27,7 +30,7 @@ export const RewardsSection = observer(() => {
         <Typography>
           {rewardsSectionTranslations('text_visitThe')}{' '}
           <a
-            style={{ color: '#6ec6d8' }}
+            style={{ color: theme.palette.secondary.main }}
             target={'_blank'}
             rel={'noopener noreferrer'}
             href={`https://orbs-network.github.io/voting/reward?address=${cryptoWalletConnectionStore.mainAddress}`}

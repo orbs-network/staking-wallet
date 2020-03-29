@@ -21,7 +21,7 @@ const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
 }));
 
 const CountrySvgImg = styled('img')(({ theme }) => ({
-  height: '1em',
+  height: '1.25em',
   [theme.breakpoints.down('md')]: {
     height: '1.5em',
   },
@@ -29,7 +29,7 @@ const CountrySvgImg = styled('img')(({ theme }) => ({
 
 export const LanguagesSelector = React.memo((props) => {
   return (
-    <Grid container alignItems={'center'} spacing={2}>
+    <Grid container alignItems={'center'} justify={'flex-end'} spacing={2}>
       <Grid item>
         <ButtonChangeLangLink lang='en'>
           <CountrySvgImg src='/assets/countryIcons/us.svg' />

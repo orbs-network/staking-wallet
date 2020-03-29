@@ -41,7 +41,7 @@ export const AppWrapper: React.FunctionComponent = () => (
       <StylesProvider injectFirst>
         <ThemeProvider theme={baseTheme}>
           <SCThemeProvider theme={themeAndStyle}>
-            <GlobalStyleComponent />
+            {/*<GlobalStyleComponent />*/}
             <CssBaseline />
             <App />
           </SCThemeProvider>
