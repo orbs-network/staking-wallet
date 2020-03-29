@@ -28,10 +28,11 @@ const SelectButton = styled(Button)`
   min-width: 130px;
 `;
 
-const NameBox = styled.div`
-  display: flex;
-  align-items: center;
-`;
+const NameBox = styled('div')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyItems: 'center',
+}));
 
 const YesContainer = styled.span`
   color: #00ff11;
@@ -232,7 +233,15 @@ function compareGuardiansBySelectedAndThenStake(
 }
 
 export const GuardiansTable = React.memo<IProps>((props) => {
-  const { guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle, tableTitle } = props;
+  const {
+    guardianSelectionMode,
+    guardians,
+    onGuardianSelect,
+    selectedGuardian,
+    tableTestId,
+    extraStyle,
+    tableTitle,
+  } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
 
   const classes = useStyles();
@@ -307,15 +316,26 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       title: guardiansTableTranslations('columnHeader_name'),
       field: 'name',
       render: (extendedGuardianInfo) => (
-        <NameBox>
+        <NameBox data-testid={`guardian-${extendedGuardianInfo.address}`}>
           <Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />
-          <NameContainer>{extendedGuardianInfo.name}</NameContainer>
+          <NameContainer>
+            <Typography>{extendedGuardianInfo.name}</Typography>
+          </NameContainer>
         </NameBox>
       ),
+      headerStyle: {
+        textAlign: 'left',
+      },
     },
     {
       title: guardiansTableTranslations('columnHeader_address'),
       field: 'address',
+      render: (extendedGuardianInfo) => (
+        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>
+          {extendedGuardianInfo.address}
+        </Typography>
+      ),
+      // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
       cellStyle: {
         fontFamily: 'monospace',
       },
@@ -323,15 +343,45 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     {
       title: guardiansTableTranslations('columnHeader_website'),
       field: 'website',
+      render: (extendedGuardianInfo) => (
+        <a
+          data-testid={`guardian-${extendedGuardianInfo.address}-website`}
+          href={getWebsiteAddress(extendedGuardianInfo.website)}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <SvgIcon component={GlobeIcon} />
+        </a>
+      ),
+      cellStyle: {
+        textAlign: 'center',
+      },
       sorting: false,
     },
     {
       title: guardiansTableTranslations('columnHeader_stakingPercentageInLastElections'),
       field: 'stakePercent',
+      render: (extendedGuardianInfo) => (
+        <Typography variant={'button'}>{asPercent(extendedGuardianInfo.stakePercent)}</Typography>
+      ),
+      cellStyle: {
+        textAlign: 'center',
+      },
+      defaultSort: 'desc',
     },
     {
       title: guardiansTableTranslations('columnHeader_votedInLastElection'),
       field: 'voted',
+      render: (extendedGuardianInfo) =>
+        extendedGuardianInfo.voted ? (
+          <YesContainer>{guardiansTableTranslations('didVote_yes')}</YesContainer>
+        ) : (
+          <NoContainer>{guardiansTableTranslations('didVote_no')}</NoContainer>
+        ),
+      cellStyle: {
+        textAlign: 'center',
+      },
+      defaultSort: 'desc',
     },
   ];
 
@@ -339,6 +389,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     columns.push({
       title: guardiansTableTranslations('columnHeader_selection'),
       field: '',
+      cellStyle: {
+        textAlign: 'center',
+      },
     });
   }
 
@@ -351,11 +404,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       icons={TABLE_ICONS}
       style={{ overflowX: 'auto' }}
       options={{
+        pageSizeOptions: [5],
+
         rowStyle: {
           backgroundColor: 'rgba(33,33, 33, 0.55)',
         },
         headerStyle: {
           backgroundColor: theme.palette.primary.dark,
+          textAlign: 'center',
         },
       }}
       components={{
