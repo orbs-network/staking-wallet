@@ -100,6 +100,7 @@
     "html-webpack-plugin": "^4.0.1",
     "jest": "^25.1.0",
     "jest-expect-message": "^1.0.2",
+    "locize-cli": "^7.0.3",
     "postcss-loader": "^3.0.0",
     "prettier": "^2.0.2",
     "react": "^16.13.1",
