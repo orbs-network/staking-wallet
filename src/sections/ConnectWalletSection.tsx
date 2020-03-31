@@ -19,7 +19,8 @@ import styled from 'styled-components';
 const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: Theme }) => ({
   // Look& Feel
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
-  borderRadius: '2%',
+  borderRadius: '10%',
+  boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.dark}`,
 
   // Dimensions
   width: 'fit-content',
