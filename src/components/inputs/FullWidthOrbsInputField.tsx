@@ -9,10 +9,11 @@ interface IProps {
   label: string;
   value: number;
   onChange: (newValue: number) => void;
+  disabled?: boolean;
 }
 
 export const FullWidthOrbsInputField = React.memo<IProps>(props => {
-  const { id, label, value, onChange } = props;
+  const { id, label, value, onChange, disabled } = props;
 
   const theme = useTheme();
 
@@ -32,6 +33,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>(props => {
           fontSize: fontSize,
         },
       }}
+      disabled={disabled}
       style={{
         width: '100%',
       }}

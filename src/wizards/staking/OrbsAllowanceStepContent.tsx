@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useNumber, useStateful } from 'react-hanger';
+import { useNumber, useStateful, useBoolean } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
@@ -54,9 +54,10 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
         label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
         value={orbsAllowance.value}
         onChange={(value) => orbsAllowance.setValue(value)}
+        disabled={disableInputs}
       />
     );
-  }, [orbsAllowance, stakingWizardTranslations]);
+  }, [orbsAllowance, stakingWizardTranslations, disableInputs]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (

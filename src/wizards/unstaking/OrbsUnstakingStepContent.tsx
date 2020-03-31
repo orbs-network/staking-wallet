@@ -67,10 +67,11 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
           label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
           value={orbsForUnstaking.value}
           onChange={(value) => orbsForUnstaking.setValue(value)}
+          disabled={disableInputs}
         />
       </>
     );
-  }, [orbsForUnstaking, unstakingWizardTranslations, orbsAccountStore.hasOrbsInCooldown]);
+  }, [orbsForUnstaking, unstakingWizardTranslations, orbsAccountStore.hasOrbsInCooldown, disableInputs]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (

@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Backdrop, CircularProgress } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
@@ -118,7 +118,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       <Grid item container justify={'center'} direction={'row'} spacing={2}>
         {addCancelButton && (
           <Grid item>
-            <CommonActionButton style={relevantStylingForActionButtons} onClick={onCancelButtonClicked}>
+            <CommonActionButton style={relevantStylingForActionButtons} onClick={onCancelButtonClicked} disabled={disableInputs}>
               {wizardsCommonTranslations('action_close')}
             </CommonActionButton>
           </Grid>
