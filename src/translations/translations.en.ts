@@ -75,8 +75,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     weRecommendWaitingToReceiveEnoughConfirmations:
       'We recommend waiting until enough confirmations have been received.',
     thisMightTakeAFewMoments: 'This might take a few moments...',
-    gotXConfirmationsOutOfRecommendedY: 'Got {{count}} confirmation out of recommended {{recommended}}',
-    gotXConfirmationsOutOfRecommendedY_plural: 'Got {{count}} confirmations out of recommended {{recommended}}',
+    gotXConfirmationsOutOfRecommendedY: 'Got {{count}} of {{recommended}} recommended confirmations.',
     txConfirmed: 'Transaction Confirmed',
     txPending: 'Transaction Pending',
     youHaveDoneActionSuccessfully: `You have successfully {{finishedActionName}}`,
@@ -89,8 +88,8 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     stepLabel_selectGuardian: 'Select a Guardian',
     finishedAction_approved: 'allowed the staking contract to use your tokens',
     finishedAction_staked: 'staked your tokens',
-    finishedAction_selectedGuardian: 'selected a Guardian',
     moveToStep_stake: 'Stake your ORBS',
+    finishedAction_selectedGuardian: 'selected a Guardian',
     moveToStep_selectGuardian: 'Select a Guardian',
     afterSuccessStateExplanation: 'Your ORBS are now staked and are assigned to a Guardian',
 
@@ -173,6 +172,6 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   commons: {
     loading: 'Loading...',
     loadingFailed: 'Loading failed',
-    left: 'left',
+    timeLeft: '{{timePhrase}} left',
   },
 };

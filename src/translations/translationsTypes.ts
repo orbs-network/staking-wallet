@@ -21,7 +21,7 @@ export interface ICommonsTranslations {
   loading: string;
   loadingFailed: string;
   // As in "5 Days -left- for something"
-  left: string;
+  timeLeft: string;
 }
 
 export interface ISectionTitlesTranslations {
@@ -85,7 +85,6 @@ export interface IApprovableWizardStepTranslations {
   weRecommendWaitingToReceiveEnoughConfirmations: string;
   thisMightTakeAFewMoments: string;
   gotXConfirmationsOutOfRecommendedY: string;
-  gotXConfirmationsOutOfRecommendedY_plural: string;
   txPending: string;
   txConfirmed: string;
   youHaveDoneActionSuccessfully: string;

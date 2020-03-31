@@ -9,7 +9,7 @@ interface IProps {
   onToMomentReached?: () => void;
 }
 
-export const TimeLeftCounter = React.memo<IProps>(props => {
+export const TimeLeftCounter = React.memo<IProps>((props) => {
   const { toTimestamp, onToMomentReached } = props;
   // DEV_NOTE : These two linea are responsible for re-rendering the component
   const num = useNumber(0);
@@ -28,9 +28,5 @@ export const TimeLeftCounter = React.memo<IProps>(props => {
     }
   }, [nowMomentTimestamp, onToMomentReached, toTimestamp]);
 
-  return (
-    <>
-      {toMoment.fromNow(true)} {commonsTranslations('left')}
-    </>
-  );
+  return <>{commonsTranslations('timeLeft', { timePhrase: toMoment.fromNow(true) })}</>;
 });

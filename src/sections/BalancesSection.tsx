@@ -132,7 +132,8 @@ export const BalancesSection = observer(() => {
       {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
       {!orbsAccountStore.errorLoading && (
         <>
-          <Grid container item direction={'row'} justify={'space-between'} spacing={2}>
+          {/* TODO : FUTURE : O.L : Consider reducing the spacing when flex goes to column display */}
+          <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
             <GridItem>
               <BalanceCard
                 title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}

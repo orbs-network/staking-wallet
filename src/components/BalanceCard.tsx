@@ -9,8 +9,8 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
   paddingTop: '0.5em',
-  paddingRight: '0.75em',
-  paddingLeft: '0.75em',
+  paddingRight: '1.25em',
+  paddingLeft: '1.25em',
   paddingBottom: '1.5em',
 }));
 
@@ -38,7 +38,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
       </Grid>
 
       <Grid item>
-        <Typography variant={'h4'} style={{ marginBottom: '0.5em' }} data-testid={'balance_text'}>
+        <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
           {amount.toLocaleString()}
         </Typography>
       </Grid>
