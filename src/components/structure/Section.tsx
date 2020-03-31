@@ -1,4 +1,4 @@
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -7,7 +7,7 @@ const StyledGrid = styled(Grid)({
   marginBottom: '1em',
 });
 
-export const Section: React.FC = ({ children, ...otherProps }) => {
+export const Section: React.FC<GridProps> = ({ children, ...otherProps }) => {
   return (
     <StyledGrid item container direction={'column'} {...otherProps}>
       {children}

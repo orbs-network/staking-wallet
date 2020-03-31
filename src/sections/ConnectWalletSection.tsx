@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
 import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
@@ -11,6 +11,30 @@ import { CommonDivider } from '../components/base/CommonDivider';
 import Youtube from 'react-youtube';
 import { CommonActionButton } from '../components/base/CommonActionButton';
 import { useConnectWalletSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import { ReactComponent as TetraIconSvg } from '../../assets/logos/tetra_icon.svg';
+import { ReactComponent as TetraLogoSvg } from '../../assets/logos/tetra_logo.svg';
+import { Theme } from '@material-ui/core';
+import styled from 'styled-components';
+
+const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: Theme }) => ({
+  // Look& Feel
+  backgroundColor: 'rgba(47, 47, 47, 0.6)',
+  borderRadius: '2%',
+
+  // Dimensions
+  width: 'fit-content',
+  padding: '3em',
+
+
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: '9em',
+    paddingRight: '9em',
+  },
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: '13em',
+    paddingRight: '13em',
+  },
+}));
 
 export const ConnectWalletSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -75,22 +99,47 @@ export const ConnectWalletSection = observer(() => {
   ]);
 
   return (
-    <Section data-testid='connect-to-wallet-section'>
+    <Section data-testid='connect-to-wallet-section' alignItems={'center'} style={{ paddingTop: '5em' }}>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('connectWallet')} icon={walletIcon} />
+      {/*<SectionHeader title={sectionTitlesTranslations('connectWallet')} icon={walletIcon} />*/}
 
-      <CommonDivider />
+      {/*<CommonDivider />*/}
+      <WalletConnectionInnerGrid container spacing={6} direction={'column'} alignItems={'center'}>
+        {/* Brand logos */}
+        <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
+          <Grid item>
+            <TetraIconSvg style={{ height: '5em', marginRight: 'auto', marginLeft: 'auto' }} />
+          </Grid>
+          <Grid item>
+            <TetraLogoSvg style={{ height: '2em' }} />
+          </Grid>
+        </Grid>
 
-      <Grid container spacing={1} direction={'column'} alignContent={'center'}>
-        <Typography variant={'h6'}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
-        <Grid item xs={12} md={4}>
-          {installOrConnectMetamaskButton}
+        {/* Texts */}
+        <Grid item container direction={'column'} spacing={5} style={{ textAlign: 'center' }}>
+          <Typography variant={'h6'}>{sectionTitlesTranslations('connectWallet').toLocaleUpperCase()}</Typography>
+          <Typography variant={'body2'}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
         </Grid>
-        {messageComponent !== null && <Grid item>{messageComponent}</Grid>}
-        <Grid item xs={8}>
-          {/*<Youtube videoId={'6Gf_kRE4MJU'} />*/}
+
+        {/* Action button */}
+        <Grid
+          item
+          container
+          direction={'column'}
+          alignItems={'center'}
+          spacing={2}
+          style={{ paddingRight: 0, paddingLeft: 0 }}
+        >
+          <Grid item style={{ paddingRight: 0, paddingLeft: 0, width: '100%' }}>
+            {installOrConnectMetamaskButton}
+          </Grid>
+          {messageComponent !== null && (
+            <Grid item>
+              <Typography>{messageComponent}</Typography>
+            </Grid>
+          )}
         </Grid>
-      </Grid>
+      </WalletConnectionInnerGrid>
     </Section>
   );
 });
