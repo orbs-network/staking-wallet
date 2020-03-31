@@ -128,6 +128,8 @@ export const WalletInfoSection = observer(() => {
         </Grid>
       </Grid>
 
+      <CommonDivider />
+
       <CommonDialog disableBackdropClick={false} disableAutoFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
         <CenteredContainerGridForQr>
           <QRCode

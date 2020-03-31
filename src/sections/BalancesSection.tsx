@@ -124,9 +124,9 @@ export const BalancesSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
+      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} bottomPadding />
 
-      <Grid item> <CommonDivider /> </Grid>
+      {/*<Grid item> <CommonDivider /> </Grid>*/}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}

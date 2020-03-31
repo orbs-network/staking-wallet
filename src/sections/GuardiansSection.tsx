@@ -56,9 +56,10 @@ export const GuardiansSection = observer(() => {
           totalParticipatingTokens: guardiansStore.totalParticipatingTokens.toLocaleString(),
         })}
         icon={ShielIcon}
+        bottomPadding
       />
 
-      <CommonDivider />
+      {/*<CommonDivider />*/}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {guardiansStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}

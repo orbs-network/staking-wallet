@@ -28,10 +28,11 @@ interface IProps {
   title: string;
   sideTitle?: string;
   icon: React.ElementType<SVGProps<SVGSVGElement>>;
+  bottomPadding?: boolean;
 }
 
 export const SectionHeader: React.FC<IProps> = (props) => {
-  const { title, sideTitle, icon: MyIcon } = props;
+  const { title, sideTitle, icon: MyIcon, bottomPadding } = props;
 
   const theme = useTheme();
   const largerThanMedium = useMediaQuery(theme.breakpoints.up('md'));
@@ -55,8 +56,18 @@ export const SectionHeader: React.FC<IProps> = (props) => {
     );
   }, [sideTitle, largerThanMedium]);
 
+  const extraStyleForHeaderGrid = useMemo<CSSProperties>(() => {
+    if (bottomPadding) {
+      return {
+        paddingBottom: '1em',
+      };
+    } else {
+      return {};
+    }
+  }, [bottomPadding]);
+
   return (
-    <SectionHeaderGrid>
+    <SectionHeaderGrid style={extraStyleForHeaderGrid}>
       <Typography></Typography>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
         <SvgIcon component={MyIcon} />

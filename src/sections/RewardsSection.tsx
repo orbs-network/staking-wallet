@@ -21,9 +21,9 @@ export const RewardsSection = observer(() => {
 
   return (
     <Section>
-      <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} />
+      <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
       <Grid item>
-        <CommonDivider />
+        {/*<CommonDivider />*/}
       </Grid>
 
       <Grid item>

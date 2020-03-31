@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Divider } from '@material-ui/core';
 
-const DIVIDER_MARGIN_EM = 0.6;
+const DIVIDER_MARGIN_EM = 1;
 
 export const CommonDivider = styled(Divider)({
   backgroundColor: '#6C6D72',
