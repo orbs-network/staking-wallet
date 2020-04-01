@@ -38,8 +38,15 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
     const promiEvent = orbsAccountStore.restakeTokens();
+
+    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+    promiEvent.on('transactionHash', (txHash) => {
+      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+      isBroadcastingMessage.setTrue();
+    });
+
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, onPromiEventAction]);
+  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, onPromiEventAction, isBroadcastingMessage]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
@@ -58,6 +65,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       })}
       infoTitle={restakingWizardTranslations('restakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
+      isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}
       actionButtonProps={actionButtonProps}
       addCancelButton

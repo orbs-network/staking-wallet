@@ -44,8 +44,23 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
     const promiEvent = orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking.value));
+
+    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+    promiEvent.on('transactionHash', (txHash) => {
+      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+      isBroadcastingMessage.setTrue();
+    });
+
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, orbsForUnstaking.value, onPromiEventAction]);
+  }, [
+    message,
+    subMessage,
+    wizardsCommonTranslations,
+    orbsAccountStore,
+    orbsForUnstaking.value,
+    onPromiEventAction,
+    isBroadcastingMessage,
+  ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
@@ -89,6 +104,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       title={unstakingWizardTranslations('unstakingSubStep_stepTitle')}
       infoTitle={unstakingWizardTranslations('unstakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
+      isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}
       actionButtonProps={actionButtonProps}
       innerContent={unstakingInput}

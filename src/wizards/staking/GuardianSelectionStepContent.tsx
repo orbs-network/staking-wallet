@@ -49,6 +49,15 @@ export const GuardianSelectionStepContent = observer(
           skipToSuccess();
         } else {
           const promiEvent = guardiansStore.selectGuardian(guardian.address);
+
+          // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+          promiEvent.on('transactionHash', (txHash) => {
+            subMessage.setValue(
+              wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'),
+            );
+            isBroadcastingMessage.setTrue();
+          });
+
           onPromiEventAction(promiEvent);
         }
       },
@@ -60,6 +69,7 @@ export const GuardianSelectionStepContent = observer(
         skipToSuccess,
         subMessage,
         wizardsCommonTranslations,
+        isBroadcastingMessage,
       ],
     );
 
@@ -84,6 +94,7 @@ export const GuardianSelectionStepContent = observer(
         title={stakingWizardTranslations('guardianSelectionSubStep_stepTitle')}
         infoTitle={stakingWizardTranslations('guardianSelectionSubStep_stepExplanation')}
         disableInputs={disableInputs}
+        isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
         innerContent={guardianSelectionContent}
       />

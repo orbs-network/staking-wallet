@@ -47,8 +47,15 @@ export const GuardianChangeStepContent = observer(
       subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
       const promiEvent = guardiansStore.selectGuardian(newGuardianAddress);
+
+      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+      promiEvent.on('transactionHash', (txHash) => {
+        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+        isBroadcastingMessage.setTrue();
+      });
+
       onPromiEventAction(promiEvent);
-    }, [message, subMessage, wizardsCommonTranslations, guardiansStore, newGuardianAddress, onPromiEventAction]);
+    }, [message, subMessage, wizardsCommonTranslations, guardiansStore, newGuardianAddress, onPromiEventAction, isBroadcastingMessage]);
 
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
       return {
@@ -63,6 +70,7 @@ export const GuardianChangeStepContent = observer(
         subMessage={subMessage.value}
         title={guardianChangingWizardTranslations('guardianSelectionSubStep_stepTitle')}
         disableInputs={disableInputs}
+        isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
         innerContent={null}
         actionButtonProps={changeGuardianActionButtonProps}
