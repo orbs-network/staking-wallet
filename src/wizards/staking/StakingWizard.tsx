@@ -128,7 +128,7 @@ export const StakingWizard = observer(
           </WizardStepper>
         </Grid>
 
-        <Grid item> {stepContent} </Grid>
+        <Grid item container> {stepContent} </Grid>
       </WizardContainer>
     );
   }),
