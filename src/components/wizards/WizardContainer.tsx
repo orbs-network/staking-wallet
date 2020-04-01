@@ -54,6 +54,6 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
   };
 });
 
-export const WizardContainer = props => (
-  <CenteredContainerGrid container direction={'column'} justify={'space-around'} spacing={1} {...props} />
+export const WizardContainer = (props) => (
+  <CenteredContainerGrid container direction={'column'} justify={'space-around'} spacing={3} {...props} />
 );

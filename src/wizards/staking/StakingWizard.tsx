@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Step, StepLabel } from '@material-ui/core';
+import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
@@ -108,25 +108,27 @@ export const StakingWizard = observer(
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>
-        <WizardStepper activeStep={activeStep.value} alternativeLabel>
-          <Step>
-            <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
-          </Step>
+        <Grid item>
+          <WizardStepper activeStep={activeStep.value} alternativeLabel>
+            <Step>
+              <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>{stakingWizardTranslations('stepLabel_stake')}</StepLabel>
-          </Step>
+            <Step>
+              <StepLabel>{stakingWizardTranslations('stepLabel_stake')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>{stakingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
-          </Step>
+            <Step>
+              <StepLabel>{stakingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-          </Step>
-        </WizardStepper>
+            <Step>
+              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
+            </Step>
+          </WizardStepper>
+        </Grid>
 
-        {stepContent}
+        <Grid item> {stepContent} </Grid>
       </WizardContainer>
     );
   }),
