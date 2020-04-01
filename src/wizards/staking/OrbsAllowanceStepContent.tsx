@@ -21,6 +21,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
   const message = useStateful(stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'));
   const subMessage = useStateful('');
+  const isBroadcastingMessage = useBoolean(false);
 
   // Calculate the proper error message
   useEffect(() => {
@@ -28,16 +29,26 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
       message.setValue(errorMessage);
       subMessage.setValue(errorSubMessage);
+      isBroadcastingMessage.setFalse();
     }
-  }, [txError, message, subMessage, wizardsCommonTranslations]);
+  }, [txError, message, subMessage, wizardsCommonTranslations, isBroadcastingMessage]);
 
   const setTokenAllowanceForStakingContract = useCallback(() => {
     message.setValue('');
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
+    isBroadcastingMessage.setTrue();
 
     const promiEvent = orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance.value));
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, orbsAllowance.value, onPromiEventAction]);
+  }, [
+    message,
+    subMessage,
+    wizardsCommonTranslations,
+    orbsAccountStore,
+    orbsAllowance.value,
+    onPromiEventAction,
+    isBroadcastingMessage,
+  ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
@@ -59,7 +70,6 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     );
   }, [orbsAllowance, stakingWizardTranslations, disableInputs]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <BaseStepContent
       message={message.value}
@@ -67,6 +77,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       title={stakingWizardTranslations('allowanceSubStep_stepTitle')}
       infoTitle={stakingWizardTranslations('allowanceSubStep_stepExplanation')}
       disableInputs={disableInputs}
+      isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_allowance_tx'}
       actionButtonProps={actionButtonProps}
       innerContent={allowanceInput}

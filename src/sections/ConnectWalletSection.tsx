@@ -26,7 +26,9 @@ const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: T
   width: 'fit-content',
   padding: '3em',
 
-
+  [theme.breakpoints.down('sm')]: {
+    padding: '1.5em',
+  },
   [theme.breakpoints.up('sm')]: {
     paddingLeft: '9em',
     paddingRight: '9em',

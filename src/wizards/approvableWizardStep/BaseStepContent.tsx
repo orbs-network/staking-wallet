@@ -14,16 +14,23 @@ export interface IActionButtonProps {
 }
 
 interface IProps {
+  // Display
   title: string | React.ElementType;
   message?: string;
   subMessage?: string;
-
-  innerContent?: ReactNode;
   infoTitle?: string;
-  actionButtonProps?: IActionButtonProps;
+  innerContent?: ReactNode;
   disableInputs?: boolean;
+  isLoading?: boolean;
+
+  // Action button
+  actionButtonProps?: IActionButtonProps;
+
+  // Cancel button
   addCancelButton?: boolean;
   onCancelButtonClicked?: () => void;
+
+  // Tests props
   contentTestId?: string;
 }
 
@@ -39,6 +46,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     message,
     subMessage,
     disableInputs,
+    isLoading,
     contentTestId,
     innerContent,
     actionButtonProps,
@@ -90,7 +98,6 @@ export const BaseStepContent = React.memo<IProps>((props) => {
   const hasMessage = message && message.length > 0;
   const hasSubMessage = subMessage && subMessage.length > 0;
 
-  // TODO : ORL : Fix centering of texts
   return (
     <WizardContent data-testid={contentTestId}>
       <Grid container item direction={'row'} justify={'center'} alignItems={'center'}>
@@ -108,6 +115,19 @@ export const BaseStepContent = React.memo<IProps>((props) => {
         <Typography variant={'body2'}>{subMessage}</Typography>
       </Grid>
 
+      {/*// TODO : ORL : Move this to translation*/}
+      {/* Display loading */}
+      {isLoading && (
+        <Grid item container direction={'column'} alignItems={'center'} style={{ textAlign: 'center' }}>
+          <Grid item>
+            <CircularProgress color={'secondary'} />
+          </Grid>
+          <Grid item>
+            <Typography>Do not refresh or close the browser</Typography>
+          </Grid>
+        </Grid>
+      )}
+
       {/* Inner Content */}
       {/* DEV_NOTE : 'container' handles taking the full width*/}
       <Grid item container justify={'center'}>
@@ -118,7 +138,11 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       <Grid item container justify={'center'} direction={'row'} spacing={2}>
         {addCancelButton && (
           <Grid item>
-            <CommonActionButton style={relevantStylingForActionButtons} onClick={onCancelButtonClicked} disabled={disableInputs}>
+            <CommonActionButton
+              style={relevantStylingForActionButtons}
+              onClick={onCancelButtonClicked}
+              disabled={disableInputs}
+            >
               {wizardsCommonTranslations('action_close')}
             </CommonActionButton>
           </Grid>

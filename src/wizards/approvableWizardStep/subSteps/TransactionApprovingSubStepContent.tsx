@@ -52,11 +52,12 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
 
   const titleFc = useMemo(() => {
     const titleMessage = isTxConfirmed
-      ? approvableWizardStepTranslations('txConfirmed')
-      : approvableWizardStepTranslations('txPending');
+      ? approvableWizardStepTranslations('txConfirmed').toLocaleUpperCase()
+      : approvableWizardStepTranslations('txPending').toLocaleUpperCase();
 
+    // TODO : ORL : Fix the link to depend on the used network
     return () => (
-      <Link href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
+      <Link href={`https://ropsten.etherscan.io/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
         {titleMessage}
       </Link>
     );

@@ -56,7 +56,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     message_errorOccurred: 'An error occurred while trying to send transaction to the staking wallet.',
     subMessage_pleaseTryAgain: 'please try again',
     subMessage_pleaseApproveTransactionWithExplanation:
-      'Please approve the transaction, we will move to the next stage as soon as the transaction is confirmed.',
+      'Please approve the transaction, we will move on to the next stage as soon as the transaction is confirmed.',
     stepLabel_finish: 'Finish',
     action_finish: 'Finish',
     moveToStep_finish: 'Finish',
