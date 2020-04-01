@@ -8,6 +8,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
+import { useWizardState } from '../wizardHooks';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -19,9 +20,12 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   // Start and limit by liquid orbs
   const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
   const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
-  const message = useStateful(stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'));
-  const subMessage = useStateful('');
-  const isBroadcastingMessage = useBoolean(false);
+
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'),
+    '',
+    false,
+  );
 
   // Calculate the proper error message
   useEffect(() => {
@@ -36,9 +40,15 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const setTokenAllowanceForStakingContract = useCallback(() => {
     message.setValue('');
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-    isBroadcastingMessage.setTrue();
 
     const promiEvent = orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance.value));
+
+    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+    promiEvent.on('transactionHash', (txHash) => {
+      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+      isBroadcastingMessage.setTrue();
+    });
+
     onPromiEventAction(promiEvent);
   }, [
     message,

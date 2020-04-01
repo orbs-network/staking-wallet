@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useNumber, useStateful } from 'react-hanger';
+import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
@@ -9,6 +9,7 @@ import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/Bas
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { Typography } from '@material-ui/core';
+import { useWizardState } from '../wizardHooks';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -23,8 +24,11 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     lowerLimit: 0,
     upperLimit: stakedOrbsNumericalFormat,
   });
-  const message = useStateful(unstakingWizardTranslations('unstakingSubStep_message_selectAmountOfOrbs'));
-  const subMessage = useStateful(unstakingWizardTranslations('unstakingSubStep_subMessage_pressUnstakeAndApprove'));
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    unstakingWizardTranslations('unstakingSubStep_message_selectAmountOfOrbs'),
+    unstakingWizardTranslations('unstakingSubStep_subMessage_pressUnstakeAndApprove'),
+    false,
+  );
 
   // Display the proper error message
   useEffect(() => {
@@ -54,8 +58,12 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const unstakingInput = useMemo(() => {
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
-        <Typography style={{ color: 'orange', textAlign: 'center' }}>{unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownHeader')} </Typography>
-        <Typography style={{ color: 'orange', textAlign: 'center' }}>{unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownBody')} </Typography>
+        <Typography style={{ color: 'orange', textAlign: 'center' }}>
+          {unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownHeader')}{' '}
+        </Typography>
+        <Typography style={{ color: 'orange', textAlign: 'center' }}>
+          {unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownBody')}{' '}
+        </Typography>
       </>
     ) : null;
 

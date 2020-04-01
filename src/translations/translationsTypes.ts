@@ -53,6 +53,7 @@ export interface IWizardsCommonsTranslations {
   message_errorOccurred: string;
   subMessage_pleaseTryAgain: string;
   subMessage_pleaseApproveTransactionWithExplanation: string;
+  subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab: string;
   stepLabel_finish: string;
   moveToStep_finish: string;
   action_finish: string;

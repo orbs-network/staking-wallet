@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useStateful } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
@@ -7,6 +7,7 @@ import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useWizardState } from '../wizardHooks';
 
 export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -18,8 +19,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   // Start and limit by allowance
   const orbsForStaking = orbsAccountStore.stakingContractAllowance;
   const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
-  const message = useStateful('');
-  const subMessage = useStateful('');
+  const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
   // Display the proper error message
   useEffect(() => {

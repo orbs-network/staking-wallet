@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useStateful } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useGuardiansStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
@@ -11,6 +11,7 @@ import {
   useGuardianChangingWizardTranslations,
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
+import { useWizardState } from '../wizardHooks';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -26,11 +27,10 @@ export const GuardianChangeStepContent = observer(
     const [t] = useTranslation();
 
     // Start and limit by allowance
-    const message = useStateful(
+    const { message, subMessage, isBroadcastingMessage } = useWizardState(
       guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
-    );
-    const subMessage = useStateful(
       guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
+      false,
     );
 
     // Display the proper error message
@@ -53,7 +53,7 @@ export const GuardianChangeStepContent = observer(
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
       return {
         title: guardianChangingWizardTranslations('guardianSelectionSubStep_action_change'),
-        onClick: changeSelectedGuardian
+        onClick: changeSelectedGuardian,
       };
     }, [changeSelectedGuardian, guardianChangingWizardTranslations]);
 

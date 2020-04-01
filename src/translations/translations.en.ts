@@ -57,6 +57,8 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     subMessage_pleaseTryAgain: 'please try again',
     subMessage_pleaseApproveTransactionWithExplanation:
       'Please approve the transaction, we will move on to the next stage as soon as the transaction is confirmed.',
+    subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab:
+      'Broadcasting your transaction, do not refresh or close this tab',
     stepLabel_finish: 'Finish',
     action_finish: 'Finish',
     moveToStep_finish: 'Finish',

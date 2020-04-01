@@ -106,24 +106,20 @@ export const BaseStepContent = React.memo<IProps>((props) => {
         </Typography>
         {infoTooltippedIcon}
       </Grid>
-      <Grid item hidden={!hasMessage}>
+      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
 
       {/* Sub Message */}
-      <Grid item hidden={!hasSubMessage}>
+      <Grid item hidden={!hasSubMessage} style={{ textAlign: 'center' }}>
         <Typography variant={'body2'}>{subMessage}</Typography>
       </Grid>
 
-      {/*// TODO : ORL : Move this to translation*/}
       {/* Display loading */}
       {isLoading && (
         <Grid item container direction={'column'} alignItems={'center'} style={{ textAlign: 'center' }}>
           <Grid item>
             <CircularProgress color={'secondary'} />
-          </Grid>
-          <Grid item>
-            <Typography>Do not refresh or close the browser</Typography>
           </Grid>
         </Grid>
       )}

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useStateful } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
@@ -7,6 +7,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useWizardState } from '../wizardHooks';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -17,8 +18,11 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
 
   // Start and limit by allowance
   const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
-  const message = useStateful('');
-  const subMessage = useStateful(restakingWizardTranslations('restakingSubStep_subMessage_pressRestakeAndApprove'));
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    '',
+    restakingWizardTranslations('restakingSubStep_subMessage_pressRestakeAndApprove'),
+    false,
+  );
 
   // Display the proper error message
   useEffect(() => {
@@ -49,7 +53,9 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={restakingWizardTranslations('restakingSubStep_stepTitle', { orbsForRestaking: fullOrbsForRestaking.toLocaleString() })}
+      title={restakingWizardTranslations('restakingSubStep_stepTitle', {
+        orbsForRestaking: fullOrbsForRestaking.toLocaleString(),
+      })}
       infoTitle={restakingWizardTranslations('restakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}

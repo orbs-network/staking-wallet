@@ -7,6 +7,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useWizardState } from '../wizardHooks';
 
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -17,9 +18,10 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
 
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
-  const message = useStateful('');
-  const subMessage = useStateful(
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    '',
     withdrawingWizardTranslations('withdrawingSubStep_subMessage_pressWithdrawAndApprove'),
+    false,
   );
 
   // Display the proper error message

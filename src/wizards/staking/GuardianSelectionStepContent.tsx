@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useStateful } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useGuardiansStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
@@ -9,6 +9,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
+import { useWizardState } from '../wizardHooks';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -23,9 +24,10 @@ export const GuardianSelectionStepContent = observer(
     const guardiansStore = useGuardiansStore();
 
     // Start and limit by allowance
-    const message = useStateful(stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'));
-    const subMessage = useStateful(
+    const { message, subMessage, isBroadcastingMessage } = useWizardState(
+      stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
       stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
+      false,
     );
 
     // Display the proper error message
