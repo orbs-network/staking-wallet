@@ -36,6 +36,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   },
   rewardsSection: {
     text_visitThe: 'Visit the',
+    text__forDetailedRewardsPleaseVisitThe: 'For Detailed rewards please visit the {{rewardsPageTextLink}}',
     linkText_rewardsPage: 'rewards page',
   },
   guardiansTable: {

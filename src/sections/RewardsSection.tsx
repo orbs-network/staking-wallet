@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import useTheme from '@material-ui/core/styles/useTheme';
+import { renderToString } from 'react-dom/server';
 
 export const RewardsSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -19,25 +20,27 @@ export const RewardsSection = observer(() => {
 
   const theme = useTheme();
 
+  // TODO : Find a better way to combine the translations with changing order links
+  const innetHtml = rewardsSectionTranslations('text__forDetailedRewardsPleaseVisitThe', {
+    rewardsPageTextLink: renderToString(
+      <a
+        style={{ color: theme.palette.secondary.main }}
+        target={'_blank'}
+        rel={'noopener noreferrer'}
+        href={`https://orbs-network.github.io/voting/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
+      >
+        {rewardsSectionTranslations('linkText_rewardsPage')}
+      </a>,
+    ),
+  });
+
   return (
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
-      <Grid item>
-        {/*<CommonDivider />*/}
-      </Grid>
+      <Grid item>{/*<CommonDivider />*/}</Grid>
 
       <Grid item>
-        <Typography>
-          {rewardsSectionTranslations('text_visitThe')}{' '}
-          <a
-            style={{ color: theme.palette.secondary.main }}
-            target={'_blank'}
-            rel={'noopener noreferrer'}
-            href={`https://orbs-network.github.io/voting/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
-          >
-            {rewardsSectionTranslations('linkText_rewardsPage')}
-          </a>
-        </Typography>
+        <Typography dangerouslySetInnerHTML={{ __html: innetHtml }}></Typography>
       </Grid>
     </Section>
   );

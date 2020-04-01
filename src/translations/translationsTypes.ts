@@ -187,8 +187,9 @@ export interface IBalancesSectionTranslations {
 }
 
 export interface IRewardsSectionTranslations {
-  text_visitThe: 'Visit the';
-  linkText_rewardsPage: 'rewards page';
+  text_visitThe: string;
+  text__forDetailedRewardsPleaseVisitThe: string;
+  linkText_rewardsPage: string;
 }
 
 export interface IAlertsTranslations {
