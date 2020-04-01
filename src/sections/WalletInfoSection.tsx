@@ -1,4 +1,4 @@
-import { Button, Divider } from '@material-ui/core';
+import { Button, Divider, GridProps } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
@@ -41,9 +41,9 @@ const QR_IMAGE_DIMENSION_XS = 240;
 const LOGO_DIMENSIONS_XS = 60;
 
 // TODO : FUTURE : O.L : Unify this with the 'Wizard container' (have one basic styled component and extend from it)
-const CenteredContainerGridForQr = styled(props => (
+const CenteredContainerGridForQr = styled((props) => (
   <Grid container direction={'column'} alignItems={'center'} {...props} />
-))(({ theme }) => {
+))<GridProps>(({ theme }) => {
   theme = theme as Theme;
 
   return {
@@ -71,6 +71,7 @@ export const WalletInfoSection = observer(() => {
   const theme = useTheme();
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const mediumOrLarger = useMediaQuery(theme.breakpoints.up('md'));
+  const smallerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
   const qrDimensions = mediumOrLarger ? QR_IMAGE_DIMENSION_MD : QR_IMAGE_DIMENSION_XS;
   const logoDimensions = mediumOrLarger ? LOGO_DIMENSIONS_MD : LOGO_DIMENSIONS_XS;
@@ -96,7 +97,8 @@ export const WalletInfoSection = observer(() => {
       <Grid item xs={12}>
         <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
       </Grid>
-      <Grid container item direction={'row'} spacing={2}>
+      {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
+      <Grid container item direction={'row'} alignItems={'center'} spacing={smallerThanLarge ? 0 : 2}>
         {/* Address */}
         <Grid item sm={12} lg={8}>
           <Typography
@@ -130,7 +132,12 @@ export const WalletInfoSection = observer(() => {
 
       <CommonDivider />
 
-      <CommonDialog disableBackdropClick={false} disableAutoFocus open={showQrModal.value} onClose={showQrModal.setFalse}>
+      <CommonDialog
+        disableBackdropClick={false}
+        disableAutoFocus
+        open={showQrModal.value}
+        onClose={showQrModal.setFalse}
+      >
         <CenteredContainerGridForQr>
           <QRCode
             value={cryptoWalletIntegrationStore.mainAddress}

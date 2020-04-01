@@ -85,9 +85,9 @@ export const ENGLISH_TEXTS: IAppTranslations = {
     action_proceed: 'Proceed',
   },
   stakingWizard: {
-    stepLabel_approve: 'Approve usage of ORBS',
-    stepLabel_stake: 'Stake your tokens',
-    stepLabel_selectGuardian: 'Select a Guardian',
+    stepLabel_approve: 'Approve ORBS usage',
+    stepLabel_stake: 'Stake ORBS',
+    stepLabel_selectGuardian: 'Select Guardian',
     finishedAction_approved: 'allowed the staking contract to use your tokens',
     finishedAction_staked: 'staked your tokens',
     moveToStep_stake: 'Stake your ORBS',

@@ -12,7 +12,11 @@ import { Variant } from '@material-ui/core/styles/createTypography';
 
 const SectionHeaderGrid = styled<typeof Grid>((props) => (
   <Grid item container direction={'row'} alignItems={'center'} {...props} />
-))(() => ({}));
+))(() => ({
+  // DEV_NOTE : This negates the 'section' spacing for sideways padding
+  paddingRight: 0,
+  paddingLeft: 0,
+}));
 
 const Title = styled(Typography)`
   margin-left: 0.5em;
