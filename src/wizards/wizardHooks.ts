@@ -1,4 +1,7 @@
 import { UseBoolean, useBoolean, UseStateful, useStateful } from 'react-hanger';
+import { useEffect } from 'react';
+import { messageFromTxCreationSubStepError } from './wizardMessages';
+import { useWizardsCommonTranslations } from '../translations/translationsHooks';
 
 export type TUseWizardStateHook = (
   initialMessage: string,
@@ -10,6 +13,13 @@ export type TUseWizardStateHook = (
   isBroadcastingMessage: UseBoolean;
 };
 
+export type TUseTxCreationErrorHandlingEffect = (
+  message: UseStateful<string>,
+  subMessage: UseStateful<string>,
+  isBroadcastingMessage: UseBoolean,
+  txError: Error,
+) => void;
+
 export const useWizardState: TUseWizardStateHook = (initialMessage, initialSubMessage, initialIsBroadcasting) => {
   const message = useStateful(initialMessage);
   const subMessage = useStateful(initialSubMessage);
@@ -20,4 +30,22 @@ export const useWizardState: TUseWizardStateHook = (initialMessage, initialSubMe
     subMessage,
     isBroadcastingMessage,
   };
+};
+
+export const useTxCreationErrorHandlingEffect: TUseTxCreationErrorHandlingEffect = (
+  message,
+  subMessage,
+  isBroadcastingMessage,
+  txError,
+) => {
+  const wizardsCommonTranslations = useWizardsCommonTranslations();
+
+  useEffect(() => {
+    if (txError) {
+      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
+      message.setValue(errorMessage);
+      subMessage.setValue(errorSubMessage);
+      isBroadcastingMessage.setFalse();
+    }
+  }, [txError, wizardsCommonTranslations, message, subMessage, isBroadcastingMessage]);
 };

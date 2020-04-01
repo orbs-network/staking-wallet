@@ -8,7 +8,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
-import { useWizardState } from '../wizardHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -27,15 +27,8 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     false,
   );
 
-  // Calculate the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-      isBroadcastingMessage.setFalse();
-    }
-  }, [txError, message, subMessage, wizardsCommonTranslations, isBroadcastingMessage]);
+  // Handle error by displaying the proper error message
+  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const setTokenAllowanceForStakingContract = useCallback(() => {
     message.setValue('');

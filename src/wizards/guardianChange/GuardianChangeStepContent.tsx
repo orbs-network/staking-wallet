@@ -11,7 +11,7 @@ import {
   useGuardianChangingWizardTranslations,
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
-import { useWizardState } from '../wizardHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -33,14 +33,8 @@ export const GuardianChangeStepContent = observer(
       false,
     );
 
-    // Display the proper error message
-    useEffect(() => {
-      if (txError) {
-        const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
-        message.setValue(errorMessage);
-        subMessage.setValue(errorSubMessage);
-      }
-    }, [txError, message, subMessage, wizardsCommonTranslations]);
+    // Handle error by displaying the proper error message
+    useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
     const changeSelectedGuardian = useCallback(() => {
       message.setValue('');
@@ -55,7 +49,15 @@ export const GuardianChangeStepContent = observer(
       });
 
       onPromiEventAction(promiEvent);
-    }, [message, subMessage, wizardsCommonTranslations, guardiansStore, newGuardianAddress, onPromiEventAction, isBroadcastingMessage]);
+    }, [
+      message,
+      subMessage,
+      wizardsCommonTranslations,
+      guardiansStore,
+      newGuardianAddress,
+      onPromiEventAction,
+      isBroadcastingMessage,
+    ]);
 
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
       return {

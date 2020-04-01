@@ -7,7 +7,7 @@ import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { useWizardState } from '../wizardHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -21,14 +21,8 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
   const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
-  // Display the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-    }
-  }, [txError, message, subMessage, wizardsCommonTranslations]);
+  // Handle error by displaying the proper error message
+  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const stakeTokens = useCallback(() => {
     message.setValue('');
@@ -43,7 +37,15 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
     });
 
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, orbsForStaking, onPromiEventAction, isBroadcastingMessage]);
+  }, [
+    message,
+    subMessage,
+    wizardsCommonTranslations,
+    orbsAccountStore,
+    orbsForStaking,
+    onPromiEventAction,
+    isBroadcastingMessage,
+  ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({

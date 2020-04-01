@@ -7,7 +7,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { useWizardState } from '../wizardHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -24,14 +24,8 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     false,
   );
 
-  // Display the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-    }
-  }, [txError, message, subMessage, wizardsCommonTranslations]);
+  // Handle error by displaying the proper error message
+  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const restakeTokens = useCallback(() => {
     message.setValue('');

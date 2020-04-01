@@ -9,7 +9,7 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
-import { useWizardState } from '../wizardHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -30,14 +30,8 @@ export const GuardianSelectionStepContent = observer(
       false,
     );
 
-    // Display the proper error message
-    useEffect(() => {
-      if (txError) {
-        const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError, wizardsCommonTranslations);
-        message.setValue(errorMessage);
-        subMessage.setValue(errorSubMessage);
-      }
-    }, [txError, message, subMessage, wizardsCommonTranslations]);
+    // Handle error by displaying the proper error message
+    useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
     const selectGuardian = useCallback(
       (guardian: TGuardianInfoExtended) => {
