@@ -37,8 +37,6 @@ export const RewardsSection = observer(() => {
   return (
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
-      <Grid item>{/*<CommonDivider />*/}</Grid>
-
       <Grid item>
         <Typography dangerouslySetInnerHTML={{ __html: innetHtml }}></Typography>
       </Grid>
