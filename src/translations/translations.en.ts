@@ -130,7 +130,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   restakingWizard: {
     stepLabel_restake: 'Restake ORBS',
     finishedAction_restaked: 'restaked your tokens',
-    afterSuccessStateExplanation: 'Your ORBSstaked once again!',
+    afterSuccessStateExplanation: 'Your ORBS staked once again!',
 
     restakingSubStep_subMessage_pressRestakeAndApprove: 'Press "Restake" and accept the transaction',
     restakingSubStep_stepTitle: 'Restaking {{orbsForRestaking}} ORBS',
