@@ -107,7 +107,7 @@ export const StakingWizard = observer(
     ]);
 
     return (
-      <WizardContainer data-testid={'wizard_staking'} style={{ padding: '1em' }}>
+      <WizardContainer data-testid={'wizard_staking'}>
         <Grid item>
           <WizardStepper activeStep={activeStep.value} alternativeLabel>
             <Step>
