@@ -76,6 +76,7 @@ export const GuardianSelectionStepContent = observer(
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
+            densePadding
           />
         </Grid>
       );

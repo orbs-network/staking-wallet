@@ -78,6 +78,9 @@ interface IProps {
   tableTestId?: string;
   extraStyle?: React.CSSProperties;
   tableTitle?: string;
+
+  // Styling
+  densePadding?: boolean;
 }
 
 export const GuardiansTableOld = React.memo<IProps>((props) => {
@@ -242,6 +245,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     tableTestId,
     extraStyle,
     tableTitle,
+    densePadding,
   } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
 
@@ -408,6 +412,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       icons={TABLE_ICONS}
       style={{ overflowX: 'auto' }}
       options={{
+        padding: densePadding? 'dense' : 'default',
         pageSizeOptions: [5],
 
         rowStyle: {
