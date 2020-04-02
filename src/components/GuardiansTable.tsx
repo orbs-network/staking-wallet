@@ -415,9 +415,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         padding: densePadding? 'dense' : 'default',
         pageSizeOptions: [5],
 
-        rowStyle: {
-          backgroundColor: 'rgba(33,33, 33, 0.55)',
-        },
+        rowStyle: (TGuardianInfoExtended) => ({
+          backgroundColor: TGuardianInfoExtended.address === selectedGuardian ? 'rgba(10, 10, 10, 1)' : 'rgba(33,33, 33, 0.55)',
+        }),
         headerStyle: {
           backgroundColor: theme.palette.primary.dark,
           textAlign: 'center',
