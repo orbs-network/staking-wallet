@@ -10,6 +10,10 @@ const CenteredDiv = styled('div')({
   left: '50%',
   transform: 'translate(-50%, -75%)',
   textAlign: 'center',
+  // backgroundColor: 'rgba(47, 47, 47, 0.6)',
+  padding: '2em',
+  // border: '1px solid #03FCF5',
+  boxShadow: `0px 0px 8px 4px #03FCF5`,
 });
 
 export const UnsopportedBrowserDisplay = () => {
@@ -19,13 +23,13 @@ export const UnsopportedBrowserDisplay = () => {
       <br />
       <br />
       <Typography style={{ color: '#03FCF5' }}>
-        Hey, it's great to see you here :)
+        Hey! it's great to see you here :)
         <br />
         <br/>
         It seems that you are using an unsupported browser...
         <br />
         <br/>
-        Try browsing from a <b>non-mobile</b> browser with the metamask extension installed
+        Try browsing from a <b>non-mobile</b> browser with the <a  style={{ color: 'inherit' }} href="https://metamask.io/" target={'_blank'} rel={'noopener noreferrer'}>Metamask</a> extension installed.
       </Typography>
     </CenteredDiv>
   );
