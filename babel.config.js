@@ -1,7 +1,8 @@
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
 // Limit browser support
-const targets = IS_DEV ? { chrome: '79', firefox: '72' } : '> 0.25%, not dead';
+const targets = IS_DEV ? { chrome: '79', firefox: '72', safari: '11.1', edge: '17' } : '> 0.25%, not dead';
+// const targets = IS_DEV ? { chrome: '79', firefox: '72', safari: '11.1', edge: '17' } : { chrome: '79', firefox: '72', safari: '11.1', edge: '17' } ;
 
 module.exports = {
   presets: [['@babel/env', { loose: true, targets }], '@babel/react', '@babel/typescript'],
