@@ -262,17 +262,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       switch (guardianSelectionMode) {
         case 'Select':
           selectedGuardianCell = (
-            // <TableCell align='center'>
-              <SelectButton
-                variant='contained'
-                size='small'
-                // disabled={g.address === selectedGuardian}
-                data-testid={actionButtonTestId}
-                onClick={actionButtonOnClick}
-              >
-                {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
-              </SelectButton>
-            // </TableCell>
+            <SelectButton
+              variant='contained'
+              size='small'
+              data-testid={actionButtonTestId}
+              onClick={actionButtonOnClick}
+            >
+              {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
+            </SelectButton>
           );
           break;
         case 'Change':
@@ -285,14 +282,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
             <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
           );
 
+          const iconColor = isSelectedGuardian ? theme.palette.secondary.main : theme.palette.grey['500'];
+
           selectedGuardianCell = (
-            // <TableCell align='center'>
-              <Typography data-testid={`guardian-${g.address}-selected-status`}>
-                <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
-                  {actionButtonIcon}
-                </IconButton>
-              </Typography>
-            // </TableCell>
+            <Typography data-testid={`guardian-${g.address}-selected-status`} >
+              <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled} style={{ color: iconColor }}>
+                {actionButtonIcon}
+              </IconButton>
+            </Typography>
           );
           break;
         case 'None':
@@ -304,7 +301,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
       return selectedGuardianCell;
     },
-    [guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
+    [theme, guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
   );
 
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
@@ -412,11 +409,12 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       icons={TABLE_ICONS}
       style={{ overflowX: 'auto' }}
       options={{
-        padding: densePadding? 'dense' : 'default',
+        padding: densePadding ? 'dense' : 'default',
         pageSizeOptions: [5],
 
         rowStyle: (TGuardianInfoExtended) => ({
-          backgroundColor: TGuardianInfoExtended.address === selectedGuardian ? '#1D0D0D' : 'rgba(33,33, 33, 0.55)',
+          backgroundColor:
+            TGuardianInfoExtended.address === selectedGuardian ? 'rgba(66,66, 66, 0.55)' : 'rgba(33,33, 33, 0.55)',
         }),
         headerStyle: {
           backgroundColor: theme.palette.primary.dark,
