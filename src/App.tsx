@@ -6,6 +6,7 @@ import { MainAppPage } from './pages/MainAppPage';
 import { ContentContainer } from './components/structure/ContentContainer';
 import i18n from 'i18next';
 import moment from 'moment';
+import { Footer } from './components/nav/Footer';
 
 function getForcedLanguage(pathname: string) {
   const langMatch = pathname.match(/\/(en|ko|jp)\/?/);
@@ -52,6 +53,7 @@ export const App = observer(() => {
           <Route exact path='/' component={MainAppPage} />
         </Switch>
       </ContentContainer>
+      <Footer />
     </main>
   );
 });
