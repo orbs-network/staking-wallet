@@ -40,18 +40,18 @@ const StyledKrCountryIconSvg = styled(KrCountryIconSvg)(buildStyleForCountryIcon
 export const LanguagesSelector = React.memo((props) => {
   return (
     <Grid container alignItems={'center'} justify={'flex-end'} spacing={1}>
-      <Grid item >
+      <Grid item>
         <ButtonChangeLangLink lang='en'>
           <StyledUsCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
-      <Grid item >
+      <Grid item>
         <ButtonChangeLangLink lang='jp'>
           <StyledJpCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
       <Grid item>
-        <ButtonChangeLangLink lang='kr'>
+        <ButtonChangeLangLink lang='ko'>
           <StyledKrCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
