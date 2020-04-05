@@ -57,7 +57,7 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
 
     // TODO : ORL : Fix the link to depend on the used network
     return () => (
-      <Link href={`https://ropsten.etherscan.io/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
+      <Link href={`https://etherscan.io/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
         {titleMessage}
       </Link>
     );
