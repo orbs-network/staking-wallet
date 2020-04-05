@@ -1,20 +1,16 @@
 import { Resource } from 'i18next';
 import { ENGLISH_TEXTS } from './translations.en';
+import { JAPANESE_TEXTS } from './translations.ja';
+import { KOREAN_TEXTS } from './translations.ko';
 
 export const resources: Resource = {
   en: {
     translation: ENGLISH_TEXTS,
   },
   jp: {
-    translation: {
-      fontFamily: 'Meiryo,Hiragino Kaku Gothic ProN,MS PGothic,sans-serif',
-      'Guardians List': 'ガーディアンリスト',
-    },
+    translation: JAPANESE_TEXTS,
   },
   ko: {
-    translation: {
-      fontFamily: 'Montserrat',
-      'Guardians List': '가디언 목록',
-    },
+    translation: KOREAN_TEXTS,
   },
 };

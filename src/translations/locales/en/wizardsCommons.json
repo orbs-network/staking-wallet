@@ -1,0 +1,17 @@
+{
+  "action_close": "Close",
+  "action_finish": "Finish",
+  "message_errorOccurred": "An error occurred while trying to send transaction to the staking wallet.",
+  "message_userCanceledTransactions": "You have canceled the transaction.",
+  "moveToStep_finish": "Finish",
+  "stepDoneExclamation": "Awesome!",
+  "stepLabel_finish": "Finish",
+  "subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab": "Broadcasting your transaction, do not refresh or close this tab",
+  "subMessage_pleaseApproveTransactionWithExplanation": "Please approve the transaction, before moving to the next stage.",
+  "subMessage_pleaseTryAgain": "Please try again",
+  "subMessage_tryAgainAndApprove": "In order to continue, please try again and approve the transaction.",
+  "txCreationError_generalError_message": "An error occurred while trying to send transaction to the staking wallet.",
+  "txCreationError_generalError_subMessage": "Please try again.",
+  "txCreationError_userCanceled_message": "You have canceled the transaction.",
+  "txCreationError_userCanceled_subMessage": "In order to continue, please try again and approve the transaction."
+}

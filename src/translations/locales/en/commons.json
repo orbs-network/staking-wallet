@@ -1,0 +1,5 @@
+{
+  "loading": "Loading...",
+  "loadingFailed": "Loading failed",
+  "timeLeft": "{{timePhrase}} left"
+}

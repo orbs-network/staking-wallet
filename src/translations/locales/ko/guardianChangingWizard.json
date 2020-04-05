@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "새로운 가디언을 선택하셨습니다",
+  "finishedAction_selectedGuardian": "선택된 가디언",
+  "guardianSelectionSubStep_action_change": "변경",
+  "guardianSelectionSubStep_message_changeGuardian": "{{newGuardianAddress}} 가디언으로 선택 변경",
+  "guardianSelectionSubStep_stepTitle": "가디언 변경",
+  "guardianSelectionSubStep_subMessage_pressChangeAndApprove": "변경”을 누르고 트랜잭션을 진행해주세요",
+  "stepLabel_changeGuardian": "{{newGuardianAddress}} 가디언으로 선택 변경'"
+}

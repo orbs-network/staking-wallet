@@ -1,0 +1,5 @@
+{
+  "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "Cannot unstake when there are ORBS to be withdrawn",
+  "guardianAlreadySelected": "Guardian already selected!",
+  "walletAddressWasCopied": "Copied address!"
+}

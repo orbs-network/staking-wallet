@@ -1,0 +1,12 @@
+{
+  "action_keep": "キープ",
+  "action_select": "選択",
+  "columnHeader_address": "アドレス",
+  "columnHeader_name": "名前",
+  "columnHeader_selection": "選択",
+  "columnHeader_stakingPercentageInLastElections": "前回投票時のステーキング％",
+  "columnHeader_votedInLastElection": "投票済み",
+  "columnHeader_website": "ウェブサイト",
+  "didVote_no": "いいえ",
+  "didVote_yes": "はい"
+}

@@ -1,0 +1,12 @@
+{
+  "action_keep": "Keep",
+  "action_select": "Select",
+  "columnHeader_address": "Address",
+  "columnHeader_name": "Name",
+  "columnHeader_selection": "Selection",
+  "columnHeader_stakingPercentageInLastElections": "Staking % in previous elections",
+  "columnHeader_votedInLastElection": "Voted in previous election",
+  "columnHeader_website": "Website",
+  "didVote_no": "No",
+  "didVote_yes": "Yes"
+}

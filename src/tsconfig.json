@@ -5,6 +5,7 @@
     "sourceMap": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,

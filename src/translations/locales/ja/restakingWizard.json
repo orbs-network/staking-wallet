@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "あなたのORBSは再度ステーキングされました",
+  "finishedAction_restaked": "あなたのトークンを再ステーク",
+  "restakingSubStep_action_restake": "再ステーク",
+  "restakingSubStep_stepExplanation": "ここではクールダウンを停止し、全てのORBSトークンをステーキングの状態に戻します。",
+  "restakingSubStep_stepTitle": "{{orbsForRestaking}}ORBSを再ステーク",
+  "restakingSubStep_subMessage_pressRestakeAndApprove": "再ステーク”を押してトランザクションを認証",
+  "stepLabel_restake": "ORBSを再ステーク"
+}

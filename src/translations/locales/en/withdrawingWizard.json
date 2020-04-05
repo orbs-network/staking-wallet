@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "Your unstaked ORBS will be available after the cooldown period",
+  "finishedAction_withdrew": "Withdrew your cooled-down tokens",
+  "stepLabel_withdraw": "Withdraw ORBS",
+  "withdrawingSubStep_action_withdraw": "Withdraw",
+  "withdrawingSubStep_stepExplanation": "This will transfer all of the ORBS that completed cooldown to your address.",
+  "withdrawingSubStep_stepTitle": "Withdrawing {{orbsForWithdrawal}} ORBS",
+  "withdrawingSubStep_subMessage_pressWithdrawAndApprove": "Press 'Withdraw' and accept the transaction."
+}

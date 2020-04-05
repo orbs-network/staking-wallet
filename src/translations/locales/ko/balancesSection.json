@@ -1,0 +1,11 @@
+{
+  "action_restakeYourTokens": "다시 락업",
+  "action_stakeYourTokens": "스테이킹 참여",
+  "action_unstakeYourTokens": "토큰 락업 해제",
+  "action_withdrawYourTokens": "지갑으로 회수",
+  "title_noTokensInCooldown": "해제 중인 토큰이 없습니다",
+  "title_stakedOrbsInSmartContract": "락업 스테이킹 중인 ORBS",
+  "title_tokensInCooldown": "락업 해제 중인 토큰",
+  "title_tokensReadyForWithdrawal": "락업 해제 완료된 토큰",
+  "title_unstakedOrbsInYourWallet": "지갑에 보유중인 락업되지 않은 ORBS"
+}

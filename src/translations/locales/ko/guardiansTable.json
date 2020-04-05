@@ -1,0 +1,12 @@
+{
+  "action_keep": "유지",
+  "action_select": "선택",
+  "columnHeader_address": "주소",
+  "columnHeader_name": "이름",
+  "columnHeader_selection": "선택",
+  "columnHeader_stakingPercentageInLastElections": "지난 선거 점유율 %",
+  "columnHeader_votedInLastElection": "지난 선거 참여여부",
+  "columnHeader_website": "웹사이트",
+  "didVote_no": "아니오'",
+  "didVote_yes": "예"
+}

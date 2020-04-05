@@ -1,0 +1,5 @@
+{
+  "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "回収すべきORBSのトークンがある場合には、追加でロックアップ解除をすることはできません",
+  "guardianAlreadySelected": "既にガーディアンを選択済みです",
+  "walletAddressWasCopied": "アドレスがコピーされました"
+}

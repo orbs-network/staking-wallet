@@ -1,0 +1,11 @@
+{
+  "action_restakeYourTokens": "トークンを再度ステーキングする",
+  "action_stakeYourTokens": "トークンをステーキングする",
+  "action_unstakeYourTokens": "トークンのステーキングを解除する",
+  "action_withdrawYourTokens": "トークンを出金する",
+  "title_noTokensInCooldown": "クールダウン中のトークンはありません",
+  "title_stakedOrbsInSmartContract": "スマートコントラクトに保管されているステーキングされているORBS",
+  "title_tokensInCooldown": "クールダウン中のトークン",
+  "title_tokensReadyForWithdrawal": "出金可能なトークン",
+  "title_unstakedOrbsInYourWallet": "ウォレット内のステーキングされていないORBS"
+}

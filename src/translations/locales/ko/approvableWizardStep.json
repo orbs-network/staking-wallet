@@ -1,0 +1,10 @@
+{
+  "action_proceed": "진행",
+  "congratulations": "축하드립니다",
+  "gotXConfirmationsOutOfRecommendedY": "{{count}}번 컨펌되었습니다. ({{recommended}} 컨펌 권장)",
+  "thisMightTakeAFewMoments": "몇 분 정도 소요됩니다...",
+  "txConfirmed": "컨펌이 완료되었습니다",
+  "txPending": "트랜잭션 처리중",
+  "weRecommendWaitingToReceiveEnoughConfirmations": "네트워크에서 충분히 컨펌될 때까지 기다려주세요.",
+  "youHaveDoneActionSuccessfully": "{{finishedActionName}} 동작이 성공적으로 완료되었습니다"
+}
