@@ -16,6 +16,8 @@ import 'moment/locale/ja';
 import 'moment/locale/ko';
 import moment from 'moment';
 import { IS_DEV } from './config';
+import i18n from 'i18next';
+import { I18nextProvider } from 'react-i18next';
 moment.locale('ja');
 moment.locale('ko');
 moment.locale('en');
@@ -38,16 +40,18 @@ const themeAndStyle = {
 
 export const AppWrapper: React.FunctionComponent = () => (
   <LangRouter preLangBasename={IS_DEV ? '' : '/staking'}>
-    <Provider {...services} {...stores}>
-      <StylesProvider injectFirst>
-        <ThemeProvider theme={baseTheme}>
-          <SCThemeProvider theme={themeAndStyle}>
-            {/*<GlobalStyleComponent />*/}
-            <CssBaseline />
-            <App />
-          </SCThemeProvider>
-        </ThemeProvider>
-      </StylesProvider>
-    </Provider>
+    <I18nextProvider i18n={i18n}>
+      <Provider {...services} {...stores}>
+        <StylesProvider injectFirst>
+          <ThemeProvider theme={baseTheme}>
+            <SCThemeProvider theme={themeAndStyle}>
+              {/*<GlobalStyleComponent />*/}
+              <CssBaseline />
+              <App />
+            </SCThemeProvider>
+          </ThemeProvider>
+        </StylesProvider>
+      </Provider>
+    </I18nextProvider>
   </LangRouter>
 );

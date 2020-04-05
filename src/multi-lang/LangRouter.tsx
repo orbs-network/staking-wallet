@@ -7,17 +7,11 @@
  */
 
 import React from 'react';
-import { I18nextProvider } from 'react-i18next';
 import { BrowserRouter as Router } from 'react-router-dom';
-import i18n, { Resource } from 'i18next';
+import i18n from 'i18next';
 import { PreLangBasenameProvider } from './PreLangBasenameContext';
 import { initReactI18next } from 'react-i18next';
 import { resources } from '../translations/translations';
-
-function getForcedLanguage() {
-  const langMatch = window.location.pathname.match(/\/(en|ko|jp)\//);
-  return langMatch ? langMatch[1] : '';
-}
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -36,27 +30,9 @@ interface IProps {
 }
 
 export const LangRouter: React.FC<IProps> = ({ children, preLangBasename = '' }) => {
-  const forcedLang = getForcedLanguage();
-  let langBaseName = '';
-  if (forcedLang) {
-    langBaseName = `/${forcedLang}/`;
-    if (i18n.language !== forcedLang) {
-      i18n.changeLanguage(forcedLang);
-    }
-  } else {
-    const navigatorLang = navigator.language.split('-')[0];
-    if (i18n.languages.indexOf(navigatorLang) > -1) {
-      if (i18n.language !== navigatorLang) {
-        i18n.changeLanguage(navigatorLang);
-      }
-    }
-  }
-
   return (
-    <I18nextProvider i18n={i18n}>
-      <PreLangBasenameProvider value={preLangBasename}>
-        <Router basename={`${preLangBasename}${langBaseName}`}>{children}</Router>
-      </PreLangBasenameProvider>
-    </I18nextProvider>
+    <PreLangBasenameProvider value={preLangBasename}>
+      <Router basename={`${preLangBasename}`}>{children}</Router>
+    </PreLangBasenameProvider>
   );
 };
