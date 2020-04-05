@@ -112,11 +112,26 @@ export class OrbsAccountStore {
 
   private async readDataForAccount(accountAddress: string) {
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
-    await this.readAndSetLiquidOrbs(accountAddress);
-    await this.readAndSetStakedOrbs(accountAddress);
-    await this.readAndSetSelectedGuardianAddress(accountAddress);
-    await this.readAndSetStakingContractAllowance(accountAddress);
-    await this.readAndSetCooldownStatus(accountAddress);
+    await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
+      console.error(`Error in reading liquid orbs : ${e}`);
+      throw e;
+    });
+    await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
+      console.error(`Error in reading staked orbs : ${e}`);
+      throw e;
+    });
+    await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
+      console.error(`Error in reading selected guardian : ${e}`);
+      throw e;
+    });
+    await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
+      console.error(`Error in reading contract allowance: ${e}`);
+      throw e;
+    });
+    await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
+      console.error(`Error in reading cooldown status : ${e}`);
+      throw e;
+    });
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {

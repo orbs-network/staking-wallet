@@ -12,6 +12,8 @@ type TSupportedNets = 'local' | 'ropsten' | 'mainnet';
 // @ts-ignore
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
+const IS_DEV = process.env.NODE_ENV !== 'production';
+
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
   contractsAddressesOverride: Partial<IOrbsPosContractsAddresses & { stakingContract: string }>;
@@ -19,13 +21,13 @@ interface IConfig {
   earliestBlockForDelegationOverride: number;
 }
 const config: IConfig = {
-  contractsAddressesOverride: {},
+  contractsAddressesOverride: IS_DEV ? {} : null,
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,
 };
 
 // Webpack will remove this section on production build //
-if (process.env.NODE_ENV !== 'production') {
+if (IS_DEV) {
   if (ethereumNetwork === 'local') {
     const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
     const OrbsTokenContractJSON = require('../ganache-env/build/contracts/OrbsToken.json');

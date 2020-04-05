@@ -14,8 +14,8 @@ export interface IGuardiansStoreState {
 export type TGuardiansStore = IGuardiansStoreState;
 
 export class GuardiansStore implements TGuardiansStore {
-  @observable public doneLoading: boolean = false;
-  @observable public errorLoading: boolean = false;
+  @observable public doneLoading = false;
+  @observable public errorLoading = false;
   @observable public guardiansList: TGuardianInfoExtended[];
   @observable public totalParticipatingTokens: bigint;
 
@@ -31,7 +31,7 @@ export class GuardiansStore implements TGuardiansStore {
 
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
-      async address => {
+      async (address) => {
         try {
           await this.reactToConnectedAddressChanged(address);
         } catch (e) {
@@ -51,7 +51,7 @@ export class GuardiansStore implements TGuardiansStore {
       this.setTotalParticipatingTokens(totalParticipatingTokens);
 
       const guardiansAddresses = await this.guardiansService.readGuardiansList(0, 100);
-      const promises = guardiansAddresses.map(guardianAddress =>
+      const promises = guardiansAddresses.map((guardianAddress) =>
         this.guardiansService.readGuardianInfo(guardianAddress),
       );
       const guardiansInfo = await Promise.all(promises);
