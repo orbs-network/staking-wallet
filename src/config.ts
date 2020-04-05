@@ -16,11 +16,13 @@ export const IS_DEV = process.env.NODE_ENV !== 'production';
 
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
+  urlBase: string;
   contractsAddressesOverride: Partial<IOrbsPosContractsAddresses & { stakingContract: string }>;
   ETHEREUM_PROVIDER_WS: string;
   earliestBlockForDelegationOverride: number;
 }
 const config: IConfig = {
+  urlBase: IS_DEV ? '' : '/staking',
   contractsAddressesOverride: IS_DEV ? {} : null,
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,

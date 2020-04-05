@@ -6,6 +6,7 @@ import cssnano from 'cssnano';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 import { createEnvObjectForWebpack, getEnvFilePath, overrideEnvFileValuesWithRuntimeEnv } from './webpackUtils';
 
 const envFilePath = getEnvFilePath(process.env);
@@ -21,6 +22,11 @@ const plugins = [
     title: 'ORBS Staking Wallet',
     template: 'index.html',
   }),
+  new CopyWebpackPlugin([
+    {
+      from: './404.html',
+    },
+  ]),
   // Adds the favicons to the dist
   new FaviconsWebpackPlugin('./assets/favicons/tetra_favicon.svg'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.

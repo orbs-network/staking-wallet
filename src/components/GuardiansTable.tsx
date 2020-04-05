@@ -319,9 +319,10 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       field: 'name',
       render: (extendedGuardianInfo) => (
         <NameBox data-testid={`guardian-${extendedGuardianInfo.address}`}>
-          <Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />
+          {/* TODO : FUTURE : O.L : add support for the jazzicon */}
+          {/*<Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />*/}
           <NameContainer>
-            <Typography>{extendedGuardianInfo.name}</Typography>
+            <Typography >{extendedGuardianInfo.name}</Typography>
           </NameContainer>
         </NameBox>
       ),

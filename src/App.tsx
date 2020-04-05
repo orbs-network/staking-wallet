@@ -8,7 +8,7 @@ import i18n from 'i18next';
 import moment from 'moment';
 
 function getForcedLanguage(pathname: string) {
-  const langMatch = pathname.match(/\/(en|ko|jp)\//);
+  const langMatch = pathname.match(/\/(en|ko|jp)\/?/);
 
   return langMatch ? langMatch[1] : '';
 }

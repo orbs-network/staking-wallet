@@ -16,7 +16,7 @@
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
-    "deploy": "npm run build && ./scripts/deploy.sh"
+    "deploy": "rm -rf ./dist && npm run build && ./scripts/deploy.sh"
   },
   "keywords": [
     "typescript",
@@ -34,6 +34,7 @@
     "@material-ui/icons": "^4.9.1",
     "color": "^3.1.2",
     "copy-to-clipboard": "^3.3.1",
+    "copy-webpack-plugin": "^5.1.1",
     "i18next": "^19.3.4",
     "lodash": "^4.17.15",
     "material-table": "^1.57.2",
