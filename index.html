@@ -42,6 +42,17 @@
 	  </script>
 	  <!-- End Single Page Apps for GitHub Pages -->
 
+	  <script type="text/javascript">
+		  try {
+			  if (!BigInt) {
+				  BigInt = () => 'unsupported';
+			  }
+		  } catch (e) {
+		  	var BigInt = () => 'unsupported';
+		  }
+
+	  </script>
+
 	  <style>
 		  .loader {
 			  border: 16px solid #7B7B7B; /* Light grey - circle */
