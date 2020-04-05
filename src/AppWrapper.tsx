@@ -15,6 +15,7 @@ import { LangRouter } from './multi-lang/LangRouter';
 import 'moment/locale/ja';
 import 'moment/locale/ko';
 import moment from 'moment';
+import { IS_DEV } from './config';
 moment.locale('ja');
 moment.locale('ko');
 moment.locale('en');
@@ -36,7 +37,7 @@ const themeAndStyle = {
 };
 
 export const AppWrapper: React.FunctionComponent = () => (
-  <LangRouter>
+  <LangRouter preLangBasename={IS_DEV ? '' : '/staking'}>
     <Provider {...services} {...stores}>
       <StylesProvider injectFirst>
         <ThemeProvider theme={baseTheme}>

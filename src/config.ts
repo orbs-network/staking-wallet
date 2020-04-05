@@ -12,7 +12,7 @@ type TSupportedNets = 'local' | 'ropsten' | 'mainnet';
 // @ts-ignore
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
-const IS_DEV = process.env.NODE_ENV !== 'production';
+export const IS_DEV = process.env.NODE_ENV !== 'production';
 
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
