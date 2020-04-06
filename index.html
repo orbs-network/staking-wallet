@@ -10,6 +10,7 @@
 	  <meta name="theme-color" content="#0D0D0D">
 	  <meta name="apple-mobile-web-app-status-bar-style" content="#0D0D0D">
 
+	  <% if (process.env.NODE_ENV === 'production') { %>
 	  <!-- Start Single Page Apps for GitHub Pages -->
 	  <script type="text/javascript">
 		  // Single Page Apps for GitHub Pages
@@ -20,7 +21,7 @@
 		  // and converts it back into the correct url and adds it to the
 		  // browser's history using window.history.replaceState(...),
 		  // which won't cause the browser to attempt to load the new url.
-		  // When the single page app is loaded further down in this file,
+		  // When the single page app is loaded further down in this filed token '<'e,
 		  // the correct url will be waiting in the browser's history for
 		  // the single page app to route accordingly.
 		  (function (l) {
@@ -43,6 +44,7 @@
 	  <!-- End Single Page Apps for GitHub Pages -->
 
 	  <script type="text/javascript">
+		  // DEV_NOTE : This is a temporary solution to detect and support unsupported browsers
 		  try {
 			  if (!BigInt) {
 				  BigInt = () => 'unsupported';
@@ -52,7 +54,7 @@
 		  }
 
 	  </script>
-
+	  <% } %>
 	  <style>
 		  .loader {
 			  border: 16px solid #7B7B7B; /* Light grey - circle */
@@ -85,8 +87,10 @@
 		<div id="centerDiv"><div class="loader"></div></div>
 	</div>
 	<% if (process.env.NODE_ENV === 'production') { %>
-		<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<!--		<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>-->
+		<script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+<!--		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>-->
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 <% } else { %>
 		<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
 		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
