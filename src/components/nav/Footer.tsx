@@ -11,7 +11,7 @@ import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tet
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
   paddingBottom: '1em',
-  borderBottom: '2px solid #363636',
+  borderTop: '2px solid #363636',
   bottom: 0,
   top: 'auto',
 });
