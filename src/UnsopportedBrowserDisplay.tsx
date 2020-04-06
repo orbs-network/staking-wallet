@@ -12,6 +12,7 @@ const CenteredDiv = styled('div')({
   textAlign: 'center',
   // backgroundColor: 'rgba(47, 47, 47, 0.6)',
   padding: '2em',
+  marginTop: '2em',
   // border: '1px solid #03FCF5',
   boxShadow: `0px 0px 8px 4px #03FCF5`,
 });
