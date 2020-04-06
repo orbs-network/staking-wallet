@@ -13,7 +13,7 @@ export const MainAppPage = observer(() => {
     cryptoWalletConnectionStore.isMetamaskInstalled && cryptoWalletConnectionStore.isConnectedToWallet;
 
   return (
-    <Grid container direction={'column'}>
+    <Grid container direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
       {canAndShouldDisplayGuardians && <GuardiansSection />}
     </Grid>

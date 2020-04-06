@@ -4,11 +4,7 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
 import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
-import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
-import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
-import { CommonDivider } from '../components/base/CommonDivider';
-import Youtube from 'react-youtube';
 import { CommonActionButton } from '../components/base/CommonActionButton';
 import { useConnectWalletSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
 import { ReactComponent as TetraIconSvg } from '../../assets/logos/tetra_icon.svg';
@@ -23,11 +19,14 @@ const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: T
   boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.dark}`,
 
   // Dimensions
-  width: 'fit-content',
+  minWidth: 'fit-content',
+  width: '40em',
   padding: '3em',
 
   [theme.breakpoints.down('sm')]: {
     padding: '1.5em',
+    width: '80%',
+    maxWidth: '80%',
   },
   [theme.breakpoints.up('sm')]: {
     paddingLeft: '9em',
@@ -59,13 +58,13 @@ export const ConnectWalletSection = observer(() => {
   const installOrConnectMetamaskButton = useMemo(() => {
     if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
-        <CommonActionButton fullWidth data-testid='button-connect-metamask' onClick={handleConnectClicked}>
+        <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked}>
           {connectWalletSectionTranslations('connectYourAccount')}
         </CommonActionButton>
       );
     } else {
       return (
-        <CommonActionButton fullWidth data-testid='button-install-metamask' onClick={handleInstallClicked}>
+        <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
           {connectWalletSectionTranslations('installMetaMask')}
         </CommonActionButton>
       );
@@ -102,26 +101,22 @@ export const ConnectWalletSection = observer(() => {
   ]);
 
   return (
-    <Section data-testid='connect-to-wallet-section' alignItems={'center'} style={{ paddingTop: '5em' }}>
-      {/* Balance */}
-      {/*<SectionHeader title={sectionTitlesTranslations('connectWallet')} icon={walletIcon} />*/}
-
-      {/*<CommonDivider />*/}
-      <WalletConnectionInnerGrid container spacing={6} direction={'column'} alignItems={'center'}>
+    <Section data-testid='connect-to-wallet-section' alignItems={'center'} style={{ marginTop: '5em' }} id='connectWalletSection' >
+      <WalletConnectionInnerGrid container item spacing={6} direction={'column'} alignItems={'center'} id={'walletConnectionInnerGrid'}>
         {/* Brand logos */}
         <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
-          <Grid item>
+          <Grid item style={{ maxWidth: '90%' }}>
             <TetraIconSvg style={{ height: '5em', marginRight: 'auto', marginLeft: 'auto' }} />
           </Grid>
-          <Grid item>
+          <Grid item style={{ maxWidth: '90%' }}>
             <TetraLogoSvg style={{ height: '2em' }} />
           </Grid>
         </Grid>
 
         {/* Texts */}
         <Grid item container direction={'column'} spacing={5} style={{ textAlign: 'center' }}>
-          <Typography variant={'h6'}>{sectionTitlesTranslations('connectWallet').toLocaleUpperCase()}</Typography>
-          <Typography variant={'body2'}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
+          <Typography variant={'h6'} style={{ overflowWrap: 'break-word' }}>{sectionTitlesTranslations('connectWallet').toLocaleUpperCase()}</Typography>
+          <Typography variant={'body2'} style={{ overflowWrap: 'break-word' }}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
         </Grid>
 
         {/* Action button */}
@@ -133,7 +128,8 @@ export const ConnectWalletSection = observer(() => {
           spacing={2}
           style={{ paddingRight: 0, paddingLeft: 0 }}
         >
-          <Grid item style={{ paddingRight: 0, paddingLeft: 0, width: '100%' }}>
+          {/*<Grid item style={{ paddingRight: 0, paddingLeft: 0, width: '100%' }}>*/}
+          <Grid item style={{ paddingRight: 0, paddingLeft: 0 }}>
             {installOrConnectMetamaskButton}
           </Grid>
           {messageComponent !== null && (

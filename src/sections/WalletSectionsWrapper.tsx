@@ -11,11 +11,11 @@ export const WalletSectionsWrapper = observer(() => {
 
   if (cryptoWalletIntegrationStore.isConnectedToWallet) {
     return (
-      <span data-testid='wallet-information-sections'>
+      <div data-testid='wallet-information-sections'>
         <WalletInfoSection />
         <BalancesSection />
         <RewardsSection />
-      </span>
+      </div>
     );
   } else {
     return <ConnectWalletSection />;

@@ -45,7 +45,7 @@ export const App = observer(() => {
   return (
     <main>
       <Header />
-      <ContentContainer>
+      <ContentContainer id={'appContainer'}>
         <Switch>
           <Route exact path='/en' component={MainAppPage} />
           <Route exact path='/jp' component={MainAppPage} />
