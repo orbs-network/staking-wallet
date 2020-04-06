@@ -29,7 +29,7 @@ const config: IConfig = {
 };
 
 // Webpack will remove this section on production build //
-if (IS_DEV) {
+if (process.env.NODE_ENV !== 'production') {
   if (ethereumNetwork === 'local') {
     const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
     const OrbsTokenContractJSON = require('../ganache-env/build/contracts/OrbsToken.json');
