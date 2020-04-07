@@ -21,7 +21,7 @@ export const RewardsSection = observer(() => {
   const theme = useTheme();
 
   // TODO : Find a better way to combine the translations with changing order links
-  const innetHtml = rewardsSectionTranslations('text__forDetailedRewardsPleaseVisitThe', {
+  const innerHtml = rewardsSectionTranslations('text__forDetailedRewardsPleaseVisitThe', {
     rewardsPageTextLink: renderToString(
       <a
         style={{ color: theme.palette.secondary.main }}
@@ -38,7 +38,7 @@ export const RewardsSection = observer(() => {
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
       <Grid item>
-        <Typography dangerouslySetInnerHTML={{ __html: innetHtml }}></Typography>
+        <Typography dangerouslySetInnerHTML={{ __html: innerHtml }}></Typography>
       </Grid>
     </Section>
   );
