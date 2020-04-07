@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
 import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
+import { useCommonsTranslations } from '../../translations/translationsHooks';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -31,6 +32,8 @@ const HideOnScroll = React.memo((props) => {
 });
 
 export const Footer = () => {
+  const commonsTranslations = useCommonsTranslations();
+
   return (
     <>
       {/* DEV_NOTE : Second 'Toolbar' is a trick offered by MUI to keep the content properly below the fixed AppBar */}
@@ -48,7 +51,7 @@ export const Footer = () => {
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
-                    <Typography variant={'subtitle2'}>Privacy Policy</Typography>
+                    <Typography variant={'subtitle2'}>{commonsTranslations('privacyPolicy')}</Typography>
                   </a>
                 </Grid>
                 <Grid item>
@@ -58,7 +61,7 @@ export const Footer = () => {
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
-                    <Typography variant={'subtitle2'}>Terms of use</Typography>
+                    <Typography variant={'subtitle2'}>{commonsTranslations('termsOfUse')}</Typography>
                   </a>
                 </Grid>
               </Grid>

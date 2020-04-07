@@ -22,6 +22,9 @@ export interface ICommonsTranslations {
   loadingFailed: string;
   // As in "5 Days -left- for something"
   timeLeft: string;
+
+  termsOfUse: string;
+  privacyPolicy: string;
 }
 
 export interface ISectionTitlesTranslations {

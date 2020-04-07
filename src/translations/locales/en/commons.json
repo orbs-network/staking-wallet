@@ -1,5 +1,7 @@
 {
   "loading": "Loading...",
   "loadingFailed": "Loading failed",
-  "timeLeft": "{{timePhrase}} left"
+  "timeLeft": "{{timePhrase}} left",
+  "termsOfUse": "Terms of use",
+  "privacyPolicy": "Privacy policy"
 }
