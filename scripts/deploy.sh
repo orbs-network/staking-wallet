@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git clone git@github.com:orbs-network/$DEPLOY_REPO.git
+git clone git@github.com:$DEPLOY_USER/$DEPLOY_REPO.git
 cd $DEPLOY_REPO/
 git rm -rf *
 cp -R ../dist/* ./
