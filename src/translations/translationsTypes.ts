@@ -48,6 +48,7 @@ export interface IConnectWalletSectionTranslations {
   pleaseApproveAccountConnection: string;
   refreshPageAfterInstallingMetaMask: string;
   initialGreeting: string;
+  agreeToTheToUAndPrivacyPolicy: string;
 }
 
 export interface IWizardsCommonsTranslations {

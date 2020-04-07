@@ -8,6 +8,7 @@ import { ContentContainer } from '../structure/ContentContainer';
 import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
 import { useCommonsTranslations } from '../../translations/translationsHooks';
+import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '../../constants';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -46,7 +47,7 @@ export const Footer = () => {
               <Grid container direction={'row'} alignItems={'flex-start'} spacing={1}>
                 <Grid item>
                   <a
-                    href='https://orbs.com/tetra-privacy-policy'
+                    href={PRIVACY_POLICY_URL}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
@@ -56,7 +57,7 @@ export const Footer = () => {
                 </Grid>
                 <Grid item>
                   <a
-                    href='https://orbs.com/tetra-terms-of-use'
+                    href={TERMS_OF_SERVICE_URL}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}

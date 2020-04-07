@@ -3,5 +3,6 @@
   "initialGreeting": "開始するには、まずウォレットを接続する必要があります",
   "installMetaMask": "まずはメタマスクをインストール",
   "pleaseApproveAccountConnection": "アカウントの接続を許可してください",
-  "refreshPageAfterInstallingMetaMask": "メタマスクをインストールした後、このページを更新してください"
+  "refreshPageAfterInstallingMetaMask": "メタマスクをインストールした後、このページを更新してください",
+  "agreeToTheToUAndPrivacyPolicy": "I agree to the {{termsOfUseText}} and {{privacyPolicyText}}"
 }

@@ -3,5 +3,6 @@
   "initialGreeting": "시작하려면, 먼저 지갑을 연결해야합니다",
   "installMetaMask": "메타마스트(MetaMask)를 먼저 설치하세요",
   "pleaseApproveAccountConnection": "계정 연결을 허용해주세요",
-  "refreshPageAfterInstallingMetaMask": "메타마스크 확장앱을 설치 후 이 화면을 새로고침 해주세요"
+  "refreshPageAfterInstallingMetaMask": "메타마스크 확장앱을 설치 후 이 화면을 새로고침 해주세요",
+  "agreeToTheToUAndPrivacyPolicy": "I agree to the {{termsOfUseText}} and {{privacyPolicyText}}"
 }
