@@ -1,13 +1,6 @@
 # Orbs Staking Wallet (Tetra)
 Web client that enables users to take part in the ORBS pos staking process.
-
-## Build
-
-* Run in terminal in root project directory:
-
-  ```
-  npm run build
-  ```
+All contract interactions are done with the [orbs-pos-data](https://github.com/orbs-network/orbs-ethereum-contracts-v1) library.
 
 ## Test
 
@@ -15,7 +8,7 @@ Web client that enables users to take part in the ORBS pos staking process.
 
   ```
   npm run test
-  ```
+  ``` 
 
 ## Running - Local ethereum network
 
@@ -24,19 +17,26 @@ Web client that enables users to take part in the ORBS pos staking process.
     cd ./ganach-env
     npm run start-ganache
    ```
+  This will start a [Ganache](https://www.trufflesuite.com/ganache) local network that will keep running until stopped (You might want to use a separate terminal for this).
    
 * Compile and deploy the contracts to your local Ganache
+    ```
+    cd ./ganach-env
+    npm run compile-and-deploy
+   ```
+    Wait for the contracts to be deployed and proceed to the next step.
 
-* Start local dev server
+* Start local dev server (from the root folder of the project)
 
   ```
-  cd ./ganace-dev
-  npm run compile-and-deploy
+  npm run dev
   ```    
 
 * Open the localhost address in your browser (localhost:8080)
 
 * In your browser, set MetaMask network to 'localhost 8545' 
+
+* Start using Tetra :)
 
 ## Deploy 
 * Run in terminal in root project directory:
