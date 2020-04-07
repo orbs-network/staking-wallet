@@ -50,7 +50,7 @@ const config: Configuration = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `[name]-[hash:8]-bundle.js`,
-    publicPath: IS_DEV ? '/' : '/staking/',
+    publicPath: process.env.PUBLIC_BASE_PATH,
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
