@@ -1,11 +1,6 @@
 # Orbs Staking Wallet (Tetra)
 Web client that enables users to take part in the ORBS pos staking process.
 
-## Install dev environment
-* Make sure [Node.js](https://nodejs.org/) is installed (min 12.13.0).
-
-  * Install with `brew install node`, check version with `node -v`.
-
 ## Build
 
 * Run in terminal in root project directory:
