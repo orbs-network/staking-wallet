@@ -1,4 +1,5 @@
 export interface ICryptoWalletConnectionService {
+  readonly hasEthereumProvider: boolean;
   readonly isMetamaskInstalled: boolean;
 
   // Getters

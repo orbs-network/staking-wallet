@@ -133,7 +133,7 @@ export const ConnectWalletSection = observer(() => {
             {installOrConnectMetamaskButton}
           </Grid>
           {messageComponent !== null && (
-            <Grid item>
+            <Grid item style={{ textAlign: 'center' }}>
               <Typography>{messageComponent}</Typography>
             </Grid>
           )}

@@ -13,6 +13,7 @@ type TSupportedNets = 'local' | 'ropsten' | 'mainnet';
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
 export const IS_DEV = process.env.NODE_ENV !== 'production';
+const SHOULD_OVERRIDE_ADDRESS = IS_DEV || ethereumNetwork === 'ropsten';
 
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
@@ -23,7 +24,7 @@ interface IConfig {
 }
 const config: IConfig = {
   urlBase: process.env.PUBLIC_BASE_PATH,
-  contractsAddressesOverride: IS_DEV ? {} : null,
+  contractsAddressesOverride: SHOULD_OVERRIDE_ADDRESS ? {} : null,
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,
 };
