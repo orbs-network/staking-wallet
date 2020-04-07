@@ -44,3 +44,26 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   ```
   npm run deploy
   ``` 
+  
+## Deploy your own version to github pages
+You can deploy your own version of Tetra to github pages very easily.
+
+1. Open a new repo on github.
+2. Change the value of the env variable 'DEPLOY_REPO' in the 'deploy' command on 'package.json' to match the name of your new repo.
+3. Change the values on ".env"
+    - ETHEREUM_NETWORK - ropsten/mainnet
+    - PUBLIC_BASE_PATH - '/' + the name of your repo
+    - PUBLIC_BASE_PATH_SECTIONS - 1 (for github pages)
+4. Change 'segmentCount' on '404.html' to 1 (for github pages). 
+5. Run in terminal 
+    ```
+    npm run deploy
+    ```  
+
+Your own tetra version will now be deployed on the URL <your-github-user>.github.io/<your-repo-name>
+
+Note : After your first deploy you will need to set your repo to be used as a project site on GitHub pages
+1. Open your repo page on GitHub.
+2. Go to 'Settings' -> options
+3. Go to the 'GitHub Pages' section.
+4. Activate GitHub pages and select you master branch as its source for deployment.
