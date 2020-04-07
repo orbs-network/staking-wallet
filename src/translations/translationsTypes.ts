@@ -22,6 +22,9 @@ export interface ICommonsTranslations {
   loadingFailed: string;
   // As in "5 Days -left- for something"
   timeLeft: string;
+
+  termsOfUse: string;
+  privacyPolicy: string;
 }
 
 export interface ISectionTitlesTranslations {
@@ -45,6 +48,7 @@ export interface IConnectWalletSectionTranslations {
   pleaseApproveAccountConnection: string;
   refreshPageAfterInstallingMetaMask: string;
   initialGreeting: string;
+  agreeToTheToUAndPrivacyPolicy: string;
 }
 
 export interface IWizardsCommonsTranslations {

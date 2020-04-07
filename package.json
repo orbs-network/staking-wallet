@@ -15,6 +15,7 @@
     "type-check": "tsc -p ./src/tsconfig.json",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
+    "dev-prod": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
     "deploy": "rm -rf ./dist && npm run build && ./scripts/deploy.sh"
   },

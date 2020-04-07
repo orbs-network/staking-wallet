@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
 import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
+import { useCommonsTranslations } from '../../translations/translationsHooks';
+import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '../../constants';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -31,6 +33,8 @@ const HideOnScroll = React.memo((props) => {
 });
 
 export const Footer = () => {
+  const commonsTranslations = useCommonsTranslations();
+
   return (
     <>
       {/* DEV_NOTE : Second 'Toolbar' is a trick offered by MUI to keep the content properly below the fixed AppBar */}
@@ -43,22 +47,22 @@ export const Footer = () => {
               <Grid container direction={'row'} alignItems={'flex-start'} spacing={1}>
                 <Grid item>
                   <a
-                    href='https://orbs.com/tetra-privacy-policy'
+                    href={PRIVACY_POLICY_URL}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
-                    <Typography variant={'subtitle2'}>Privacy Policy</Typography>
+                    <Typography variant={'subtitle2'}>{commonsTranslations('privacyPolicy')}</Typography>
                   </a>
                 </Grid>
                 <Grid item>
                   <a
-                    href='https://orbs.com/tetra-terms-of-use'
+                    href={TERMS_OF_SERVICE_URL}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
-                    <Typography variant={'subtitle2'}>Terms of use</Typography>
+                    <Typography variant={'subtitle2'}>{commonsTranslations('termsOfUse')}</Typography>
                   </a>
                 </Grid>
               </Grid>

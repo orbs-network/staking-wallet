@@ -9,6 +9,11 @@ export type TNetworkVersion = '1' | '2' | '3' | '4' | '5' | '42';
 const ACCOUNTS_CHANGED = 'accountsChanged';
 
 export interface IEthereumProvider {
+  /**
+   * DEV_NOTE : Only exists in metamask provider
+   */
+  isMetaMask?: boolean;
+
   // Deprecatable members
   /**
    * @deprecated

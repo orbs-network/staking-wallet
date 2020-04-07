@@ -6,10 +6,12 @@ import { IEthereumProvider } from './IEthereumProvider';
 
 export class CryptoWalletConnectionService implements ICryptoWalletConnectionService {
   private web3: Web3;
+  public readonly hasEthereumProvider: boolean;
   public readonly isMetamaskInstalled: boolean;
 
   constructor(private ethereum: IEthereumProvider) {
-    this.isMetamaskInstalled = this.ethereum !== undefined;
+    this.hasEthereumProvider = this.ethereum !== undefined;
+    this.isMetamaskInstalled = this.hasEthereumProvider && this.ethereum.isMetaMask;
     if (this.isMetamaskInstalled) {
       this.web3 = new Web3(this.ethereum as any);
     }
@@ -43,7 +45,7 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
 
   // Event listeners
   onMainAddressChange(onChange: (mainAddress: string) => void): () => void {
-    const listener = accounts => onChange(accounts[0]);
+    const listener = (accounts) => onChange(accounts[0]);
 
     this.ethereum.on('accountsChanged', listener);
 

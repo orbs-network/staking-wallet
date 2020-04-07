@@ -6,11 +6,18 @@ import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
 import { Section } from '../components/structure/Section';
 import { CommonActionButton } from '../components/base/CommonActionButton';
-import { useConnectWalletSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import {
+  useCommonsTranslations,
+  useConnectWalletSectionTranslations,
+  useSectionsTitlesTranslations,
+} from '../translations/translationsHooks';
 import { ReactComponent as TetraIconSvg } from '../../assets/logos/tetra_icon.svg';
 import { ReactComponent as TetraLogoSvg } from '../../assets/logos/tetra_logo.svg';
-import { Theme } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Theme } from '@material-ui/core';
+import useTheme from '@material-ui/core/styles/useTheme';
 import styled from 'styled-components';
+import { renderToString } from 'react-dom/server';
+import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '../constants';
 
 const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: Theme }) => ({
   // Look& Feel
@@ -38,12 +45,24 @@ const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: T
   },
 }));
 
+type TWalletConnectionPhase = 'install' | 'connect';
+
 export const ConnectWalletSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
+  const cryptoWalletConnectionStore = useCommonsTranslations();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
+  const legalDocsAgreedTo = useBoolean(false);
+
+  const theme = useTheme();
+
+  const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.isMetamaskInstalled
+    ? 'connect'
+    : 'install';
+
+  const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
     const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
@@ -56,9 +75,13 @@ export const ConnectWalletSection = observer(() => {
   }, [pressedOnInstallMetamask]);
 
   const installOrConnectMetamaskButton = useMemo(() => {
-    if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
+    if (walletConnectionState === 'connect') {
       return (
-        <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked}>
+        <CommonActionButton
+          data-testid='button-connect-metamask'
+          onClick={handleConnectClicked}
+          disabled={!legalDocsAgreedTo.value}
+        >
           {connectWalletSectionTranslations('connectYourAccount')}
         </CommonActionButton>
       );
@@ -71,9 +94,10 @@ export const ConnectWalletSection = observer(() => {
     }
   }, [
     connectWalletSectionTranslations,
-    cryptoWalletIntegrationStore.isMetamaskInstalled,
     handleConnectClicked,
     handleInstallClicked,
+    walletConnectionState,
+    legalDocsAgreedTo.value,
   ]);
 
   const messageComponent = useMemo(() => {
@@ -100,9 +124,45 @@ export const ConnectWalletSection = observer(() => {
     rejectedConnection.value,
   ]);
 
+  // TODO : Find a better way to combine the translations with changing order links
+  const innerHtmlForLegalAgreement = connectWalletSectionTranslations('agreeToTheToUAndPrivacyPolicy', {
+    termsOfUseText: renderToString(
+      <a
+        style={{ color: theme.palette.secondary.main }}
+        target={'_blank'}
+        rel={'noopener noreferrer'}
+        href={TERMS_OF_SERVICE_URL}
+      >
+        {cryptoWalletConnectionStore('termsOfUse')}
+      </a>,
+    ),
+    privacyPolicyText: renderToString(
+      <a
+        style={{ color: theme.palette.secondary.main }}
+        target={'_blank'}
+        rel={'noopener noreferrer'}
+        href={PRIVACY_POLICY_URL}
+      >
+        {cryptoWalletConnectionStore('privacyPolicy')}
+      </a>,
+    ),
+  });
+
   return (
-    <Section data-testid='connect-to-wallet-section' alignItems={'center'} style={{ marginTop: '5em' }} id='connectWalletSection' >
-      <WalletConnectionInnerGrid container item spacing={6} direction={'column'} alignItems={'center'} id={'walletConnectionInnerGrid'}>
+    <Section
+      data-testid='connect-to-wallet-section'
+      alignItems={'center'}
+      style={{ marginTop: '5em' }}
+      id='connectWalletSection'
+    >
+      <WalletConnectionInnerGrid
+        container
+        item
+        spacing={6}
+        direction={'column'}
+        alignItems={'center'}
+        id={'walletConnectionInnerGrid'}
+      >
         {/* Brand logos */}
         <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
           <Grid item style={{ maxWidth: '90%' }}>
@@ -115,8 +175,12 @@ export const ConnectWalletSection = observer(() => {
 
         {/* Texts */}
         <Grid item container direction={'column'} spacing={5} style={{ textAlign: 'center' }}>
-          <Typography variant={'h6'} style={{ overflowWrap: 'break-word' }}>{sectionTitlesTranslations('connectWallet').toLocaleUpperCase()}</Typography>
-          <Typography variant={'body2'} style={{ overflowWrap: 'break-word' }}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
+          <Typography variant={'h6'} style={{ overflowWrap: 'break-word' }}>
+            {sectionTitlesTranslations('connectWallet').toLocaleUpperCase()}
+          </Typography>
+          <Typography variant={'body2'} style={{ overflowWrap: 'break-word' }}>
+            {connectWalletSectionTranslations('initialGreeting')}
+          </Typography>
         </Grid>
 
         {/* Action button */}
@@ -132,8 +196,30 @@ export const ConnectWalletSection = observer(() => {
           <Grid item style={{ paddingRight: 0, paddingLeft: 0 }}>
             {installOrConnectMetamaskButton}
           </Grid>
-          {messageComponent !== null && (
+
+          {/* TODO : FUTURE : Move the ticker to a stand alone component */}
+          {shouldDisplayLegalTicker && (
             <Grid item>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={legalDocsAgreedTo.value}
+                    onChange={(e) => legalDocsAgreedTo.setValue(e.target.checked)}
+                    name='legalTicker'
+                  />
+                }
+                label={
+                  <Typography
+                    onClick={(e) => e.preventDefault()}
+                    dangerouslySetInnerHTML={{ __html: innerHtmlForLegalAgreement }}
+                  />
+                }
+              />
+            </Grid>
+          )}
+
+          {messageComponent !== null && (
+            <Grid item style={{ textAlign: 'center' }}>
               <Typography>{messageComponent}</Typography>
             </Grid>
           )}
