@@ -1,0 +1,17 @@
+{
+  "action_close": "閉じる",
+  "action_finish": "完了",
+  "message_errorOccurred": "ステーキングの最中にエラーが発生しました",
+  "message_userCanceledTransactions": "トランザクションがキャンセルされました",
+  "moveToStep_finish": "完了",
+  "stepDoneExclamation": "素晴らしい！",
+  "stepLabel_finish": "完了",
+  "subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab": "トランザクションを送信中、タプを更新したり閉じたりしないでください",
+  "subMessage_pleaseApproveTransactionWithExplanation": "トランザクションを承認してください。承認後、すぐに次のステップに進みます",
+  "subMessage_pleaseTryAgain": "再試行してください",
+  "subMessage_tryAgainAndApprove": "継続するには、再試行の後、トランザクションを認証してください",
+  "txCreationError_generalError_message": "ステーキングの最中にエラーが発生しました",
+  "txCreationError_generalError_subMessage": "再試行してください",
+  "txCreationError_userCanceled_message": "トランザクションがキャンセルされました",
+  "txCreationError_userCanceled_subMessage": "続行するには再試行の後、トランザクションを認証してください"
+}

@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Step, StepLabel, Typography } from '@material-ui/core';
+import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
@@ -10,6 +9,8 @@ import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
 import { GuardianSelectionStepContent, IGuardianSelectionStepContentProps } from './GuardianSelectionStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -28,6 +29,8 @@ export const StakingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
     const activeStep = useNumber(0);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
@@ -47,9 +50,11 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsAllowanceStepContent}
-              finishedActionName={'allowed the staking contract to use your tokens'}
+              displayCongratulationsSubStep={false}
+              finishedActionName={stakingWizardTranslations('finishedAction_approved')}
               moveToNextStepAction={goToStakeOrbsStep}
-              moveToNextStepTitle={'Stake your ORBs'}
+              moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
+              closeWizard={closeWizard}
               key={'approvingStep'}
             />
           );
@@ -58,9 +63,11 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsStakingStepContent}
-              finishedActionName={'staked your tokens'}
+              displayCongratulationsSubStep={false}
+              finishedActionName={stakingWizardTranslations('finishedAction_staked')}
               moveToNextStepAction={goToSelectGuardianStep}
-              moveToNextStepTitle={'Select a Guardian'}
+              moveToNextStepTitle={stakingWizardTranslations('moveToStep_selectGuardian')}
+              closeWizard={closeWizard}
               key={'stakingStep'}
             />
           );
@@ -69,47 +76,59 @@ export const StakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianSelectionStepContent}
-              finishedActionName={'selected a guardian'}
+              displayCongratulationsSubStep={false}
+              finishedActionName={stakingWizardTranslations('stepLabel_selectGuardian')}
               moveToNextStepAction={goToFinishStep}
-              moveToNextStepTitle={'Finish'}
+              moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
+              closeWizard={closeWizard}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
             />
           );
         case STEPS_INDEXES.finish:
           return (
-            <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>Awesome !</Typography>
-              <Typography> Your Orbs are now staked and are assigned to a guardian </Typography>
-              <Button onClick={closeWizard}>Finish</Button>
-            </WizardContent>
+            <WizardFinishStep
+              finishedActionDescription={stakingWizardTranslations('afterSuccessStateExplanation')}
+              onFinishClicked={closeWizard}
+            />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep, goToSelectGuardianStep, goToStakeOrbsStep]);
+    }, [
+      activeStep.value,
+      closeWizard,
+      extraPropsForGuardianSelection,
+      goToFinishStep,
+      goToSelectGuardianStep,
+      goToStakeOrbsStep,
+      stakingWizardTranslations,
+      wizardsCommonTranslations,
+    ]);
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>
-        <WizardStepper activeStep={activeStep.value} alternativeLabel>
-          <Step>
-            <StepLabel>Approve usage of Orbs</StepLabel>
-          </Step>
+        <Grid item>
+          <WizardStepper activeStep={activeStep.value} alternativeLabel>
+            <Step>
+              <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>Stake your tokens</StepLabel>
-          </Step>
+            <Step>
+              <StepLabel>{stakingWizardTranslations('stepLabel_stake')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>Select a guardian</StepLabel>
-          </Step>
+            <Step>
+              <StepLabel>{stakingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>Finish</StepLabel>
-          </Step>
-        </WizardStepper>
+            <Step>
+              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
+            </Step>
+          </WizardStepper>
+        </Grid>
 
-        {stepContent}
+        <Grid item container> {stepContent} </Grid>
       </WizardContainer>
     );
   }),

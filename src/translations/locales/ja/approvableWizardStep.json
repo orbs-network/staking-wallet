@@ -1,0 +1,10 @@
+{
+  "action_proceed": "進む",
+  "congratulations": "おめでとうございます",
+  "gotXConfirmationsOutOfRecommendedY": "{{recommended}}のうち、{{count}}の承認が取れました ",
+  "thisMightTakeAFewMoments": "数分かかる場合があります",
+  "txConfirmed": "トランザクションが認証されました",
+  "txPending": "トランザクション処理中",
+  "weRecommendWaitingToReceiveEnoughConfirmations": "ネットワークの認証が十分されるまで少々お待ちください",
+  "youHaveDoneActionSuccessfully": "{{finishedActionName}}の処理が完了しました"
+}

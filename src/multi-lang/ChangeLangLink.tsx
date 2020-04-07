@@ -9,20 +9,34 @@
 import { useLocation } from 'react-router';
 import React, { useContext } from 'react';
 import { PreLangBasenameContext } from './PreLangBasenameContext';
+import { Link } from 'react-router-dom';
+import config from '../config';
 
 function addLangToCurrentLocation(location, preLangBasename: string, lang: string) {
   const langRegexp = /\/(en|ko|jp)\//;
-  return location.pathname.match(langRegexp)
+  const locationWithProperLang = location.pathname.match(langRegexp)
     ? location.pathname.replace(langRegexp, `/${lang}/`)
     : `${preLangBasename}/${lang}${location.pathname}`;
+
+  return locationWithProperLang;
+}
+
+function addLangToCurrentLocationBasic(lang: string, base = '') {
+  return `/${lang}`;
 }
 
 interface IProps {
   lang: string;
 }
 
-export const ChangeLangLink: React.FC<IProps> = ({ lang, children }) => {
-  const location = useLocation();
-  const preLangBasename = useContext(PreLangBasenameContext);
-  return <a href={addLangToCurrentLocation(location, preLangBasename, lang)}>{children}</a>;
+export const ChangeLangLink: React.FC<IProps> = ({ lang, children, ...others }) => {
+  // TODO : FUTURE : O.L : Change this 'a' to 'Link'
+  return (
+    // <a href={addLangToCurrentLocation(location, preLangBasename, lang)} {...others}>
+    //   {children}
+    // </a>
+    <Link to={addLangToCurrentLocationBasic(lang, config.urlBase)} {...others}>
+      {children}
+    </Link>
+  );
 };

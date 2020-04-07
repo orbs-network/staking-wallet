@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Step, StepLabel, Typography } from '@material-ui/core';
+import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { WizardContainer } from '../../components/wizards/WizardContainer';
 import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { OrbsUntakingStepContent } from './OrbsUnstakingStepContent';
+import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 
 const STEPS_INDEXES = {
   unstakeOrbs: 0,
@@ -23,6 +24,8 @@ export const UnstakingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const unstakingWizardTranslations = useUnstakingWizardTranslations();
     const activeStep = useNumber(0);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
@@ -33,38 +36,42 @@ export const UnstakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsUntakingStepContent}
-              finishedActionName={'selected a guardian'}
+              displayCongratulationsSubStep={false}
+              finishedActionName={unstakingWizardTranslations('finishedAction_unstaked')}
               moveToNextStepAction={goToFinishStep}
-              moveToNextStepTitle={'Finish'}
+              moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'guardianSelectionStep'}
+              closeWizard={closeWizard}
             />
           );
         case STEPS_INDEXES.finish:
           return (
-            <WizardContent data-testid={'wizard_sub_step_finish'}>
-              <Typography>Awesome !</Typography>
-              <Typography> Your unstaked Orbs will be available after the unfreezing period </Typography>
-              <Button onClick={closeWizard}>Finish</Button>
-            </WizardContent>
+            <WizardFinishStep
+              finishedActionDescription={unstakingWizardTranslations('afterSuccessStateExplanation')}
+              onFinishClicked={closeWizard}
+            />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep]);
+    }, [activeStep.value, closeWizard, goToFinishStep, unstakingWizardTranslations, wizardsCommonTranslations]);
 
     return (
       <WizardContainer data-testid={'wizard_unstaking'}>
-        <WizardStepper activeStep={activeStep.value} alternativeLabel>
-          <Step>
-            <StepLabel>Unstake Orbs</StepLabel>
-          </Step>
+        <Grid item>
+          <WizardStepper activeStep={activeStep.value} alternativeLabel>
+            <Step>
+              <StepLabel>{unstakingWizardTranslations('stepLabel_unstake')}</StepLabel>
+            </Step>
 
-          <Step>
-            <StepLabel>Finish</StepLabel>
-          </Step>
-        </WizardStepper>
-
-        {stepContent}
+            <Step>
+              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
+            </Step>
+          </WizardStepper>
+        </Grid>
+        <Grid item>
+          {stepContent}
+        </Grid>
       </WizardContainer>
     );
   }),

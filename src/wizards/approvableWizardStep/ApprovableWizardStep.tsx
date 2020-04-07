@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
@@ -6,12 +6,13 @@ import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStep
 
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
-const REQUIRED_CONFIRMATIONS = 6;
+const REQUIRED_CONFIRMATIONS = 7;
 
 export interface ITransactionCreationStepProps {
   onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>): void;
   skipToSuccess: () => void;
   disableInputs: boolean;
+  closeWizard?: () => void;
   txError?: Error;
 }
 
@@ -20,69 +21,101 @@ interface IProps<T = {}> {
   transactionCreationSubStepContent: React.FC<ITransactionCreationStepProps & T>;
 
   // Congratulations sub step
+  displayCongratulationsSubStep: boolean;
   finishedActionName: string;
   moveToNextStepAction: () => void;
   moveToNextStepTitle: string;
+
+  // Wizard interaction
+  closeWizard: () => void;
 
   // Extra props for the tx creation step
   propsForTransactionCreationSubStepContent?: object;
 }
 
-export const ApprovableWizardStep = React.memo<IProps>(props => {
+export const ApprovableWizardStep = React.memo<IProps>((props) => {
   const {
     transactionCreationSubStepContent: TransactionCreationSubStepContent,
+    displayCongratulationsSubStep,
     finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
     propsForTransactionCreationSubStepContent,
+    closeWizard,
   } = props;
 
   const stepState = useStateful<TStepState>('Action');
 
-  const unsubscribeFromAllPromiventListeners = useRef<() => void>(null);
+  const unsubscribeFromAllPromiventListenersRef = useRef<() => void>(null);
   const goToApprovalSubStep = useCallback(() => stepState.setValue('Confirmation'), [stepState]);
-  const goToCongratulationSubStep = useCallback(() => {
-    if (unsubscribeFromAllPromiventListeners.current) {
-      unsubscribeFromAllPromiventListeners.current();
+  const goToCongratulationSubStep = useCallback(() => stepState.setValue('Success'), [stepState]);
+
+  const unsubscribeFromAllPromiventListeners = useCallback(() => {
+    if (unsubscribeFromAllPromiventListenersRef.current) {
+      unsubscribeFromAllPromiventListenersRef.current();
     }
-    stepState.setValue('Success');
-  }, [stepState, unsubscribeFromAllPromiventListeners]);
+  }, [unsubscribeFromAllPromiventListenersRef]);
+
+  const onTransactionApprovingSubStepFinished = useCallback(() => {
+    // First, unsubscribe
+    unsubscribeFromAllPromiventListeners();
+
+    // Do we want to display the congratulations sub step ?
+    if (displayCongratulationsSubStep) {
+      goToCongratulationSubStep();
+    } else {
+      moveToNextStepAction();
+    }
+  }, [
+    unsubscribeFromAllPromiventListeners,
+    goToCongratulationSubStep,
+    moveToNextStepAction,
+    displayCongratulationsSubStep,
+  ]);
 
   const disableTxCreationInputs = useBoolean(false);
   const txHash = useStateful<string>('');
-  const txVerificationsCount = useNumber(-1);
+  const txConfirmationsCount = useNumber(-1);
   const txCreatingError = useStateful<Error>(null);
 
   const txCreationAction = useCallback<(promiEvent: PromiEvent<TransactionReceipt>) => void>(
-    promiEvent => {
+    (promiEvent) => {
       disableTxCreationInputs.setTrue();
 
-      unsubscribeFromAllPromiventListeners.current = () => {
+      unsubscribeFromAllPromiventListenersRef.current = () => {
         return (promiEvent as any).removeAllListeners();
       };
 
-      promiEvent.on('confirmation', confirmation => {
-        txVerificationsCount.setValue(confirmation);
+      promiEvent.on('confirmation', (confirmation) => {
+        txConfirmationsCount.setValue(confirmation);
 
         // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
         if (confirmation >= 10) {
           disableTxCreationInputs.setFalse();
         }
       });
-      promiEvent.once('receipt', receipt => {
+      promiEvent.once('receipt', (receipt) => {
         txHash.setValue(receipt.transactionHash);
         goToApprovalSubStep();
         disableTxCreationInputs.setFalse();
       });
-      promiEvent.on('error', error => {
+      promiEvent.on('error', (error) => {
         txCreatingError.setValue(error);
 
         (promiEvent as any).removeAllListeners();
         disableTxCreationInputs.setFalse();
       });
     },
-    [disableTxCreationInputs, txVerificationsCount, txHash, goToApprovalSubStep, txCreatingError],
+    [disableTxCreationInputs, txConfirmationsCount, txHash, goToApprovalSubStep, txCreatingError],
   );
+
+  useEffect(() => {
+    return () => {
+      if (unsubscribeFromAllPromiventListenersRef.current) {
+        unsubscribeFromAllPromiventListenersRef.current();
+      }
+    };
+  }, []);
 
   const currentSubStepContent = useMemo(() => {
     switch (stepState.value) {
@@ -93,6 +126,7 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
             txError={txCreatingError.value}
             onPromiEventAction={txCreationAction}
             skipToSuccess={goToCongratulationSubStep}
+            closeWizard={closeWizard}
             {...propsForTransactionCreationSubStepContent}
           />
         );
@@ -100,9 +134,9 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
         return (
           <TransactionApprovingSubStepContent
             requiredConfirmations={REQUIRED_CONFIRMATIONS}
-            verificationCount={txVerificationsCount.value}
+            confirmationsCount={txConfirmationsCount.value}
             txHash={txHash.value}
-            onStepFinished={goToCongratulationSubStep}
+            onStepFinished={onTransactionApprovingSubStepFinished}
           />
         );
       case 'Success':
@@ -122,12 +156,14 @@ export const ApprovableWizardStep = React.memo<IProps>(props => {
     txCreatingError.value,
     txCreationAction,
     propsForTransactionCreationSubStepContent,
-    txVerificationsCount.value,
+    txConfirmationsCount.value,
     txHash.value,
     goToCongratulationSubStep,
     finishedActionName,
     moveToNextStepAction,
     moveToNextStepTitle,
+    closeWizard,
+    onTransactionApprovingSubStepFinished,
   ]);
 
   return currentSubStepContent;

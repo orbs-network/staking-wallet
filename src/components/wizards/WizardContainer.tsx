@@ -4,27 +4,56 @@ import { Grid } from '@material-ui/core';
 import Color from 'color';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
-const CenteredContainerGrid = styled(Grid)(({ theme }) => {
+const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
   theme = theme as Theme;
 
   return {
-    backgroundColor: Color(theme.palette.primary.dark)
-      // .fade(0.1)
-      .toString(),
+    // Position
     position: 'fixed',
     top: '35%',
     left: '50%',
     transform: 'translate(-50%, -35%)',
-    width: '40em',
-    maxWidth: '100%',
-    border: '2px solid #E0E0E0',
+
+    // Colors
+    backgroundColor: Color(theme.palette.primary.dark)
+      // .fade(0.1)
+      .toString(),
+
+    // Box Effect
+    border: '1px solid #979797',
     borderRadius: 5,
     boxShadow: theme.shadows[2],
-    paddingTop: '0.5em',
-    paddingBottom: '1.5em',
+
+    // Handles width of wizards
+    width: 'fit-content',
+    maxWidth: '95%',
+
+    // Adjusts max size for larger screens
+    [theme.breakpoints.up('sm')]: {
+      minWidth: '50%',
+      maxWidth: '80%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      minWidth: '40%',
+      maxWidth: '80%',
+    },
+    [theme.breakpoints.up('xl')]: {
+      minWidth: '30%',
+      maxWidth: '80%',
+    },
+
+    // Keeps space between the contents and the border
+    padding: '1.5em',
+    [theme.breakpoints.up('md')]: {
+      padding: '3em',
+    },
+
+    // Removes the negative side margin added by the "spacing" prop
+    marginRight: 0,
+    marginLeft: 0,
   };
 });
 
-export const WizardContainer = props => (
-  <CenteredContainerGrid container direction={'column'} alignItems={'center'} {...props} />
+export const WizardContainer = (props) => (
+  <CenteredContainerGrid container direction={'column'} justify={'space-around'} spacing={3} {...props} />
 );

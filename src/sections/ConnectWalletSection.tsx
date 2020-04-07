@@ -2,20 +2,45 @@ import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { Button, Divider } from '@material-ui/core';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
-import { useTranslation } from 'react-i18next';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-
-import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
-import { CommonDivider } from '../components/base/CommonDivider';
-import Youtube from 'react-youtube';
 import { CommonActionButton } from '../components/base/CommonActionButton';
+import { useConnectWalletSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import { ReactComponent as TetraIconSvg } from '../../assets/logos/tetra_icon.svg';
+import { ReactComponent as TetraLogoSvg } from '../../assets/logos/tetra_logo.svg';
+import { Theme } from '@material-ui/core';
+import styled from 'styled-components';
+
+const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: Theme }) => ({
+  // Look& Feel
+  backgroundColor: 'rgba(47, 47, 47, 0.6)',
+  borderRadius: '10%',
+  boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.dark}`,
+
+  // Dimensions
+  minWidth: 'fit-content',
+  width: '40em',
+  padding: '3em',
+
+  [theme.breakpoints.down('sm')]: {
+    padding: '1.5em',
+    width: '80%',
+    maxWidth: '80%',
+  },
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: '9em',
+    paddingRight: '9em',
+  },
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: '13em',
+    paddingRight: '13em',
+  },
+}));
 
 export const ConnectWalletSection = observer(() => {
-  const { t } = useTranslation();
+  const sectionTitlesTranslations = useSectionsTitlesTranslations();
+  const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
@@ -30,21 +55,26 @@ export const ConnectWalletSection = observer(() => {
     pressedOnInstallMetamask.setTrue();
   }, [pressedOnInstallMetamask]);
 
-  const installOrConnectMetamask = useMemo(() => {
+  const installOrConnectMetamaskButton = useMemo(() => {
     if (cryptoWalletIntegrationStore.isMetamaskInstalled) {
       return (
         <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked}>
-          {t('Connect your account')}
+          {connectWalletSectionTranslations('connectYourAccount')}
         </CommonActionButton>
       );
     } else {
       return (
         <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
-          {t('Install Metamask')}
+          {connectWalletSectionTranslations('installMetaMask')}
         </CommonActionButton>
       );
     }
-  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, handleConnectClicked, t, handleInstallClicked]);
+  }, [
+    connectWalletSectionTranslations,
+    cryptoWalletIntegrationStore.isMetamaskInstalled,
+    handleConnectClicked,
+    handleInstallClicked,
+  ]);
 
   const messageComponent = useMemo(() => {
     let testId = null;
@@ -52,10 +82,10 @@ export const ConnectWalletSection = observer(() => {
 
     if (cryptoWalletIntegrationStore.isMetamaskInstalled && rejectedConnection.value) {
       testId = 'text-connection-was-not-approved';
-      messageText = t('Please approve the account connection');
+      messageText = connectWalletSectionTranslations('pleaseApproveAccountConnection');
     } else if (pressedOnInstallMetamask.value) {
       testId = 'text-pleaseRefresh';
-      messageText = t('Please refresh this page after installing Metamask');
+      messageText = connectWalletSectionTranslations('refreshPageAfterInstallingMetaMask');
     }
 
     if (messageText) {
@@ -63,28 +93,52 @@ export const ConnectWalletSection = observer(() => {
     } else {
       return null;
     }
-  }, [cryptoWalletIntegrationStore.isMetamaskInstalled, pressedOnInstallMetamask.value, rejectedConnection.value, t]);
+  }, [
+    connectWalletSectionTranslations,
+    cryptoWalletIntegrationStore.isMetamaskInstalled,
+    pressedOnInstallMetamask.value,
+    rejectedConnection.value,
+  ]);
 
   return (
-    <Section data-testid='connect-to-wallet-section'>
-      {/* Balance */}
-      <SectionHeader title={'Connect your wallet'} icon={AccountBalanceWalletIcon} />
-
-      <CommonDivider />
-
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          {installOrConnectMetamask}
-        </Grid>
-        {messageComponent !== null && (
-          <Grid item xs={12}>
-            {messageComponent}
+    <Section data-testid='connect-to-wallet-section' alignItems={'center'} style={{ marginTop: '5em' }} id='connectWalletSection' >
+      <WalletConnectionInnerGrid container item spacing={6} direction={'column'} alignItems={'center'} id={'walletConnectionInnerGrid'}>
+        {/* Brand logos */}
+        <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
+          <Grid item style={{ maxWidth: '90%' }}>
+            <TetraIconSvg style={{ height: '5em', marginRight: 'auto', marginLeft: 'auto' }} />
           </Grid>
-        )}
-        <Grid item xs={12}>
-          <Youtube videoId={'6Gf_kRE4MJU'} />
+          <Grid item style={{ maxWidth: '90%' }}>
+            <TetraLogoSvg style={{ height: '2em' }} />
+          </Grid>
         </Grid>
-      </Grid>
+
+        {/* Texts */}
+        <Grid item container direction={'column'} spacing={5} style={{ textAlign: 'center' }}>
+          <Typography variant={'h6'} style={{ overflowWrap: 'break-word' }}>{sectionTitlesTranslations('connectWallet').toLocaleUpperCase()}</Typography>
+          <Typography variant={'body2'} style={{ overflowWrap: 'break-word' }}>{connectWalletSectionTranslations('initialGreeting')}</Typography>
+        </Grid>
+
+        {/* Action button */}
+        <Grid
+          item
+          container
+          direction={'column'}
+          alignItems={'center'}
+          spacing={2}
+          style={{ paddingRight: 0, paddingLeft: 0 }}
+        >
+          {/*<Grid item style={{ paddingRight: 0, paddingLeft: 0, width: '100%' }}>*/}
+          <Grid item style={{ paddingRight: 0, paddingLeft: 0 }}>
+            {installOrConnectMetamaskButton}
+          </Grid>
+          {messageComponent !== null && (
+            <Grid item>
+              <Typography>{messageComponent}</Typography>
+            </Grid>
+          )}
+        </Grid>
+      </WalletConnectionInnerGrid>
     </Section>
   );
 });

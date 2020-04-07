@@ -3,53 +3,67 @@ import { observer } from 'mobx-react';
 import { useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
+import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { disableInputs, onPromiEventAction, txError } = props;
+  const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
+  const wizardsCommonTranslations = useWizardsCommonTranslations();
+  const withdrawingWizardTranslations = useWithdrawingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
-  const message = useStateful('');
-  const subMessage = useStateful('Press "Withdraw" and accept the transaction');
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    '',
+    withdrawingWizardTranslations('withdrawingSubStep_subMessage_pressWithdrawAndApprove'),
+    false,
+  );
 
-  // Display the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-    }
-  }, [txError, message, subMessage]);
+  // Handle error by displaying the proper error message
+  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const withdrawTokens = useCallback(() => {
     message.setValue('');
-    subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
     const promiEvent = orbsAccountStore.withdrawTokens();
+
+    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+    promiEvent.on('transactionHash', (txHash) => {
+      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+      isBroadcastingMessage.setTrue();
+    });
+
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, orbsAccountStore, onPromiEventAction]);
+  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, onPromiEventAction, isBroadcastingMessage]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
       onClick: withdrawTokens,
-      title: 'Withdraw',
+      title: withdrawingWizardTranslations('withdrawingSubStep_action_withdraw'),
     }),
-    [withdrawTokens],
+    [withdrawTokens, withdrawingWizardTranslations],
   );
 
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={`Withdrawing ${fullOrbsReadyForWithdrawal} Orbs`}
+      title={withdrawingWizardTranslations('withdrawingSubStep_stepTitle', {
+        orbsForWithdrawal: fullOrbsReadyForWithdrawal,
+      })}
+      infoTitle={withdrawingWizardTranslations('withdrawingSubStep_stepExplanation')}
       disableInputs={disableInputs}
+      isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_withdrawing_tx'}
       actionButtonProps={actionButtonProps}
+      addCancelButton
+      onCancelButtonClicked={closeWizard}
     />
   );
 });

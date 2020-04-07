@@ -5,6 +5,7 @@
     "sourceMap": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
@@ -15,6 +16,6 @@
     "jsx": "react"
   },
   "files": [
-    "./client.tsx", "global.d.ts"
+    "./client.tsx", "global.d.ts", "@types/index.d.ts"
   ]
 }

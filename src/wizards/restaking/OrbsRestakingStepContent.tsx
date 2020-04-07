@@ -1,57 +1,69 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { Button, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
-import { useStateful } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
+import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { disableInputs, onPromiEventAction, txError } = props;
+  const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
+  const wizardsCommonTranslations = useWizardsCommonTranslations();
+  const restakingWizardTranslations = useRestakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by allowance
-  const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
-  const message = useStateful('');
-  const subMessage = useStateful('Press "Restake" and accept the transaction');
+  const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    '',
+    restakingWizardTranslations('restakingSubStep_subMessage_pressRestakeAndApprove'),
+    false,
+  );
 
-  // Display the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-    }
-  }, [txError, message, subMessage]);
+  // Handle error by displaying the proper error message
+  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const restakeTokens = useCallback(() => {
     message.setValue('');
-    subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
     const promiEvent = orbsAccountStore.restakeTokens();
+
+    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+    promiEvent.on('transactionHash', (txHash) => {
+      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+      isBroadcastingMessage.setTrue();
+    });
+
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, orbsAccountStore, onPromiEventAction]);
+  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, onPromiEventAction, isBroadcastingMessage]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
       onClick: restakeTokens,
-      title: 'Restake',
+      title: restakingWizardTranslations('restakingSubStep_action_restake'),
     }),
-    [restakeTokens],
+    [restakeTokens, restakingWizardTranslations],
   );
 
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={`Restaking ${fullOrbsForRestaking} ORBS`}
+      title={restakingWizardTranslations('restakingSubStep_stepTitle', {
+        orbsForRestaking: fullOrbsForRestaking.toLocaleString(),
+      })}
+      infoTitle={restakingWizardTranslations('restakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
+      isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}
       actionButtonProps={actionButtonProps}
+      addCancelButton
+      onCancelButtonClicked={closeWizard}
     />
   );
 });

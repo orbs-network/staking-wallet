@@ -1,0 +1,13 @@
+{
+  "afterSuccessStateExplanation": "Your unstaked ORBS will be available after the unfreezing period.",
+  "finishedAction_unstaked": "unstaked your tokens",
+  "stepLabel_unstake": "Unstake",
+  "unstakingSubStep_action_unstake": "Unstake",
+  "unstakingSubStep_inputLabel": "Unstaking",
+  "unstakingSubStep_message_selectAmountOfOrbs": "Select amount of ORBS to unstake",
+  "unstakingSubStep_stepExplanation": "This will take your ORBS out of their staked state and start a 21-day cooldown period, after which you'll be able to withdraw them to your wallet. During those 21 days, you may choose to re-stake your tokens.",
+  "unstakingSubStep_stepTitle": "Unstaking your tokens",
+  "unstakingSubStep_subMessage_pressUnstakeAndApprove": "Press \"Unstake\" and accept the transaction",
+  "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "Unstaking more tokens now will reset the cooldown timer to 30 days for the entire sum.",
+  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "Warning: There are currently tokens in cooldown."
+}

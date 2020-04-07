@@ -1,62 +1,67 @@
 import React, { useEffect, useMemo } from 'react';
-import { Button, Link, TextField, Theme, Typography } from '@material-ui/core';
-import { WizardContent } from '../../../components/wizards/WizardContent';
+import { Button, Link, Typography } from '@material-ui/core';
 import { useStateful, useBoolean } from 'react-hanger';
 import { BaseStepContent } from '../BaseStepContent';
-import styled from 'styled-components';
+import { useApprovableWizardStepTranslations } from '../../../translations/translationsHooks';
+import { CommonActionButton } from '../../../components/base/CommonActionButton';
 
 interface IProps {
   txHash: string;
-  verificationCount: number;
+  confirmationsCount: number;
   onStepFinished(): void;
   requiredConfirmations: number;
 }
 
 export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished, txHash, verificationCount, requiredConfirmations } = props;
+  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations } = props;
 
-  const allowToProceed = useBoolean(false);
-  const message = useStateful('Waiting to receive enough confirmations');
+  const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
+  const allowToProceed = useBoolean(true);
+  const message = useStateful(approvableWizardStepTranslations('weRecommendWaitingToReceiveEnoughConfirmations'));
   const subMessage = useStateful('');
+
+  const isTxConfirmed = confirmationsCount >= 1;
 
   // Update the verification count text
   useEffect(() => {
-    // TODO : O.L : FUTURE : Handle plurality
-    subMessage.setValue(`Got ${verificationCount} conformations out of recommended ${requiredConfirmations}`);
-  }, [verificationCount, requiredConfirmations, subMessage]);
-
-  // Should allow the user to proceed ?
-  useEffect(() => {
-    if (verificationCount >= requiredConfirmations) {
-      allowToProceed.setTrue();
-    }
-  }, [verificationCount, requiredConfirmations, allowToProceed]);
+    subMessage.setValue(
+      approvableWizardStepTranslations('gotXConfirmationsOutOfRecommendedY', {
+        count: confirmationsCount,
+        recommended: requiredConfirmations,
+      }),
+    );
+  }, [approvableWizardStepTranslations, confirmationsCount, requiredConfirmations, subMessage]);
 
   const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
     let actionContent = null;
-    if (allowToProceedValue) {
+    if (allowToProceedValue && isTxConfirmed) {
       actionContent = (
-        <Button variant={'outlined'} onClick={onStepFinished}>
-          Proceed
-        </Button>
+        <CommonActionButton onClick={onStepFinished}>
+          {approvableWizardStepTranslations('action_proceed')}
+        </CommonActionButton>
       );
     } else {
-      actionContent = <Typography variant={'caption'}>This might take a few moments... </Typography>;
+      actionContent = (
+        <Typography variant={'caption'}>{approvableWizardStepTranslations('thisMightTakeAFewMoments')}</Typography>
+      );
     }
 
     return actionContent;
-  }, [allowToProceedValue, onStepFinished]);
+  }, [allowToProceedValue, approvableWizardStepTranslations, isTxConfirmed, onStepFinished]);
 
   const titleFc = useMemo(() => {
-    const titleMessage = verificationCount >= 1 ? 'Transaction Confirmed' : 'Transaction Pending';
+    const titleMessage = isTxConfirmed
+      ? approvableWizardStepTranslations('txConfirmed').toLocaleUpperCase()
+      : approvableWizardStepTranslations('txPending').toLocaleUpperCase();
 
+    // TODO : ORL : Fix the link to depend on the used network
     return () => (
-      <Link href={`https://etherscan.com/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
+      <Link href={`https://etherscan.io/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
         {titleMessage}
       </Link>
     );
-  }, [txHash, verificationCount]);
+  }, [isTxConfirmed, approvableWizardStepTranslations, txHash]);
 
   return (
     <BaseStepContent

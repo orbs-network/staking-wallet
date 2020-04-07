@@ -1,12 +1,17 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useStateful } from 'react-hanger';
+import { useBoolean, useStateful } from 'react-hanger';
 import { useGuardiansStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
-import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
+import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useTranslation } from 'react-i18next';
+import {
+  useGuardianChangingWizardTranslations,
+  useWizardsCommonTranslations,
+} from '../../translations/translationsHooks';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -14,44 +19,65 @@ export interface IGuardianChangeStepContentProps {
 
 export const GuardianChangeStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianChangeStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress } = props;
+    const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress, closeWizard } = props;
 
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
     const guardiansStore = useGuardiansStore();
     const [t] = useTranslation();
 
     // Start and limit by allowance
-    const message = useStateful(`Change selected guardian to ${newGuardianAddress}`);
-    const subMessage = useStateful('Press "Change" and accept the transaction');
+    const { message, subMessage, isBroadcastingMessage } = useWizardState(
+      guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
+      guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
+      false,
+    );
 
-    // Display the proper error message
-    useEffect(() => {
-      if (txError) {
-        const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
-        message.setValue(errorMessage);
-        subMessage.setValue(errorSubMessage);
-      }
-    }, [txError, message, subMessage]);
+    // Handle error by displaying the proper error message
+    useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
     const changeSelectedGuardian = useCallback(() => {
       message.setValue('');
-      subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
       const promiEvent = guardiansStore.selectGuardian(newGuardianAddress);
-      onPromiEventAction(promiEvent);
-    }, [guardiansStore, message, onPromiEventAction, newGuardianAddress, subMessage]);
 
-    const guardianSelectionContent = useMemo(() => {
-      return <CommonActionButton onClick={changeSelectedGuardian}>{t('Change')}</CommonActionButton>;
-    }, [changeSelectedGuardian, t]);
+      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+      promiEvent.on('transactionHash', (txHash) => {
+        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+        isBroadcastingMessage.setTrue();
+      });
+
+      onPromiEventAction(promiEvent);
+    }, [
+      message,
+      subMessage,
+      wizardsCommonTranslations,
+      guardiansStore,
+      newGuardianAddress,
+      onPromiEventAction,
+      isBroadcastingMessage,
+    ]);
+
+    const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
+      return {
+        title: guardianChangingWizardTranslations('guardianSelectionSubStep_action_change'),
+        onClick: changeSelectedGuardian,
+      };
+    }, [changeSelectedGuardian, guardianChangingWizardTranslations]);
 
     return (
       <BaseStepContent
         message={message.value}
         subMessage={subMessage.value}
-        title={'Change selected guardian'}
+        title={guardianChangingWizardTranslations('guardianSelectionSubStep_stepTitle')}
         disableInputs={disableInputs}
+        isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
-        innerContent={guardianSelectionContent}
+        innerContent={null}
+        actionButtonProps={changeGuardianActionButtonProps}
+        addCancelButton
+        onCancelButtonClicked={closeWizard}
       />
     );
   },

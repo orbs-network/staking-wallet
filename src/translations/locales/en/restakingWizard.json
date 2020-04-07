@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "Your ORBS are staked once again!",
+  "finishedAction_restaked": "Restaked your tokens",
+  "restakingSubStep_action_restake": "Restake",
+  "restakingSubStep_stepExplanation": "This will stop the cooldown process and return all of the ORBS back to the staked state.",
+  "restakingSubStep_stepTitle": "Restaking {{orbsForRestaking}} ORBS",
+  "restakingSubStep_subMessage_pressRestakeAndApprove": "Press \"Restake\" and accept the transaction",
+  "stepLabel_restake": "Restake ORBS"
+}

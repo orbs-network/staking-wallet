@@ -1,0 +1,13 @@
+{
+  "afterSuccessStateExplanation": "アンロックしたORBSは解除期間が経過すると回収することができます",
+  "finishedAction_unstaked": "保有するトークンのステーキングを解除",
+  "stepLabel_unstake": "ステーキングを解除",
+  "unstakingSubStep_action_unstake": "ステーキングを解除",
+  "unstakingSubStep_inputLabel": "ステーキングを解除する",
+  "unstakingSubStep_message_selectAmountOfOrbs": "ステーキングを解除するORBS数量を選択",
+  "unstakingSubStep_stepExplanation": "この手続きでは、ステーキング中のトークンのロックアップを解除します。30日間のクールダウン期間が過ぎるとウォレットから回収ことができます。クールダウン中に再度ステーキングすることも可能です。",
+  "unstakingSubStep_stepTitle": "保有するトークンのステーキングを解除",
+  "unstakingSubStep_subMessage_pressUnstakeAndApprove": "”ステーキングを解除”を押してトランザクションを認証",
+  "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "今ステーキングを解除することで、全てのトークンに30日間のクールダウンが適応されます",
+  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "注意：現在クールダウン中のトークンがあります"
+}

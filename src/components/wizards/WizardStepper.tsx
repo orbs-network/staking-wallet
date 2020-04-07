@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Stepper } from '@material-ui/core';
-import Color from 'color';
 
 export const WizardStepper = styled(Stepper)(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -10,4 +9,5 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
     },
     color: theme.palette.secondary.main, // Affects the circles
   },
+  padding: 0, // Removes the excessive padding
 }));

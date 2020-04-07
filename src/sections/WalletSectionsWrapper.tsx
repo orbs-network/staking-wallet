@@ -4,16 +4,18 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { ConnectWalletSection } from './ConnectWalletSection';
 import { WalletInfoSection } from './WalletInfoSection';
 import { BalancesSection } from '../sections/BalancesSection';
+import { RewardsSection } from './RewardsSection';
 
 export const WalletSectionsWrapper = observer(() => {
   const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
 
   if (cryptoWalletIntegrationStore.isConnectedToWallet) {
     return (
-      <span data-testid='wallet-information-sections'>
+      <div data-testid='wallet-information-sections'>
         <WalletInfoSection />
         <BalancesSection />
-      </span>
+        <RewardsSection />
+      </div>
     );
   } else {
     return <ConnectWalletSection />;

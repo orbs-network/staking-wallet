@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "クールダウン後のアンロックされたORBSは回収可能です",
+  "finishedAction_withdrew": "クールダウンしたトークンを回収",
+  "stepLabel_withdraw": "ORBSを回収",
+  "withdrawingSubStep_action_withdraw": "回収",
+  "withdrawingSubStep_stepExplanation": "クールダウン後のORBSトークンを全てあなたのアドレスに転送します。",
+  "withdrawingSubStep_stepTitle": "{{orbsForWithdrawal}}ORBSを回収",
+  "withdrawingSubStep_subMessage_pressWithdrawAndApprove": "回収”を押してトランザクションを認証"
+}

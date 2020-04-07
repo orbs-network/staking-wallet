@@ -1,28 +1,101 @@
 <!DOCTYPE html>
 <html>
   <head>
-		<meta charset="UTF-8">
-		<title><%= htmlWebpackPlugin.options.title %></title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	  <style>
-		  html, body {
-			  height: 100%;
+	  <meta charset="UTF-8">
+	  <title><%= htmlWebpackPlugin.options.title %></title>
+	  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+	  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width">
+
+	  <!-- Chrome, Firefox OS and Opera (DEV_NOTE : Same color as header) -->
+	  <meta name="theme-color" content="#0D0D0D">
+	  <meta name="apple-mobile-web-app-status-bar-style" content="#0D0D0D">
+
+	  <% if (process.env.NODE_ENV === 'production') { %>
+	  <!-- Start Single Page Apps for GitHub Pages -->
+	  <script type="text/javascript">
+		  // Single Page Apps for GitHub Pages
+		  // https://github.com/rafrex/spa-github-pages
+		  // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+		  // ----------------------------------------------------------------------
+		  // This script checks to see if a redirect is present in the query string
+		  // and converts it back into the correct url and adds it to the
+		  // browser's history using window.history.replaceState(...),
+		  // which won't cause the browser to attempt to load the new url.
+		  // When the single page app is loaded further down in this filed token '<'e,
+		  // the correct url will be waiting in the browser's history for
+		  // the single page app to route accordingly.
+		  (function (l) {
+			  if (l.search) {
+				  var q = {};
+				  l.search.slice(1).split('&').forEach(function (v) {
+					  var a = v.split('=');
+					  q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+				  });
+				  if (q.p !== undefined) {
+					  window.history.replaceState(null, null,
+							  l.pathname.slice(0, -1) + (q.p || '') +
+							  (q.q ? ('?' + q.q) : '') +
+							  l.hash
+					  );
+				  }
+			  }
+		  }(window.location))
+	  </script>
+	  <!-- End Single Page Apps for GitHub Pages -->
+
+	  <!-- Start script to detect unsupported browsers -->
+	  <script type="text/javascript">
+		  // DEV_NOTE : This is a temporary solution to detect and support unsupported browsers
+		  try {
+			  if (!BigInt) {
+				  BigInt = () => 'unsupported';
+			  }
+		  } catch (e) {
+		  	var BigInt = () => 'unsupported';
 		  }
 
-		  .full-height {
-			  height: 100%;
+	  </script>
+	  <!-- End script to detect unsupported browsers -->
+	  <% } %>
+	  <style>
+		  .loader {
+			  border: 16px solid #7B7B7B; /* Light grey - circle */
+			  border-top: 16px solid #03FCF5; /* Blue - loader */
+			  border-radius: 50%;
+			  width: 120px;
+			  height: 120px;
+			  animation: spin 2s linear infinite;
+		  }
+
+		  @keyframes spin {
+			  0% { transform: rotate(0deg); }
+			  100% { transform: rotate(360deg); }
+		  }
+
+		  #centerDiv {
+			  margin: 0;
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  transform: translate(-50%, -50%);
 		  }
 	  </style>
   </head>
-  <body>
-	<div id="app" class="full-height">Loading...</div>
+  <body style="background-color: black">
+	<div id="app" style="height: 100%">
+<!--		<div id="loadingDiv" style="background-color: black; color: #03FCF5; height: 100%;">-->
+<!--			Loading...-->
+<!--		</div>-->
+		<div id="centerDiv"><div class="loader"></div></div>
+	</div>
 	<% if (process.env.NODE_ENV === 'production') { %>
-		<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<!--	<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>-->
+		<script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+<!--	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>-->
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 <% } else { %>
 		<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
 		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 <% } %>
-</body>	
+</body>
 </html>

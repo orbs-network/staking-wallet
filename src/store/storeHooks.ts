@@ -6,6 +6,7 @@ import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { OrbsAccountStore } from './OrbsAccountStore';
 
 export function useStores(): IStores {
+  // @ts-ignore
   return React.useContext(MobXProviderContext);
 }
 

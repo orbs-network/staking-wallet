@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "락업 해제한 ORBSS는 해제기간이 지나면 되찾을 수 있습니다",
+  "finishedAction_withdrew": "해제 기간이 만료된 토큰을 회수",
+  "stepLabel_withdraw": "ORBS 회수하기",
+  "withdrawingSubStep_action_withdraw": "회수",
+  "withdrawingSubStep_stepExplanation": "이 작업은 해제기간이 만료된 모든 ORBS 토큰을 사용자의 지갑으로 전송해줍니다.",
+  "withdrawingSubStep_stepTitle": "{{orbsForWithdrawal}} ORBS를 회수 중입니다",
+  "withdrawingSubStep_subMessage_pressWithdrawAndApprove": "\"회수하기\"를 누르고 트랜잭션을 진행해주세요"
+}

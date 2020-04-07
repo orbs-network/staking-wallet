@@ -1,0 +1,5 @@
+{
+  "loading": "ロード中...",
+  "loadingFailed": "読み込みが失敗しました",
+  "timeLeft": "残り{{timePhrase}}"
+}

@@ -1,0 +1,22 @@
+{
+  "afterSuccessStateExplanation": "Your ORBS are now staked and assigned to a Guardian",
+  "allowanceSubStep_action_approve": "Approve",
+  "allowanceSubStep_label_allowance": "Allowance",
+  "allowanceSubStep_message_selectAmountOfOrbs": "Select the amount of ORBS you want to stake:",
+  "allowanceSubStep_stepExplanation": "This step will approve the staking contract to transfer your ORBS into the contract in order to be staked (up to the approved amount).",
+  "allowanceSubStep_stepTitle": "Approve usage of your ORBS",
+  "finishedAction_approved": "allowed the staking contract to use your tokens",
+  "finishedAction_selectedGuardian": "selected Guardian",
+  "finishedAction_staked": "staked your tokens",
+  "guardianSelectionSubStep_message_selectGuardian": "Select a Guardian",
+  "guardianSelectionSubStep_stepExplanation": "This step selects which Guardian you would like to delegate to, adding your staked ORBS to their influence.",
+  "guardianSelectionSubStep_stepTitle": "Select your Guardian",
+  "guardianSelectionSubStep_subMessage_pressSelectAndApprove": "Press 'Select' and accept the transaction",
+  "moveToStep_selectGuardian": "Select a Guardian",
+  "moveToStep_stake": "Stake your ORBS",
+  "stakingSubStep_stepExplanation": "This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators, Guardians, and Validators to participate.",
+  "stakingSubStep_stepTitle": "In this step you will stake {{orbsForStaking}} ORBS",
+  "stepLabel_approve": "Approve ORBS usage",
+  "stepLabel_selectGuardian": "Select Guardian",
+  "stepLabel_stake": "Stake ORBS"
+}

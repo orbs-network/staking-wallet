@@ -1,73 +1,91 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { TextField } from '@material-ui/core';
-import { useNumber, useStateful } from 'react-hanger';
+import { useNumber, useStateful, useBoolean } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
-import { messageFromTxCreationSubStepError, PLEASE_APPROVE_TX_MESSAGE } from '../wizardMessages';
+import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
+import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
+import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { disableInputs, onPromiEventAction, txError } = props;
+  const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
+  const wizardsCommonTranslations = useWizardsCommonTranslations();
+  const stakingWizardTranslations = useStakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by liquid orbs
   const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
   const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
-  const message = useStateful('Select the amount of ORBS you would like to stake');
-  const subMessage = useStateful('');
 
-  // Calculate the proper error message
-  useEffect(() => {
-    if (txError) {
-      const { errorMessage, errorSubMessage } = messageFromTxCreationSubStepError(txError);
-      message.setValue(errorMessage);
-      subMessage.setValue(errorSubMessage);
-    }
-  }, [txError, message, subMessage]);
+  const { message, subMessage, isBroadcastingMessage } = useWizardState(
+    stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'),
+    '',
+    false,
+  );
+
+  // Handle error by displaying the proper error message
+  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const setTokenAllowanceForStakingContract = useCallback(() => {
     message.setValue('');
-    subMessage.setValue(PLEASE_APPROVE_TX_MESSAGE);
+    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
     const promiEvent = orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance.value));
+
+    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+    promiEvent.on('transactionHash', (txHash) => {
+      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+      isBroadcastingMessage.setTrue();
+    });
+
     onPromiEventAction(promiEvent);
-  }, [message, subMessage, orbsAccountStore, orbsAllowance.value, onPromiEventAction]);
+  }, [
+    message,
+    subMessage,
+    wizardsCommonTranslations,
+    orbsAccountStore,
+    orbsAllowance.value,
+    onPromiEventAction,
+    isBroadcastingMessage,
+  ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
       onClick: setTokenAllowanceForStakingContract,
-      title: 'Approve',
+      title: stakingWizardTranslations('allowanceSubStep_action_approve'),
     }),
-    [setTokenAllowanceForStakingContract],
+    [setTokenAllowanceForStakingContract, stakingWizardTranslations],
   );
 
-  // TODO : O.L : Add a number formatter here to display the sums with proper separation
-  //  https://material-ui.com/components/text-fields/#FormattedInputs.tsx
   const allowanceInput = useMemo(() => {
     return (
-      <TextField
+      <FullWidthOrbsInputField
         id={'orbsAllowance'}
-        label={'Allowance'}
-        type={'number'}
+        label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
         value={orbsAllowance.value}
-        onChange={e => orbsAllowance.setValue(parseInt(e.target.value))}
+        onChange={(value) => orbsAllowance.setValue(value)}
+        disabled={disableInputs}
       />
     );
-  }, [orbsAllowance]);
+  }, [orbsAllowance, stakingWizardTranslations, disableInputs]);
 
-  // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
-      title={'Approve the staking contract to use your Orbs'}
+      title={stakingWizardTranslations('allowanceSubStep_stepTitle')}
+      infoTitle={stakingWizardTranslations('allowanceSubStep_stepExplanation')}
       disableInputs={disableInputs}
+      isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_allowance_tx'}
       actionButtonProps={actionButtonProps}
       innerContent={allowanceInput}
+      addCancelButton
+      onCancelButtonClicked={closeWizard}
     />
   );
 });

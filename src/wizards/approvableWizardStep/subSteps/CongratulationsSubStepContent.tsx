@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { BaseStepContent, IActionButtonProps } from '../BaseStepContent';
+import { useApprovableWizardStepTranslations } from '../../../translations/translationsHooks';
 
 interface IProps {
   finishedActionName: string;
@@ -10,6 +11,7 @@ interface IProps {
 export const CongratulationsSubStepContent: React.FC<IProps> = (props: IProps) => {
   const { finishedActionName, moveToNextStepAction, moveToNextStepTitle } = props;
 
+  const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
       onClick: moveToNextStepAction,
@@ -20,9 +22,9 @@ export const CongratulationsSubStepContent: React.FC<IProps> = (props: IProps) =
 
   return (
     <BaseStepContent
-      message={`You have successfully ${finishedActionName}`}
+      message={approvableWizardStepTranslations('youHaveDoneActionSuccessfully', { finishedActionName })}
       subMessage={''}
-      title={'Congratulations'}
+      title={approvableWizardStepTranslations('congratulations')}
       contentTestId={'wizard_sub_step_congratulations'}
       actionButtonProps={actionButtonProps}
     />

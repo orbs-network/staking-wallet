@@ -11,7 +11,9 @@ import { EMPTY_ADDRESS } from '../constants';
 import moment from 'moment';
 
 export class OrbsAccountStore {
-  // TODO : O.L : Check if we really need to have a string here.
+  @observable public doneLoading: boolean = false;
+  @observable public errorLoading: boolean = false;
+
   @observable public liquidOrbs = BigInt(0);
   @observable public stakingContractAllowance = BigInt(0);
   @observable public stakedOrbs = BigInt(0);
@@ -26,6 +28,13 @@ export class OrbsAccountStore {
   @computed get hasOrbsToWithdraw(): boolean {
     return this.orbsInCoolDown > 0 && this.cooldownReleaseTimestamp <= moment.utc().unix();
   }
+  @computed get hasStakedOrbs(): boolean {
+    return this.stakedOrbs > 0;
+  }
+  @computed get hasOrbsInCooldown(): boolean {
+    return this.orbsInCoolDown > 0;
+  }
+
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
@@ -42,7 +51,11 @@ export class OrbsAccountStore {
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
-      async address => await this.reactToConnectedAddressChanged(address),
+      async (address) => {
+        this.setDoneLoading(false);
+        await this.reactToConnectedAddressChanged(address);
+        this.setDoneLoading(true);
+      },
       {
         fireImmediately: true,
       },
@@ -81,7 +94,12 @@ export class OrbsAccountStore {
       this.setDefaultAccountAddress(currentAddress);
       this.refreshAccountListeners(currentAddress);
 
-      await this.readDataForAccount(currentAddress);
+      try {
+        await this.readDataForAccount(currentAddress);
+      } catch (e) {
+        this.failLoadingProcess(e);
+        console.error('Error in reacting to address change in Orbs Account Store', e);
+      }
     }
   }
 
@@ -94,11 +112,26 @@ export class OrbsAccountStore {
 
   private async readDataForAccount(accountAddress: string) {
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
-    await this.readAndSetLiquidOrbs(accountAddress);
-    await this.readAndSetStakedOrbs(accountAddress);
-    await this.readAndSetSelectedGuardianAddress(accountAddress);
-    await this.readAndSetStakingContractAllowance(accountAddress);
-    await this.readAndSetCooldownStatus(accountAddress);
+    await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
+      console.error(`Error in reading liquid orbs : ${e}`);
+      throw e;
+    });
+    await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
+      console.error(`Error in reading staked orbs : ${e}`);
+      throw e;
+    });
+    await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
+      console.error(`Error in reading selected guardian : ${e}`);
+      throw e;
+    });
+    await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
+      console.error(`Error in reading contract allowance: ${e}`);
+      throw e;
+    });
+    await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
+      console.error(`Error in reading cooldown status : ${e}`);
+      throw e;
+    });
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {
@@ -144,7 +177,7 @@ export class OrbsAccountStore {
     // Orbs balance
     this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
       accountAddress,
-      newBalance => this.setLiquidOrbs(newBalance),
+      (newBalance) => this.setLiquidOrbs(newBalance),
     );
 
     // Staking contract allowance
@@ -202,6 +235,12 @@ export class OrbsAccountStore {
     }
   }
 
+  // ****  Complex setters ****
+  private failLoadingProcess(error: Error) {
+    this.setErrorLoading(true);
+    this.setDoneLoading(true);
+  }
+
   // ****  Observables setter actions ****
 
   @action('setLiquidOrbs')
@@ -237,5 +276,15 @@ export class OrbsAccountStore {
   @action('setSelectedGuardianAddress')
   private setSelectedGuardianAddress(selectedGuardianAddress: string) {
     this.selectedGuardianAddress = selectedGuardianAddress;
+  }
+
+  @action('setDoneLoading')
+  private setDoneLoading(doneLoading: boolean) {
+    this.doneLoading = doneLoading;
+  }
+
+  @action('setErrorLoading')
+  private setErrorLoading(errorLoading: boolean) {
+    this.errorLoading = errorLoading;
   }
 }

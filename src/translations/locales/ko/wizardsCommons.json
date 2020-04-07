@@ -1,0 +1,17 @@
+{
+  "action_close": "닫기",
+  "action_finish": "완료",
+  "message_errorOccurred": "스테이킹을 위한 트래잭션 진행 중 에러가 발생했습니다.",
+  "message_userCanceledTransactions": "트랜잭션이 취소되었습니다.",
+  "moveToStep_finish": "완료",
+  "stepDoneExclamation": "훌륭해요!",
+  "stepLabel_finish": "완료",
+  "subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab": "트랜잭션 처리중입니다. 새로고침이나 이 창을 닫지마세요.",
+  "subMessage_pleaseApproveTransactionWithExplanation": "트랜잭션을 승인해주세요. 네트워크에서 컨펌되면 바로 다음 단계로 이동합니다.",
+  "subMessage_pleaseTryAgain": "다시 시도해주세요",
+  "subMessage_tryAgainAndApprove": "계속하려면, 재시도 후 트랜잭션을 인증해주세요.",
+  "txCreationError_generalError_message": "스테이킹을 위한 트랜잭션 진행 중 에러가 발생했습니다.",
+  "txCreationError_generalError_subMessage": "다시 시도해주세요",
+  "txCreationError_userCanceled_message": "트랜잭션이 취소되었습니다.",
+  "txCreationError_userCanceled_subMessage": "계속하려면, 재시도 후 트랜잭션을 인증해주세요."
+}

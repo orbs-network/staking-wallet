@@ -5,50 +5,56 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
  * The above notice should be included in all copies or substantial portions of the software.
  */
-
-import { withStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { ChangeLangLink } from '../../multi-lang/ChangeLangLink';
-import EN_FLAG from './en-us.png';
-import JP_FLAG from './jp.png';
-import KO_FLAG from './ko.png';
+import { ReactComponent as UsCountryIconSvg } from '../../../assets/countryIcons/us.svg';
+import { ReactComponent as JpCountryIconSvg } from '../../../assets/countryIcons/jp.svg';
+import { ReactComponent as KrCountryIconSvg } from '../../../assets/countryIcons/kr.svg';
+import Grid from '@material-ui/core/Grid';
+import styled from 'styled-components';
+import { Theme } from '@material-ui/core';
 
-const styles = () => ({
-  list: {
-    padding: 0,
-    margin: 0,
-    display: 'inherit',
-    listStyle: 'none',
-    justifyContent: 'flex-end',
+const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
+  '&:hover': {
+    opacity: 0.8,
   },
-  item: {
-    padding: '0 10px',
-    '&:hover': {
-      opacity: 0.8,
-    },
-  },
-});
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+}));
 
-const LanguagesSelectorImpl = ({ classes }) => {
+function buildStyleForCountryIcon({ theme }: { theme: Theme }): CSSProperties {
+  return {
+    height: '1.25em',
+  };
+}
+
+// @ts-ignore
+const StyledUsCountryIconSvg = styled(UsCountryIconSvg)(buildStyleForCountryIcon);
+// @ts-ignore
+const StyledJpCountryIconSvg = styled(JpCountryIconSvg)(buildStyleForCountryIcon);
+// @ts-ignore
+const StyledKrCountryIconSvg = styled(KrCountryIconSvg)(buildStyleForCountryIcon);
+
+export const LanguagesSelector = React.memo((props) => {
   return (
-    <ul className={classes.list}>
-      <li className={classes.item}>
-        <ChangeLangLink lang='en'>
-          <img src={EN_FLAG} alt='English' />
-        </ChangeLangLink>
-      </li>
-      <li className={classes.item}>
-        <ChangeLangLink lang='jp'>
-          <img src={JP_FLAG} alt='Japanese' />
-        </ChangeLangLink>
-      </li>
-      <li className={classes.item}>
-        <ChangeLangLink lang='ko'>
-          <img src={KO_FLAG} alt='Korean' />
-        </ChangeLangLink>
-      </li>
-    </ul>
+    <Grid container alignItems={'center'} justify={'flex-end'} spacing={1}>
+      <Grid item>
+        <ButtonChangeLangLink lang='en'>
+          <StyledUsCountryIconSvg />
+        </ButtonChangeLangLink>
+      </Grid>
+      <Grid item>
+        <ButtonChangeLangLink lang='jp'>
+          <StyledJpCountryIconSvg />
+        </ButtonChangeLangLink>
+      </Grid>
+      <Grid item>
+        <ButtonChangeLangLink lang='ko'>
+          <StyledKrCountryIconSvg />
+        </ButtonChangeLangLink>
+      </Grid>
+    </Grid>
   );
-};
-
-export const LanguagesSelector = withStyles(styles)(LanguagesSelectorImpl);
+});

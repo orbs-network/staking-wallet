@@ -1,0 +1,8 @@
+{
+  "allGuardians": "All Guardians",
+  "allGuardians_sideTitle": "Participating stake: {{totalParticipatingTokens}}",
+  "balance": "Balance",
+  "connectWallet": "Connect your wallet",
+  "rewards": "Rewards",
+  "walletInfo": "Wallet info"
+}

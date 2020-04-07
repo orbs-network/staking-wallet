@@ -1,0 +1,22 @@
+{
+  "afterSuccessStateExplanation": "保有されるORBSは選択したガーディアンにステーキングされています。",
+  "allowanceSubStep_action_approve": "認証",
+  "allowanceSubStep_label_allowance": "割り当て",
+  "allowanceSubStep_message_selectAmountOfOrbs": "ステーキングするORBSの数量をお選びください",
+  "allowanceSubStep_stepExplanation": "このステップは保有するORBSのうち、ステーキングしたい数量だけを選んでコントラクトに転送することを許可するものです。",
+  "allowanceSubStep_stepTitle": "このステップでは{{orbsForStaking}}のORBSをステーキングします",
+  "finishedAction_approved": "ステーキングコントラクトにあなたのトークンを転送します",
+  "finishedAction_selectedGuardian": "ガーディアンを選択",
+  "finishedAction_staked": "ステーキング済みのトークン",
+  "guardianSelectionSubStep_message_selectGuardian": "ガーディアンを選択",
+  "guardianSelectionSubStep_stepExplanation": "このステップでは選択したガーディアンにあなたがステーキングしているORBSトークン分の影響力を委任するものです。",
+  "guardianSelectionSubStep_stepTitle": "ガーディアンを選択",
+  "guardianSelectionSubStep_subMessage_pressSelectAndApprove": "選択”を押しトランザクションを認証",
+  "moveToStep_selectGuardian": "ガーディアンを選択",
+  "moveToStep_stake": "ORBSをステーキング",
+  "stakingSubStep_stepExplanation": "このステップでは保有するORBSトークンをコントラクトに転送してステーキングするものです。ステーキングすることで、Orbsネットワークがより安全なものになり、且つデリゲータやガーディアン、バリデータの参加を促すことになります。",
+  "stakingSubStep_stepTitle": "このステップでは{{orbsForStaking}}のORBSをステーキングします",
+  "stepLabel_approve": "ORBSの利用を許可",
+  "stepLabel_selectGuardian": "ガーディアンを選択",
+  "stepLabel_stake": "トークンをステーキング"
+}
