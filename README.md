@@ -60,7 +60,7 @@ You can deploy your own version of Tetra to github pages very easily.
     npm run deploy
     ```  
 
-Your own tetra version will now be deployed on the URL <your-github-user>.github.io/<your-repo-name>
+Your own tetra version will now be deployed on the URL (your-github-user).github.io/(your-repo-name)
 
 Note : After your first deploy you will need to set your repo to be used as a project site on GitHub pages
 1. Open your repo page on GitHub.
