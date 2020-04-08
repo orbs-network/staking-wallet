@@ -1,5 +1,6 @@
 {
-  "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "回収すべきORBSのトークンがある場合には、追加でロックアップ解除をすることはできません",
+  "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "回収すべきORBSのトークンがある場合には、ロックアップを解除をすることはできません",
   "guardianAlreadySelected": "既にガーディアンを選択済みです",
+  "undergoingMaintenance": "メインテナンス中。全てのウォレット内の情報が非表示になっています。数時間後に再度お試しください。",
   "walletAddressWasCopied": "アドレスがコピーされました"
 }

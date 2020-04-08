@@ -1,5 +1,6 @@
 {
   "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "Cannot unstake when there are ORBS to be withdrawn",
   "guardianAlreadySelected": "Guardian already selected!",
+  "undergoingMaintenance": "Undergoing maintenance, all wallet interaction temporarily disabled. Please try again in a few hours.",
   "walletAddressWasCopied": "Copied address!"
 }
