@@ -128,10 +128,6 @@ export const BalancesSection = observer(() => {
 
       {/*<Grid item> <CommonDivider /> </Grid>*/}
 
-      <Grid item>
-        <Typography color={'error'}>{alertsTranslations('undergoingMaintenance')}</Typography>
-      </Grid>
-
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
       {!orbsAccountStore.errorLoading && (
@@ -142,8 +138,7 @@ export const BalancesSection = observer(() => {
               <BalanceCard
                 title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
                 actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
-                // actionButtonActive={true}
-                actionButtonActive={false}
+                actionButtonActive={true}
                 onActionButtonPressed={showStakingModal.setTrue}
                 amount={fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)}
                 balanceCardTestId={'balance_card_liquid_orbs'}
@@ -155,8 +150,7 @@ export const BalancesSection = observer(() => {
                 title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
                 amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
-                // actionButtonActive={orbsAccountStore.hasStakedOrbs}
-                actionButtonActive={false}
+                actionButtonActive={orbsAccountStore.hasStakedOrbs}
                 onActionButtonPressed={onUnstakeTokensClicked}
                 balanceCardTestId={'balance_card_staked_orbs'}
               />
@@ -167,8 +161,7 @@ export const BalancesSection = observer(() => {
                 title={orbsInCooldownBoxTitle}
                 actionButtonTitle={orbsInCooldownBoxButtonText}
                 amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
-                // actionButtonActive={orbsInCooldownBoxEnabled}
-                actionButtonActive={false}
+                actionButtonActive={orbsInCooldownBoxEnabled}
                 onActionButtonPressed={orbsInCooldownBoxButtonAction}
                 balanceCardTestId={'balance_card_cool_down_orbs'}
               />
