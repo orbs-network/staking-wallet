@@ -200,4 +200,5 @@ export interface IAlertsTranslations {
   cannotUnstakeWhenThereAreOrbsReadyToWithdraw: string;
   walletAddressWasCopied: string;
   guardianAlreadySelected: string;
+  undergoingMaintenance: string;
 }
