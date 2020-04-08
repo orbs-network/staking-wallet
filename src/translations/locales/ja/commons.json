@@ -1,7 +1,7 @@
 {
   "loading": "ロード中...",
   "loadingFailed": "読み込みが失敗しました",
-  "timeLeft": "残り{{timePhrase}}",
-  "termsOfUse": "Terms of Use",
-  "privacyPolicy": "Privacy Policy"
+  "privacyPolicy": "個人情報規定",
+  "termsOfUse": "利用規約",
+  "timeLeft": "残り{{timePhrase}}"
 }

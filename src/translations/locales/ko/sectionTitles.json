@@ -1,6 +1,6 @@
 {
   "allGuardians": "가디언들",
-  "allGuardians_sideTitle": "'전체 참여수량: {{totalParticipatingTokens}}",
+  "allGuardians_sideTitle": "전체 참여수량: {{totalParticipatingTokens}}",
   "balance": "수량",
   "connectWallet": "지갑 연결하기",
   "rewards": "리워드",

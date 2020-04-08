@@ -5,5 +5,5 @@
   "guardianSelectionSubStep_message_changeGuardian": "{{newGuardianAddress}} 가디언으로 선택 변경",
   "guardianSelectionSubStep_stepTitle": "가디언 변경",
   "guardianSelectionSubStep_subMessage_pressChangeAndApprove": "변경”을 누르고 트랜잭션을 진행해주세요",
-  "stepLabel_changeGuardian": "{{newGuardianAddress}} 가디언으로 선택 변경'"
+  "stepLabel_changeGuardian": "{{newGuardianAddress}} 가디언으로 선택 변경"
 }
