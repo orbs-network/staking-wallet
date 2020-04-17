@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
 
 import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
@@ -11,6 +11,7 @@ import { Typography } from '@material-ui/core';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { renderToString } from 'react-dom/server';
+import { useTranslation } from 'react-i18next';
 
 export const RewardsSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -19,6 +20,17 @@ export const RewardsSection = observer(() => {
   const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
 
   const theme = useTheme();
+  const translation = useTranslation();
+
+  const innerLinkLang = useMemo(() => {
+    if (!translation?.i18n?.language) {
+      return '';
+    } else {
+      return `${translation.i18n.language}/`;
+    }
+  }, [translation]);
+
+  console.log('innerLinkLang', innerLinkLang);
 
   // TODO : Find a better way to combine the translations with changing order links
   const innerHtml = rewardsSectionTranslations('text__forDetailedRewardsPleaseVisitThe', {
@@ -27,7 +39,7 @@ export const RewardsSection = observer(() => {
         style={{ color: theme.palette.secondary.main }}
         target={'_blank'}
         rel={'noopener noreferrer'}
-        href={`https://orbs-network.github.io/voting/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
+        href={`https://orbs-network.github.io/voting/${innerLinkLang}reward?address=${cryptoWalletConnectionStore.mainAddress}`}
       >
         {rewardsSectionTranslations('linkText_rewardsPage')}
       </a>,
