@@ -1,6 +1,6 @@
 {
   "name": "staking-wallet",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "homepage": "https://orbs-network.github.io/staking",
@@ -17,7 +17,8 @@
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-prod": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
-    "deploy": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh"
+    "deploy": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
+    "deploy-staging": "rm -rf ./dist && npm run build && ./scripts/deploy-staging.sh"
   },
   "keywords": [
     "typescript",
