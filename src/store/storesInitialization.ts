@@ -31,6 +31,7 @@ export function getStores(
   const guardiansStore = new GuardiansStore(cryptoWalletIntegrationStore, orbsPOSDataService, guardiansService);
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
+    guardiansStore,
     orbsPOSDataService,
     stakingService,
     orbsTokenService,
