@@ -9,10 +9,13 @@ export class CryptoWalletConnectionStore {
 
   @observable public mainAddress: string;
 
+  @observable public hasEventsSupport: boolean;
+
   reactionToWalletConnection: IReactionDisposer;
 
   constructor(private cryptoWalletConnectionService: ICryptoWalletConnectionService) {
     this.isMetamaskInstalled = cryptoWalletConnectionService.isMetamaskInstalled;
+    this.hasEventsSupport = cryptoWalletConnectionService.hasEventsSupport;
 
     this.reactionToWalletConnection = reaction(
       () => this.isConnectedToWallet,

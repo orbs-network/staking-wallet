@@ -172,6 +172,11 @@ export class OrbsAccountStore {
   // ****  Subscriptions ****
 
   private async refreshAccountListeners(accountAddress: string) {
+    if (!this.cryptoWalletIntegrationStore.hasEventsSupport) {
+      console.log(`Subscriptions are not supported`);
+      return;
+    }
+
     this.cancelAllCurrentSubscriptions();
 
     // Orbs balance

@@ -1,6 +1,7 @@
 export interface ICryptoWalletConnectionService {
   readonly hasEthereumProvider: boolean;
   readonly isMetamaskInstalled: boolean;
+  readonly hasEventsSupport: boolean;
 
   // Getters
   didUserApproveWalletInThePast: boolean;
