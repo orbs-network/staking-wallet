@@ -9,11 +9,13 @@ import moment from 'moment';
 import { Footer } from './components/nav/Footer';
 import { Notifier } from '@airbrake/browser';
 
-const airbrake = new Notifier({
-  projectId: Number(process.env.AIRBRAKE_PROJECT_ID),
-  projectKey: process.env.AIRBRAKE_PROJECT_KEY,
-  environment: 'production',
-});
+if (process.env.AIRBRAKE_PROJECT_ID && process.env.AIRBRAKE_PROJECT_KEY) {
+  const airbrake = new Notifier({
+    projectId: Number(process.env.AIRBRAKE_PROJECT_ID),
+    projectKey: process.env.AIRBRAKE_PROJECT_KEY,
+    environment: 'production',
+  });
+}
 
 function getForcedLanguage(pathname: string) {
   const langMatch = pathname.match(/\/(en|ko|jp)\/?/);
