@@ -1,4 +1,4 @@
-import { observable, action, reaction, IReactionDisposer } from 'mobx';
+import { observable, action, reaction, IReactionDisposer, computed } from 'mobx';
 
 import { IOrbsPOSDataService, IGuardianInfo, IGuardiansService } from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
@@ -20,6 +20,10 @@ export class GuardiansStore implements TGuardiansStore {
   @observable public totalParticipatingTokens: bigint;
 
   private addressChangeReaction: IReactionDisposer;
+
+  @computed get guardiansAddresses(): string[] {
+    return this.guardiansList.map((g) => g.address.toLowerCase());
+  }
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
