@@ -16,7 +16,7 @@ export class CryptoWalletConnectionStore {
 
     this.reactionToWalletConnection = reaction(
       () => this.isConnectedToWallet,
-      async isConnected => {
+      async (isConnected) => {
         if (isConnected) {
           this.readInformationFromConnectedWallet();
         }
@@ -27,7 +27,7 @@ export class CryptoWalletConnectionStore {
     );
 
     if (this.isMetamaskInstalled) {
-      this.cryptoWalletConnectionService.onMainAddressChange(address => this.setMainAddress(address));
+      this.cryptoWalletConnectionService.onMainAddressChange((address) => this.setMainAddress(address));
     }
   }
 
