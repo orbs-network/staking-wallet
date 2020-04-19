@@ -18,7 +18,7 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
       this.web3 = new Web3(this.ethereum as any);
     }
 
-    const on = (this.ethereum as any).on;
+    const on = this.hasEthereumProvider ? (this.ethereum as any).on : undefined;
     this.hasEventsSupport = on !== undefined && on !== null;
   }
 
