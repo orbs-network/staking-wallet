@@ -7,6 +7,13 @@ import { ContentContainer } from './components/structure/ContentContainer';
 import i18n from 'i18next';
 import moment from 'moment';
 import { Footer } from './components/nav/Footer';
+import { Notifier } from '@airbrake/browser';
+
+const airbrake = new Notifier({
+  projectId: Number(process.env.AIRBRAKE_PROJECT_ID),
+  projectKey: process.env.AIRBRAKE_PROJECT_KEY,
+  environment: 'production',
+});
 
 function getForcedLanguage(pathname: string) {
   const langMatch = pathname.match(/\/(en|ko|jp)\/?/);

@@ -8,13 +8,18 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
   private web3: Web3;
   public readonly hasEthereumProvider: boolean;
   public readonly isMetamaskInstalled: boolean;
+  public readonly hasEventsSupport: boolean;
 
   constructor(private ethereum: IEthereumProvider) {
     this.hasEthereumProvider = this.ethereum !== undefined;
-    this.isMetamaskInstalled = this.hasEthereumProvider && this.ethereum.isMetaMask;
+
+    this.isMetamaskInstalled = this.hasEthereumProvider && (this.ethereum.isMetaMask || this.ethereum.isImToken);
     if (this.isMetamaskInstalled) {
       this.web3 = new Web3(this.ethereum as any);
     }
+
+    const on = (this.ethereum as any).on;
+    this.hasEventsSupport = on !== undefined && on !== null;
   }
 
   public async requestConnectionPermission(): Promise<boolean> {
@@ -47,10 +52,12 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
   onMainAddressChange(onChange: (mainAddress: string) => void): () => void {
     const listener = (accounts) => onChange(accounts[0]);
 
-    this.ethereum.on('accountsChanged', listener);
+    if (this.hasEventsSupport) {
+      this.ethereum.on('accountsChanged', listener);
 
-    return () => {
-      this.ethereum.off('accountsChanged', listener);
-    };
+      return () => {
+        this.ethereum.off('accountsChanged', listener);
+      };
+    }
   }
 }

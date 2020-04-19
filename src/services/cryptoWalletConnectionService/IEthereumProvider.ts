@@ -14,6 +14,11 @@ export interface IEthereumProvider {
    */
   isMetaMask?: boolean;
 
+  /**
+   * ImToken dapp browser
+   */
+  isImToken?: boolean;
+
   // Deprecatable members
   /**
    * @deprecated
