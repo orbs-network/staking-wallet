@@ -6,7 +6,7 @@ import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/
 import { IAnalyticsService } from './analytics/IAnalyticsService';
 
 function useServices(): IServices {
-  return React.useContext(MobXProviderContext);
+  return React.useContext(MobXProviderContext) as IServices;
 }
 
 export function useOrbsPOSDataService(): IOrbsPOSDataService {
