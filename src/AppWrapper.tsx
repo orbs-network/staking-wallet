@@ -31,6 +31,7 @@ const stores = getStores(
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
   services.guardiansService,
+  services.analyticsService,
 );
 
 const themeAndStyle = {

@@ -11,6 +11,8 @@ import {
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
+import { useTrackModal } from '../../services/analytics/analyticsHooks';
+import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -26,6 +28,7 @@ interface IProps {
 // Connect to store
 export const GuardianChangingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
+    useTrackModal(MODAL_IDS.guardianChange);
     const { closeWizard, newGuardianAddress } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();

@@ -11,6 +11,8 @@ import { GuardianSelectionStepContent, IGuardianSelectionStepContentProps } from
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
+import { useTrackModal } from '../../services/analytics/analyticsHooks';
+import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -28,6 +30,8 @@ interface IProps {
 export const StakingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     const { closeWizard } = props;
+
+    useTrackModal(MODAL_IDS.staking);
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();

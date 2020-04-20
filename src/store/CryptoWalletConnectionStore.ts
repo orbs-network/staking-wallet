@@ -1,6 +1,7 @@
 import { action, computed, observable, reaction } from 'mobx';
 import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { IReactionDisposer } from 'mobx/lib/core/reaction';
+import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 
 export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
@@ -11,7 +12,10 @@ export class CryptoWalletConnectionStore {
 
   reactionToWalletConnection: IReactionDisposer;
 
-  constructor(private cryptoWalletConnectionService: ICryptoWalletConnectionService) {
+  constructor(
+    private cryptoWalletConnectionService: ICryptoWalletConnectionService,
+    private analyticsService: IAnalyticsService,
+  ) {
     this.isMetamaskInstalled = cryptoWalletConnectionService.isMetamaskInstalled;
 
     this.reactionToWalletConnection = reaction(
@@ -64,5 +68,7 @@ export class CryptoWalletConnectionStore {
   @action('setMainAddress')
   private setMainAddress(mainAddress: string) {
     this.mainAddress = mainAddress;
+
+    this.analyticsService.setUserAddress(mainAddress);
   }
 }

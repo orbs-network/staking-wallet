@@ -1,5 +1,6 @@
 import ReactGA from 'react-ga';
 import { IAnalyticsService } from './IAnalyticsService';
+import { TModalId } from './analyticConstants';
 
 export class AnalyticsService implements IAnalyticsService {
   private active = false;
@@ -25,5 +26,27 @@ export class AnalyticsService implements IAnalyticsService {
 
   public get isInitialized() {
     return this.initialized;
+  }
+
+  public setUserAddress(userAddress: string) {
+    this.setDimension('userAddress', userAddress);
+  }
+
+  public trackModalView(modalId: TModalId) {}
+
+  private setDimension(dimensionKey: string, dimensionValue: string | number) {
+    if (!this.isActive) {
+      return;
+    }
+
+    ReactGA.set({ [dimensionKey]: dimensionValue });
+  }
+
+  private trackModal(modalId: TModalId) {
+    if (!this.isActive) {
+      return;
+    }
+
+    ReactGA.modalview(modalId);
   }
 }
