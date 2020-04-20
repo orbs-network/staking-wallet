@@ -244,6 +244,7 @@ export class OrbsAccountStore {
   private failLoadingProcess(error: Error) {
     this.setErrorLoading(true);
     this.setDoneLoading(true);
+    throw error;
   }
 
   // ****  Observables setter actions ****

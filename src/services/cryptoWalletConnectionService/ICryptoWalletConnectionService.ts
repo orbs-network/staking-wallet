@@ -11,5 +11,5 @@ export interface ICryptoWalletConnectionService {
   requestConnectionPermission: () => Promise<boolean>;
 
   // Event listeners
-  onMainAddressChange: (onChange: (mainAddress: string) => void) => () => void;
+  onMainAddressChange: (onChange: (mainAddress: string) => void) => Promise<() => void>;
 }
