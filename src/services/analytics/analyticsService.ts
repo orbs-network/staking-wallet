@@ -32,7 +32,9 @@ export class AnalyticsService implements IAnalyticsService {
     this.setDimension('userAddress', userAddress);
   }
 
-  public trackModalView(modalId: TModalId) {}
+  public trackModalView(modalId: TModalId) {
+    this.trackModal(modalId);
+  }
 
   private setDimension(dimensionKey: string, dimensionValue: string | number) {
     if (!this.isActive) {

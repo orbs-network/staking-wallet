@@ -34,6 +34,9 @@ const stores = getStores(
   services.analyticsService,
 );
 
+// TODO : FUTURE : O.L : Move this to a better location
+services.analyticsService.init();
+
 const themeAndStyle = {
   ...baseTheme,
   styles: AppStyles,
