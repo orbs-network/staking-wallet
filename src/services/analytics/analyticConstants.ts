@@ -15,7 +15,8 @@ export const STAKING_ACTIONS = {
 };
 
 export const EVENT_CATEGORIES = {
-  tokenStake: 'Token Stake',
+  tokenStakeRequest: 'Token Stake request',
+  tokenStakeSuccess: 'Token Stake success',
 };
 
 type ValueOf<T> = T[keyof T];

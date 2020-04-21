@@ -7,5 +7,6 @@ export interface IAnalyticsService {
 
   setUserAddress: (userAddress: string) => void;
   trackModalView: (modalId: TModalId) => void;
-  trackStakingContractInteraction: (stakingAction: TStackingAction, value: number) => void;
+  trackStakingContractInteractionRequest: (stakingAction: TStackingAction, value?: number) => void;
+  trackStakingContractInteractionSuccess: (stakingAction: TStackingAction, value?: number) => void;
 }

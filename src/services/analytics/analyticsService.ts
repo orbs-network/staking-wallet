@@ -36,8 +36,12 @@ export class AnalyticsService implements IAnalyticsService {
     this.trackModal(modalId);
   }
 
-  public trackStakingContractInteraction(stakingAction: TStackingAction, value?: number): void {
-    this.trackEvent(EVENT_CATEGORIES.tokenStake, stakingAction, value);
+  public trackStakingContractInteractionRequest(stakingAction: TStackingAction, value?: number): void {
+    this.trackEvent(EVENT_CATEGORIES.tokenStakeRequest, stakingAction, value);
+  }
+
+  public trackStakingContractInteractionSuccess(stakingAction: TStackingAction, value?: number): void {
+    this.trackEvent(EVENT_CATEGORIES.tokenStakeSuccess, stakingAction, value);
   }
 
   private setDimension(dimensionKey: string, dimensionValue: string | number) {
