@@ -1,4 +1,4 @@
-import { TModalId } from './analyticConstants';
+import { TModalId, TStackingAction } from './analyticConstants';
 
 export interface IAnalyticsService {
   isActive: boolean;
@@ -7,4 +7,5 @@ export interface IAnalyticsService {
 
   setUserAddress: (userAddress: string) => void;
   trackModalView: (modalId: TModalId) => void;
+  trackStakingContractInteraction: (stakingAction: TStackingAction, value: number) => void;
 }

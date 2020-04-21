@@ -1,9 +1,9 @@
-import ReactGA from 'react-ga';
+import ReactGA, { EventArgs } from 'react-ga';
 import { IAnalyticsService } from './IAnalyticsService';
-import { TModalId } from './analyticConstants';
+import { EVENT_CATEGORIES, TEventCategories, TModalId, TStackingAction } from './analyticConstants';
 
 export class AnalyticsService implements IAnalyticsService {
-  private active = false;
+  private readonly active;
   private initialized = false;
 
   constructor(private trackingId: string, isActive: boolean) {
@@ -36,6 +36,10 @@ export class AnalyticsService implements IAnalyticsService {
     this.trackModal(modalId);
   }
 
+  public trackStakingContractInteraction(stakingAction: TStackingAction, value?: number): void {
+    this.trackEvent(EVENT_CATEGORIES.tokenStake, stakingAction, value);
+  }
+
   private setDimension(dimensionKey: string, dimensionValue: string | number) {
     if (!this.isActive) {
       return;
@@ -50,5 +54,22 @@ export class AnalyticsService implements IAnalyticsService {
     }
 
     ReactGA.modalview(modalId);
+  }
+
+  private trackEvent(category: TEventCategories, action: string, value?: number) {
+    if (!this.isActive) {
+      return;
+    }
+
+    const eventArgs: EventArgs = {
+      category,
+      action,
+    };
+
+    if (value !== undefined) {
+      eventArgs.value = value;
+    }
+
+    ReactGA.event(eventArgs);
   }
 }
