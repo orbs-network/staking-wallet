@@ -10,6 +10,8 @@ import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { useAnalyticsService } from '../../services/ServicesHooks';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -22,6 +24,7 @@ export const GuardianSelectionStepContent = observer(
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
     const guardiansStore = useGuardiansStore();
+    const analyticsService = useAnalyticsService();
 
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
@@ -52,18 +55,21 @@ export const GuardianSelectionStepContent = observer(
             isBroadcastingMessage.setTrue();
           });
 
-          onPromiEventAction(promiEvent);
+          onPromiEventAction(promiEvent, () =>
+            analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
+          );
         }
       },
       [
         guardiansStore,
+        analyticsService,
         message,
         onPromiEventAction,
         selectedGuardianAddress,
         skipToSuccess,
         subMessage,
         wizardsCommonTranslations,
-        isBroadcastingMessage,
+        isBroadcastingMessage
       ],
     );
 

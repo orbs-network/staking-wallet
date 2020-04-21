@@ -8,6 +8,8 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { useAnalyticsService } from '../../services/ServicesHooks';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 
 export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError } = props;
@@ -15,6 +17,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const stakingWizardTranslations = useStakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
+  const analyticsService = useAnalyticsService();
 
   // Start and limit by allowance
   const orbsForStaking = orbsAccountStore.stakingContractAllowance;
@@ -36,8 +39,11 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent);
+    onPromiEventAction(promiEvent, () =>
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.staking, fullOrbsForStaking),
+    );
   }, [
+    analyticsService,
     message,
     subMessage,
     wizardsCommonTranslations,
@@ -45,6 +51,7 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
     orbsForStaking,
     onPromiEventAction,
     isBroadcastingMessage,
+    fullOrbsForStaking,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
