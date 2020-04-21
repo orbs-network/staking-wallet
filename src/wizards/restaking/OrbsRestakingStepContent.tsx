@@ -8,6 +8,8 @@ import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { useAnalyticsService } from '../../services/ServicesHooks';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -15,6 +17,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const restakingWizardTranslations = useRestakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
+  const analyticsService = useAnalyticsService();
 
   // Start and limit by allowance
   const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
@@ -39,8 +42,18 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent);
-  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, onPromiEventAction, isBroadcastingMessage]);
+    onPromiEventAction(promiEvent, () =>
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.restaking),
+    );
+  }, [
+    analyticsService,
+    message,
+    subMessage,
+    wizardsCommonTranslations,
+    orbsAccountStore,
+    onPromiEventAction,
+    isBroadcastingMessage,
+  ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({

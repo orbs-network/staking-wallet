@@ -31,7 +31,11 @@ const stores = getStores(
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
   services.guardiansService,
+  services.analyticsService,
 );
+
+// TODO : FUTURE : O.L : Move this to a better location
+services.analyticsService.init();
 
 const themeAndStyle = {
   ...baseTheme,

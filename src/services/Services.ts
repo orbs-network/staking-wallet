@@ -16,6 +16,8 @@ import { CryptoWalletConnectionService } from './cryptoWalletConnectionService/C
 import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
 import { BuildOrbsClient } from './OrbsClientFactory';
+import { AnalyticsService } from './analytics/analyticsService';
+import { IAnalyticsService } from './analytics/IAnalyticsService';
 
 export interface IServices {
   orbsPOSDataService: IOrbsPOSDataService;
@@ -23,6 +25,7 @@ export interface IServices {
   stakingService: IStakingService;
   orbsTokenService: IOrbsTokenService;
   guardiansService: IGuardiansService;
+  analyticsService: IAnalyticsService;
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider): IServices {
@@ -51,5 +54,6 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
           }
         : undefined,
     ),
+    analyticsService: new AnalyticsService(config.gaTrackerId, config.analyticsActive),
   };
 }

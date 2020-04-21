@@ -3,6 +3,8 @@ import { observable, action, reaction, IReactionDisposer, computed } from 'mobx'
 import { IOrbsPOSDataService, IGuardianInfo, IGuardiansService } from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
+import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
+import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 
 export type TGuardianInfoExtended = IGuardianInfo & { address: string };
 
@@ -29,6 +31,7 @@ export class GuardiansStore implements TGuardiansStore {
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private guardiansService: IGuardiansService,
+    private analyticsService: IAnalyticsService,
   ) {
     this.guardiansList = [];
     this.totalParticipatingTokens = BigInt(0);
@@ -87,6 +90,8 @@ export class GuardiansStore implements TGuardiansStore {
   }
 
   public selectGuardian(guardianAddress: string): PromiEvent<TransactionReceipt> {
+    this.analyticsService.trackStakingContractInteractionRequest(STAKING_ACTIONS.guardianChange);
+
     return this.guardiansService.selectGuardian(guardianAddress);
   }
 

@@ -8,6 +8,8 @@ import { observer } from 'mobx-react';
 import { OrbsUntakingStepContent } from './OrbsUnstakingStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
+import { useTrackModal } from '../../services/analytics/analyticsHooks';
+import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 
 const STEPS_INDEXES = {
   unstakeOrbs: 0,
@@ -22,6 +24,7 @@ interface IProps {
 // Connect to store
 export const UnstakingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
+    useTrackModal(MODAL_IDS.unstaking);
     const { closeWizard } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
