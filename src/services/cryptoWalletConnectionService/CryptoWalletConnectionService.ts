@@ -45,7 +45,8 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
   }
 
   async getMainAddress(): Promise<string> {
-    return this.ethereum.selectedAddress;
+    const accounts = await this.web3.eth.getAccounts();
+    return accounts[0];
   }
 
   // Event listeners
@@ -63,7 +64,6 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
     } else {
       const accounts = await this.web3.eth.getAccounts();
       listener(accounts);
-      this.ethereum.selectedAddress = accounts[0];
     }
   }
 }
