@@ -8,6 +8,8 @@ import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { useAnalyticsService } from '../../services/ServicesHooks';
 
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -15,6 +17,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const withdrawingWizardTranslations = useWithdrawingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
+  const analyticsService = useAnalyticsService();
 
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
@@ -39,8 +42,19 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent);
-  }, [message, subMessage, wizardsCommonTranslations, orbsAccountStore, onPromiEventAction, isBroadcastingMessage]);
+    onPromiEventAction(promiEvent, () =>
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal),
+    );
+  }, [
+    analyticsService,
+    message,
+    subMessage,
+    wizardsCommonTranslations,
+    orbsAccountStore,
+    onPromiEventAction,
+    isBroadcastingMessage,
+    fullOrbsReadyForWithdrawal,
+  ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({

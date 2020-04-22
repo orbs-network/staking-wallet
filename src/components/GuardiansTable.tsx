@@ -258,6 +258,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
       const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
       const actionButtonOnClick = () => onGuardianSelect(g);
+      const isSelectedGuardian = g.address.toLowerCase() === selectedGuardian.toLowerCase();
 
       switch (guardianSelectionMode) {
         case 'Select':
@@ -268,13 +269,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               data-testid={actionButtonTestId}
               onClick={actionButtonOnClick}
             >
-              {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
+              {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
             </SelectButton>
           );
           break;
         case 'Change':
-          const isSelectedGuardian = g.address === selectedGuardian;
-
           const enabled = !!onGuardianSelect;
           const actionButtonIcon = isSelectedGuardian ? (
             <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
@@ -285,8 +284,13 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           const iconColor = isSelectedGuardian ? theme.palette.secondary.main : theme.palette.grey['500'];
 
           selectedGuardianCell = (
-            <Typography data-testid={`guardian-${g.address}-selected-status`} >
-              <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled} style={{ color: iconColor }}>
+            <Typography data-testid={`guardian-${g.address}-selected-status`}>
+              <IconButton
+                data-testid={actionButtonTestId}
+                onClick={actionButtonOnClick}
+                disabled={!enabled}
+                style={{ color: iconColor }}
+              >
                 {actionButtonIcon}
               </IconButton>
             </Typography>
@@ -322,7 +326,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           {/* TODO : FUTURE : O.L : add support for the jazzicon */}
           {/*<Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />*/}
           <NameContainer>
-            <Typography >{extendedGuardianInfo.name}</Typography>
+            <Typography>{extendedGuardianInfo.name}</Typography>
           </NameContainer>
         </NameBox>
       ),

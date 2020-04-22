@@ -10,6 +10,8 @@ import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '..
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { Typography } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { useAnalyticsService } from '../../services/ServicesHooks';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -17,6 +19,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const unstakingWizardTranslations = useUnstakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
+  const analyticsService = useAnalyticsService();
 
   // Start and limit by allowance
   const stakedOrbsNumericalFormat = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
@@ -45,8 +48,11 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent);
+    onPromiEventAction(promiEvent, () =>
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, orbsForUnstaking.value),
+    );
   }, [
+    analyticsService,
     message,
     subMessage,
     wizardsCommonTranslations,

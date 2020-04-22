@@ -8,6 +8,8 @@ import { observer } from 'mobx-react';
 import { OrbsWithdrawingStepContent } from './OrbsWithdrawingStepContent';
 import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
+import { useTrackModal } from '../../services/analytics/analyticsHooks';
+import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 
 const STEPS_INDEXES = {
   withdrawOrbs: 0,
@@ -22,6 +24,7 @@ interface IProps {
 // Connect to store
 export const WithdrawingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
+    useTrackModal(MODAL_IDS.withdrawing);
     const { closeWizard } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();

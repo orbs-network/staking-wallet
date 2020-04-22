@@ -9,7 +9,7 @@ type TStepState = 'Action' | 'Confirmation' | 'Success';
 const REQUIRED_CONFIRMATIONS = 7;
 
 export interface ITransactionCreationStepProps {
-  onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>): void;
+  onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>, afterTxConfirmedCb?: () => void): void;
   skipToSuccess: () => void;
   disableInputs: boolean;
   closeWizard?: () => void;
@@ -78,9 +78,12 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
   const txConfirmationsCount = useNumber(-1);
   const txCreatingError = useStateful<Error>(null);
 
-  const txCreationAction = useCallback<(promiEvent: PromiEvent<TransactionReceipt>) => void>(
-    (promiEvent) => {
+  const txCreationAction = useCallback<
+    (promiEvent: PromiEvent<TransactionReceipt>, afterTxConfirmedCb?: () => void) => void
+  >(
+    (promiEvent, afterTxConfirmedCb) => {
       disableTxCreationInputs.setTrue();
+      let afterConfirmationCbCalled = false;
 
       unsubscribeFromAllPromiventListenersRef.current = () => {
         return (promiEvent as any).removeAllListeners();
@@ -88,6 +91,12 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
 
       promiEvent.on('confirmation', (confirmation) => {
         txConfirmationsCount.setValue(confirmation);
+
+        if (!afterConfirmationCbCalled && afterTxConfirmedCb) {
+          afterConfirmationCbCalled = true;
+
+          afterTxConfirmedCb();
+        }
 
         // DEV_NOTE : By API definition, the 'promivent' will fire up until confirmation number 24.
         if (confirmation >= 10) {

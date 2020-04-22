@@ -12,6 +12,8 @@ import {
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { useAnalyticsService } from '../../services/ServicesHooks';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -25,6 +27,7 @@ export const GuardianChangeStepContent = observer(
     const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
     const guardiansStore = useGuardiansStore();
     const [t] = useTranslation();
+    const analyticsService = useAnalyticsService();
 
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
@@ -48,8 +51,11 @@ export const GuardianChangeStepContent = observer(
         isBroadcastingMessage.setTrue();
       });
 
-      onPromiEventAction(promiEvent);
+      onPromiEventAction(promiEvent, () =>
+        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
+      );
     }, [
+      analyticsService,
       message,
       subMessage,
       wizardsCommonTranslations,

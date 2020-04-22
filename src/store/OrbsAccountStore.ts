@@ -9,10 +9,14 @@ import {
 } from './contractsStateSubscriptions/combinedEventsSubscriptions';
 import { EMPTY_ADDRESS } from '../constants';
 import moment from 'moment';
+import { GuardiansStore } from './GuardiansStore';
+import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
+import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
+import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 
 export class OrbsAccountStore {
-  @observable public doneLoading: boolean = false;
-  @observable public errorLoading: boolean = false;
+  @observable public doneLoading = false;
+  @observable public errorLoading = false;
 
   @observable public liquidOrbs = BigInt(0);
   @observable public stakingContractAllowance = BigInt(0);
@@ -20,7 +24,21 @@ export class OrbsAccountStore {
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
   @observable public accumulatedRewards = BigInt(0);
-  @observable public selectedGuardianAddress: string;
+  @observable public _selectedGuardianAddress: string;
+
+  @computed get isGuardian(): boolean {
+    return this.guardiansStore.guardiansAddresses.includes(
+      this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase(),
+    );
+  }
+
+  @computed get selectedGuardianAddress(): string {
+    if (this.isGuardian) {
+      return this.cryptoWalletIntegrationStore.mainAddress;
+    } else {
+      return this._selectedGuardianAddress;
+    }
+  }
 
   @computed get hasSelectedGuardian(): boolean {
     return !isNil(this.selectedGuardianAddress) && this.selectedGuardianAddress !== EMPTY_ADDRESS;
@@ -44,10 +62,12 @@ export class OrbsAccountStore {
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
+    private guardiansStore: GuardiansStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,
     private guardiansService: IGuardiansService,
+    private analyticsService: IAnalyticsService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -72,18 +92,32 @@ export class OrbsAccountStore {
   }
 
   public stakeTokens(weiOrbsToStake: bigint): PromiEvent<TransactionReceipt> {
+    this.analyticsService.trackStakingContractInteractionRequest(
+      STAKING_ACTIONS.staking,
+      fullOrbsFromWeiOrbs(weiOrbsToStake),
+    );
+
     return this.stakingService.stake(weiOrbsToStake);
   }
 
   public withdrawTokens(): PromiEvent<TransactionReceipt> {
+    this.analyticsService.trackStakingContractInteractionRequest(STAKING_ACTIONS.withdrawing);
+
     return this.stakingService.withdraw();
   }
 
   public unstakeTokens(weiOrbsToUnstake: bigint): PromiEvent<TransactionReceipt> {
+    this.analyticsService.trackStakingContractInteractionRequest(
+      STAKING_ACTIONS.unstaking,
+      fullOrbsFromWeiOrbs(weiOrbsToUnstake),
+    );
+
     return this.stakingService.unstake(weiOrbsToUnstake);
   }
 
   public restakeTokens(): PromiEvent<TransactionReceipt> {
+    this.analyticsService.trackStakingContractInteractionRequest(STAKING_ACTIONS.restaking);
+
     return this.stakingService.restake();
   }
 
@@ -281,7 +315,7 @@ export class OrbsAccountStore {
 
   @action('setSelectedGuardianAddress')
   private setSelectedGuardianAddress(selectedGuardianAddress: string) {
-    this.selectedGuardianAddress = selectedGuardianAddress;
+    this._selectedGuardianAddress = selectedGuardianAddress;
   }
 
   @action('setDoneLoading')

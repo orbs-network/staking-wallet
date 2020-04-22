@@ -30,8 +30,6 @@ export const RewardsSection = observer(() => {
     }
   }, [translation]);
 
-  console.log('innerLinkLang', innerLinkLang);
-
   // TODO : Find a better way to combine the translations with changing order links
   const innerHtml = rewardsSectionTranslations('text__forDetailedRewardsPleaseVisitThe', {
     rewardsPageTextLink: renderToString(
