@@ -11,6 +11,7 @@ import {
   IOrbsClientService,
 } from 'orbs-pos-data';
 import Web3 from 'web3';
+import { AxiosInstance } from 'axios';
 import config from '../config';
 import { CryptoWalletConnectionService } from './cryptoWalletConnectionService/CryptoWalletConnectionService';
 import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
@@ -18,8 +19,11 @@ import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProv
 import { BuildOrbsClient } from './OrbsClientFactory';
 import { AnalyticsService } from './analytics/analyticsService';
 import { IAnalyticsService } from './analytics/IAnalyticsService';
+import { HttpService } from './http/HttpService';
+import { IHttpService } from './http/IHttpService';
 
 export interface IServices {
+  httpService: IHttpService;
   orbsPOSDataService: IOrbsPOSDataService;
   cryptoWalletConnectionService: ICryptoWalletConnectionService;
   stakingService: IStakingService;
@@ -28,7 +32,7 @@ export interface IServices {
   analyticsService: IAnalyticsService;
 }
 
-export function buildServices(ethereumProvider: IEthereumProvider): IServices {
+export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosInstance): IServices {
   let web3: Web3;
 
   if (ethereumProvider) {
@@ -38,8 +42,10 @@ export function buildServices(ethereumProvider: IEthereumProvider): IServices {
   }
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
+  const httpService: IHttpService = new HttpService(axios);
 
   return {
+    httpService,
     cryptoWalletConnectionService: new CryptoWalletConnectionService(ethereumProvider),
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, config?.contractsAddressesOverride),
     stakingService: new StakingService(web3, config?.contractsAddressesOverride?.stakingContract),

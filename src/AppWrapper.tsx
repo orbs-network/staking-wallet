@@ -1,3 +1,4 @@
+import axios from 'axios';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { StylesProvider, ThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
@@ -24,7 +25,7 @@ moment.locale('en');
 
 configureMobx();
 
-const services = buildServices((window as any).ethereum);
+const services = buildServices((window as any).ethereum, axios);
 const stores = getStores(
   services.orbsPOSDataService,
   services.stakingService,
