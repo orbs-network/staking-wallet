@@ -1,4 +1,6 @@
+import { IAccumulatedRewards, TRewardsDistributionHistory } from './orbsEndpointTypes';
+
 export interface IOrbsEndpointService {
-  readRewards(address: string);
-  readRewardsHistory(address: string);
+  readAccumulatedRewards(address: string): Promise<IAccumulatedRewards>;
+  readRewardsDistributionsHistory(address: string): Promise<TRewardsDistributionHistory>;
 }
