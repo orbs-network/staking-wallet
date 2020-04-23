@@ -22,14 +22,17 @@ interface IConfig {
   ETHEREUM_PROVIDER_WS: string;
   earliestBlockForDelegationOverride: number;
   gaTrackerId: string;
+  orbsEndpointUrl: string;
   analyticsActive: boolean;
 }
+
 const config: IConfig = {
   urlBase: process.env.PUBLIC_BASE_PATH,
   contractsAddressesOverride: SHOULD_OVERRIDE_ADDRESS ? {} : null,
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,
   gaTrackerId: 'UA-163134097-1',
+  orbsEndpointUrl: process.env.ORBS_ENDPOINT_URL,
   analyticsActive: !IS_DEV,
 };
 

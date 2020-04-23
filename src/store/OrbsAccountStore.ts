@@ -13,6 +13,7 @@ import { GuardiansStore } from './GuardiansStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
+import { IOrbsEndpointService } from '../services/orbsEndpoint/IOrbsEndpointService';
 
 export class OrbsAccountStore {
   @observable public doneLoading = false;
@@ -24,6 +25,8 @@ export class OrbsAccountStore {
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
   @observable public accumulatedRewards = BigInt(0);
+  @observable public rewards: any;
+  @observable public rewardsHistory: any;
   @observable public _selectedGuardianAddress: string;
 
   @computed get isGuardian(): boolean {
@@ -67,6 +70,7 @@ export class OrbsAccountStore {
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,
     private guardiansService: IGuardiansService,
+    private orbsEndpointService: IOrbsEndpointService,
     private analyticsService: IAnalyticsService,
   ) {
     this.addressChangeReaction = reaction(
@@ -166,6 +170,14 @@ export class OrbsAccountStore {
       console.error(`Error in reading cooldown status : ${e}`);
       throw e;
     });
+    await this.readAndSetRewards(accountAddress).catch((e) => {
+      console.error(`Error in reading rewards : ${e}`);
+      throw e;
+    });
+    await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
+      console.error(`Error in reading rewards history : ${e}`);
+      throw e;
+    });
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {
@@ -201,6 +213,16 @@ export class OrbsAccountStore {
 
     this.setOrbsInCooldown(amount);
     this.setCooldownReleaseTimestamp(releaseTimestamp);
+  }
+
+  private async readAndSetRewards(accountAddress: string) {
+    const rewards = await this.orbsEndpointService.readRewards(accountAddress);
+    this.setRewards(rewards);
+  }
+
+  private async readAndSetRewardsHistory(accountAddress: string) {
+    const rewardsHistory = await this.orbsEndpointService.readRewardsHistory(accountAddress);
+    this.setRewards(rewardsHistory);
   }
 
   // ****  Subscriptions ****
@@ -320,5 +342,15 @@ export class OrbsAccountStore {
   @action('setErrorLoading')
   private setErrorLoading(errorLoading: boolean) {
     this.errorLoading = errorLoading;
+  }
+
+  @action('setRewards')
+  private setRewards(rewards: any) {
+    this.rewards = rewards;
+  }
+
+  @action('setRewardsHistory')
+  private setRewardsHistory(rewardsHistory: any) {
+    this.rewardsHistory = rewardsHistory;
   }
 }

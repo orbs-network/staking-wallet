@@ -1,8 +1,8 @@
-import { HttpService } from '../http/HttpService';
 import { IOrbsEndpointService } from './IOrbsEndpointService';
+import { IHttpService } from '../http/IHttpService';
 
 export class OrbsEndpointService implements IOrbsEndpointService {
-  constructor(private httpService: HttpService, private remoteAddress: string) {}
+  constructor(private httpService: IHttpService, private remoteAddress: string) {}
 
   readRewards(address: string) {
     return this.httpService.get(this.buildEndpoint(`/rewards/${address}`));
