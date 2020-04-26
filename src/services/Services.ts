@@ -9,6 +9,8 @@ import {
   OrbsTokenService,
   StakingService,
   IOrbsClientService,
+  OrbsRewardsService,
+  IOrbsRewardsService,
 } from 'orbs-pos-data';
 import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
@@ -21,8 +23,6 @@ import { AnalyticsService } from './analytics/analyticsService';
 import { IAnalyticsService } from './analytics/IAnalyticsService';
 import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
-import { IOrbsEndpointService } from './orbsEndpoint/IOrbsEndpointService';
-import { OrbsEndpointService } from './orbsEndpoint/OrbsEndpointService';
 
 export interface IServices {
   httpService: IHttpService;
@@ -31,8 +31,8 @@ export interface IServices {
   stakingService: IStakingService;
   orbsTokenService: IOrbsTokenService;
   guardiansService: IGuardiansService;
-  orbsEndpointService: IOrbsEndpointService;
   analyticsService: IAnalyticsService;
+  rewardsService: IOrbsRewardsService;
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosInstance): IServices {
@@ -63,7 +63,11 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
           }
         : undefined,
     ),
-    orbsEndpointService: new OrbsEndpointService(httpService, config.orbsEndpointUrl),
+    rewardsService: new OrbsRewardsService(
+      web3,
+      orbsClientService,
+      config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
+    ),
     analyticsService: new AnalyticsService(config.gaTrackerId, config.analyticsActive),
   };
 }

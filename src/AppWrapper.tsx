@@ -32,7 +32,7 @@ const stores = getStores(
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
   services.guardiansService,
-  services.orbsEndpointService,
+  services.rewardsService,
   services.analyticsService,
 );
 

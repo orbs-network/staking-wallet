@@ -1,7 +1,7 @@
 const OrbsGuardians = artifacts.require('OrbsGuardians');
 
-module.exports = async function(deployer, network, accounts) {
-  const registrationDepositWei = web3.utils.toWei("1", "ether");
+module.exports = async function (deployer, network, accounts) {
+  const registrationDepositWei = web3.utils.toWei('1', 'ether');
   const registrationMinTime = 60 * 3;
 
   await deployer.deploy(OrbsGuardians, registrationDepositWei, registrationMinTime);

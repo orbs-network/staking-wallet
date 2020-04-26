@@ -1,7 +1,14 @@
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
+import {
+  IOrbsPOSDataService,
+  IStakingService,
+  IOrbsTokenService,
+  IGuardiansService,
+  IOrbsRewardsService,
+  IRewardsDistributionEvent,
+} from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   subscribeToOrbsInCooldownChange,
@@ -13,8 +20,9 @@ import { GuardiansStore } from './GuardiansStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
-import { IOrbsEndpointService } from '../services/orbsEndpoint/IOrbsEndpointService';
-import { IAccumulatedRewards, TRewardsDistributionHistory } from '../services/orbsEndpoint/orbsEndpointTypes';
+import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
+
+export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
 export class OrbsAccountStore {
   @observable public doneLoading = false;
@@ -60,10 +68,11 @@ export class OrbsAccountStore {
       return 0;
     }
 
+    // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
     return (
-      this.accumulatedRewards.delegatorReward +
-      this.accumulatedRewards.guardianReward +
-      this.accumulatedRewards.validatorReward
+      Number(this.accumulatedRewards.delegatorReward) +
+      Number(this.accumulatedRewards.guardianReward) +
+      Number(this.accumulatedRewards.validatorReward)
     );
   }
 
@@ -73,7 +82,8 @@ export class OrbsAccountStore {
     }
 
     const totalDistributedRewards = this.rewardsDistributionsHistory.reduce((sum, distributionEvent) => {
-      return sum + distributionEvent.amount;
+      // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
+      return sum + Number(distributionEvent.amount);
     }, 0);
 
     return totalDistributedRewards;
@@ -93,7 +103,7 @@ export class OrbsAccountStore {
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,
     private guardiansService: IGuardiansService,
-    private orbsEndpointService: IOrbsEndpointService,
+    private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
   ) {
     this.addressChangeReaction = reaction(
@@ -193,11 +203,11 @@ export class OrbsAccountStore {
       console.error(`Error in reading cooldown status : ${e}`);
       throw e;
     });
-    await this.readAndSetRewards(accountAddress).catch((e) => {
+    await this.readAndSetRewards('0x63AEf7616882F488BCa97361d1c24F05B4657ae5').catch((e) => {
       console.error(`Error in reading rewards : ${e}`);
       throw e;
     });
-    await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
+    await this.readAndSetRewardsHistory('0x63AEf7616882F488BCa97361d1c24F05B4657ae5').catch((e) => {
       console.error(`Error in reading rewards history : ${e}`);
       throw e;
     });
@@ -239,12 +249,12 @@ export class OrbsAccountStore {
   }
 
   private async readAndSetRewards(accountAddress: string) {
-    const accumulatedRewards = await this.orbsEndpointService.readAccumulatedRewards(accountAddress);
+    const accumulatedRewards = await this.orbsRewardsService.readAccumulatedRewards(accountAddress);
     this.setAccumulatedRewards(accumulatedRewards);
   }
 
   private async readAndSetRewardsHistory(accountAddress: string) {
-    const rewardsDistributionHistory = await this.orbsEndpointService.readRewardsDistributionsHistory(accountAddress);
+    const rewardsDistributionHistory = await this.orbsRewardsService.readRewardsDistributionsHistory(accountAddress);
     this.setRewardsDistributionsHistory(rewardsDistributionHistory);
   }
 

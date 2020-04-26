@@ -6,8 +6,10 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-var Voting = artifacts.require("OrbsVoting.sol");
+const OrbsRewardsDistributionContract = artifacts.require('OrbsRewardsDistribution');
+const OrbsToken = artifacts.require('OrbsToken');
 
-module.exports = function(deployer) {
-  deployer.deploy(Voting, 3);
+module.exports = function (deployer) {
+  const erc20 = OrbsToken.address;
+  deployer.deploy(OrbsRewardsDistributionContract, erc20);
 };
