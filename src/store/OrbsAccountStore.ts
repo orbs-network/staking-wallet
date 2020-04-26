@@ -203,11 +203,11 @@ export class OrbsAccountStore {
       console.error(`Error in reading cooldown status : ${e}`);
       throw e;
     });
-    await this.readAndSetRewards('0x63AEf7616882F488BCa97361d1c24F05B4657ae5').catch((e) => {
+    await this.readAndSetRewards(accountAddress).catch((e) => {
       console.error(`Error in reading rewards : ${e}`);
       throw e;
     });
-    await this.readAndSetRewardsHistory('0x63AEf7616882F488BCa97361d1c24F05B4657ae5').catch((e) => {
+    await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
       console.error(`Error in reading rewards history : ${e}`);
       throw e;
     });

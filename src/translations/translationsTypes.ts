@@ -192,7 +192,10 @@ export interface IBalancesSectionTranslations {
 
 export interface IRewardsSectionTranslations {
   text_visitThe: string;
+  text__totalDistributedRewards: string;
+  text__totalAccumulatedRewards: string;
   text__forDetailedRewardsPleaseVisitThe: string;
+  text__NextElectionRoundWillTakePlaceAtEthereumBlock: string;
   linkText_rewardsPage: string;
 }
 
