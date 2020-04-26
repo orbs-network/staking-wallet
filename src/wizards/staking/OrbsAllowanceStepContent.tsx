@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useNumber, useStateful, useBoolean } from 'react-hanger';
+import React, { useCallback, useMemo } from 'react';
+import { useNumber } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
@@ -18,7 +17,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by liquid orbs
-  const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
+  const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)
   const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
 
   const { message, subMessage, isBroadcastingMessage } = useWizardState(
@@ -67,7 +66,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
         id={'orbsAllowance'}
         label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
         value={orbsAllowance.value}
-        onChange={(value) => orbsAllowance.setValue(value)}
+        onChange={(value) => orbsAllowance.setValue(Math.min(value, liquidOrbsAsNumber))}
         disabled={disableInputs}
       />
     );
