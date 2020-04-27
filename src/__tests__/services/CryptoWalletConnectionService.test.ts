@@ -43,7 +43,7 @@ describe('Crypto Wallet Connection Service', () => {
     const cryptoWalletConnectionService = new CryptoWalletConnectionService(ethereumProvider);
     await cryptoWalletConnectionService.requestConnectionPermission();
     ethereumProvider.setSelectedAddress('BLABLA');
-    const result = await cryptoWalletConnectionService.getMainAddress();
+    const result = await cryptoWalletConnectionService.readMainAddress();
     expect(result).toBe('BLABLA');
   });
 

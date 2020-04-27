@@ -48,12 +48,18 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
     return this.isMetamaskInstalled && this.ethereum.networkVersion === '1';
   }
 
-  async getMainAddress(): Promise<string> {
-    return this.ethereum.selectedAddress;
+  // Data "reading"
+  async readMainAddress(): Promise<string> {
+    const accounts = await this.web3.eth.getAccounts();
+    return accounts[0];
   }
 
   // Event listeners
   onMainAddressChange(onChange: (mainAddress: string) => void): () => void {
+    if (!this.hasEventsSupport) {
+      throw new Error(`Cannot subscribe to events with given Ethereum provider`);
+    }
+
     const listener = (accounts) => onChange(accounts[0]);
 
     this.ethereum.on('accountsChanged', listener);

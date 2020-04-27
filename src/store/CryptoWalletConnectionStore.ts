@@ -55,7 +55,7 @@ export class CryptoWalletConnectionStore {
   }
 
   private async readInformationFromConnectedWallet() {
-    const walletAddress = await this.cryptoWalletConnectionService.getMainAddress();
+    const walletAddress = await this.cryptoWalletConnectionService.readMainAddress();
 
     this.setMainAddress(walletAddress);
   }
