@@ -1,7 +1,7 @@
 const StakingContract = artifacts.require('StakingContract');
 const OrbsToken = artifacts.require('OrbsToken');
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function (deployer, network, accounts) {
   console.log('Orbs token address', OrbsToken.address);
 
   const cooldownTimeInSeconds = 60 * 1 * 5;

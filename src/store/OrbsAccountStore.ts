@@ -1,7 +1,14 @@
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IGuardiansService } from 'orbs-pos-data';
+import {
+  IOrbsPOSDataService,
+  IStakingService,
+  IOrbsTokenService,
+  IGuardiansService,
+  IOrbsRewardsService,
+  IRewardsDistributionEvent,
+} from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   subscribeToOrbsInCooldownChange,
@@ -13,6 +20,9 @@ import { GuardiansStore } from './GuardiansStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
+import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
+
+export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
 export class OrbsAccountStore {
   @observable public doneLoading = false;
@@ -23,7 +33,8 @@ export class OrbsAccountStore {
   @observable public stakedOrbs = BigInt(0);
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
-  @observable public accumulatedRewards = BigInt(0);
+  @observable public accumulatedRewards: IAccumulatedRewards;
+  @observable public rewardsDistributionsHistory: TRewardsDistributionHistory;
   @observable public _selectedGuardianAddress: string;
 
   @computed get isGuardian(): boolean {
@@ -52,6 +63,31 @@ export class OrbsAccountStore {
   @computed get hasOrbsInCooldown(): boolean {
     return this.orbsInCoolDown > 0;
   }
+  @computed get totalAccumulatedRewards(): number {
+    if (!this.accumulatedRewards) {
+      return 0;
+    }
+
+    // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
+    return (
+      Number(this.accumulatedRewards.delegatorReward) +
+      Number(this.accumulatedRewards.guardianReward) +
+      Number(this.accumulatedRewards.validatorReward)
+    );
+  }
+
+  @computed get totalDistributedRewards(): number {
+    if (!this.rewardsDistributionsHistory) {
+      return 0;
+    }
+
+    const totalDistributedRewards = this.rewardsDistributionsHistory.reduce((sum, distributionEvent) => {
+      // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
+      return sum + Number(distributionEvent.amount);
+    }, 0);
+
+    return totalDistributedRewards;
+  }
 
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
@@ -67,6 +103,7 @@ export class OrbsAccountStore {
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,
     private guardiansService: IGuardiansService,
+    private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
   ) {
     this.addressChangeReaction = reaction(
@@ -166,6 +203,14 @@ export class OrbsAccountStore {
       console.error(`Error in reading cooldown status : ${e}`);
       throw e;
     });
+    await this.readAndSetRewards(accountAddress).catch((e) => {
+      console.error(`Error in reading rewards : ${e}`);
+      throw e;
+    });
+    await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
+      console.error(`Error in reading rewards history : ${e}`);
+      throw e;
+    });
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {
@@ -201,6 +246,16 @@ export class OrbsAccountStore {
 
     this.setOrbsInCooldown(amount);
     this.setCooldownReleaseTimestamp(releaseTimestamp);
+  }
+
+  private async readAndSetRewards(accountAddress: string) {
+    const accumulatedRewards = await this.orbsRewardsService.readAccumulatedRewards(accountAddress);
+    this.setAccumulatedRewards(accumulatedRewards);
+  }
+
+  private async readAndSetRewardsHistory(accountAddress: string) {
+    const rewardsDistributionHistory = await this.orbsRewardsService.readRewardsDistributionsHistory(accountAddress);
+    this.setRewardsDistributionsHistory(rewardsDistributionHistory);
   }
 
   // ****  Subscriptions ****
@@ -302,11 +357,6 @@ export class OrbsAccountStore {
     this.cooldownReleaseTimestamp = cooldownReleaseTimestamp;
   }
 
-  @action('setAccumulatedRewards')
-  private setAccumulatedRewards(accumulatedRewards: bigint) {
-    this.accumulatedRewards = accumulatedRewards;
-  }
-
   @action('setSelectedGuardianAddress')
   private setSelectedGuardianAddress(selectedGuardianAddress: string) {
     this._selectedGuardianAddress = selectedGuardianAddress;
@@ -320,5 +370,15 @@ export class OrbsAccountStore {
   @action('setErrorLoading')
   private setErrorLoading(errorLoading: boolean) {
     this.errorLoading = errorLoading;
+  }
+
+  @action('setAccumulatedRewards')
+  private setAccumulatedRewards(accumulatedRewards: any) {
+    this.accumulatedRewards = accumulatedRewards;
+  }
+
+  @action('setRewardsDistributionsHistory')
+  private setRewardsDistributionsHistory(rewardsDistributionsHistory: any) {
+    this.rewardsDistributionsHistory = rewardsDistributionsHistory;
   }
 }
