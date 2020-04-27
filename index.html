@@ -43,19 +43,20 @@
 	  </script>
 	  <!-- End Single Page Apps for GitHub Pages -->
 
-	  <!-- Start script to detect unsupported browsers -->
-	  <script type="text/javascript">
-		  // DEV_NOTE : This is a temporary solution to detect and support unsupported browsers
-		  try {
-			  if (!BigInt) {
-				  BigInt = () => 'unsupported';
+	  <!-- Start Script to Fix Mobile Safari BigInt -->
+	  <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script>
+	  <script>
+		  if (!BigInt && (navigator.userAgent.match(/iPhone/) || navigator.userAgent.match(/iPad/))) {
+			  function BigInt(value) {
+				  if ((typeof value) === "string" && value.slice(0, 2) === "0x") {
+					  return bigInt(value.slice(2), 16);
+				  }
+				  return bigInt(value);
 			  }
-		  } catch (e) {
-		  	var BigInt = () => 'unsupported';
 		  }
-
 	  </script>
-	  <!-- End script to detect unsupported browsers -->
+	  <!-- End Script to Fix Mobile Safari BigInt -->
+
 	  <% } %>
 	  <style>
 		  .loader {
