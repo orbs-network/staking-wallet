@@ -7,14 +7,23 @@ import { IEthereumProvider } from './IEthereumProvider';
 export class CryptoWalletConnectionService implements ICryptoWalletConnectionService {
   private web3: Web3;
   public readonly hasEthereumProvider: boolean;
+  public readonly hasEventsSupport: boolean;
   public readonly isMetamaskInstalled: boolean;
+  public readonly isSemiCompliantEthereumProviderInstalled: boolean;
 
   constructor(private ethereum: IEthereumProvider) {
     this.hasEthereumProvider = this.ethereum !== undefined;
+
+    // Distinguishes between installed ethereum providers
     this.isMetamaskInstalled = this.hasEthereumProvider && this.ethereum.isMetaMask;
-    if (this.isMetamaskInstalled) {
+    this.isSemiCompliantEthereumProviderInstalled = this.hasEthereumProvider && !this.ethereum.isMetaMask;
+
+    if (this.hasEthereumProvider) {
       this.web3 = new Web3(this.ethereum as any);
     }
+
+    const onFunction = this.hasEthereumProvider ? this.ethereum.on : undefined;
+    this.hasEventsSupport = onFunction !== undefined && onFunction !== null;
   }
 
   public async requestConnectionPermission(): Promise<boolean> {
