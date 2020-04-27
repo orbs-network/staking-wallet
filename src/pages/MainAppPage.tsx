@@ -10,7 +10,7 @@ export const MainAppPage = observer(() => {
 
   // DEV_NOTE : Currently not showing the guardians table to mobile
   const canAndShouldDisplayGuardians =
-    cryptoWalletConnectionStore.isMetamaskInstalled && cryptoWalletConnectionStore.isConnectedToWallet;
+    cryptoWalletConnectionStore.hasEthereumProvider && cryptoWalletConnectionStore.isConnectedToWallet;
 
   return (
     <Grid container direction={'column'} id={'mainPage'}>
