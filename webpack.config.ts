@@ -115,7 +115,6 @@ const config: Configuration = {
   plugins,
   devServer: {
     historyApiFallback: true,
-    port: 3000,
   },
   externals: {
     react: 'React',

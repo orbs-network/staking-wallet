@@ -79,13 +79,16 @@ export const RewardsSection = observer(() => {
   });
 
   const gridMargin = theme.spacing(1);
-  const gridPadding = theme.spacing(1);
+  const gridPadding = theme.spacing(2);
 
+  // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
 
-      <Grid container item direction={'column'} spacing={1} style={{ backgroundColor: 'rgba(47, 47, 47, 0.6)', marginRight: gridMargin, marginLeft: gridMargin, paddingRight: gridPadding, paddingLeft: gridPadding }}>
+      <Grid item container direction={'column'} spacing={1}
+            style={{ width: '98%', alignSelf: 'center', backgroundColor: 'rgba(47, 47, 47, 0.6)', marginRight: gridMargin, marginLeft: gridMargin, paddingLeft: gridPadding,paddingRight: gridPadding }}
+      >
         <Grid item>
           <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />
         </Grid>
