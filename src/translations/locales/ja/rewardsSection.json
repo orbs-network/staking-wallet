@@ -1,5 +1,8 @@
 {
   "linkText_rewardsPage": "リワードページ",
+  "text__NextElectionRoundWillTakePlaceAtEthereumBlock": "次回投票はイーサリアムのブロックが{{nextElectionBlockNumberLink}}の時",
   "text__forDetailedRewardsPleaseVisitThe": "リワードの詳細は{{rewardsPageTextLink}}をご参照ください",
+  "text__totalAccumulatedRewards": "累計リワード数：{{totalAccumulatedRewards}}",
+  "text__totalDistributedRewards": "合計配布済みリワード数：{{totalDistributedRewards}}",
   "text_visitThe": "参照"
 }
