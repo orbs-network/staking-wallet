@@ -89,6 +89,10 @@ export class OrbsAccountStore {
     return totalDistributedRewards;
   }
 
+  @computed get needsManualUpdatingOfState(): boolean {
+    return !this.cryptoWalletIntegrationStore.hasEventsSupport;
+  }
+
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
@@ -163,7 +167,10 @@ export class OrbsAccountStore {
   private async reactToConnectedAddressChanged(currentAddress) {
     if (currentAddress) {
       this.setDefaultAccountAddress(currentAddress);
-      this.refreshAccountListeners(currentAddress);
+
+      if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
+        this.refreshAccountListeners(currentAddress);
+      }
 
       try {
         await this.readDataForAccount(currentAddress);
@@ -180,6 +187,15 @@ export class OrbsAccountStore {
   }
 
   // **** Data reading and setting ****
+
+  public async manuallyReadAccountData() {
+    try {
+      await this.readDataForAccount(this.cryptoWalletIntegrationStore.mainAddress);
+    } catch (e) {
+      this.failLoadingProcess(e);
+      console.error('Error in manually reading address data in Orbs Account Store', e);
+    }
+  }
 
   private async readDataForAccount(accountAddress: string) {
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
@@ -220,7 +236,6 @@ export class OrbsAccountStore {
 
   private async readAndSetSelectedGuardianAddress(accountAddress: string) {
     const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
-
     this.setSelectedGuardianAddress(selectedGuardianAddress);
   }
 

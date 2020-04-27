@@ -7,6 +7,7 @@ export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
 
   @observable public hasEthereumProvider: boolean;
+  @observable public hasEventsSupport: boolean;
 
   @observable public mainAddress: string;
 
@@ -18,6 +19,7 @@ export class CryptoWalletConnectionStore {
     private analyticsService: IAnalyticsService,
   ) {
     this.hasEthereumProvider = cryptoWalletConnectionService.hasEthereumProvider;
+    this.hasEventsSupport = cryptoWalletConnectionService.hasEventsSupport;
 
     this.reactionToWalletConnection = reaction(
       () => this.isConnectedToWallet,
