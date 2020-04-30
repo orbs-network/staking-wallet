@@ -3,6 +3,7 @@ import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
 import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
@@ -44,6 +45,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     closeWizard,
   } = props;
 
+  const orbsAccountStore = useOrbsAccountStore();
   const stepState = useStateful<TStepState>('Action');
 
   const unsubscribeFromAllPromiventListenersRef = useRef<() => void>(null);
@@ -60,6 +62,14 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     // First, unsubscribe
     unsubscribeFromAllPromiventListeners();
 
+    // TODO : ORL : If this type of manual updating works, lets make this part into a function prop
+    // DEV_NOTE : This manually updating part is less about the wizard logic and more about
+    //            helping us maintain the true state of the address after each action.
+    // Then, if our ethereum provider has no event support, we will want to read
+    if (orbsAccountStore.needsManualUpdatingOfState) {
+      orbsAccountStore.manuallyReadAccountData();
+    }
+
     // Do we want to display the congratulations sub step ?
     if (displayCongratulationsSubStep) {
       goToCongratulationSubStep();
@@ -67,6 +77,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       moveToNextStepAction();
     }
   }, [
+    orbsAccountStore,
     unsubscribeFromAllPromiventListeners,
     goToCongratulationSubStep,
     moveToNextStepAction,

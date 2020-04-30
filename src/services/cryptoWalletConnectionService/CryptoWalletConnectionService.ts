@@ -7,14 +7,23 @@ import { IEthereumProvider } from './IEthereumProvider';
 export class CryptoWalletConnectionService implements ICryptoWalletConnectionService {
   private web3: Web3;
   public readonly hasEthereumProvider: boolean;
+  public readonly hasEventsSupport: boolean;
   public readonly isMetamaskInstalled: boolean;
+  public readonly isSemiCompliantEthereumProviderInstalled: boolean;
 
   constructor(private ethereum: IEthereumProvider) {
     this.hasEthereumProvider = this.ethereum !== undefined;
+
+    // Distinguishes between installed ethereum providers
     this.isMetamaskInstalled = this.hasEthereumProvider && this.ethereum.isMetaMask;
-    if (this.isMetamaskInstalled) {
+    this.isSemiCompliantEthereumProviderInstalled = this.hasEthereumProvider && !this.ethereum.isMetaMask;
+
+    if (this.hasEthereumProvider) {
       this.web3 = new Web3(this.ethereum as any);
     }
+
+    const onFunction = this.hasEthereumProvider ? this.ethereum.on : undefined;
+    this.hasEventsSupport = onFunction !== undefined && onFunction !== null;
   }
 
   public async requestConnectionPermission(): Promise<boolean> {
@@ -39,12 +48,18 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
     return this.isMetamaskInstalled && this.ethereum.networkVersion === '1';
   }
 
-  async getMainAddress(): Promise<string> {
-    return this.ethereum.selectedAddress;
+  // Data "reading"
+  async readMainAddress(): Promise<string> {
+    const accounts = await this.web3.eth.getAccounts();
+    return accounts[0];
   }
 
   // Event listeners
   onMainAddressChange(onChange: (mainAddress: string) => void): () => void {
+    if (!this.hasEventsSupport) {
+      throw new Error(`Cannot subscribe to events with given Ethereum provider`);
+    }
+
     const listener = (accounts) => onChange(accounts[0]);
 
     this.ethereum.on('accountsChanged', listener);

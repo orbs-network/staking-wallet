@@ -58,7 +58,7 @@ export const ConnectWalletSection = observer(() => {
 
   const theme = useTheme();
 
-  const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.isMetamaskInstalled
+  const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.hasEthereumProvider
     ? 'connect'
     : 'install';
 
@@ -104,7 +104,7 @@ export const ConnectWalletSection = observer(() => {
     let testId = null;
     let messageText = null;
 
-    if (cryptoWalletIntegrationStore.isMetamaskInstalled && rejectedConnection.value) {
+    if (cryptoWalletIntegrationStore.hasEthereumProvider && rejectedConnection.value) {
       testId = 'text-connection-was-not-approved';
       messageText = connectWalletSectionTranslations('pleaseApproveAccountConnection');
     } else if (pressedOnInstallMetamask.value) {
@@ -119,7 +119,7 @@ export const ConnectWalletSection = observer(() => {
     }
   }, [
     connectWalletSectionTranslations,
-    cryptoWalletIntegrationStore.isMetamaskInstalled,
+    cryptoWalletIntegrationStore.hasEthereumProvider,
     pressedOnInstallMetamask.value,
     rejectedConnection.value,
   ]);
