@@ -50,7 +50,6 @@ export class OrbsAccountStore {
       return this._selectedGuardianAddress;
     }
   }
-
   @computed get hasSelectedGuardian(): boolean {
     return !isNil(this.selectedGuardianAddress) && this.selectedGuardianAddress !== EMPTY_ADDRESS;
   }
@@ -62,6 +61,9 @@ export class OrbsAccountStore {
   }
   @computed get hasOrbsInCooldown(): boolean {
     return this.orbsInCoolDown > 0;
+  }
+  @computed get participatingInStaking(): boolean {
+    return this.hasStakedOrbs || this.hasOrbsInCooldown || this.hasOrbsToWithdraw;
   }
   @computed get totalAccumulatedRewards(): number {
     if (!this.accumulatedRewards) {

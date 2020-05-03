@@ -1,24 +1,24 @@
-import Typography from '@material-ui/core/Typography';
-import { ReactComponent as ShielIcon } from '../../assets/shield.svg';
-import { observer } from 'mobx-react';
 import React, { useCallback, useState } from 'react';
-import { Section } from '../components/structure/Section';
-import { SectionHeader } from '../components/structure/SectionHeader';
-import { useGuardiansStore, useOrbsAccountStore } from '../store/storeHooks';
-import { GuardiansTable } from '../components/GuardiansTable';
-import Snackbar from '@material-ui/core/Snackbar';
-import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { useBoolean } from 'react-hanger';
-import { TGuardianInfoExtended } from '../store/GuardiansStore';
-import { GuardianChangingWizard } from '../wizards/guardianChange/GuardianChangingWizard';
+import { Grid } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
+import { observer } from 'mobx-react';
+import Snackbar from '@material-ui/core/Snackbar';
+import { Section } from '../../components/structure/Section';
+import { SectionHeader } from '../../components/structure/SectionHeader';
+import { useGuardiansStore, useOrbsAccountStore } from '../../store/storeHooks';
+import { GuardiansTable } from '../../components/GuardiansTable';
+import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
+import { TGuardianInfoExtended } from '../../store/GuardiansStore';
+import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
 import {
   useAlertsTranslations,
   useCommonsTranslations,
   useSectionsTitlesTranslations,
-} from '../translations/translationsHooks';
-import { Grid } from '@material-ui/core';
-import { CommonDivider } from '../components/base/CommonDivider';
-import { CommonDialog } from '../components/modal/CommonDialog';
+} from '../../translations/translationsHooks';
+import { CommonDivider } from '../../components/base/CommonDivider';
+import { CommonDialog } from '../../components/modal/CommonDialog';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -43,8 +43,11 @@ export const GuardiansSection = observer(() => {
     [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
 
+  const isLoadingData = !guardiansStore.doneLoading || !orbsAccountStore.doneLoading;
+  const isErrorOnLoading = guardiansStore.errorLoading || orbsAccountStore.errorLoading;
+
   // Before data was loaded
-  if (!guardiansStore.doneLoading || !orbsAccountStore.doneLoading) {
+  if (isLoadingData) {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 
@@ -62,9 +65,14 @@ export const GuardiansSection = observer(() => {
       {/*<CommonDivider />*/}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
-      {guardiansStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
-      {!guardiansStore.errorLoading && (
+      {isErrorOnLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
+      {!isErrorOnLoading && (
         <>
+          {orbsAccountStore.participatingInStaking && (
+            <Grid item xs={12}>
+              <Typography>My Selected Guardian</Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <GuardiansTable
               guardianSelectionMode={'Change'}

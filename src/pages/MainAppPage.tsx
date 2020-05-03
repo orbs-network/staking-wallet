@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Grid } from '@material-ui/core';
-import { GuardiansSection } from '../sections/GuardiansSection';
+import { GuardiansSection } from '../sections/guardians/GuardiansSection';
 import { WalletSectionsWrapper } from '../sections/WalletSectionsWrapper';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 
