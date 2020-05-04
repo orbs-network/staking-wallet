@@ -6,6 +6,7 @@ import balancesSectionTextsJson from './locales/en/balancesSection.json';
 import commonsTextsJson from './locales/en/commons.json';
 import connectWalletSectionTextsJson from './locales/en/connectWalletSection.json';
 import guardianChangingWizardTextsJson from './locales/en/guardianChangingWizard.json';
+import guardianSelectingWizardTextsJson from './locales/en/guardianSelectingWizard.json';
 import guardiansTableTextsJson from './locales/en/guardiansTable.json';
 import restakingWizardTextsJson from './locales/en/restakingWizard.json';
 import rewardsSectionTextsJson from './locales/en/rewardsSection.json';
@@ -28,6 +29,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   approvableWizardStep: approvableWizardStepTextsJson,
   stakingWizard: stakingWizardTextsJson,
   guardianChangingWizard: guardianChangingWizardTextsJson,
+  guardianSelectingWizard: guardianSelectingWizardTextsJson,
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,

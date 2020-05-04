@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useBoolean } from 'react-hanger';
-import { Grid } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
 import { observer } from 'mobx-react';
@@ -19,6 +19,9 @@ import {
 } from '../../translations/translationsHooks';
 import { CommonDivider } from '../../components/base/CommonDivider';
 import { CommonDialog } from '../../components/modal/CommonDialog';
+import { CommonActionButton } from '../../components/base/CommonActionButton';
+import { MyGuardianDisplay } from './MyGuardianDisplay';
+import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -27,6 +30,7 @@ export const GuardiansSection = observer(() => {
   const guardiansStore = useGuardiansStore();
   const orbsAccountStore = useOrbsAccountStore();
   const showGuardianChangingModal = useBoolean(false);
+  const showGuardianSelectionModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
   const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
@@ -69,9 +73,7 @@ export const GuardiansSection = observer(() => {
       {!isErrorOnLoading && (
         <>
           {orbsAccountStore.participatingInStaking && (
-            <Grid item xs={12}>
-              <Typography>My Selected Guardian</Typography>
-            </Grid>
+            <MyGuardianDisplay openGuardianSelectionWizard={showGuardianSelectionModal.setTrue} />
           )}
           <Grid item xs={12}>
             <GuardiansTable
@@ -89,6 +91,10 @@ export const GuardiansSection = observer(() => {
               closeWizard={showGuardianChangingModal.setFalse}
               newGuardianAddress={selectedGuardianAddress}
             />
+          </CommonDialog>
+
+          <CommonDialog open={showGuardianSelectionModal.value} onClose={showGuardianSelectionModal.setFalse}>
+            <GuardianSelectingWizard closeWizard={showGuardianSelectionModal.setFalse} selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress} />
           </CommonDialog>
 
           <Snackbar

@@ -4,6 +4,7 @@ export const MODAL_IDS = {
   restaking: 'Restaking',
   withdrawing: 'Withdrawing',
   guardianChange: 'GuardianChange',
+  guardianSelection: 'GuardianSelection',
 };
 
 export const STAKING_ACTIONS = {
