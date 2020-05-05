@@ -6,8 +6,8 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-var Voting = artifacts.require("OrbsVoting.sol");
+const Voting = artifacts.require('OrbsVoting.sol');
 
-module.exports = function(deployer) {
+module.exports = function (deployer) {
   deployer.deploy(Voting, 3);
 };
