@@ -18,7 +18,7 @@ import { EMPTY_ADDRESS } from '../constants';
 import moment from 'moment';
 import { GuardiansStore } from './GuardiansStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
-import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
 
@@ -85,7 +85,7 @@ export class OrbsAccountStore {
 
     const totalDistributedRewards = this.rewardsDistributionsHistory.reduce((sum, distributionEvent) => {
       // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
-      return sum + Number(distributionEvent.amount);
+      return sum + fullOrbsFromWeiOrbs(distributionEvent.amount);
     }, 0);
 
     return totalDistributedRewards;

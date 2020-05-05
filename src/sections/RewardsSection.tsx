@@ -86,8 +86,20 @@ export const RewardsSection = observer(() => {
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
 
-      <Grid item container direction={'column'} spacing={1}
-            style={{ width: '98%', alignSelf: 'center', backgroundColor: 'rgba(47, 47, 47, 0.6)', marginRight: gridMargin, marginLeft: gridMargin, paddingLeft: gridPadding,paddingRight: gridPadding }}
+      <Grid
+        item
+        container
+        direction={'column'}
+        spacing={1}
+        style={{
+          width: '98%',
+          alignSelf: 'center',
+          backgroundColor: 'rgba(47, 47, 47, 0.6)',
+          marginRight: gridMargin,
+          marginLeft: gridMargin,
+          paddingLeft: gridPadding,
+          paddingRight: gridPadding,
+        }}
       >
         <Grid item>
           <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />
