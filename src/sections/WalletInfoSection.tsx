@@ -28,6 +28,7 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
 import { CommonDialog } from '../components/modal/CommonDialog';
+import { CommonActionButton } from '../components/base/CommonActionButton';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -139,15 +140,17 @@ export const WalletInfoSection = observer(() => {
         onClose={showQrModal.setFalse}
       >
         <CenteredContainerGridForQr>
-          <QRCode
-            value={cryptoWalletIntegrationStore.mainAddress}
-            logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
-            logoWidth={logoDimensions}
-            logoHeight={logoDimensions}
-            size={qrDimensions}
-            qrStyle={'dots'}
-            fgColor={'#07142E'}
-          />
+          <Grid item id={'qr-code-wrap'}>
+            <QRCode
+              value={cryptoWalletIntegrationStore.mainAddress}
+              logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
+              logoWidth={logoDimensions}
+              logoHeight={logoDimensions}
+              size={qrDimensions}
+              qrStyle={'dots'}
+              fgColor={'#07142E'}
+            />
+          </Grid>
         </CenteredContainerGridForQr>
       </CommonDialog>
 
