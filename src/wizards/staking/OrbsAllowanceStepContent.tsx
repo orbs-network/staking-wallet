@@ -17,7 +17,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const orbsAccountStore = useOrbsAccountStore();
 
   // Start and limit by liquid orbs
-  const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)
+  const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
   const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
 
   const { message, subMessage, isBroadcastingMessage } = useWizardState(
@@ -70,7 +70,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
         disabled={disableInputs}
       />
     );
-  }, [orbsAllowance, stakingWizardTranslations, disableInputs]);
+  }, [stakingWizardTranslations, orbsAllowance, disableInputs, liquidOrbsAsNumber]);
 
   return (
     <BaseStepContent
