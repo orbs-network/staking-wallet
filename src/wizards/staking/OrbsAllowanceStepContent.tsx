@@ -8,6 +8,7 @@ import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/Bas
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
+import { enforceNumberInRange } from '../../utils/numberUtils';
 
 export const OrbsAllowanceStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -30,6 +31,11 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const setTokenAllowanceForStakingContract = useCallback(() => {
+    // TODO : FUTURE : O.L : Add written error message about out of range
+    if (orbsAllowance.value < 1 || orbsAllowance.value > liquidOrbsAsNumber) {
+      console.warn(`tried to set out of range allowance of ${orbsAllowance.value}`)
+      return;
+    }
     message.setValue('');
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
@@ -50,6 +56,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
     orbsAllowance.value,
     onPromiEventAction,
     isBroadcastingMessage,
+    liquidOrbsAsNumber,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
@@ -66,7 +73,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
         id={'orbsAllowance'}
         label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
         value={orbsAllowance.value}
-        onChange={(value) => orbsAllowance.setValue(Math.min(value, liquidOrbsAsNumber))}
+        onChange={(value) => orbsAllowance.setValue(enforceNumberInRange(value, 0, liquidOrbsAsNumber))}
         disabled={disableInputs}
       />
     );

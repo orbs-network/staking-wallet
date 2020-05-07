@@ -12,6 +12,7 @@ import { Typography } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
+import { enforceNumberInRange } from '../../utils/numberUtils';
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -37,6 +38,12 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
   const unstakeTokens = useCallback(() => {
+    // TODO : FUTURE : O.L : Add written error message about out of range
+    if (orbsForUnstaking.value < 1 || orbsForUnstaking.value > stakedOrbsNumericalFormat) {
+      console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking.value}`)
+      return;
+    }
+
     message.setValue('');
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
@@ -89,7 +96,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
           id={'orbsUnstaking'}
           label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
           value={orbsForUnstaking.value}
-          onChange={(value) => orbsForUnstaking.setValue(value)}
+          onChange={(value) => orbsForUnstaking.setValue(enforceNumberInRange(value, 0, stakedOrbsNumericalFormat))}
           disabled={disableInputs}
         />
       </>
