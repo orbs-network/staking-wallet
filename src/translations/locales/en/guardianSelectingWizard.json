@@ -1,9 +1,9 @@
 {
-  "stepLabel_selectGuardian": "Select Guardian",
   "afterSuccessStateExplanation": "You have selected a new Guardian",
   "finishedAction_selectedGuardian": "Guardian selected",
+  "guardianSelectionSubStep_action_select": "Select",
   "guardianSelectionSubStep_message_selectGuardian": "This step selects which Guardian you would like to delegate to, adding your staked ORBS to their influence.",
-  "guardianSelectionSubStep_subMessage_pressChangeAndApprove": "Press \"Change\" and accept the transaction",
   "guardianSelectionSubStep_stepTitle": "Select your Guardian",
-  "guardianSelectionSubStep_action_select": "Select"
+  "guardianSelectionSubStep_subMessage_pressChangeAndApprove": "Press \"Change\" and accept the transaction",
+  "stepLabel_selectGuardian": "Select Guardian"
 }

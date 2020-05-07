@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "새로운 가디언을 선택하셨습니다",
+  "finishedAction_selectedGuardian": "선택된 가디언",
+  "guardianSelectionSubStep_action_select": "선택",
+  "guardianSelectionSubStep_message_selectGuardian": "위임하고자하는 가디언을 선택하는 단계입니다. 스테이킹한 토큰만큼 가디언의 영향력이 증가됩니다.",
+  "guardianSelectionSubStep_stepTitle": "위임할 가디언을 선택하세요",
+  "guardianSelectionSubStep_subMessage_pressChangeAndApprove": "\"변경\"을 누르고 트랜잭션을 승인해주세요",
+  "stepLabel_selectGuardian": "가디언 선택하기"
+}

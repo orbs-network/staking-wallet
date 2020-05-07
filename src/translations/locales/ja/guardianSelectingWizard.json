@@ -1,0 +1,9 @@
+{
+  "afterSuccessStateExplanation": "新しいガーディアンを選択しました",
+  "finishedAction_selectedGuardian": "選択したガーディアン",
+  "guardianSelectionSubStep_action_select": "選択",
+  "guardianSelectionSubStep_message_selectGuardian": "このステップではご自身がステーキングするORBSを、選択したガーディアンに委任します",
+  "guardianSelectionSubStep_stepTitle": "ガーディアンを選択",
+  "guardianSelectionSubStep_subMessage_pressChangeAndApprove": "”変更”を押してトランザクションを決定",
+  "stepLabel_selectGuardian": "ガーディアンを選択"
+}
