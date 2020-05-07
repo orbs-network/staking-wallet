@@ -6,6 +6,7 @@ import balancesSectionTextsJson from './locales/ko/balancesSection.json';
 import commonsTextsJson from './locales/ko/commons.json';
 import connectWalletSectionTextsJson from './locales/ko/connectWalletSection.json';
 import guardianChangingWizardTextsJson from './locales/ko/guardianChangingWizard.json';
+import guardianSelectingWizardTextsJson from './locales/ko/guardianSelectingWizard.json';
 import guardiansTableTextsJson from './locales/ko/guardiansTable.json';
 import restakingWizardTextsJson from './locales/ko/restakingWizard.json';
 import rewardsSectionTextsJson from './locales/ko/rewardsSection.json';
@@ -28,6 +29,7 @@ export const KOREAN_TEXTS: IAppTranslations = {
   approvableWizardStep: approvableWizardStepTextsJson,
   stakingWizard: stakingWizardTextsJson,
   guardianChangingWizard: guardianChangingWizardTextsJson,
+  guardianSelectingWizard: guardianSelectingWizardTextsJson,
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,
