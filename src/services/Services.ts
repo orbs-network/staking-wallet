@@ -57,7 +57,7 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
       web3,
       orbsClientService,
       config?.contractsAddressesOverride,
-      config?.earliestBlockForDelegationOverride
+      config.earliestBlockForDelegationOverride !== null
         ? {
             earliestBlockForDelegation: config.earliestBlockForDelegationOverride,
           }

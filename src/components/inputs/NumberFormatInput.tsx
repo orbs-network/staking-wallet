@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import NumberFormat from 'react-number-format';
+import React, { useEffect, useMemo, useRef } from 'react';
+import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { useTheme } from '@material-ui/core';
 
 interface INumberFormatCustomProps {
@@ -15,8 +15,10 @@ interface INumberFormatCustomProps {
   fontSize?: number;
 }
 
-export function NumberFormatCustom(props: INumberFormatCustomProps) {
-  const { inputRef, onChange, allowNegative, suffix, fontSize, ...others } = props;
+export function NumberFormatCustom(props: INumberFormatCustomProps & NumberFormatProps) {
+  const { inputRef, onChange, allowNegative, suffix, fontSize, onBlur, onFocus,...others } = props;
+
+  const ref = useRef<NumberFormat>();
 
   const style = useMemo<React.CSSProperties>(() => {
     const styleObject: React.CSSProperties = {
@@ -34,18 +36,34 @@ export function NumberFormatCustom(props: INumberFormatCustomProps) {
     <NumberFormat
       {...others}
       getInputRef={inputRef}
-      onValueChange={values => {
+      onValueChange={(values) => {
         onChange({
           target: {
             value: values.value,
           },
         });
       }}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      onClickCapture={() => {
+        // Dev Note : By design, zny leading zero will be removed only after focus lost.
+        //            Our users, when on Mobile, will lose focus only when clicking the action button (and thus, will always have
+        //            the less-than-idle UX of seeing a leading zero).
+        //            What this little hack over here does is (and I am not 100% sure why though) keeping the zero displayed,
+        //            and only after the user starts typing the actual desired amount, then the zero will disappear and only the
+        //            intended amount will remain.
+        if (ref.current) {
+          // DEV_NOTE : the object has an 'onBlur' method, not sure as to why they typing do not include it.
+          (ref.current as any).onBlur();
+        }
+      }}
       thousandSeparator
       isNumericString
       allowNegative={!!allowNegative}
+      allowLeadingZeros={false}
       suffix={suffix}
       style={style}
+      ref={ref}
     />
   );
 }

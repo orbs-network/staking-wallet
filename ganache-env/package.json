@@ -12,9 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ganache-cli": "^6.7.0",
+    "ganache-cli": "^6.9.1",
     "openzeppelin-solidity": "2.0.1",
-    "rimraf": "^3.0.0",
-    "truffle": "5.0.36"
+    "rimraf": "^3.0.2",
+    "truffle": "5.1.24"
   }
 }

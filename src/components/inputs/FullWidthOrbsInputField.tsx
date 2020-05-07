@@ -12,7 +12,7 @@ interface IProps {
   disabled?: boolean;
 }
 
-export const FullWidthOrbsInputField = React.memo<IProps>(props => {
+export const FullWidthOrbsInputField = React.memo<IProps>((props) => {
   const { id, label, value, onChange, disabled } = props;
 
   const theme = useTheme();
@@ -25,7 +25,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>(props => {
       id={id}
       label={label}
       value={value}
-      onChange={e => onChange(parseInt(e.target.value))}
+      onChange={(e) => onChange(parseInt(e.target.value))}
       InputProps={{
         inputComponent: NumberFormatCustom as any,
         inputProps: {

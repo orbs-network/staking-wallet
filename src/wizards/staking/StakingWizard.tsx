@@ -41,11 +41,43 @@ export const StakingWizard = observer(
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
+    // DEV_NOTE : adds the selected guardian address to allow user to press 'keep'
     const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
       return {
         selectedGuardianAddress: orbsAccountStore.selectedGuardianAddress,
       };
     }, [orbsAccountStore.selectedGuardianAddress]);
+
+    // DEV_NOTE : In certain cases, such as when the user already has a selected guardian or the user is a Guardian himself,
+    //            we would like to skip on the 'guardian selection' sub-step.
+    const { nextStepAfterStakingTitle, goToNextStepAfterStaking } = useMemo<{
+      goToNextStepAfterStaking: () => void;
+      nextStepAfterStakingTitle: string;
+    }>(() => {
+      let goToNextStepAfterStaking: () => void;
+      let nextStepAfterStakingTitle: string;
+      const shouldSkipGuardianSelection = orbsAccountStore.isGuardian || orbsAccountStore.hasSelectedGuardian;
+
+      if (shouldSkipGuardianSelection) {
+        goToNextStepAfterStaking = goToFinishStep;
+        nextStepAfterStakingTitle = wizardsCommonTranslations('moveToStep_finish');
+      } else {
+        goToNextStepAfterStaking = goToSelectGuardianStep;
+        nextStepAfterStakingTitle = stakingWizardTranslations('moveToStep_selectGuardian');
+      }
+
+      return {
+        goToNextStepAfterStaking,
+        nextStepAfterStakingTitle,
+      };
+    }, [
+      goToFinishStep,
+      goToSelectGuardianStep,
+      orbsAccountStore.hasSelectedGuardian,
+      orbsAccountStore.isGuardian,
+      stakingWizardTranslations,
+      wizardsCommonTranslations,
+    ]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
@@ -69,8 +101,8 @@ export const StakingWizard = observer(
               transactionCreationSubStepContent={OrbsStakingStepContent}
               displayCongratulationsSubStep={false}
               finishedActionName={stakingWizardTranslations('finishedAction_staked')}
-              moveToNextStepAction={goToSelectGuardianStep}
-              moveToNextStepTitle={stakingWizardTranslations('moveToStep_selectGuardian')}
+              moveToNextStepAction={goToNextStepAfterStaking}
+              moveToNextStepTitle={nextStepAfterStakingTitle}
               closeWizard={closeWizard}
               key={'stakingStep'}
             />
@@ -132,7 +164,9 @@ export const StakingWizard = observer(
           </WizardStepper>
         </Grid>
 
-        <Grid item container> {stepContent} </Grid>
+        <Grid item container>
+          {stepContent}
+        </Grid>
       </WizardContainer>
     );
   }),

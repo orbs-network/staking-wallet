@@ -8,6 +8,7 @@ import {
   ICommonsTranslations,
   IConnectWalletSectionTranslations,
   IGuardianChangingWizardTranslation,
+  IGuardianSelectingWizardTranslation,
   IGuardiansTableTranslations,
   IRestakingWizardTranslation,
   IRewardsSectionTranslations,
@@ -71,6 +72,10 @@ export function useStakingWizardTranslations() {
 
 export function useGuardianChangingWizardTranslations() {
   return useSpecificTypeSafeTFunction<IGuardianChangingWizardTranslation>('guardianChangingWizard');
+}
+
+export function useGuardianSelectingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IGuardianSelectingWizardTranslation>('guardianSelectingWizard');
 }
 
 export function useRestakingWizardTranslations() {

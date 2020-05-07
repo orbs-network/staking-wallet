@@ -10,6 +10,7 @@ export interface IAppTranslations {
   approvableWizardStep: IApprovableWizardStepTranslations;
   stakingWizard: IStakingWizardTranslations;
   guardianChangingWizard: IGuardianChangingWizardTranslation;
+  guardianSelectingWizard: IGuardianSelectingWizardTranslation;
   restakingWizard: IRestakingWizardTranslation;
   unstakingWizard: IUnstakingWizardTranslation;
   withdrawingWizard: IWithdrawingWizardTranslation;
@@ -136,6 +137,18 @@ export interface IGuardianChangingWizardTranslation {
   guardianSelectionSubStep_subMessage_pressChangeAndApprove: string;
   guardianSelectionSubStep_stepTitle: string;
   guardianSelectionSubStep_action_change: string;
+}
+
+export interface IGuardianSelectingWizardTranslation {
+  stepLabel_selectGuardian: string;
+  afterSuccessStateExplanation: string;
+  finishedAction_selectedGuardian: string;
+
+  // Guardian selection sub step
+  guardianSelectionSubStep_message_selectGuardian: string;
+  guardianSelectionSubStep_subMessage_pressChangeAndApprove: string;
+  guardianSelectionSubStep_stepTitle: string;
+  guardianSelectionSubStep_action_select: string;
 }
 
 export interface IRestakingWizardTranslation {
