@@ -14,6 +14,13 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
     left: '50%',
     transform: 'translate(-50%, -35%)',
 
+    [theme.breakpoints.up('down')]: {
+      position: null,
+      top: null,
+      left: null,
+      transform: null,
+    },
+
     // Colors
     backgroundColor: Color(theme.palette.primary.dark)
       // .fade(0.1)
@@ -23,10 +30,11 @@ const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
     border: '1px solid #979797',
     borderRadius: 5,
     boxShadow: theme.shadows[2],
+    overflowY: 'auto',
 
     // Handles width of wizards
-    width: 'fit-content',
-    maxWidth: '95%',
+    // width: 'fit-content',
+    // maxHeight: '100%',
 
     // Adjusts max size for larger screens
     [theme.breakpoints.up('sm')]: {

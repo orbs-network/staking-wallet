@@ -12,7 +12,7 @@ export const CommonDialog = React.memo<DialogProps>(props => {
   const { children, ...others } = props;
 
   return (
-    <Dialog disableBackdropClick BackdropComponent={DarkBackdrop} {...others}>
+    <Dialog style={{ }} disableBackdropClick BackdropComponent={DarkBackdrop} {...others}>
       {children}
     </Dialog>
   );

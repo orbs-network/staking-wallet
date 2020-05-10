@@ -36,7 +36,7 @@ export const StakingWizard = observer(
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
-    const activeStep = useNumber(0);
+    const activeStep = useNumber(2);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
@@ -136,15 +136,16 @@ export const StakingWizard = observer(
       closeWizard,
       extraPropsForGuardianSelection,
       goToFinishStep,
-      goToSelectGuardianStep,
+      goToNextStepAfterStaking,
       goToStakeOrbsStep,
+      nextStepAfterStakingTitle,
       stakingWizardTranslations,
       wizardsCommonTranslations,
     ]);
 
     return (
       <WizardContainer data-testid={'wizard_staking'}>
-        <Grid item>
+        <Grid item container direction={'column'} alignItems={'center'}>
           <WizardStepper activeStep={activeStep.value} alternativeLabel>
             <Step>
               <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
