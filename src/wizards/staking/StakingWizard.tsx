@@ -36,7 +36,7 @@ export const StakingWizard = observer(
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
-    const activeStep = useNumber(2);
+    const activeStep = useNumber(0);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
