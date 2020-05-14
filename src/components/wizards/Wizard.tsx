@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { WizardContainer } from './WizardContainer';
-import { DialogContent, Grid, Step, StepLabel } from '@material-ui/core';
+import { DialogContent, DialogTitle, Grid, Step, StepLabel } from '@material-ui/core';
 import { WizardStepper } from './WizardStepper';
 import styled from 'styled-components';
 
@@ -35,17 +35,27 @@ export const Wizard = React.memo<IProps>((props) => {
   }, [stepperTitles]);
 
   return (
-    <StyledDialogContent data-testid={dataTestId}>
-      <WizardContainer>
-        <Grid item container direction={'column'} alignItems={'center'}>
-          <WizardStepper activeStep={activeStep} alternativeLabel>
-            {stepperStepTitles}
-          </WizardStepper>
-        </Grid>
-        <Grid item container direction={'column'} alignItems={'center'}>
-          {content}
-        </Grid>
-      </WizardContainer>
-    </StyledDialogContent>
+    <>
+      <DialogTitle>
+        <WizardStepper activeStep={activeStep} alternativeLabel>
+          {stepperStepTitles}
+        </WizardStepper>
+      </DialogTitle>
+      <StyledDialogContent data-testid={dataTestId}>
+        {content}
+      </StyledDialogContent>
+    </>
+    // <StyledDialogContent data-testid={dataTestId}>
+    //   <WizardContainer>
+    //     <Grid item container direction={'column'} alignItems={'center'}>
+    //       <WizardStepper activeStep={activeStep} alternativeLabel>
+    //         {stepperStepTitles}
+    //       </WizardStepper>
+    //     </Grid>
+    //     <Grid item container direction={'column'} alignItems={'center'}>
+    //       {content}
+    //     </Grid>
+    //   </WizardContainer>
+    // </StyledDialogContent>
   );
 });
