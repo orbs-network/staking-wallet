@@ -7,4 +7,7 @@ export const WizardContent = styled((props) => (
 ))(() => ({
   // Makes the content wrapping box appear in the center (regardless of used width)
   alignSelf: 'center',
+
+  // Cancels the margins of the 'spacing' property
+  margin: 0,
 }));

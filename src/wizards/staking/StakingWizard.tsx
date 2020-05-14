@@ -13,6 +13,7 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
+import { Wizard } from '../../components/wizards/Wizard';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -143,32 +144,15 @@ export const StakingWizard = observer(
       wizardsCommonTranslations,
     ]);
 
-    return (
-      <WizardContainer data-testid={'wizard_staking'}>
-        <Grid item container direction={'column'} alignItems={'center'}>
-          <WizardStepper activeStep={activeStep.value} alternativeLabel>
-            <Step>
-              <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
-            </Step>
+    const stepperTitles = useMemo(() => {
+      return [
+        stakingWizardTranslations('stepLabel_approve'),
+        stakingWizardTranslations('stepLabel_stake'),
+        stakingWizardTranslations('stepLabel_selectGuardian'),
+        wizardsCommonTranslations('stepLabel_finish'),
+      ];
+    }, [stakingWizardTranslations, wizardsCommonTranslations]);
 
-            <Step>
-              <StepLabel>{stakingWizardTranslations('stepLabel_stake')}</StepLabel>
-            </Step>
-
-            <Step>
-              <StepLabel>{stakingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
-            </Step>
-
-            <Step>
-              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-            </Step>
-          </WizardStepper>
-        </Grid>
-
-        <Grid item container>
-          {stepContent}
-        </Grid>
-      </WizardContainer>
-    );
+    return <Wizard activeStep={activeStep.value} stepperTitles={stepperTitles} content={stepContent} />;
   }),
 );
