@@ -1,8 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContainer } from '../../components/wizards/WizardContainer';
-import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { OrbsWithdrawingStepContent } from './OrbsWithdrawingStepContent';
@@ -10,6 +7,7 @@ import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
+import { Wizard } from '../../components/wizards/Wizard';
 
 const STEPS_INDEXES = {
   withdrawOrbs: 0,
@@ -59,23 +57,17 @@ export const WithdrawingWizard = observer(
       }
     }, [activeStep.value, closeWizard, goToFinishStep, withdrawingWizardTranslations, wizardsCommonTranslations]);
 
-    return (
-      <WizardContainer data-testid={'wizard_withdrawing'}>
-        <Grid item>
-          <WizardStepper activeStep={activeStep.value} alternativeLabel>
-            <Step>
-              <StepLabel>{withdrawingWizardTranslations('stepLabel_withdraw')}</StepLabel>
-            </Step>
+    const stepperTitles = useMemo(() => {
+      return [withdrawingWizardTranslations('stepLabel_withdraw'), wizardsCommonTranslations('stepLabel_finish')];
+    }, [withdrawingWizardTranslations, wizardsCommonTranslations]);
 
-            <Step>
-              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-            </Step>
-          </WizardStepper>
-        </Grid>
-        <Grid item>
-          {stepContent}
-        </Grid>
-      </WizardContainer>
+    return (
+      <Wizard
+        activeStep={activeStep.value}
+        stepperTitles={stepperTitles}
+        content={stepContent}
+        dataTestId={'wizard_withdrawing'}
+      />
     );
   }),
 );

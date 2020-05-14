@@ -1,8 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContainer } from '../../components/wizards/WizardContainer';
-import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
@@ -13,6 +10,7 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
+import { Wizard } from '../../components/wizards/Wizard';
 
 const STEPS_INDEXES = {
   allowTransfer: 0,
@@ -136,38 +134,29 @@ export const StakingWizard = observer(
       closeWizard,
       extraPropsForGuardianSelection,
       goToFinishStep,
-      goToSelectGuardianStep,
+      goToNextStepAfterStaking,
       goToStakeOrbsStep,
+      nextStepAfterStakingTitle,
       stakingWizardTranslations,
       wizardsCommonTranslations,
     ]);
 
+    const stepperTitles = useMemo(() => {
+      return [
+        stakingWizardTranslations('stepLabel_approve'),
+        stakingWizardTranslations('stepLabel_stake'),
+        stakingWizardTranslations('stepLabel_selectGuardian'),
+        wizardsCommonTranslations('stepLabel_finish'),
+      ];
+    }, [stakingWizardTranslations, wizardsCommonTranslations]);
+
     return (
-      <WizardContainer data-testid={'wizard_staking'}>
-        <Grid item>
-          <WizardStepper activeStep={activeStep.value} alternativeLabel>
-            <Step>
-              <StepLabel>{stakingWizardTranslations('stepLabel_approve')}</StepLabel>
-            </Step>
-
-            <Step>
-              <StepLabel>{stakingWizardTranslations('stepLabel_stake')}</StepLabel>
-            </Step>
-
-            <Step>
-              <StepLabel>{stakingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
-            </Step>
-
-            <Step>
-              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-            </Step>
-          </WizardStepper>
-        </Grid>
-
-        <Grid item container>
-          {stepContent}
-        </Grid>
-      </WizardContainer>
+      <Wizard
+        activeStep={activeStep.value}
+        stepperTitles={stepperTitles}
+        content={stepContent}
+        dataTestId={'wizard_staking'}
+      />
     );
   }),
 );

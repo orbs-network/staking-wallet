@@ -1,8 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContainer } from '../../components/wizards/WizardContainer';
-import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardianChangeStepContent, IGuardianChangeStepContentProps } from './GuardianChangeStepContent';
@@ -13,6 +10,7 @@ import {
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
+import { Wizard } from '../../components/wizards/Wizard';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -77,21 +75,20 @@ export const GuardianChangingWizard = observer(
       wizardsCommonTranslations,
     ]);
 
-    return (
-      <WizardContainer data-testid={'wizard_staking'}>
-        <Grid item>
-          <WizardStepper activeStep={activeStep.value} alternativeLabel>
-            <Step>
-              <StepLabel>{guardianChangingWizardTranslations('stepLabel_changeGuardian')}</StepLabel>
-            </Step>
+    const stepperTitles = useMemo(() => {
+      return [
+        guardianChangingWizardTranslations('stepLabel_changeGuardian'),
+        wizardsCommonTranslations('stepLabel_finish'),
+      ];
+    }, [guardianChangingWizardTranslations, wizardsCommonTranslations]);
 
-            <Step>
-              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-            </Step>
-          </WizardStepper>
-        </Grid>
-        <Grid item>{stepContent}</Grid>
-      </WizardContainer>
+    return (
+      <Wizard
+        activeStep={activeStep.value}
+        stepperTitles={stepperTitles}
+        content={stepContent}
+        dataTestId={'wizard_guardianChanging'}
+      />
     );
   }),
 );
