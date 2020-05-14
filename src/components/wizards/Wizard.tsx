@@ -8,6 +8,9 @@ interface IProps {
   stepperTitles: string[];
   activeStep: number;
   content: JSX.Element;
+
+  // For tests
+  dataTestId?: string;
 }
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
@@ -21,7 +24,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 }));
 
 export const Wizard = React.memo<IProps>((props) => {
-  const { activeStep, stepperTitles, content } = props;
+  const { activeStep, stepperTitles, content, dataTestId } = props;
 
   const stepperStepTitles = useMemo(() => {
     return stepperTitles.map((title) => (
@@ -32,7 +35,7 @@ export const Wizard = React.memo<IProps>((props) => {
   }, [stepperTitles]);
 
   return (
-    <StyledDialogContent>
+    <StyledDialogContent data-testid={dataTestId}>
       <WizardContainer>
         <Grid item container direction={'column'} alignItems={'center'}>
           <WizardStepper activeStep={activeStep} alternativeLabel>

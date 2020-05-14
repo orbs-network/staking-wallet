@@ -1,8 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContainer } from '../../components/wizards/WizardContainer';
-import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { OrbsRestakingStepContent } from './OrbsRestakingStepContent';
@@ -10,6 +7,7 @@ import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '..
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
+import { Wizard } from '../../components/wizards/Wizard';
 
 const STEPS_INDEXES = {
   withdrawOrbs: 0,
@@ -59,23 +57,17 @@ export const RestakingWizard = observer(
       }
     }, [activeStep.value, closeWizard, goToFinishStep, restakingWizardTranslations, wizardsCommonTranslations]);
 
-    return (
-      <WizardContainer data-testid={'wizard_restaking'}>
-        <Grid item>
-          <WizardStepper activeStep={activeStep.value} alternativeLabel>
-            <Step>
-              <StepLabel>{restakingWizardTranslations('stepLabel_restake')}</StepLabel>
-            </Step>
+    const stepperTitles = useMemo(() => {
+      return [restakingWizardTranslations('stepLabel_restake'), wizardsCommonTranslations('stepLabel_finish')];
+    }, [restakingWizardTranslations, wizardsCommonTranslations]);
 
-            <Step>
-              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-            </Step>
-          </WizardStepper>
-        </Grid>
-        <Grid item>
-          {stepContent}
-        </Grid>
-      </WizardContainer>
+    return (
+      <Wizard
+        activeStep={activeStep.value}
+        stepperTitles={stepperTitles}
+        content={stepContent}
+        dataTestId={'wizard_restaking'}
+      />
     );
   }),
 );

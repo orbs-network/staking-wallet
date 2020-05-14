@@ -1,14 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
-import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContainer } from '../../components/wizards/WizardContainer';
-import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import {
-  useGuardianChangingWizardTranslations,
   useGuardianSelectingWizardTranslations,
-  useStakingWizardTranslations,
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
@@ -18,6 +13,7 @@ import {
   GuardianSelectionStepContent,
   IGuardianSelectionStepContentProps,
 } from '../staking/GuardianSelectionStepContent';
+import { Wizard } from '../../components/wizards/Wizard';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -82,23 +78,20 @@ export const GuardianSelectingWizard = observer(
       wizardsCommonTranslations,
     ]);
 
-    return (
-      <WizardContainer data-testid={'wizard_staking'}>
-        <Grid item>
-          <WizardStepper activeStep={activeStep.value} alternativeLabel>
-            <Step>
-              <StepLabel>{guardianSelectingWizardTranslations('stepLabel_selectGuardian')}</StepLabel>
-            </Step>
+    const stepperTitles = useMemo(() => {
+      return [
+        guardianSelectingWizardTranslations('stepLabel_selectGuardian'),
+        wizardsCommonTranslations('stepLabel_finish'),
+      ];
+    }, [guardianSelectingWizardTranslations, wizardsCommonTranslations]);
 
-            <Step>
-              <StepLabel>{wizardsCommonTranslations('stepLabel_finish')}</StepLabel>
-            </Step>
-          </WizardStepper>
-        </Grid>
-        <Grid item container>
-          {stepContent}
-        </Grid>
-      </WizardContainer>
+    return (
+      <Wizard
+        activeStep={activeStep.value}
+        stepperTitles={stepperTitles}
+        content={stepContent}
+        dataTestId={'wizard_guardianSelecting'}
+      />
     );
   }),
 );

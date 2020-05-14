@@ -1,8 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Grid, Step, StepLabel } from '@material-ui/core';
 import { useNumber } from 'react-hanger';
-import { WizardContainer } from '../../components/wizards/WizardContainer';
-import { WizardStepper } from '../../components/wizards/WizardStepper';
 import { OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
@@ -153,6 +150,13 @@ export const StakingWizard = observer(
       ];
     }, [stakingWizardTranslations, wizardsCommonTranslations]);
 
-    return <Wizard activeStep={activeStep.value} stepperTitles={stepperTitles} content={stepContent} />;
+    return (
+      <Wizard
+        activeStep={activeStep.value}
+        stepperTitles={stepperTitles}
+        content={stepContent}
+        dataTestId={'wizard_staking'}
+      />
+    );
   }),
 );
