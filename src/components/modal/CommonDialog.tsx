@@ -25,10 +25,15 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       // .fade(0.1)
       .toString(),
 
+    padding: '1em',
+
     [theme.breakpoints.down('xs')]: {
       margin: '0.5em',
     },
 
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
+    },
     // TODO : Might move this to 'Wizard'
     // '.MuiDialogContent-root': {
     //   maxHeight: '100%',
