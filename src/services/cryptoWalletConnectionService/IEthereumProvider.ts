@@ -9,11 +9,6 @@ export type TNetworkVersion = '1' | '2' | '3' | '4' | '5' | '42';
 const ACCOUNTS_CHANGED = 'accountsChanged';
 
 export interface IEthereumProvider {
-  /**
-   * DEV_NOTE : Only exists in metamask provider
-   */
-  isMetaMask?: boolean;
-
   // Deprecatable members
   /**
    * @deprecated
@@ -51,4 +46,20 @@ export interface IEthereumProvider {
   off(action: 'chainChanged', listener: (chainId: string) => void): this;
   off(action: 'networkChanged', listener: (chainId: string) => void): this;
   off(action: 'accountsChanged', listener: (accounts: Array<string>) => void): this;
+
+  // Optional flags that indicate provider
+  /**
+   * DEV_NOTE : Only exists in metamask provider
+   */
+  isMetaMask?: boolean;
+
+  /**
+   * DEV_NOTE : Only exists in trust-wallet provider
+   */
+  isTrust?: boolean;
+
+  /**
+   * DEV_NOTE : Only exists in ImToken provider
+   */
+  isImToken?: boolean;
 }

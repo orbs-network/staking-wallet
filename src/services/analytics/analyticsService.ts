@@ -1,6 +1,11 @@
 import ReactGA, { EventArgs } from 'react-ga';
-import { IAnalyticsService } from './IAnalyticsService';
-import { EVENT_CATEGORIES, TEventCategories, TModalId, TStackingAction } from './analyticConstants';
+import { IAnalyticsService, TEthereumProviderName } from './IAnalyticsService';
+import { EVENT_CATEGORIES, TEventCategories, TModalId, TStackingAction, USER_EVENT_ACTIONS } from './analyticConstants';
+
+const CUSTOM_DIMENSIONS = {
+  userAddress: 'dimension1',
+  ethereumProviderName: 'dimension2',
+};
 
 export class AnalyticsService implements IAnalyticsService {
   private readonly active;
@@ -29,11 +34,19 @@ export class AnalyticsService implements IAnalyticsService {
   }
 
   public setUserAddress(userAddress: string) {
-    this.setDimension('userAddress', userAddress);
+    this.setDimension(CUSTOM_DIMENSIONS.userAddress, userAddress);
+  }
+
+  public setEthereumProvider(ethereumProviderName: TEthereumProviderName) {
+    this.setDimension(CUSTOM_DIMENSIONS.ethereumProviderName, ethereumProviderName);
   }
 
   public trackModalView(modalId: TModalId) {
     this.trackModal(modalId);
+  }
+
+  public trackAppLogin(): void {
+    this.trackEvent(EVENT_CATEGORIES.user, USER_EVENT_ACTIONS.loggedIn);
   }
 
   public trackStakingContractInteractionRequest(stakingAction: TStackingAction, value?: number): void {

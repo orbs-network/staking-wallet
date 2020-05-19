@@ -19,13 +19,17 @@ import moment from 'moment';
 import config, { IS_DEV } from './config';
 import i18n from 'i18next';
 import { I18nextProvider } from 'react-i18next';
+import { TEthereumProviderName } from './services/analytics/IAnalyticsService';
+import Web3 from 'web3';
+import { detectEthereumProviderName } from './services/analytics/analyticsUtils';
 moment.locale('ja');
 moment.locale('ko');
 moment.locale('en');
 
 configureMobx();
 
-const services = buildServices((window as any).ethereum, axios);
+const ethereumProvider = (window as any).ethereum;
+const services = buildServices(ethereumProvider, axios);
 const stores = getStores(
   services.orbsPOSDataService,
   services.stakingService,
@@ -38,6 +42,15 @@ const stores = getStores(
 
 // TODO : FUTURE : O.L : Move this to a better location
 services.analyticsService.init();
+
+// TODO : FUTURE : O.L : Move this with the analytics 'init'
+let ethereumProviderName: TEthereumProviderName;
+if (ethereumProvider) {
+  ethereumProviderName = detectEthereumProviderName(ethereumProvider);
+} else {
+  ethereumProviderName = 'ORBS Infura';
+}
+services.analyticsService.setEthereumProvider(ethereumProviderName);
 
 const themeAndStyle = {
   ...baseTheme,
