@@ -15,9 +15,14 @@ export const STAKING_ACTIONS = {
   guardianChange: 'GuardianChange',
 };
 
+export const USER_EVENT_ACTIONS = {
+  loggedIn: 'Logged in',
+};
+
 export const EVENT_CATEGORIES = {
   tokenStakeRequest: 'Token Stake request',
   tokenStakeSuccess: 'Token Stake success',
+  user: 'User',
 };
 
 type ValueOf<T> = T[keyof T];

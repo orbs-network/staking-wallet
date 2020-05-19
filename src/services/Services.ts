@@ -20,9 +20,10 @@ import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/
 import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
 import { BuildOrbsClient } from './OrbsClientFactory';
 import { AnalyticsService } from './analytics/analyticsService';
-import { IAnalyticsService } from './analytics/IAnalyticsService';
+import { IAnalyticsService, TEthereumProviderName } from './analytics/IAnalyticsService';
 import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
+import { detectEthereumProviderName } from './analytics/analyticsUtils';
 
 export interface IServices {
   httpService: IHttpService;
@@ -46,6 +47,7 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
   const httpService: IHttpService = new HttpService(axios);
+  const analyticsService = new AnalyticsService(config.gaTrackerId, config.analyticsActive);
 
   return {
     httpService,
@@ -68,6 +70,6 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
       orbsClientService,
       config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
     ),
-    analyticsService: new AnalyticsService(config.gaTrackerId, config.analyticsActive),
+    analyticsService: analyticsService,
   };
 }
