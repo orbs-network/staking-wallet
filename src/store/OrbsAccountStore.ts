@@ -95,6 +95,10 @@ export class OrbsAccountStore {
     return !this.cryptoWalletIntegrationStore.hasEventsSupport;
   }
 
+  @computed get hasUnusedAllowance(): boolean {
+    return this.stakingContractAllowance > 0;
+  }
+
   private addressChangeReaction: IReactionDisposer;
   private orbsBalanceChangeUnsubscribeFunction: () => void;
   private stakingContractAllowanceChangeUnsubscribeFunction: () => void;
