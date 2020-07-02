@@ -10,6 +10,7 @@ const StyledGrid = styled(Grid)({
   marginRight: 0,
   marginLeft: 0,
   width: '100%',
+  maxWidth: '100%',
 });
 
 export const Section: React.FC<GridProps> = ({ children, ...otherProps }) => {
