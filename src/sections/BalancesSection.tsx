@@ -126,6 +126,8 @@ export const BalancesSection = observer(() => {
       {/* Balance */}
       <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} bottomPadding />
 
+      <CommonDivider />
+
       {/*<Grid item> <CommonDivider /> </Grid>*/}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}

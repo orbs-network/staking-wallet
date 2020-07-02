@@ -101,7 +101,7 @@ export const WalletInfoSection = observer(() => {
 
       {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
       <Grid container item direction={smOrLarger ? 'row' : 'column'} alignItems={'center'}
-            // spacing={smallerThanLarge ? 0 : 2}
+            spacing={largerThanLarge ? 2 : 1}
       >
         {/* Address */}
         <Grid item sm={12} lg={9} id={'addressItem'} style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset': 'center' }}>
