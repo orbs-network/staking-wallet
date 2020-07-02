@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from 'react';
-import { Typography, Backdrop, CircularProgress } from '@material-ui/core';
+import { Typography, Backdrop, CircularProgress, Box } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
@@ -100,20 +100,22 @@ export const BaseStepContent = React.memo<IProps>((props) => {
 
   return (
     <WizardContent data-testid={contentTestId}>
-      <Grid container item direction={'row'} justify={'center'} alignItems={'center'}>
-        <Typography variant={'h5'} style={{ fontWeight: 'bold', paddingRight: '0.25em' }}>
+      {/* Title */}
+      <Grid container item direction={'row'} justify={'center'} alignItems={'center'} style={{ textAlign: 'center' }}>
+        <Typography variant={'h5'} style={{ fontWeight: 'bold', paddingRight: '0.25em'}}>
           {titleContent}
         </Typography>
         {infoTooltippedIcon}
       </Grid>
-      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
-        <Typography variant={'body1'}>{message}</Typography>
-      </Grid>
 
-      {/* Sub Message */}
-      <Grid item hidden={!hasSubMessage} style={{ textAlign: 'center' }}>
-        <Typography variant={'body2'}>{subMessage}</Typography>
-      </Grid>
+        <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
+          <Typography variant={'body1'}>{message}</Typography>
+        </Grid>
+
+        {/* Sub Message */}
+        <Grid item hidden={!hasSubMessage} style={{ textAlign: 'center' }}>
+          <Typography variant={'body2'}>{subMessage}</Typography>
+        </Grid>
 
       {/* Display loading */}
       {isLoading && (
@@ -131,7 +133,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       </Grid>
 
       {/* Action Buttons */}
-      <Grid item container justify={'center'} direction={'row'} spacing={2}>
+      <Grid item container justify={'space-around'} direction={'row'} spacing={0} style={{ margin: 0, width: '100%' }}>
         {addCancelButton && (
           <Grid item>
             <CommonActionButton
