@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useOrbsPOSDataService } from '../services/ServicesHooks';
 import { useNumber } from 'react-hanger';
+import { CommonDivider } from '../components/base/CommonDivider';
 
 export const RewardsContainer = styled((props: GridProps) => <Grid item container {...props} />)<GridProps>(
   (styledProps: { theme: Theme }) => {
@@ -78,7 +79,7 @@ export const RewardsSection = observer(() => {
     ),
   });
 
-  const gridMargin = theme.spacing(1);
+  const gridMargin = theme.spacing(0);
   const gridPadding = theme.spacing(2);
 
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
@@ -86,27 +87,30 @@ export const RewardsSection = observer(() => {
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
 
+      <CommonDivider />
+
       <Grid
         item
         container
         direction={'column'}
         spacing={1}
         style={{
-          width: '98%',
+          width: '100%',
           alignSelf: 'center',
-          backgroundColor: 'rgba(47, 47, 47, 0.6)',
-          marginRight: gridMargin,
-          marginLeft: gridMargin,
+          // backgroundColor: 'rgba(47, 47, 47, 0.6)',
+          // marginRight: gridMargin,
+          // marginLeft: gridMargin,
           paddingLeft: gridPadding,
           paddingRight: gridPadding,
+          marginBottom: 0,
+          // textAlign: 'center',
         }}
       >
         <Grid item>
-          <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />
+          <Typography dangerouslySetInnerHTML={{ __html: '- ' + rewardsPageInnerHtml }} />
         </Grid>
-
         <Grid item>
-          <Typography dangerouslySetInnerHTML={{ __html: nextElectionsInnerHtml }} />
+          <Typography dangerouslySetInnerHTML={{ __html: '- ' + nextElectionsInnerHtml }} />
         </Grid>
 
         <RewardsContainer direction={'column'} spacing={1}>

@@ -18,7 +18,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     boxShadow: theme.shadows[2],
 
     // Dimensions
-    maxHeight: '100%',
+    maxHeight: '90%',
 
     // Colors
     backgroundColor: Color(theme.palette.primary.dark)

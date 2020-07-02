@@ -65,6 +65,7 @@ export const GuardiansSection = observer(() => {
         icon={ShielIcon}
         bottomPadding
       />
+      <CommonDivider />
 
       {/*<CommonDivider />*/}
 

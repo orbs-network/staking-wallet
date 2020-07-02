@@ -72,7 +72,7 @@ export const WalletInfoSection = observer(() => {
   const theme = useTheme();
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const mediumOrLarger = useMediaQuery(theme.breakpoints.up('md'));
-  const smallerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
+  const largerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
   const qrDimensions = mediumOrLarger ? QR_IMAGE_DIMENSION_MD : QR_IMAGE_DIMENSION_XS;
   const logoDimensions = mediumOrLarger ? LOGO_DIMENSIONS_MD : LOGO_DIMENSIONS_XS;
@@ -95,25 +95,29 @@ export const WalletInfoSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid item xs={12}>
+      <Grid item xs={12} >
         <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
       </Grid>
+
       {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
-      <Grid container item direction={'row'} alignItems={'center'} spacing={smallerThanLarge ? 0 : 2}>
+      <Grid container item direction={smOrLarger ? 'row' : 'column'} alignItems={'center'}
+            spacing={largerThanLarge ? 2 : 1}
+      >
         {/* Address */}
-        <Grid item sm={12} lg={8}>
+        <Grid item sm={12} lg={9} id={'addressItem'} style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset': 'center' }}>
           <Typography
             variant={smOrLarger ? 'h4' : 'body2'}
             data-testid={'text-active-address'}
             style={walletAddressExtraStyle}
+            noWrap
           >
-            {cryptoWalletIntegrationStore.mainAddress}
+            {cryptoWalletIntegrationStore?.mainAddress}
           </Typography>
         </Grid>
 
         {/* Buttons */}
-        <Grid container direction={'row'} item sm={12} lg={4} justify={'flex-end'}>
-          <Grid item xs={6} lg={4}>
+        <Grid container direction={'row'} item sm={12} lg={3} justify={'flex-end'}>
+          <Grid item xs={6} lg={5}>
             <LoweCaseButton fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
@@ -123,7 +127,7 @@ export const WalletInfoSection = observer(() => {
           <Hidden mdDown>
             <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }} />
           </Hidden>
-          <Grid item xs={6} lg={4}>
+          <Grid item xs={6} lg={5}>
             <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
               {walletInfoSectionTranslations('qr')}
             </LoweCaseButton>
