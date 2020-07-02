@@ -20,6 +20,10 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   [theme.breakpoints.down('xs')]: {
     paddingRight: 0,
     paddingLeft: 0,
+
+    // Reduces height
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 }));
 

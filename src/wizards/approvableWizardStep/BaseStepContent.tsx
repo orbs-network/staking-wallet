@@ -73,6 +73,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       return null;
     }
   }, [actionButtonProps, disableInputs, relevantStylingForActionButtons]);
+  const hasAnyButtons = !!actionButton || addCancelButton;
 
   const titleContent = useMemo(() => {
     if (typeof title === 'string') {
@@ -133,7 +134,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       </Grid>
 
       {/* Action Buttons */}
-      <Grid item container justify={'space-around'} direction={'row'} spacing={0} style={{ margin: 0, width: '100%' }}>
+      { hasAnyButtons && <Grid item container justify={'space-around'} direction={'row'} spacing={0} style={{ margin: 0, width: '100%' }}>
         {addCancelButton && (
           <Grid item>
             <CommonActionButton
@@ -146,7 +147,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
           </Grid>
         )}
         <Grid item>{actionButton}</Grid>
-      </Grid>
+      </Grid>}
     </WizardContent>
   );
 });
