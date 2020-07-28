@@ -5,6 +5,7 @@ import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 
 export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
+  @observable private cryptoServiceDataDidUserApproveWalletInThePast: boolean;
 
   @observable public hasEthereumProvider: boolean;
   @observable public hasEventsSupport: boolean;
@@ -13,6 +14,8 @@ export class CryptoWalletConnectionStore {
 
   private addressCheckingInterval: NodeJS.Timeout;
   reactionToWalletConnection: IReactionDisposer;
+  unsubscribeFromMainAddressChange: () => void;
+
 
   constructor(
     private cryptoWalletConnectionService: ICryptoWalletConnectionService,
@@ -36,8 +39,11 @@ export class CryptoWalletConnectionStore {
     if (this.hasEthereumProvider) {
       // We will only detect address change if the Ethereum provider can support it
       if (this.cryptoWalletConnectionService.hasEventsSupport) {
-        this.cryptoWalletConnectionService.onMainAddressChange((address) => this.setMainAddress(address));
+        console.log('Supports events');
+        // this.unsubscribeFromMainAddressChange = this.cryptoWalletConnectionService.onMainAddressChange((address) => this.handleMainAddressChange(address));
+        this.unsubscribeFromMainAddressChange = this.cryptoWalletConnectionService.onMainAddressChange((address) => this.readInformationFromConnectedWallet());
       } else {
+        console.warn('This Ethereum provider has no event support.');
         // Else, we will read it one time + set an interval
         this.cryptoWalletConnectionService.readMainAddress().then((address) => this.setMainAddress(address));
 
@@ -49,11 +55,28 @@ export class CryptoWalletConnectionStore {
     }
   }
 
+  private handleMainAddressChange(newAddress : string) {
+    console.log('New address', newAddress);
+    // We need to re-check if the user has approved the app.
+    this.setMainAddress(newAddress);
+
+    console.log('Is connected ? ', this.isConnectedToWallet)
+
+    this.copyDataFromCryptoWalletService();
+
+    console.log('Is connected ? ', this.isConnectedToWallet)
+  }
+
+  private copyDataFromCryptoWalletService() {
+    console.log('Crypto service, did user approve', this.cryptoWalletConnectionService.didUserApproveWalletInThePast);
+    this.setCryptoServiceDataDidUserApproveWalletInThePast(this.cryptoWalletConnectionService.didUserApproveWalletInThePast);
+  }
+
   @computed
   public get isConnectedToWallet(): boolean {
     return (
       this.hasEthereumProvider &&
-      (this.cryptoWalletConnectionService.didUserApproveWalletInThePast || this.walletConnectionRequestApproved)
+      (this.cryptoServiceDataDidUserApproveWalletInThePast || this.walletConnectionRequestApproved)
     );
   }
 
@@ -69,7 +92,11 @@ export class CryptoWalletConnectionStore {
   }
 
   private async readInformationFromConnectedWallet() {
+    console.log('Reading information from connected wallet');
     const walletAddress = await this.cryptoWalletConnectionService.readMainAddress();
+    console.log('Wallet address is ', walletAddress);
+
+    this.copyDataFromCryptoWalletService();
 
     this.setMainAddress(walletAddress);
   }
@@ -84,5 +111,10 @@ export class CryptoWalletConnectionStore {
     this.mainAddress = mainAddress;
 
     this.analyticsService.setUserAddress(mainAddress);
+  }
+
+  @action('setCryptoServiceDataDidUserApproveWalletInThePast')
+  private setCryptoServiceDataDidUserApproveWalletInThePast(didUserApproveWalletInThePast) {
+    this.cryptoServiceDataDidUserApproveWalletInThePast = didUserApproveWalletInThePast;
   }
 }

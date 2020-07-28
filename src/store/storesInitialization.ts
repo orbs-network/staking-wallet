@@ -9,6 +9,10 @@ import {
   IOrbsRewardsService,
 } from 'orbs-pos-data';
 
+// DEV_NOTE : O.L : This import add MobX batching (https://github.com/mobxjs/mobx-react-lite/#observer-batching)
+import 'mobx-react-lite/batchingForReactDom';
+
+
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { OrbsAccountStore } from './OrbsAccountStore';
