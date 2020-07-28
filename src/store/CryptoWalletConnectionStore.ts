@@ -56,20 +56,15 @@ export class CryptoWalletConnectionStore {
   }
 
   private handleMainAddressChange(newAddress : string) {
-    console.log('New address', newAddress);
     // We need to re-check if the user has approved the app.
     this.setMainAddress(newAddress);
-
-    console.log('Is connected ? ', this.isConnectedToWallet)
-
     this.copyDataFromCryptoWalletService();
-
-    console.log('Is connected ? ', this.isConnectedToWallet)
   }
 
   private copyDataFromCryptoWalletService() {
-    console.log('Crypto service, did user approve', this.cryptoWalletConnectionService.didUserApproveWalletInThePast);
-    this.setCryptoServiceDataDidUserApproveWalletInThePast(this.cryptoWalletConnectionService.didUserApproveWalletInThePast);
+    const didUserApproveWalletInThePast = this.cryptoWalletConnectionService.didUserApproveWalletInThePast;
+    // console.log('Crypto service, did user approve', this.cryptoWalletConnectionService.didUserApproveWalletInThePast);
+    this.setCryptoServiceDataDidUserApproveWalletInThePast(didUserApproveWalletInThePast);
   }
 
   @computed

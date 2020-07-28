@@ -60,7 +60,10 @@ export class CryptoWalletConnectionService implements ICryptoWalletConnectionSer
       throw new Error(`Cannot subscribe to events with given Ethereum provider`);
     }
 
-    const listener = (accounts) => onChange(accounts[0]);
+    const listener = (accounts) => {
+      console.log('Accounts changes', accounts)
+      onChange(accounts[0]);
+    };
 
     this.ethereum.on('accountsChanged', listener);
 
