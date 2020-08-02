@@ -15,7 +15,7 @@
   "moveToStep_selectGuardian": "ガーディアンを選択",
   "moveToStep_stake": "ORBSをステーキング",
   "stakingSubStep_stepExplanation": "このステップでは保有するORBSトークンをコントラクトに転送してステーキングするものです。ステーキングすることで、Orbsネットワークがより安全なものになり、且つデリゲータやガーディアン、バリデータの参加を促すことになります。",
-  "stakingSubStep_stepTitle": "このステップでは{{orbsForStaking}}のORBSをステーキングします",
+  "stakingSubStep_stepTitle": "このステップでは{{orbsForStaking}}ORBSをステーキングします",
   "stepLabel_approve": "ORBSの利用を許可",
   "stepLabel_selectGuardian": "ガーディアンを選択",
   "stepLabel_stake": "トークンをステーキング"
