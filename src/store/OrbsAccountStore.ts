@@ -174,9 +174,9 @@ export class OrbsAccountStore {
     if (currentAddress) {
       this.setDefaultAccountAddress(currentAddress);
 
-      if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
-        this.refreshAccountListeners(currentAddress);
-      }
+      // if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
+      //   this.refreshAccountListeners(currentAddress);
+      // }
 
       try {
         await this.readDataForAccount(currentAddress);
@@ -190,6 +190,7 @@ export class OrbsAccountStore {
   private setDefaultAccountAddress(accountAddress: string) {
     this.stakingService.setFromAccount(accountAddress);
     this.orbsTokenService.setFromAccount(accountAddress);
+    this.guardiansService.setFromAccount(accountAddress);
   }
 
   // **** Data reading and setting ****
@@ -213,10 +214,10 @@ export class OrbsAccountStore {
       console.error(`Error in reading staked orbs : ${e}`);
       throw e;
     });
-    await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
-      console.error(`Error in reading selected guardian : ${e}`);
-      throw e;
-    });
+    // await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
+    //   console.error(`Error in reading selected guardian : ${e}`);
+    //   throw e;
+    // });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
       console.error(`Error in reading contract allowance: ${e}`);
       throw e;

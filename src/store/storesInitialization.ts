@@ -13,6 +13,8 @@ import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { OrbsAccountStore } from './OrbsAccountStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
+import { OrbsNodeStore } from './OrbsNodeStore';
+import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
 
 /**
  * Configures the mobx library. Should get called at App's initialization.
@@ -34,6 +36,7 @@ export function getStores(
   guardiansService: IGuardiansService,
   orbsRewardsService: IOrbsRewardsService,
   analyticsService: IAnalyticsService,
+  orbsNodeService: IOrbsNodeService,
 ): IStores {
   // Create stores instances + Hydrate the stores
   const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService);
@@ -54,6 +57,8 @@ export function getStores(
     analyticsService,
   );
 
+  const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
+
   // Call the initialize function on each one
   // NOTE : FUTURE : O.L : Should consider the order and relation between Hydrating and 'init'
   // NOTE : FUTURE : O.L : Should handle the async calls properly
@@ -63,6 +68,7 @@ export function getStores(
     guardiansStore,
     cryptoWalletIntegrationStore,
     orbsAccountStore,
+    orbsNodeStore
   };
 
   return stores;

@@ -8,12 +8,12 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
     "outDir": "../dist",
     "lib": ["esnext", "dom"],
     "types": [],
-    "jsx": "react"
+    "jsx": "react",
+    "experimentalDecorators": true
   },
   "files": [
     "./client.tsx", "global.d.ts", "@types/index.d.ts"

@@ -24,6 +24,8 @@ import { IAnalyticsService, TEthereumProviderName } from './analytics/IAnalytics
 import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
 import { detectEthereumProviderName } from './analytics/analyticsUtils';
+import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
+import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
 
 export interface IServices {
   httpService: IHttpService;
@@ -34,6 +36,7 @@ export interface IServices {
   guardiansService: IGuardiansService;
   analyticsService: IAnalyticsService;
   rewardsService: IOrbsRewardsService;
+  orbsNodeService: IOrbsNodeService;
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosInstance): IServices {
@@ -71,5 +74,6 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
       config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
     ),
     analyticsService: analyticsService,
+    orbsNodeService: new OrbsNodeService(),
   };
 }

@@ -5,16 +5,21 @@
   "main": "truffle-config.js",
   "scripts": {
     "clean": "rimraf build",
-    "compile-and-deploy": "truffle compile && truffle migrate --reset",
-    "start-ganache": "ganache-cli --networkId 5777 --deterministic --mnemonic \"bone spatial narrow improve drop rabbit song pride lamp strong run hand\" --blockTime 3"
+    "start-ganache": "ganache-cli -p 7545 -i 5777 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\"",
+    "deploy-driver": "ts-node delpoyDriverScripts.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@orbs-network/orbs-ethereum-contracts-v2": "0.0.21",
+    "bn.js": "^5.1.2",
     "ganache-cli": "^6.9.1",
     "openzeppelin-solidity": "2.0.1",
     "rimraf": "^3.0.2",
     "truffle": "5.1.24"
+  },
+  "devDependencies": {
+    "ts-node": "^8.10.2"
   }
 }

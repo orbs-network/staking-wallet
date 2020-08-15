@@ -17,7 +17,10 @@
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-prod": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
-    "deploy": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh"
+    "deploy": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
+    "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
+    "postinstall": "npm run generate_types && npm run mkd",
+    "generate_types": "typechain --target web3-v1 --outDir ./src/contracts './node_modules/@orbs-network/orbs-ethereum-contracts-v2/build/contracts/*.json'"
   },
   "keywords": [
     "typescript",
@@ -33,6 +36,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "@material-ui/icons": "^4.9.1",
+    "@typechain/web3-v1": "^1.0.0",
     "axios": "^0.19.2",
     "color": "^3.1.2",
     "copy-to-clipboard": "^3.3.1",
@@ -52,7 +56,9 @@
     "react-number-format": "^4.4.1",
     "react-qrcode-logo": "^2.2.1",
     "styled-components": "^5.1.0",
+    "ts-retry-promise": "^0.5.0",
     "tslib": "^1.11.2",
+    "typechain": "^2.0.0",
     "use-interval": "^1.2.1",
     "web3": "^1.2.7"
   },

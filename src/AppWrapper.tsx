@@ -38,6 +38,7 @@ const stores = getStores(
   services.guardiansService,
   services.rewardsService,
   services.analyticsService,
+  services.orbsNodeService,
 );
 
 // TODO : FUTURE : O.L : Move this to a better location

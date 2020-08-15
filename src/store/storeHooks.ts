@@ -4,6 +4,7 @@ import { IStores } from './stores';
 import { GuardiansStore } from './GuardiansStore';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { OrbsAccountStore } from './OrbsAccountStore';
+import { OrbsNodeStore } from './OrbsNodeStore';
 
 export function useStores(): IStores {
   // @ts-ignore
@@ -20,4 +21,8 @@ export function useCryptoWalletIntegrationStore(): CryptoWalletConnectionStore {
 
 export function useOrbsAccountStore(): OrbsAccountStore {
   return useStores().orbsAccountStore;
+}
+
+export function useOrbsNodeStore(): OrbsNodeStore {
+  return useStores().orbsNodeStore;
 }
