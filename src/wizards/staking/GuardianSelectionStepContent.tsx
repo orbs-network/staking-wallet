@@ -1,17 +1,15 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useStateful } from 'react-hanger';
-import { useGuardiansStore } from '../../store/storeHooks';
+import { useGuardiansStore, useOrbsNodeStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { GuardiansTable } from '../../components/GuardiansTable';
-import { TGuardianInfoExtended } from '../../store/GuardiansStore';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
+import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
+import { Guardian } from '../../services/v2/orbsNodeService/model';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -24,6 +22,7 @@ export const GuardianSelectionStepContent = observer(
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
     const guardiansStore = useGuardiansStore();
+    const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
 
     // Start and limit by allowance
@@ -37,15 +36,15 @@ export const GuardianSelectionStepContent = observer(
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
     const selectGuardian = useCallback(
-      (guardian: TGuardianInfoExtended) => {
+      (guardian: Guardian) => {
         message.setValue('');
         subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
         // No need to re-select an already selected guardian
-        if (guardian.address === selectedGuardianAddress) {
+        if (guardian.EthAddress === selectedGuardianAddress) {
           skipToSuccess();
         } else {
-          const promiEvent = guardiansStore.selectGuardian(guardian.address);
+          const promiEvent = guardiansStore.selectGuardian(guardian.EthAddress);
 
           // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
           promiEvent.on('transactionHash', (txHash) => {
@@ -69,7 +68,7 @@ export const GuardianSelectionStepContent = observer(
         skipToSuccess,
         subMessage,
         wizardsCommonTranslations,
-        isBroadcastingMessage
+        isBroadcastingMessage,
       ],
     );
 
@@ -77,7 +76,7 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
-            guardians={guardiansStore.guardiansList}
+            guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}

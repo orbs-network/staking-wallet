@@ -3,21 +3,17 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import React, { useCallback, useMemo } from 'react';
 import MaterialTable, { Column, MTableToolbar } from 'material-table';
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import { TGuardianInfoExtended } from '../store/GuardiansStore';
 import styled from 'styled-components';
-import { EMPTY_ADDRESS } from '../constants';
+import { EMPTY_ADDRESS } from '../../constants';
 import IconButton from '@material-ui/core/IconButton';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { selectActionButtonTestIdFromAddress } from '../__tests__/components/guardians/guardiansTestUtils';
-import { useGuardiansTableTranslations } from '../translations/translationsHooks';
-import TableContainer from '@material-ui/core/TableContainer';
-import Paper from '@material-ui/core/Paper';
-import { ReactComponent as GlobeIcon } from '../../assets/globe.svg';
+import { selectActionButtonTestIdFromAddress } from '../../__tests__/components/guardians/guardiansTestUtils';
+import { useGuardiansTableTranslations } from '../../translations/translationsHooks';
+import { ReactComponent as GlobeIcon } from '../../../assets/globe.svg';
 import SvgIcon from '@material-ui/core/SvgIcon';
-import { TABLE_ICONS } from './tables/TableIcons';
-import { Guardian } from '../services/v2/orbsNodeService/model';
+import { TABLE_ICONS } from '../tables/TableIcons';
+import { Guardian } from '../../services/v2/orbsNodeService/model';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -177,6 +173,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
   const columns: Column<Guardian>[] = [
     {
+      title: '',
+      field: '',
+      render: (guardian) => <div>{guardian.Name}</div>,
+      headerStyle: {
+        textAlign: 'left',
+      },
+    },
+    {
       title: guardiansTableTranslations('columnHeader_name'),
       field: 'name',
       render: (guardian) => (
@@ -259,6 +263,8 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     });
   }
 
+  const pageSize = Math.min(50, guardians.length);
+
   // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
   return (
     <MaterialTable
@@ -269,11 +275,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       style={{ overflowX: 'auto' }}
       options={{
         padding: densePadding ? 'dense' : 'default',
-        pageSizeOptions: [5],
+        pageSize: pageSize,
+        pageSizeOptions: [5, 10, pageSize],
 
-        rowStyle: (TGuardianInfoExtended) => ({
-          backgroundColor:
-            TGuardianInfoExtended.address === selectedGuardian ? 'rgba(66,66, 66, 0.55)' : 'rgba(33,33, 33, 0.55)',
+        rowStyle: (guardian: Guardian) => ({
+          backgroundColor: guardian.EthAddress === selectedGuardian ? 'rgba(66,66, 66, 0.55)' : 'rgba(33,33, 33, 0.55)',
         }),
         headerStyle: {
           backgroundColor: theme.palette.primary.dark,

@@ -8,7 +8,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
 import { useGuardiansStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
-import { GuardiansTable } from '../../components/GuardiansTable';
+import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
