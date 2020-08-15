@@ -9,8 +9,32 @@ export class OrbsNodeStore {
   @observable public errorLoading = false;
   @observable public model: Model = new Model();
 
+  @computed public get committeeGuardians(): Guardian[] {
+    return Object.values(this.model.CommitteeNodes);
+  }
+
+  @computed public get nonCommitteeGuardians(): Guardian[] {
+    return Object.values(this.model.StandByNodes);
+  }
+
   @computed public get guardians(): Guardian[] {
-    return [...Object.values(this.model.CommitteeNodes), ...Object.values(this.model.StandByNodes)];
+    return [...this.committeeGuardians, ...this.nonCommitteeGuardians];
+  }
+
+  @computed public get committeeEffectiveStake(): number {
+    const committeeEffectiveStake = this.committeeGuardians.reduce((sum, committeeGuardian) => {
+      return sum + committeeGuardian.EffectiveStake;
+    }, 0);
+
+    return committeeEffectiveStake;
+  }
+
+  @computed public get totalStake(): number {
+    const totalStake = this.guardians.reduce((sum, committeeGuardian) => {
+      return sum + committeeGuardian.EffectiveStake;
+    }, 0);
+
+    return totalStake;
   }
 
   constructor(private orbsNodeService: IOrbsNodeService) {

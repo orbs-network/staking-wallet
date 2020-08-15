@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import { ReactComponent as GlobeIcon } from '../../assets/globe.svg';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { TABLE_ICONS } from './tables/TableIcons';
+import { Guardian } from '../services/v2/orbsNodeService/model';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -72,9 +73,9 @@ type TGuardianSelectionMode = 'Select' | 'Change' | 'None';
 
 interface IProps {
   guardianSelectionMode: TGuardianSelectionMode;
-  guardians: TGuardianInfoExtended[];
+  guardians: Guardian[];
   selectedGuardian?: string;
-  onGuardianSelect?: (guardian: TGuardianInfoExtended) => void;
+  onGuardianSelect?: (guardian: Guardian) => void;
   tableTestId?: string;
   extraStyle?: React.CSSProperties;
   tableTitle?: string;
@@ -83,156 +84,13 @@ interface IProps {
   densePadding?: boolean;
 }
 
-export const GuardiansTableOld = React.memo<IProps>((props) => {
-  const { guardianSelectionMode, guardians, onGuardianSelect, selectedGuardian, tableTestId, extraStyle } = props;
-  const guardiansTableTranslations = useGuardiansTableTranslations();
-
-  const getSelectedGuardianCell = useCallback(
-    (g: TGuardianInfoExtended, idx: number) => {
-      let selectedGuardianCell = null;
-
-      const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
-      const actionButtonOnClick = () => onGuardianSelect(g);
-
-      switch (guardianSelectionMode) {
-        case 'Select':
-          selectedGuardianCell = (
-            <TableCell align='center'>
-              <SelectButton
-                variant='contained'
-                size='small'
-                // disabled={g.address === selectedGuardian}
-                data-testid={actionButtonTestId}
-                onClick={actionButtonOnClick}
-              >
-                {guardiansTableTranslations(g.address === selectedGuardian ? 'action_keep' : 'action_select')}
-              </SelectButton>
-            </TableCell>
-          );
-          break;
-        case 'Change':
-          const isSelectedGuardian = g.address === selectedGuardian;
-
-          const enabled = !!onGuardianSelect;
-          const actionButtonIcon = isSelectedGuardian ? (
-            <CheckCircleOutlineIcon data-testid={'selected-guardian-icon'} />
-          ) : (
-            <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
-          );
-
-          selectedGuardianCell = (
-            <TableCell align='center'>
-              <Typography data-testid={`guardian-${g.address}-selected-status`}>
-                <IconButton data-testid={actionButtonTestId} onClick={actionButtonOnClick} disabled={!enabled}>
-                  {actionButtonIcon}
-                </IconButton>
-              </Typography>
-            </TableCell>
-          );
-          break;
-        case 'None':
-          selectedGuardianCell = null;
-          break;
-        default:
-          throw new Error(`Invalid guardian selection mode of ${guardianSelectionMode}`);
-      }
-
-      return selectedGuardianCell;
-    },
-    [guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
-  );
-
-  const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
-  const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
-
-  const sortedGuardians = useMemo(
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    () => guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian)),
-    [guardians, selectedGuardian],
-  );
-
-  const tableRows = useMemo(() => {
-    return sortedGuardians.map((g, idx) => {
-      const extraStyle = hasSelectedGuardian && selectedGuardian === g.address ? selectedGuardianRowStyle : null;
-      return (
-        <TableRow style={extraStyle} data-testid={`guardian-${g.address}`} key={g.name} hover>
-          <TableCell data-testid={`guardian-${g.address}-name`}>
-            <NameBox>
-              <Jazzicon diameter={40} seed={jsNumberForAddress(g.address)} />
-              <NameContainer>{g.name}</NameContainer>
-            </NameBox>
-          </TableCell>
-          <TableCell data-testid={`guardian-${g.address}-address`} style={{ fontFamily: 'monospace' }}>
-            {g.address}
-          </TableCell>
-          <TableCell align='center'>
-            <a
-              data-testid={`guardian-${g.address}-website`}
-              href={getWebsiteAddress(g.website)}
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <SvgIcon component={GlobeIcon} />
-            </a>
-          </TableCell>
-          <TableCell data-testid={`guardian-${g.address}-stake`} align='center'>
-            {asPercent(g.stakePercent)}
-          </TableCell>
-          <TableCell data-testid={`guardian-${g.address}-voted`} align='center'>
-            {g.voted ? (
-              <YesContainer>{guardiansTableTranslations('didVote_yes')}</YesContainer>
-            ) : (
-              <NoContainer>{guardiansTableTranslations('didVote_no')}</NoContainer>
-            )}
-          </TableCell>
-          {addSelectionColumn && getSelectedGuardianCell(g, idx)}
-        </TableRow>
-      );
-    });
-  }, [
-    addSelectionColumn,
-    getSelectedGuardianCell,
-    guardiansTableTranslations,
-    hasSelectedGuardian,
-    selectedGuardian,
-    sortedGuardians,
-  ]);
-
-  // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
-  return (
-    <TableContainer component={Paper} style={extraStyle}>
-      <Table data-testid={tableTestId}>
-        <StyledTableHead>
-          <TableRow>
-            <TableCell>{guardiansTableTranslations('columnHeader_name')}</TableCell>
-            <TableCell>{guardiansTableTranslations('columnHeader_address')}</TableCell>
-            <TableCell align='center'>{guardiansTableTranslations('columnHeader_website')}</TableCell>
-            <TableCell align='center'>
-              {guardiansTableTranslations('columnHeader_stakingPercentageInLastElections')}
-            </TableCell>
-            <TableCell align='center'>{guardiansTableTranslations('columnHeader_votedInLastElection')}</TableCell>
-            {addSelectionColumn && (
-              <TableCell align='center'>{guardiansTableTranslations('columnHeader_selection')}</TableCell>
-            )}
-          </TableRow>
-        </StyledTableHead>
-        <StyledTableBody>{tableRows}</StyledTableBody>
-      </Table>
-    </TableContainer>
-  );
-});
-
-function compareGuardiansBySelectedAndThenStake(
-  a: TGuardianInfoExtended,
-  b: TGuardianInfoExtended,
-  selectedGuardianAddress: string,
-) {
-  if (a.address === selectedGuardianAddress) {
+function compareGuardiansBySelectedAndThenStake(a: Guardian, b: Guardian, selectedGuardianAddress: string) {
+  if (a.EthAddress === selectedGuardianAddress) {
     return -1;
-  } else if (b.address === selectedGuardianAddress) {
+  } else if (b.EthAddress === selectedGuardianAddress) {
     return 11;
   } else {
-    return b.stakePercent - a.stakePercent;
+    return b.EffectiveStake - a.EffectiveStake;
   }
 }
 
@@ -253,12 +111,12 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   const theme = useTheme();
 
   const getGuardianSelectionCellContent = useCallback(
-    (g: TGuardianInfoExtended) => {
+    (g: Guardian) => {
       let selectedGuardianCell = null;
 
-      const actionButtonTestId = selectActionButtonTestIdFromAddress(g.address);
+      const actionButtonTestId = selectActionButtonTestIdFromAddress(g.EthAddress);
       const actionButtonOnClick = () => onGuardianSelect(g);
-      const isSelectedGuardian = g.address.toLowerCase() === selectedGuardian.toLowerCase();
+      const isSelectedGuardian = g.EthAddress.toLowerCase() === selectedGuardian.toLowerCase();
 
       switch (guardianSelectionMode) {
         case 'Select':
@@ -284,7 +142,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           const iconColor = isSelectedGuardian ? theme.palette.secondary.main : theme.palette.grey['500'];
 
           selectedGuardianCell = (
-            <Typography data-testid={`guardian-${g.address}-selected-status`}>
+            <Typography data-testid={`guardian-${g.EthAddress}-selected-status`}>
               <IconButton
                 data-testid={actionButtonTestId}
                 onClick={actionButtonOnClick}
@@ -317,16 +175,16 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     [guardians, selectedGuardian],
   );
 
-  const columns: Column<TGuardianInfoExtended>[] = [
+  const columns: Column<Guardian>[] = [
     {
       title: guardiansTableTranslations('columnHeader_name'),
       field: 'name',
-      render: (extendedGuardianInfo) => (
-        <NameBox data-testid={`guardian-${extendedGuardianInfo.address}`}>
+      render: (guardian) => (
+        <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
           {/* TODO : FUTURE : O.L : add support for the jazzicon */}
           {/*<Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />*/}
           <NameContainer>
-            <Typography>{extendedGuardianInfo.name}</Typography>
+            <Typography>{guardian.Name}</Typography>
           </NameContainer>
         </NameBox>
       ),
@@ -337,8 +195,8 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     {
       title: guardiansTableTranslations('columnHeader_address'),
       field: 'address',
-      render: (extendedGuardianInfo) => (
-        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>{extendedGuardianInfo.address}</Typography>
+      render: (guardian) => (
+        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>{guardian.EthAddress}</Typography>
       ),
       // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
       cellStyle: {
@@ -348,10 +206,10 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     {
       title: guardiansTableTranslations('columnHeader_website'),
       field: 'website',
-      render: (extendedGuardianInfo) => (
+      render: (guardian) => (
         <a
-          data-testid={`guardian-${extendedGuardianInfo.address}-website`}
-          href={getWebsiteAddress(extendedGuardianInfo.website)}
+          data-testid={`guardian-${guardian.EthAddress}-website`}
+          href={getWebsiteAddress(guardian.Website)}
           target='_blank'
           rel='noopener noreferrer'
         >
@@ -366,9 +224,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     {
       title: guardiansTableTranslations('columnHeader_stakingPercentageInLastElections'),
       field: 'stakePercent',
-      render: (extendedGuardianInfo) => (
-        <Typography variant={'button'}>{asPercent(extendedGuardianInfo.stakePercent)}</Typography>
-      ),
+      render: (guardian) => <Typography variant={'button'}>{asPercent(0)}</Typography>,
       cellStyle: {
         textAlign: 'center',
       },
@@ -377,11 +233,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     {
       title: guardiansTableTranslations('columnHeader_votedInLastElection'),
       field: 'voted',
-      render: (extendedGuardianInfo) => {
-        const textColor = extendedGuardianInfo.voted ? yesColor : noColor;
-        const text = extendedGuardianInfo.voted
-          ? guardiansTableTranslations('didVote_yes')
-          : guardiansTableTranslations('didVote_no');
+      render: (guardian) => {
+        const textColor = false ? yesColor : noColor;
+        const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
 
         return <Typography style={{ color: textColor }}>{text}</Typography>;
       },

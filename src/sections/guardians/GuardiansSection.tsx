@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
-import { useGuardiansStore, useOrbsAccountStore } from '../../store/storeHooks';
+import { useGuardiansStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
 import { GuardiansTable } from '../../components/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
@@ -22,12 +22,14 @@ import { CommonDialog } from '../../components/modal/CommonDialog';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
+import { Guardian } from '../../services/v2/orbsNodeService/model';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
   const guardiansStore = useGuardiansStore();
+  const orbsNodeStore = useOrbsNodeStore();
   const orbsAccountStore = useOrbsAccountStore();
   const showGuardianChangingModal = useBoolean(false);
   const showGuardianSelectionModal = useBoolean(false);
@@ -36,32 +38,47 @@ export const GuardiansSection = observer(() => {
   const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
 
   const onGuardianSelect = useCallback(
-    (guardian: TGuardianInfoExtended) => {
-      if (guardian.address === orbsAccountStore.selectedGuardianAddress) {
+    (guardian: Guardian) => {
+      if (guardian.EthAddress === orbsAccountStore.selectedGuardianAddress) {
         showSnackbarMessage.setTrue();
       } else {
-        setSelectedGuardianAddress(guardian.address);
+        setSelectedGuardianAddress(guardian.EthAddress);
         showGuardianChangingModal.setTrue();
       }
     },
     [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
 
-  const isLoadingData = !guardiansStore.doneLoading || !orbsAccountStore.doneLoading;
-  const isErrorOnLoading = guardiansStore.errorLoading || orbsAccountStore.errorLoading;
+  const isLoadingData = !orbsNodeStore.doneLoading || !orbsAccountStore.doneLoading;
+  const isErrorOnLoading = orbsNodeStore.errorLoading || orbsAccountStore.errorLoading;
 
   // Before data was loaded
   if (isLoadingData) {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 
+  // const totalStake = guardiansStore.totalParticipatingTokens;
+  const totalStake = orbsNodeStore.totalStake;
+  const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
+
+  // console.log(orbsNodeStore.model);
+  // console.log('Guarians store total stake', guardiansStore.totalParticipatingTokens.toLocaleString());
+  // console.log('Orbs node store total stake', orbsNodeStore.totalStake);
+  // console.log('Orbs node effective total stake', orbsNodeStore.committeeEffectiveStake);
+
+  // TODO : ORL : Fix display of total and effective stake.
+
   return (
     <Section data-testid='guardians-section'>
       <SectionHeader
         title={sectionTitlesTranslations('allGuardians')}
-        sideTitle={sectionTitlesTranslations('allGuardians_sideTitle', {
-          totalParticipatingTokens: guardiansStore.totalParticipatingTokens.toLocaleString(),
-        })}
+        sideTitle={
+          sectionTitlesTranslations('allGuardians_sideTitle', {
+            totalParticipatingTokens: totalStake.toLocaleString(),
+          }) +
+          ' ' +
+          committeeEffectiveStake.toLocaleString()
+        }
         icon={ShielIcon}
         bottomPadding
       />
@@ -80,7 +97,7 @@ export const GuardiansSection = observer(() => {
             <GuardiansTable
               guardianSelectionMode={'Change'}
               selectedGuardian={orbsAccountStore.selectedGuardianAddress}
-              guardians={guardiansStore.guardiansList}
+              guardians={orbsNodeStore.guardians}
               onGuardianSelect={onGuardianSelect}
               tableTestId={'guardians-table'}
             />
@@ -95,7 +112,10 @@ export const GuardiansSection = observer(() => {
           </CommonDialog>
 
           <CommonDialog open={showGuardianSelectionModal.value} onClose={showGuardianSelectionModal.setFalse}>
-            <GuardianSelectingWizard closeWizard={showGuardianSelectionModal.setFalse} selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress} />
+            <GuardianSelectingWizard
+              closeWizard={showGuardianSelectionModal.setFalse}
+              selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress}
+            />
           </CommonDialog>
 
           <Snackbar
