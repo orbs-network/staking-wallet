@@ -123,10 +123,20 @@ function readGuardians(rootNodeData: any): Guardians {
         ReputationToolTip: '',
       },
       RegistrationTime: guardianData.RegistrationTime,
+      DistributionFrequency: extractDistributionFrequency(guardianData),
     };
 
     return guardian;
   });
+}
+
+function extractDistributionFrequency(guardianData: any): number {
+  // TODO : ORL : Read these constants from a better place that will get updted.
+  const DEFAULT_DISTRIBUTION_FREQUENCY = 60 * 60 * 24 * 14; // 14 days in seconds
+  const REWARDS_DISTRIBUTION_KEY = 'REWARDS_FREQUENCY_SEC';
+
+  const manuallySetValue = guardianData.Metadata[REWARDS_DISTRIBUTION_KEY];
+  return manuallySetValue ? manuallySetValue : DEFAULT_DISTRIBUTION_FREQUENCY;
 }
 
 // async function calcReputation(url: string, committeeMembers: Guardians) {

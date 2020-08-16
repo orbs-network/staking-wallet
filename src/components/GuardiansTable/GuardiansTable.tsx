@@ -30,6 +30,9 @@ import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNode
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
 
+// DEV_NOTE : O.L : The '+' is a trick to get better display of round numbers
+const secondsToDaysString = (seconds: number) => +(seconds / (60 * 60 * 24)).toFixed(2);
+
 const getWebsiteAddress = (url: string) => (url.toLowerCase().indexOf('http') === 0 ? url : `http://${url}`);
 
 const SelectButton = styled(Button)`
@@ -197,6 +200,8 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     [committeeMembers],
   );
 
+  // TODO : ORL : TRANSLATIONS
+
   const columns = useMemo(() => {
     const columns: Column<Guardian>[] = [
       {
@@ -240,7 +245,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       },
       {
         title: guardiansTableTranslations('columnHeader_website'),
-        field: 'website',
+        field: 'Website',
         render: (guardian) => (
           <Tooltip title={<Typography>{guardian.Website}</Typography>}>
             <a
@@ -259,9 +264,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         sorting: false,
       },
       {
-        title: guardiansTableTranslations('columnHeader_stakingPercentageInLastElections'),
-        field: 'stakePercent',
-        render: (guardian) => <Typography variant={'button'}>{asPercent(0)}</Typography>,
+        title: 'Rewards Distribution Frequency',
+        field: 'DistributionFrequency',
+        render: (guardian) => (
+          <Typography variant={'button'}>{secondsToDaysString(guardian.DistributionFrequency)} days</Typography>
+        ),
         cellStyle: {
           textAlign: 'center',
         },

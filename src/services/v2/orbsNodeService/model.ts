@@ -66,6 +66,10 @@ export interface Guardian {
   NodeServices: NodeServices;
   NodeReputation: NodeReputation;
   RegistrationTime: number;
+  /**
+   * In Seconds
+   */
+  DistributionFrequency: number;
 }
 
 export interface NodeServiceUrls {
