@@ -26,6 +26,7 @@ import { TABLE_ICONS } from '../tables/TableIcons';
 import { Guardian } from '../../services/v2/orbsNodeService/model';
 import { GuardianQualifications } from './GuardianQualifications';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
+import { Line } from 'rc-progress';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -281,7 +282,16 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           // const textColor = false ? yesColor : noColor;
           // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
 
-          return <Typography>{guardian.ParticipationPercentage}%</Typography>;
+          const { ParticipationPercentage } = guardian;
+          // TODO : ORL : Make this color gradient
+          const color = ParticipationPercentage <= 30 ? 'red' : ParticipationPercentage <= 80 ? 'yellow' : 'green';
+
+          return (
+            <>
+              <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
+              <Typography>{ParticipationPercentage}%</Typography>
+            </>
+          );
         },
         cellStyle: {
           textAlign: 'center',

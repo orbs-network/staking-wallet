@@ -49,6 +49,7 @@
     "moment": "^2.25.3",
     "orbs-client-sdk": "^2.5.0",
     "orbs-pos-data": "^6.18.0",
+    "rc-progress": "^3.0.0",
     "react-ga": "^2.7.0",
     "react-hanger": "^2.2.1",
     "react-i18next": "^11.4.0",
