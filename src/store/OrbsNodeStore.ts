@@ -3,11 +3,13 @@
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
 import { action, computed, observable } from 'mobx';
 import { Guardian, Model } from '../services/v2/orbsNodeService/model';
+import { ICommitteeMemberData } from '../services/v2/orbsNodeService/OrbsNodeTypes';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
   @observable public model: Model = new Model();
+  @observable public committeeMembers: ICommitteeMemberData[] = [];
 
   @computed public get committeeGuardians(): Guardian[] {
     return Object.values(this.model.CommitteeNodes);
@@ -45,8 +47,9 @@ export class OrbsNodeStore {
     this.setDoneLoading(false);
     this.setErrorLoading(false);
     try {
-      const model = await this.orbsNodeService.readAndProcessModel();
+      const { model, committeeMembers } = await this.orbsNodeService.readAndProcessModel();
       this.setModel(model);
+      this.setCommitteeMemberData(committeeMembers);
       this.setDoneLoading(true);
     } catch (e) {
       this.setErrorLoading(true);
@@ -67,5 +70,10 @@ export class OrbsNodeStore {
   @action('setModel')
   private setModel(model: Model) {
     this.model = model;
+  }
+
+  @action('setCommitteeMemberData')
+  private setCommitteeMemberData(committeeMembers: ICommitteeMemberData[]) {
+    this.committeeMembers = committeeMembers;
   }
 }

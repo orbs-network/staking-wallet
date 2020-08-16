@@ -100,6 +100,7 @@ export const GuardiansSection = observer(() => {
               guardians={orbsNodeStore.guardians}
               onGuardianSelect={onGuardianSelect}
               tableTestId={'guardians-table'}
+              committeeMembers={orbsNodeStore.committeeMembers}
             />
           </Grid>
 

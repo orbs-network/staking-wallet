@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/interface-name-prefix,@typescript-eslint/no-inferrable-types */
 export class Model {
   TimeSeconds = 0; // UTC seconds
   Timestamp: string = '';
@@ -35,15 +36,23 @@ export class Service {
   static VC = new Service('VC', 'vchains', 'https://github.com/orbs-network/orbs-network-go/tree/');
   static Boyar = new Service('Boyar', 'boyar', 'https://github.com/orbs-network/boyarin/tree/');
   static Signer = new Service('Signer', 'signer', 'https://github.com/orbs-network/signer-service/tree/');
-  static EthereumWriter = new Service('EthereumWriter', 'ethereum-writer', 'https://github.com/orbs-network/ethereum-writer/tree/');
+  static EthereumWriter = new Service(
+    'EthereumWriter',
+    'ethereum-writer',
+    'https://github.com/orbs-network/ethereum-writer/tree/',
+  );
   static Rewards = new Service('Rewards', 'rewards-service', 'https://github.com/orbs-network/rewards-service/tree/');
-  static Management = new Service('Management', 'management-service', 'https://github.com/orbs-network/management-service/tree/');
+  static Management = new Service(
+    'Management',
+    'management-service',
+    'https://github.com/orbs-network/management-service/tree/',
+  );
 }
 
 export interface Guardians {
   [key: string]: Guardian;
 }
-
+/// C.F.G : Add 'RegistrationTime' to the procssor.
 export interface Guardian {
   EthAddress: string;
   Name: string;
@@ -56,6 +65,7 @@ export interface Guardian {
   NodeVirtualChains: NodeVirtualChains;
   NodeServices: NodeServices;
   NodeReputation: NodeReputation;
+  RegistrationTime: number;
 }
 
 export interface NodeServiceUrls {
@@ -93,7 +103,7 @@ export function nodeVirtualChainBuilder(
   version: string = '',
   blockHeight: number = 0,
   blockHeightToolTip: string = '',
-  protocolVersion: number = 0
+  protocolVersion: number = 0,
 ): NodeVirtualChain {
   return {
     StatusMsg: statusMsg,
@@ -127,7 +137,7 @@ export function nodeServiceBuilder(
   status: HealthLevel = HealthLevel.Green,
   statusTooltip: string = '',
   timestamp: string = '',
-  version: string = ''
+  version: string = '',
 ): NodeService {
   return {
     StatusMsg: statusMsg,

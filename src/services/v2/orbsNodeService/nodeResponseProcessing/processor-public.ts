@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-use-before-define,@typescript-eslint/interface-name-prefix */
 import _ from 'lodash';
 // import { fetchJson, isStaleTime, getCurrentClockTime } from '../helpers';
-import { Model, VirtualChain, Service, Guardians, HealthLevel } from '../model';
+import { Model, VirtualChain, Service, Guardians, HealthLevel, Guardian } from '../model';
 import { getCurrentClockTime, isStaleTime } from './helpers';
 import { generateNodeManagmentUrl, generateVirtualChainUrls } from './url-generator';
 
@@ -75,7 +76,7 @@ export function updateModel(model: Model, rootNodeData: any) {
 
 function readVirtualChains(rootNodeData: any, config: Configuration): VirtualChain[] {
   return _.map(rootNodeData.Payload.CurrentVirtualChains, (vcData, vcId) => {
-    let expirationTime = _.isNumber(vcData.Expiration) ? vcData.Expiration : -1;
+    const expirationTime = _.isNumber(vcData.Expiration) ? vcData.Expiration : -1;
     let healthLevel = HealthLevel.Green;
     let healthLevelToolTip = '';
     if (expirationTime > 0) {
@@ -103,8 +104,8 @@ function readVirtualChains(rootNodeData: any, config: Configuration): VirtualCha
 
 function readGuardians(rootNodeData: any): Guardians {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData) => {
-    let ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
-    return {
+    const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
+    const guardian: Guardian = {
       EthAddress: guardianData.EthAddress,
       Name: _.isString(guardianData.Name) ? guardianData.Name : '',
       Ip: ip,
@@ -121,7 +122,10 @@ function readGuardians(rootNodeData: any): Guardians {
         ReputationStatus: HealthLevel.Green,
         ReputationToolTip: '',
       },
+      RegistrationTime: guardianData.RegistrationTime,
     };
+
+    return guardian;
   });
 }
 

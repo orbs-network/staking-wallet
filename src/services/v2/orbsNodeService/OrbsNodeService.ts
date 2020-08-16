@@ -4,6 +4,7 @@ import { fetchJson } from './nodeResponseProcessing/helpers';
 import { Model } from './model';
 import { updateModel } from './nodeResponseProcessing/processor-public';
 import RootNodeData from '../../../local/StatusResponse.json';
+import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
 
 const MAIN_NET_DEFAULT_NODE_URL = 'http://34.255.138.28';
 const ManagementStatusSuffix = '/services/management-service/status';
@@ -11,7 +12,7 @@ const ManagementStatusSuffix = '/services/management-service/status';
 export class OrbsNodeService implements IOrbsNodeService {
   constructor(private defaultNodeUrl: string = MAIN_NET_DEFAULT_NODE_URL) {}
 
-  async readAndProcessModel(nodeAddress?: string): Promise<Model> {
+  async readAndProcessModel(nodeAddress?: string): Promise<IReadAndProcessResults> {
     const nodeUrl = nodeAddress || this.defaultNodeUrl;
     const model = new Model();
     // TODO : ORL : Fix CORS and then return this read.
@@ -19,6 +20,9 @@ export class OrbsNodeService implements IOrbsNodeService {
     const rootNodeData = RootNodeData;
     updateModel(model, rootNodeData);
 
-    return model;
+    return {
+      model,
+      committeeMembers: rootNodeData.Payload.CurrentCommittee,
+    };
   }
 }

@@ -14,6 +14,8 @@ import { ReactComponent as GlobeIcon } from '../../../assets/globe.svg';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { TABLE_ICONS } from '../tables/TableIcons';
 import { Guardian } from '../../services/v2/orbsNodeService/model';
+import { GuardianQualifications } from './GuardianQualifications';
+import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -70,6 +72,8 @@ type TGuardianSelectionMode = 'Select' | 'Change' | 'None';
 interface IProps {
   guardianSelectionMode: TGuardianSelectionMode;
   guardians: Guardian[];
+  committeeMembers: ICommitteeMemberData[];
+
   selectedGuardian?: string;
   onGuardianSelect?: (guardian: Guardian) => void;
   tableTestId?: string;
@@ -100,6 +104,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     extraStyle,
     tableTitle,
     densePadding,
+    committeeMembers,
   } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
 
@@ -171,97 +176,114 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     [guardians, selectedGuardian],
   );
 
-  const columns: Column<Guardian>[] = [
-    {
-      title: '',
-      field: '',
-      render: (guardian) => <div>{guardian.Name}</div>,
-      headerStyle: {
-        textAlign: 'left',
-      },
-    },
-    {
-      title: guardiansTableTranslations('columnHeader_name'),
-      field: 'name',
-      render: (guardian) => (
-        <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
-          {/* TODO : FUTURE : O.L : add support for the jazzicon */}
-          {/*<Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />*/}
-          <NameContainer>
-            <Typography>{guardian.Name}</Typography>
-          </NameContainer>
-        </NameBox>
-      ),
-      headerStyle: {
-        textAlign: 'left',
-      },
-    },
-    {
-      title: guardiansTableTranslations('columnHeader_address'),
-      field: 'address',
-      render: (guardian) => (
-        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>{guardian.EthAddress}</Typography>
-      ),
-      // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
-      cellStyle: {
-        fontFamily: 'monospace',
-      },
-    },
-    {
-      title: guardiansTableTranslations('columnHeader_website'),
-      field: 'website',
-      render: (guardian) => (
-        <a
-          data-testid={`guardian-${guardian.EthAddress}-website`}
-          href={getWebsiteAddress(guardian.Website)}
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <SvgIcon component={GlobeIcon} />
-        </a>
-      ),
-      cellStyle: {
-        textAlign: 'center',
-      },
-      sorting: false,
-    },
-    {
-      title: guardiansTableTranslations('columnHeader_stakingPercentageInLastElections'),
-      field: 'stakePercent',
-      render: (guardian) => <Typography variant={'button'}>{asPercent(0)}</Typography>,
-      cellStyle: {
-        textAlign: 'center',
-      },
-      defaultSort: 'desc',
-    },
-    {
-      title: guardiansTableTranslations('columnHeader_votedInLastElection'),
-      field: 'voted',
-      render: (guardian) => {
-        const textColor = false ? yesColor : noColor;
-        const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
+  const getCommitteeMemberData = useCallback(
+    (guardianEthAddress: string) => {
+      const committeeMemberData = committeeMembers.find(
+        (committeeMember) => committeeMember.EthAddress.toLowerCase() === guardianEthAddress.toLowerCase(),
+      );
 
-        return <Typography style={{ color: textColor }}>{text}</Typography>;
-      },
-      cellStyle: {
-        textAlign: 'center',
-      },
-      defaultSort: 'desc',
+      return committeeMemberData;
     },
-  ];
+    [committeeMembers],
+  );
 
-  if (addSelectionColumn) {
-    columns.push({
-      title: guardiansTableTranslations('columnHeader_selection'),
-      field: '',
-      render: (extendedGuardianInfo) => {
-        return getGuardianSelectionCellContent(extendedGuardianInfo);
+  const columns = useMemo(() => {
+    const columns: Column<Guardian>[] = [
+      {
+        title: '',
+        field: '',
+        render: (guardian) => (
+          <GuardianQualifications
+            guardian={guardian}
+            committeeMembershipData={getCommitteeMemberData(guardian.EthAddress)}
+          />
+        ),
       },
-      cellStyle: {
-        textAlign: 'center',
+      {
+        title: guardiansTableTranslations('columnHeader_name'),
+        field: 'name',
+        render: (guardian) => (
+          <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
+            {/* TODO : FUTURE : O.L : add support for the jazzicon */}
+            {/*<Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />*/}
+            <NameContainer>
+              <Typography>{guardian.Name}</Typography>
+            </NameContainer>
+          </NameBox>
+        ),
+        headerStyle: {
+          textAlign: 'left',
+        },
       },
-    });
-  }
+      {
+        title: guardiansTableTranslations('columnHeader_address'),
+        field: 'address',
+        render: (guardian) => (
+          <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>{guardian.EthAddress}</Typography>
+        ),
+        // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
+        cellStyle: {
+          fontFamily: 'monospace',
+        },
+      },
+      {
+        title: guardiansTableTranslations('columnHeader_website'),
+        field: 'website',
+        render: (guardian) => (
+          <a
+            data-testid={`guardian-${guardian.EthAddress}-website`}
+            href={getWebsiteAddress(guardian.Website)}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <SvgIcon component={GlobeIcon} />
+          </a>
+        ),
+        cellStyle: {
+          textAlign: 'center',
+        },
+        sorting: false,
+      },
+      {
+        title: guardiansTableTranslations('columnHeader_stakingPercentageInLastElections'),
+        field: 'stakePercent',
+        render: (guardian) => <Typography variant={'button'}>{asPercent(0)}</Typography>,
+        cellStyle: {
+          textAlign: 'center',
+        },
+        defaultSort: 'desc',
+      },
+      {
+        title: guardiansTableTranslations('columnHeader_votedInLastElection'),
+        field: 'voted',
+        render: (guardian) => {
+          const textColor = false ? yesColor : noColor;
+          const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
+
+          return <Typography style={{ color: textColor }}>{text}</Typography>;
+        },
+        cellStyle: {
+          textAlign: 'center',
+        },
+        defaultSort: 'desc',
+      },
+    ];
+
+    if (addSelectionColumn) {
+      columns.push({
+        title: guardiansTableTranslations('columnHeader_selection'),
+        field: '',
+        render: (extendedGuardianInfo) => {
+          return getGuardianSelectionCellContent(extendedGuardianInfo);
+        },
+        cellStyle: {
+          textAlign: 'center',
+        },
+      });
+    }
+
+    return columns;
+  }, [addSelectionColumn, getCommitteeMemberData, getGuardianSelectionCellContent, guardiansTableTranslations]);
 
   const pageSize = Math.min(50, guardians.length);
 
