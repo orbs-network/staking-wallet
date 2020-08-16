@@ -1,4 +1,14 @@
-import { Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Theme } from '@material-ui/core';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Button,
+  Typography,
+  Theme,
+  Tooltip,
+} from '@material-ui/core';
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import React, { useCallback, useMemo } from 'react';
@@ -201,11 +211,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       },
       {
         title: guardiansTableTranslations('columnHeader_name'),
-        field: 'name',
+        field: 'Name',
         render: (guardian) => (
           <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
-            {/* TODO : FUTURE : O.L : add support for the jazzicon */}
-            {/*<Jazzicon diameter={40} seed={jsNumberForAddress(extendedGuardianInfo.address)} />*/}
             <NameContainer>
               <Typography>{guardian.Name}</Typography>
             </NameContainer>
@@ -217,9 +225,13 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       },
       {
         title: guardiansTableTranslations('columnHeader_address'),
-        field: 'address',
+        field: 'EthAddress',
         render: (guardian) => (
-          <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>{guardian.EthAddress}</Typography>
+          <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'}>
+            <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>
+              {guardian.EthAddress.substring(0, 10)}...
+            </Typography>
+          </Tooltip>
         ),
         // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
         cellStyle: {
@@ -230,14 +242,16 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: guardiansTableTranslations('columnHeader_website'),
         field: 'website',
         render: (guardian) => (
-          <a
-            data-testid={`guardian-${guardian.EthAddress}-website`}
-            href={getWebsiteAddress(guardian.Website)}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <SvgIcon component={GlobeIcon} />
-          </a>
+          <Tooltip title={<Typography>{guardian.Website}</Typography>}>
+            <a
+              data-testid={`guardian-${guardian.EthAddress}-website`}
+              href={getWebsiteAddress(guardian.Website)}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <SvgIcon component={GlobeIcon} />
+            </a>
+          </Tooltip>
         ),
         cellStyle: {
           textAlign: 'center',
