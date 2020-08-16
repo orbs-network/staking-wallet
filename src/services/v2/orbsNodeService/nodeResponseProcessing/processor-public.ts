@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Model, VirtualChain, Service, Guardians, HealthLevel, Guardian } from '../model';
 import { getCurrentClockTime, isStaleTime } from './helpers';
 import { generateNodeManagmentUrl, generateVirtualChainUrls } from './url-generator';
+import { IRootNodeData, IGuardianData, ICommitteeEvent } from './RootNodeData';
 
 // DEV_NOTE : IMPORTANT: O.L : This file is taken from the 'Status-page' backend, we should unite them
 // TODO : Extract the functionality to a library.
@@ -34,7 +35,7 @@ const defaultConfiguration = {
 const ManagementStatusSuffix = '/services/management-service/status';
 const EthWriterStatusSuffix = '/services/ethereum-writer/status';
 
-export function updateModel(model: Model, rootNodeData: any) {
+export function updateModel(model: Model, rootNodeData: IRootNodeData) {
   // const rootNodeData = await fetchJson(`${config.RootNodeEndpoint}${ManagementStatusSuffix}`);
 
   const virtualChainList = readVirtualChains(rootNodeData, defaultConfiguration);
@@ -74,7 +75,7 @@ export function updateModel(model: Model, rootNodeData: any) {
   model.StandByNodes = standByMembers;
 }
 
-function readVirtualChains(rootNodeData: any, config: Configuration): VirtualChain[] {
+function readVirtualChains(rootNodeData: IRootNodeData, config: Configuration): VirtualChain[] {
   return _.map(rootNodeData.Payload.CurrentVirtualChains, (vcData, vcId) => {
     const expirationTime = _.isNumber(vcData.Expiration) ? vcData.Expiration : -1;
     let healthLevel = HealthLevel.Green;
@@ -102,8 +103,8 @@ function readVirtualChains(rootNodeData: any, config: Configuration): VirtualCha
   });
 }
 
-function readGuardians(rootNodeData: any): Guardians {
-  return _.mapValues(rootNodeData.Payload.Guardians, (guardianData) => {
+function readGuardians(rootNodeData: IRootNodeData): Guardian[] {
+  return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
     const guardian: Guardian = {
       EthAddress: guardianData.EthAddress,
@@ -124,6 +125,11 @@ function readGuardians(rootNodeData: any): Guardians {
       },
       RegistrationTime: guardianData.RegistrationTime,
       DistributionFrequency: extractDistributionFrequency(guardianData),
+      // ParticipationPercentage: 0,
+      ParticipationPercentage: calculateParticipationPercentage(
+        guardianData.EthAddress,
+        rootNodeData.Payload.CommitteeEvents,
+      ),
     };
 
     return guardian;
@@ -137,6 +143,33 @@ function extractDistributionFrequency(guardianData: any): number {
 
   const manuallySetValue = guardianData.Metadata[REWARDS_DISTRIBUTION_KEY];
   return manuallySetValue ? manuallySetValue : DEFAULT_DISTRIBUTION_FREQUENCY;
+}
+
+function calculateParticipationPercentage(guardianAddress: string, committeeEvents: ICommitteeEvent[]): number {
+  // TODO : ORL : Filter for last 30 days
+  const firstEvent = committeeEvents[0];
+  const lastEvent = committeeEvents[committeeEvents.length - 1];
+  const totalTime = lastEvent.RefTime - firstEvent.RefTime;
+  let participationTime = 0;
+
+  // DEV_NOTE : We start with 1 as we start the period between events
+  for (let i = 1; i < committeeEvents.length; i++) {
+    const committeeEvent = committeeEvents[i];
+
+    if (
+      committeeEvent.Committee.map((committeeMember) => committeeMember.EthAddress.toLowerCase()).includes(
+        guardianAddress.toLowerCase(),
+      )
+    ) {
+      const previousCommitteeEvent = committeeEvents[i - 1];
+      const period = committeeEvent.RefTime - previousCommitteeEvent.RefTime;
+      participationTime += period;
+    }
+  }
+
+  const participationPercentage = (participationTime / totalTime) * 100;
+  const roundedNumber = +participationPercentage.toFixed(2);
+  return roundedNumber;
 }
 
 // async function calcReputation(url: string, committeeMembers: Guardians) {

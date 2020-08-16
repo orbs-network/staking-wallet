@@ -70,6 +70,7 @@ export interface Guardian {
    * In Seconds
    */
   DistributionFrequency: number;
+  ParticipationPercentage: number;
 }
 
 export interface NodeServiceUrls {

@@ -275,13 +275,13 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: guardiansTableTranslations('columnHeader_votedInLastElection'),
+        title: 'Participation',
         field: 'voted',
         render: (guardian) => {
-          const textColor = false ? yesColor : noColor;
-          const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
+          // const textColor = false ? yesColor : noColor;
+          // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
 
-          return <Typography style={{ color: textColor }}>{text}</Typography>;
+          return <Typography>{guardian.ParticipationPercentage}%</Typography>;
         },
         cellStyle: {
           textAlign: 'center',
