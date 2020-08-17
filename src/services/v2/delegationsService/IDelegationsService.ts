@@ -1,3 +1,3 @@
 export interface IDelegationsService {
-  readDelegation(fromAddress: string): Promise<string>;
+  readDelegation(forAddress: string): Promise<string>;
 }

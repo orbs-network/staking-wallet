@@ -23,6 +23,13 @@ export class OrbsNodeStore {
     return [...this.committeeGuardians, ...this.nonCommitteeGuardians];
   }
 
+  /**
+   * Returns all addresses in lower case.
+   */
+  @computed public get guardiansAddresses(): string[] {
+    return this.guardians.map((guardian) => guardian.EthAddress.toLowerCase());
+  }
+
   @computed public get committeeEffectiveStake(): number {
     const committeeEffectiveStake = this.committeeGuardians.reduce((sum, committeeGuardian) => {
       return sum + committeeGuardian.EffectiveStake;

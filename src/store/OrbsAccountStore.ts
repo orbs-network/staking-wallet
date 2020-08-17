@@ -22,6 +22,8 @@ import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../cryptoUtils/unitCon
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
 import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
+import { OrbsNodeService } from '../services/v2/orbsNodeService/OrbsNodeService';
+import { OrbsNodeStore } from './OrbsNodeStore';
 
 export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
@@ -39,9 +41,7 @@ export class OrbsAccountStore {
   @observable public _selectedGuardianAddress: string;
 
   @computed get isGuardian(): boolean {
-    return this.guardiansStore.guardiansAddresses.includes(
-      this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase(),
-    );
+    return this.orbsNodeStore.guardiansAddresses.includes(this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase());
   }
 
   @computed get selectedGuardianAddress(): string {
@@ -109,11 +109,10 @@ export class OrbsAccountStore {
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
-    private guardiansStore: GuardiansStore,
+    private orbsNodeStore: OrbsNodeStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
     private orbsTokenService: IOrbsTokenService,
-    private guardiansService: IGuardiansService,
     private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
     private delegationsService: IDelegationsService,
@@ -192,7 +191,7 @@ export class OrbsAccountStore {
   private setDefaultAccountAddress(accountAddress: string) {
     this.stakingService.setFromAccount(accountAddress);
     this.orbsTokenService.setFromAccount(accountAddress);
-    this.guardiansService.setFromAccount(accountAddress);
+    // this.guardiansService.setFromAccount(accountAddress);
   }
 
   // **** Data reading and setting ****
@@ -245,7 +244,6 @@ export class OrbsAccountStore {
 
   private async readAndSetSelectedGuardianAddress(accountAddress: string) {
     const selectedGuardianAddress = await this.delegationsService.readDelegation(accountAddress);
-    console.log({ selectedGuardianAddress });
     this.setSelectedGuardianAddress(selectedGuardianAddress);
   }
 
@@ -321,10 +319,10 @@ export class OrbsAccountStore {
     );
 
     // Selected guardian
-    this.selectedGuardianChangeUnsubscribeFunction = this.guardiansService.subscribeToDelegateEvent(
-      accountAddress,
-      (error, delegator, delegatee, delegationCounter) => this.setSelectedGuardianAddress(delegatee),
-    );
+    // this.selectedGuardianChangeUnsubscribeFunction = this.guardiansService.subscribeToDelegateEvent(
+    //   accountAddress,
+    //   (error, delegator, delegatee, delegationCounter) => this.setSelectedGuardianAddress(delegatee),
+    // );
   }
 
   private cancelAllCurrentSubscriptions() {

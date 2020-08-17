@@ -41,6 +41,7 @@ export function getStores(
   delegationsService: IDelegationsService,
 ): IStores {
   // Create stores instances + Hydrate the stores
+  const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
   const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService);
   const guardiansStore = new GuardiansStore(
     cryptoWalletIntegrationStore,
@@ -50,17 +51,14 @@ export function getStores(
   );
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
-    guardiansStore,
+    orbsNodeStore,
     orbsPOSDataService,
     stakingService,
     orbsTokenService,
-    guardiansService,
     orbsRewardsService,
     analyticsService,
     delegationsService,
   );
-
-  const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
 
   // Call the initialize function on each one
   // NOTE : FUTURE : O.L : Should consider the order and relation between Hydrating and 'init'
