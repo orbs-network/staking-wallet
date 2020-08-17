@@ -5,7 +5,7 @@
   "main": "truffle-config.js",
   "scripts": {
     "clean": "rimraf build",
-    "start-ganache": "ganache-cli -p 7545 -i 5777 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\"",
+    "start-ganache": "ganache-cli -p 7545 -i 5777 -b 1 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\"",
     "deploy-driver": "ts-node delpoyDriverScripts.ts"
   },
   "keywords": [],

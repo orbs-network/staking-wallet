@@ -10,7 +10,6 @@ import { SectionHeader } from '../../components/structure/SectionHeader';
 import { useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
 import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
-import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
 import {
   useAlertsTranslations,
@@ -65,17 +64,20 @@ export const GuardiansSection = observer(() => {
 
   // TODO : ORL : Fix display of total and effective stake.
 
+  // TODO : ORL : TRANSLATION
+
   return (
     <Section data-testid='guardians-section'>
       <SectionHeader
         title={sectionTitlesTranslations('allGuardians')}
-        sideTitle={
-          sectionTitlesTranslations('allGuardians_sideTitle', {
-            totalParticipatingTokens: totalStake.toLocaleString(),
-          }) +
-          ' ' +
-          committeeEffectiveStake.toLocaleString()
-        }
+        // sideTitle={
+        //   sectionTitlesTranslations('allGuardians_sideTitle', {
+        //     totalParticipatingTokens: totalStake.toLocaleString(),
+        //   }) +
+        //   ' ' +
+        //   committeeEffectiveStake.toLocaleString()
+        // }
+        sideTitle={`Total Stake: ${totalStake.toLocaleString()} Committee Stake: ${committeeEffectiveStake.toLocaleString()}`}
         icon={ShielIcon}
         bottomPadding
       />

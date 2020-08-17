@@ -179,9 +179,9 @@ export class OrbsAccountStore {
     if (currentAddress) {
       this.setDefaultAccountAddress(currentAddress);
 
-      // if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
-      //   this.refreshAccountListeners(currentAddress);
-      // }
+      if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
+        this.refreshAccountListeners(currentAddress);
+      }
 
       try {
         await this.readDataForAccount(currentAddress);
