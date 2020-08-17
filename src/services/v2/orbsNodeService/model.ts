@@ -71,6 +71,12 @@ export interface Guardian {
    */
   DistributionFrequency: number;
   ParticipationPercentage: number;
+  /**
+   * Indicates how 'full' the guardian delegation is, under the requirement that he will hold a certain percent of its effective stake.
+   */
+  Capacity: number;
+  DelegatedStake: number;
+  SelfStake: number;
 }
 
 export interface NodeServiceUrls {

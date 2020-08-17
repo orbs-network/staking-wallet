@@ -46,28 +46,8 @@ const NameBox = styled('div')(() => ({
   justifyItems: 'center',
 }));
 
-const yesColor = '#00ff11';
-const YesContainer = styled.span`
-  color: #00ff11;
-`;
-
-const noColor = 'red';
-const NoContainer = styled.span`
-  color: red;
-`;
-
 const NameContainer = styled.span(({ theme }) => ({
   paddingLeft: theme.spacing(2),
-}));
-
-const StyledTableHead = styled(TableHead)((themeProps: { theme: Theme }) => ({
-  backgroundColor: themeProps.theme.palette.primary.dark,
-  // backgroundColor: 'rgba(33,33, 33, 0.55)',
-}));
-
-const StyledTableBody = styled(TableBody)((themeProps: { theme: Theme }) => ({
-  // backgroundColor: themeProps.theme.palette.primary.main,
-  backgroundColor: 'rgba(33,33, 33, 0.55)',
 }));
 
 const useStyles = makeStyles((theme) => ({
@@ -77,9 +57,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-// TODO : ORL : Pick a better color for marking selected guardian
-const selectedGuardianRowStyle: React.CSSProperties = { backgroundColor: '#1D0D0D' };
 
 type TGuardianSelectionMode = 'Select' | 'Change' | 'None';
 
@@ -277,7 +254,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       },
       {
         title: 'Participation',
-        field: 'voted',
+        field: 'ParticipationPercentage',
         render: (guardian) => {
           // const textColor = false ? yesColor : noColor;
           // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
@@ -291,6 +268,40 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
               <Typography>{ParticipationPercentage}%</Typography>
             </>
+          );
+        },
+        cellStyle: {
+          textAlign: 'center',
+        },
+        defaultSort: 'desc',
+      },
+      {
+        title: 'Capacity',
+        field: 'ParticipationPercentage',
+        render: (guardian) => {
+          // const textColor = false ? yesColor : noColor;
+          // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
+
+          const { Capacity, SelfStake, DelegatedStake } = guardian;
+          const selfStakePercentage = +((SelfStake / DelegatedStake) * 100).toFixed(2);
+          // TODO : ORL : Make this color gradient
+          const color = Capacity <= 30 ? 'green' : Capacity <= 80 ? 'yellow' : 'red';
+
+          return (
+            <Tooltip
+              title={
+                <>
+                  <Typography>Self stake: {SelfStake} ORBS</Typography>
+                  <Typography>Delegated stake: {DelegatedStake} ORBS</Typography>
+                  <Typography>% self stake: {selfStakePercentage}%</Typography>
+                </>
+              }
+            >
+              <div>
+                <Line percent={Capacity} strokeWidth={5} strokeColor={color} />
+                <Typography>{Capacity}%</Typography>
+              </div>
+            </Tooltip>
           );
         },
         cellStyle: {
@@ -316,6 +327,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     return columns;
   }, [addSelectionColumn, getCommitteeMemberData, getGuardianSelectionCellContent, guardiansTableTranslations]);
 
+  // DEV_NOTE : O.L : This prevents displaying of a large empty table if there are less than 50 Guardians.
   const pageSize = Math.min(50, guardians.length);
 
   // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component

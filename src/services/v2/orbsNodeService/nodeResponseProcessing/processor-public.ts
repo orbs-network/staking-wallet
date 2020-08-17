@@ -130,13 +130,16 @@ function readGuardians(rootNodeData: IRootNodeData): Guardian[] {
         guardianData.EthAddress,
         rootNodeData.Payload.CommitteeEvents,
       ),
+      Capacity: calculateCapacity(guardianData),
+      DelegatedStake: guardianData.DelegatedStake,
+      SelfStake: guardianData.SelfStake,
     };
 
     return guardian;
   });
 }
 
-function extractDistributionFrequency(guardianData: any): number {
+function extractDistributionFrequency(guardianData: IGuardianData): number {
   // TODO : ORL : Read these constants from a better place that will get updted.
   const DEFAULT_DISTRIBUTION_FREQUENCY = 60 * 60 * 24 * 14; // 14 days in seconds
   const REWARDS_DISTRIBUTION_KEY = 'REWARDS_FREQUENCY_SEC';
@@ -170,6 +173,15 @@ function calculateParticipationPercentage(guardianAddress: string, committeeEven
   const participationPercentage = (participationTime / totalTime) * 100;
   const roundedNumber = +participationPercentage.toFixed(2);
   return roundedNumber;
+}
+
+function calculateCapacity(guardianData: IGuardianData): number {
+  // TODO : ORL : Move to proper constants config.
+  const MIN_SELF_STAKE_PERCENTAGE = 8;
+
+  const capacity = guardianData.DelegatedStake / (guardianData.SelfStake / MIN_SELF_STAKE_PERCENTAGE);
+
+  return capacity;
 }
 
 // async function calcReputation(url: string, committeeMembers: Guardians) {
