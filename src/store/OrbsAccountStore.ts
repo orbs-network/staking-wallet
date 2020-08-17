@@ -5,7 +5,6 @@ import {
   IOrbsPOSDataService,
   IStakingService,
   IOrbsTokenService,
-  IGuardiansService,
   IOrbsRewardsService,
   IRewardsDistributionEvent,
 } from 'orbs-pos-data';
@@ -16,13 +15,11 @@ import {
 } from './contractsStateSubscriptions/combinedEventsSubscriptions';
 import { EMPTY_ADDRESS } from '../constants';
 import moment from 'moment';
-import { GuardiansStore } from './GuardiansStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
-import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
 import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
-import { OrbsNodeService } from '../services/v2/orbsNodeService/OrbsNodeService';
 import { OrbsNodeStore } from './OrbsNodeStore';
 
 export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
@@ -52,7 +49,18 @@ export class OrbsAccountStore {
     }
   }
   @computed get hasSelectedGuardian(): boolean {
-    return !isNil(this.selectedGuardianAddress) && this.selectedGuardianAddress !== EMPTY_ADDRESS;
+    if (this.isGuardian) {
+      return true;
+    } else if (
+      !isNil(this.selectedGuardianAddress) &&
+      this.selectedGuardianAddress !== EMPTY_ADDRESS &&
+      this.selectedGuardianAddress !== this.cryptoWalletIntegrationStore.mainAddress
+    ) {
+      // DEV_NOTE : O.L : We want to make sure that the selected guardian address is not empty, directed to null (zero address) or the default one (default in V2 is auto self-delegation)
+      return true;
+    } else {
+      return false;
+    }
   }
   @computed get hasOrbsToWithdraw(): boolean {
     return this.orbsInCoolDown > 0 && this.cooldownReleaseTimestamp <= moment.utc().unix();

@@ -33,7 +33,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const setTokenAllowanceForStakingContract = useCallback(() => {
     // TODO : FUTURE : O.L : Add written error message about out of range
     if (orbsAllowance.value < 1 || orbsAllowance.value > liquidOrbsAsNumber) {
-      console.warn(`tried to set out of range allowance of ${orbsAllowance.value}`)
+      console.warn(`tried to set out of range allowance of ${orbsAllowance.value}`);
       return;
     }
     message.setValue('');
