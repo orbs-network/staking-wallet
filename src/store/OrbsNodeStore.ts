@@ -46,6 +46,13 @@ export class OrbsNodeStore {
     return totalStake;
   }
 
+  @computed public get currentRewardsInterest(): number {
+    const committeeStake = this.committeeEffectiveStake;
+
+    // TODO : ORL : Calculate this after making sure all other functionality works
+    return 7.5;
+  }
+
   constructor(private orbsNodeService: IOrbsNodeService) {
     this.readAllData();
   }
