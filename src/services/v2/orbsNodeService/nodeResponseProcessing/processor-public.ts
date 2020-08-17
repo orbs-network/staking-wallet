@@ -107,7 +107,7 @@ function readGuardians(rootNodeData: IRootNodeData): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
     const guardian: Guardian = {
-      EthAddress: guardianData.EthAddress,
+      EthAddress: ensureAddressStartsWithPrefix(guardianData.EthAddress),
       Name: _.isString(guardianData.Name) ? guardianData.Name : '',
       Ip: ip,
       Website: _.isString(guardianData.Website) ? guardianData.Website : '',
@@ -137,6 +137,15 @@ function readGuardians(rootNodeData: IRootNodeData): Guardian[] {
 
     return guardian;
   });
+}
+
+function ensureAddressStartsWithPrefix(ethAddress: string) {
+  const prefix = '0x';
+  if (ethAddress.startsWith(prefix)) {
+    return ethAddress;
+  } else {
+    return `${prefix}${ethAddress}`;
+  }
 }
 
 function extractDistributionFrequency(guardianData: IGuardianData): number {

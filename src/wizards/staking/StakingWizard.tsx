@@ -39,7 +39,12 @@ export const StakingWizard = observer(
     const activeStep = useNumber(initialStep);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
-    const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
+    const goToFinishStep = useCallback(() => {
+      // DEV_NOTE : O.L : IMPORTANT : This manually reading is a dev hack to ensure the seleced guardian will be re-read.
+      // TODO : ORL : Move this logic to a better place, and add event listener to the service.
+      orbsAccountStore.manuallyReadAccountData();
+      activeStep.setValue(STEPS_INDEXES.finish);
+    }, [activeStep, orbsAccountStore]);
 
     // DEV_NOTE : adds the selected guardian address to allow user to press 'keep'
     const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
