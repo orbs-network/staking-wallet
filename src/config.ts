@@ -18,7 +18,13 @@ const SHOULD_OVERRIDE_ADDRESS = IS_DEV || ethereumNetwork === 'ropsten';
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
   urlBase: string;
-  contractsAddressesOverride: Partial<IOrbsPosContractsAddresses & { stakingContract: string }>;
+  contractsAddressesOverride: Partial<{
+    stakingContract: string;
+    erc20Contract: string;
+    guardiansContract: string;
+    orbsRewardsDistributionContract: string;
+    delegationsContract: string;
+  }>;
   ETHEREUM_PROVIDER_WS: string;
   earliestBlockForDelegationOverride: number;
   gaTrackerId: string;
@@ -37,6 +43,7 @@ const config: IConfig = {
 // Webpack will remove this section on production build //
 if (process.env.NODE_ENV !== 'production') {
   if (ethereumNetwork === 'local') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const addresses = require('./local/addresses.json');
     // const OrbsGuardiansContractJSON = require('../ganache-env/build/contracts/OrbsGuardians.json');
     // const OrbsTokenContractJSON = require('../ganache-env/build/contracts/OrbsToken.json');
@@ -47,15 +54,17 @@ if (process.env.NODE_ENV !== 'production') {
     config.ETHEREUM_PROVIDER_WS = 'ws://localhost:8545';
 
     config.contractsAddressesOverride.stakingContract = addresses.staking;
-    config.contractsAddressesOverride.erc20Contract =addresses.erc20;
+    config.contractsAddressesOverride.erc20Contract = addresses.erc20;
     config.contractsAddressesOverride.guardiansContract = addresses.guardians;
     // config.contractsAddressesOverride.votingContract = VotingContractJSON.networks['5777'].address;
-    config.contractsAddressesOverride.orbsRewardsDistributionContract = addresses.rewards
+    config.contractsAddressesOverride.orbsRewardsDistributionContract = addresses.rewards;
+    config.contractsAddressesOverride.delegationsContract = addresses.delegations;
 
     config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
   }
 }
 
+// TODO : ORL : Adjusts these addresses for v2.
 if (ethereumNetwork === 'ropsten') {
   config.contractsAddressesOverride.stakingContract = '0x88287444f10709f9531D11e08DCd692deccd1d63';
   config.contractsAddressesOverride.erc20Contract = '0xeD0Aa9A4F9e5ae9092994f4B86F6AAa89944939b';

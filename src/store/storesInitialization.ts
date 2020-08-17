@@ -15,6 +15,7 @@ import { OrbsAccountStore } from './OrbsAccountStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { OrbsNodeStore } from './OrbsNodeStore';
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
+import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
 
 /**
  * Configures the mobx library. Should get called at App's initialization.
@@ -37,6 +38,7 @@ export function getStores(
   orbsRewardsService: IOrbsRewardsService,
   analyticsService: IAnalyticsService,
   orbsNodeService: IOrbsNodeService,
+  delegationsService: IDelegationsService,
 ): IStores {
   // Create stores instances + Hydrate the stores
   const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService);
@@ -55,6 +57,7 @@ export function getStores(
     guardiansService,
     orbsRewardsService,
     analyticsService,
+    delegationsService,
   );
 
   const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
@@ -68,7 +71,7 @@ export function getStores(
     guardiansStore,
     cryptoWalletIntegrationStore,
     orbsAccountStore,
-    orbsNodeStore
+    orbsNodeStore,
   };
 
   return stores;

@@ -5,6 +5,7 @@ import { IServices } from './Services';
 import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { IAnalyticsService } from './analytics/IAnalyticsService';
 import { IHttpService } from './http/IHttpService';
+import { IDelegationsService } from './v2/delegationsService/IDelegationsService';
 
 function useServices(): IServices {
   return React.useContext(MobXProviderContext) as IServices;
@@ -24,4 +25,8 @@ export function useAnalyticsService(): IAnalyticsService {
 
 export function useHttpService(): IHttpService {
   return useServices().httpService;
+}
+
+export function useDelegationsService(): IDelegationsService {
+  return useServices().delegationsService;
 }

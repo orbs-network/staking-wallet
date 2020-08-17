@@ -21,6 +21,7 @@ import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
+import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
 
 export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
@@ -115,6 +116,7 @@ export class OrbsAccountStore {
     private guardiansService: IGuardiansService,
     private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
+    private delegationsService: IDelegationsService,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -214,10 +216,10 @@ export class OrbsAccountStore {
       console.error(`Error in reading staked orbs : ${e}`);
       throw e;
     });
-    // await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
-    //   console.error(`Error in reading selected guardian : ${e}`);
-    //   throw e;
-    // });
+    await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
+      console.error(`Error in reading selected guardian : ${e}`);
+      throw e;
+    });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
       console.error(`Error in reading contract allowance: ${e}`);
       throw e;
@@ -242,7 +244,8 @@ export class OrbsAccountStore {
   }
 
   private async readAndSetSelectedGuardianAddress(accountAddress: string) {
-    const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
+    const selectedGuardianAddress = await this.delegationsService.readDelegation(accountAddress);
+    console.log({ selectedGuardianAddress });
     this.setSelectedGuardianAddress(selectedGuardianAddress);
   }
 
