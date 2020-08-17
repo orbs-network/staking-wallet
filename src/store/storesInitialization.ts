@@ -2,6 +2,9 @@ import { configure } from 'mobx';
 import { IStores } from './stores';
 import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IOrbsRewardsService } from 'orbs-pos-data';
 
+// This import ensures mobx batching
+import 'mobx-react-lite/batchingForReactDom';
+
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { OrbsAccountStore } from './OrbsAccountStore';
