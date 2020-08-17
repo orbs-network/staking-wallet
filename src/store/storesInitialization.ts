@@ -1,13 +1,6 @@
 import { configure } from 'mobx';
-import { GuardiansStore } from './GuardiansStore';
 import { IStores } from './stores';
-import {
-  IOrbsPOSDataService,
-  IStakingService,
-  IOrbsTokenService,
-  IGuardiansService,
-  IOrbsRewardsService,
-} from 'orbs-pos-data';
+import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IOrbsRewardsService } from 'orbs-pos-data';
 
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
@@ -34,7 +27,6 @@ export function getStores(
   stakingService: IStakingService,
   orbsTokenService: IOrbsTokenService,
   cryptoWalletConnectionService: ICryptoWalletConnectionService,
-  guardiansService: IGuardiansService,
   orbsRewardsService: IOrbsRewardsService,
   analyticsService: IAnalyticsService,
   orbsNodeService: IOrbsNodeService,
@@ -43,12 +35,6 @@ export function getStores(
   // Create stores instances + Hydrate the stores
   const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
   const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService);
-  const guardiansStore = new GuardiansStore(
-    cryptoWalletIntegrationStore,
-    orbsPOSDataService,
-    guardiansService,
-    analyticsService,
-  );
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
     orbsNodeStore,
@@ -60,13 +46,7 @@ export function getStores(
     delegationsService,
   );
 
-  // Call the initialize function on each one
-  // NOTE : FUTURE : O.L : Should consider the order and relation between Hydrating and 'init'
-  // NOTE : FUTURE : O.L : Should handle the async calls properly
-  guardiansStore.init();
-
   const stores: IStores = {
-    guardiansStore,
     cryptoWalletIntegrationStore,
     orbsAccountStore,
     orbsNodeStore,

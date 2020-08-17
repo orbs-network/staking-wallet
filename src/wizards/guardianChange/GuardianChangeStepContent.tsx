@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useStateful } from 'react-hanger';
-import { useGuardiansStore } from '../../store/storeHooks';
+import React, { useCallback, useMemo } from 'react';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
-import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useTranslation } from 'react-i18next';
 import {
   useGuardianChangingWizardTranslations,
@@ -25,7 +22,7 @@ export const GuardianChangeStepContent = observer(
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
-    const guardiansStore = useGuardiansStore();
+    const orbsAccountStore = useOrbsAccountStore();
     const [t] = useTranslation();
     const analyticsService = useAnalyticsService();
 
@@ -43,7 +40,7 @@ export const GuardianChangeStepContent = observer(
       message.setValue('');
       subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
-      const promiEvent = guardiansStore.selectGuardian(newGuardianAddress);
+      const promiEvent = orbsAccountStore.delegate(newGuardianAddress);
 
       // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
       promiEvent.on('transactionHash', (txHash) => {
@@ -55,14 +52,14 @@ export const GuardianChangeStepContent = observer(
         analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
       );
     }, [
-      analyticsService,
       message,
       subMessage,
       wizardsCommonTranslations,
-      guardiansStore,
+      orbsAccountStore,
       newGuardianAddress,
       onPromiEventAction,
       isBroadcastingMessage,
+      analyticsService,
     ]);
 
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {

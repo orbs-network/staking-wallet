@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useGuardiansStore, useOrbsNodeStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
@@ -21,7 +21,7 @@ export const GuardianSelectionStepContent = observer(
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
-    const guardiansStore = useGuardiansStore();
+    const orbsAccountStore = useOrbsAccountStore();
     const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
 
@@ -44,7 +44,7 @@ export const GuardianSelectionStepContent = observer(
         if (guardian.EthAddress === selectedGuardianAddress) {
           skipToSuccess();
         } else {
-          const promiEvent = guardiansStore.selectGuardian(guardian.EthAddress);
+          const promiEvent = orbsAccountStore.delegate(guardian.EthAddress);
 
           // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
           promiEvent.on('transactionHash', (txHash) => {
@@ -60,15 +60,15 @@ export const GuardianSelectionStepContent = observer(
         }
       },
       [
-        guardiansStore,
-        analyticsService,
         message,
-        onPromiEventAction,
-        selectedGuardianAddress,
-        skipToSuccess,
         subMessage,
         wizardsCommonTranslations,
+        selectedGuardianAddress,
+        skipToSuccess,
+        orbsAccountStore,
+        onPromiEventAction,
         isBroadcastingMessage,
+        analyticsService,
       ],
     );
 
@@ -81,11 +81,12 @@ export const GuardianSelectionStepContent = observer(
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
+            committeeMembers={orbsNodeStore.committeeMembers}
             densePadding
           />
         </Grid>
       );
-    }, [guardiansStore.guardiansList, selectGuardian, selectedGuardianAddress]);
+    }, [orbsNodeStore.committeeMembers, orbsNodeStore.guardians, selectGuardian, selectedGuardianAddress]);
 
     return (
       <BaseStepContent

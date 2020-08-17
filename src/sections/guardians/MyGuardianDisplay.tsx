@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
-import { useGuardiansStore, useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 interface IProps {
   openGuardianSelectionWizard: () => void;
@@ -10,7 +10,6 @@ interface IProps {
 
 export const MyGuardianDisplay = observer<React.FC<IProps>>((props) => {
   const { openGuardianSelectionWizard } = props;
-  const guardiansStore = useGuardiansStore();
   const orbsAccountStore = useOrbsAccountStore();
 
   if (!orbsAccountStore.hasSelectedGuardian) {

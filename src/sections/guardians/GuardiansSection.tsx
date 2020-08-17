@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
-import { useGuardiansStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
 import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
 import { TGuardianInfoExtended } from '../../store/GuardiansStore';
@@ -28,7 +28,6 @@ export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
-  const guardiansStore = useGuardiansStore();
   const orbsNodeStore = useOrbsNodeStore();
   const orbsAccountStore = useOrbsAccountStore();
   const showGuardianChangingModal = useBoolean(false);
@@ -57,12 +56,10 @@ export const GuardiansSection = observer(() => {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 
-  // const totalStake = guardiansStore.totalParticipatingTokens;
   const totalStake = orbsNodeStore.totalStake;
   const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
 
   // console.log(orbsNodeStore.model);
-  // console.log('Guarians store total stake', guardiansStore.totalParticipatingTokens.toLocaleString());
   // console.log('Orbs node store total stake', orbsNodeStore.totalStake);
   // console.log('Orbs node effective total stake', orbsNodeStore.committeeEffectiveStake);
 

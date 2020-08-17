@@ -35,7 +35,6 @@ const stores = getStores(
   services.stakingService,
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
-  services.guardiansService,
   services.rewardsService,
   services.analyticsService,
   services.orbsNodeService,

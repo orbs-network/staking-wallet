@@ -1,6 +1,4 @@
 import {
-  GuardiansService,
-  IGuardiansService,
   IOrbsPOSDataService,
   IOrbsTokenService,
   IStakingService,
@@ -20,10 +18,9 @@ import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/
 import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
 import { BuildOrbsClient } from './OrbsClientFactory';
 import { AnalyticsService } from './analytics/analyticsService';
-import { IAnalyticsService, TEthereumProviderName } from './analytics/IAnalyticsService';
+import { IAnalyticsService } from './analytics/IAnalyticsService';
 import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
-import { detectEthereumProviderName } from './analytics/analyticsUtils';
 import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
 import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
 import { IDelegationsService } from './v2/delegationsService/IDelegationsService';
@@ -35,7 +32,6 @@ export interface IServices {
   cryptoWalletConnectionService: ICryptoWalletConnectionService;
   stakingService: IStakingService;
   orbsTokenService: IOrbsTokenService;
-  guardiansService: IGuardiansService;
   analyticsService: IAnalyticsService;
   rewardsService: IOrbsRewardsService;
   orbsNodeService: IOrbsNodeService;
@@ -61,16 +57,6 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, config?.contractsAddressesOverride),
     stakingService: new StakingService(web3, config?.contractsAddressesOverride?.stakingContract),
     orbsTokenService: new OrbsTokenService(web3, config?.contractsAddressesOverride?.erc20Contract),
-    guardiansService: new GuardiansService(
-      web3,
-      orbsClientService,
-      config?.contractsAddressesOverride,
-      config.earliestBlockForDelegationOverride !== null
-        ? {
-            earliestBlockForDelegation: config.earliestBlockForDelegationOverride,
-          }
-        : undefined,
-    ),
     rewardsService: new OrbsRewardsService(
       web3,
       orbsClientService,
