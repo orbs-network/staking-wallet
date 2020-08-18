@@ -58,10 +58,6 @@ export const GuardiansSection = observer(() => {
   const totalStake = orbsNodeStore.totalStake;
   const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
 
-  // console.log(orbsNodeStore.model);
-  // console.log('Orbs node store total stake', orbsNodeStore.totalStake);
-  // console.log('Orbs node effective total stake', orbsNodeStore.committeeEffectiveStake);
-
   // TODO : ORL : Fix display of total and effective stake.
 
   // TODO : ORL : TRANSLATION

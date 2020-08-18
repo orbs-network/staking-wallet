@@ -21,6 +21,8 @@ import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
 import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
 import { OrbsNodeStore } from './OrbsNodeStore';
+import { configureMobx } from './storesInitialization';
+import { Guardian } from '../services/v2/orbsNodeService/model';
 
 export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
@@ -61,6 +63,19 @@ export class OrbsAccountStore {
     } else {
       return false;
     }
+  }
+  @computed get selectedGuardian(): Guardian | null {
+    if (this.hasSelectedGuardian) {
+      const guardian = this.orbsNodeStore.guardians.find(
+        (g) => g.EthAddress.toLowerCase() === this.selectedGuardianAddress,
+      );
+      return guardian || null;
+    } else {
+      return null;
+    }
+  }
+  @computed get isSelectedGuardianRegistered(): boolean {
+    return this.selectedGuardian !== null;
   }
   @computed get hasOrbsToWithdraw(): boolean {
     return this.orbsInCoolDown > 0 && this.cooldownReleaseTimestamp <= moment.utc().unix();

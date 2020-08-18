@@ -5,6 +5,7 @@ import { Model } from './model';
 import { updateModel } from './nodeResponseProcessing/processor-public';
 import RootNodeData from '../../../local/StatusResponse.json';
 import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
+import { IRootNodeData } from './nodeResponseProcessing/RootNodeData';
 
 const MAIN_NET_DEFAULT_NODE_URL = 'http://34.255.138.28';
 const ManagementStatusSuffix = '/services/management-service/status';
@@ -17,7 +18,7 @@ export class OrbsNodeService implements IOrbsNodeService {
     const model = new Model();
     // TODO : ORL : Fix CORS and then return this read.
     // const rootNodeData = await fetchJson(`${nodeUrl}${ManagementStatusSuffix}`);
-    const rootNodeData = RootNodeData;
+    const rootNodeData = (RootNodeData as any) as IRootNodeData;
     updateModel(model, rootNodeData);
 
     return {
