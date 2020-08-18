@@ -1,4 +1,4 @@
-import { VirtualChainUrls, NodeServiceUrls, NodeVirtualChainUrls, Service } from './model';
+import { VirtualChainUrls, NodeServiceUrls, NodeVirtualChainUrls, Service } from '../model';
 
 const PrismSuffix = '.prism.orbs.network/';
 const SubscriptionUiPrefix = 'subscription.orbs.network/vc/';
