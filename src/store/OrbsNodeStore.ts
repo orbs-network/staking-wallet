@@ -46,11 +46,23 @@ export class OrbsNodeStore {
     return totalStake;
   }
 
-  @computed public get currentRewardsInterest(): number {
+  @computed public get currentGuardiansAnnualRewardsInterest(): number {
     const committeeStake = this.committeeEffectiveStake;
 
-    // TODO : ORL : Calculate this after making sure all other functionality works
-    return 7.5;
+    // TODO : ORL : Fix this calculation after speaking with Oded
+    const maxInterestForGuardians = 12;
+    const percentageFromMax = 80_000_000 / committeeStake;
+
+    const rewardsInterest = Math.min(maxInterestForGuardians, percentageFromMax);
+
+    return rewardsInterest;
+  }
+
+  @computed public get currentDelegatorsAnnualRewardsInterest(): number {
+    const ratioFromGuardians = 2 / 3;
+    const currentInterest = ratioFromGuardians * this.currentGuardiansAnnualRewardsInterest;
+
+    return +currentInterest.toFixed(2);
   }
 
   constructor(private orbsNodeService: IOrbsNodeService) {
