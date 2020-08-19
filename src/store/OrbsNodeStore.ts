@@ -51,7 +51,7 @@ export class OrbsNodeStore {
 
     // TODO : ORL : Fix this calculation after speaking with Oded
     const maxInterestForGuardians = 12;
-    const percentageFromMax = 80_000_000 / committeeStake;
+    const percentageFromMax = (80_000_000 / committeeStake) * 100;
 
     const rewardsInterest = Math.min(maxInterestForGuardians, percentageFromMax);
 
