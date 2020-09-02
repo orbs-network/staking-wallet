@@ -27,6 +27,11 @@ const plugins = [
       from: './404.html',
     },
   ]),
+  new CopyWebpackPlugin([
+    {
+      from: './CNAME',
+    },
+  ]),
   // Adds the favicons to the dist
   new FaviconsWebpackPlugin('./assets/favicons/tetra_favicon.svg'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.
@@ -50,9 +55,7 @@ const config: Configuration = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `[name]-[hash:8]-bundle.js`,
-    // DEV_NOTE : O.L : Using the env var caused production deployment to not recognise the base url. shoud check that,
-    // publicPath: process.env.PUBLIC_BASE_PATH,
-    publicPath: '/staking',
+    publicPath: process.env.PUBLIC_BASE_PATH,
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
