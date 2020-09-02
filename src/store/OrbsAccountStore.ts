@@ -212,33 +212,46 @@ export class OrbsAccountStore {
   private async readDataForAccount(accountAddress: string) {
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
       console.error(`Error in reading liquid orbs : ${e}`);
       throw e;
     });
     await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading staked orbs : ${e}`);
       console.error(`Error in reading staked orbs : ${e}`);
       throw e;
     });
     await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading selected guardian : ${e}`);
       console.error(`Error in reading selected guardian : ${e}`);
       throw e;
     });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading contract allowance: ${e}`);
       console.error(`Error in reading contract allowance: ${e}`);
       throw e;
     });
     await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading cooldown status : ${e}`);
       console.error(`Error in reading cooldown status : ${e}`);
       throw e;
     });
     await this.readAndSetRewards(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading rewards : ${e}`);
       console.error(`Error in reading rewards : ${e}`);
       throw e;
     });
     await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading rewards history : ${e}`);
       console.error(`Error in reading rewards history : ${e}`);
       throw e;
     });
+  }
+
+  private alertIfEnabled(error: string) {
+    if (this.alertErrors) {
+      alert(error);
+    }
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {
