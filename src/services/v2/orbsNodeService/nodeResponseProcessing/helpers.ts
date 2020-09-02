@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 import { retry } from 'ts-retry-promise';
 import _ from 'lodash';
 
@@ -37,14 +37,17 @@ export type JsonResponse = any;
 export async function fetchJson(url: string) {
   return await retry(
     async () => {
-      const response = await fetch(url, { timeout: 15000 });
+      const response = await fetch(url);
+
+      console.log({ response });
       const body = await response.text();
+      console.log('body', body);
       try {
         return JSON.parse(body);
       } catch (e) {
         throw new Error(`Invalid response for url '${url}': ${body}`);
       }
     },
-    { retries: 3, delay: 300 }
+    { retries: 3, delay: 300 },
   );
 }

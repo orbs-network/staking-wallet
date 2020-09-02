@@ -17,8 +17,9 @@ export class OrbsNodeService implements IOrbsNodeService {
     const nodeUrl = nodeAddress || this.defaultNodeUrl;
     const model = new Model();
     // TODO : ORL : Fix CORS and then return this read.
-    // const rootNodeData = await fetchJson(`${nodeUrl}${ManagementStatusSuffix}`);
-    const rootNodeData = (RootNodeData as any) as IRootNodeData;
+    const rootNodeData = await fetchJson(`${nodeUrl}${ManagementStatusSuffix}`);
+    console.log(rootNodeData);
+    // const rootNodeData = (RootNodeData as any) as IRootNodeData;
     updateModel(model, rootNodeData);
 
     return {
