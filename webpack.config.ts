@@ -50,7 +50,9 @@ const config: Configuration = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `[name]-[hash:8]-bundle.js`,
-    publicPath: process.env.PUBLIC_BASE_PATH,
+    // DEV_NOTE : O.L : Using the env var caused production deployment to not recognise the base url. shoud check that,
+    // publicPath: process.env.PUBLIC_BASE_PATH,
+    publicPath: '/staking',
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
