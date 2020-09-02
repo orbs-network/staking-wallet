@@ -115,6 +115,7 @@ export class OrbsAccountStore {
     private guardiansService: IGuardiansService,
     private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
+    private alertErrors = false,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -182,6 +183,11 @@ export class OrbsAccountStore {
         await this.readDataForAccount(currentAddress);
       } catch (e) {
         this.failLoadingProcess(e);
+
+        if (this.alertErrors) {
+          alert(`Error on orbs account store : ${e}`);
+        }
+
         console.error('Error in reacting to address change in Orbs Account Store', e);
       }
     }

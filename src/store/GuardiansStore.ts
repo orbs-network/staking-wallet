@@ -32,6 +32,7 @@ export class GuardiansStore implements TGuardiansStore {
     private orbsPOSDataService: IOrbsPOSDataService,
     private guardiansService: IGuardiansService,
     private analyticsService: IAnalyticsService,
+    private alertErrors = false,
   ) {
     this.guardiansList = [];
     this.totalParticipatingTokens = BigInt(0);
@@ -68,6 +69,11 @@ export class GuardiansStore implements TGuardiansStore {
       this.setDoneLoading(true);
     } catch (e) {
       this.failLoadingProcess(e);
+
+      if (this.alertErrors) {
+        alert(`Error on Guardians store : ${e}`);
+      }
+
       console.error('Error while initialising Guardians store', e);
     }
   }
