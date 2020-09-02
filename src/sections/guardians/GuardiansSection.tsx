@@ -95,7 +95,10 @@ export const GuardiansSection = observer(() => {
           </CommonDialog>
 
           <CommonDialog open={showGuardianSelectionModal.value} onClose={showGuardianSelectionModal.setFalse}>
-            <GuardianSelectingWizard closeWizard={showGuardianSelectionModal.setFalse} selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress} />
+            <GuardianSelectingWizard
+              closeWizard={showGuardianSelectionModal.setFalse}
+              selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress}
+            />
           </CommonDialog>
 
           <Snackbar

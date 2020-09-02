@@ -69,7 +69,7 @@ export const GuardianSelectionStepContent = observer(
         skipToSuccess,
         subMessage,
         wizardsCommonTranslations,
-        isBroadcastingMessage
+        isBroadcastingMessage,
       ],
     );
 
