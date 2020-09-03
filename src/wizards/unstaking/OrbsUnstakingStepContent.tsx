@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
@@ -22,6 +22,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const orbsAccountStore = useOrbsAccountStore();
   const analyticsService = useAnalyticsService();
 
+  const reReadStoresData = useReReadAllStoresData();
+
   // Start and limit by allowance
   const stakedOrbsNumericalFormat = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
   const orbsForUnstaking = useNumber(0, {
@@ -40,7 +42,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const unstakeTokens = useCallback(() => {
     // TODO : FUTURE : O.L : Add written error message about out of range
     if (orbsForUnstaking.value < 1 || orbsForUnstaking.value > stakedOrbsNumericalFormat) {
-      console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking.value}`)
+      console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking.value}`);
       return;
     }
 
@@ -55,18 +57,20 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent, () =>
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, orbsForUnstaking.value),
-    );
+    onPromiEventAction(promiEvent, () => {
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, orbsForUnstaking.value);
+      reReadStoresData();
+    });
   }, [
-    analyticsService,
+    orbsForUnstaking.value,
+    stakedOrbsNumericalFormat,
     message,
     subMessage,
     wizardsCommonTranslations,
     orbsAccountStore,
-    orbsForUnstaking.value,
     onPromiEventAction,
     isBroadcastingMessage,
+    analyticsService,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
@@ -101,7 +105,13 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         />
       </>
     );
-  }, [orbsForUnstaking, unstakingWizardTranslations, orbsAccountStore.hasOrbsInCooldown, disableInputs]);
+  }, [
+    orbsAccountStore.hasOrbsInCooldown,
+    unstakingWizardTranslations,
+    orbsForUnstaking,
+    disableInputs,
+    stakedOrbsNumericalFormat,
+  ]);
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (

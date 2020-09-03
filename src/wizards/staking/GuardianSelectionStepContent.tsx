@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useOrbsNodeStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
@@ -24,6 +24,8 @@ export const GuardianSelectionStepContent = observer(
     const orbsAccountStore = useOrbsAccountStore();
     const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
+
+    const reReadStoresData = useReReadAllStoresData();
 
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
@@ -54,9 +56,10 @@ export const GuardianSelectionStepContent = observer(
             isBroadcastingMessage.setTrue();
           });
 
-          onPromiEventAction(promiEvent, () =>
-            analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
-          );
+          onPromiEventAction(promiEvent, () => {
+            analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange);
+            reReadStoresData();
+          });
         }
       },
       [
@@ -69,6 +72,7 @@ export const GuardianSelectionStepContent = observer(
         onPromiEventAction,
         isBroadcastingMessage,
         analyticsService,
+        reReadStoresData,
       ],
     );
 

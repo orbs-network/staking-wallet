@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useBoolean, useStateful } from 'react-hanger';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
@@ -18,6 +18,8 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
   const restakingWizardTranslations = useRestakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
   const analyticsService = useAnalyticsService();
+
+  const reReadStoresData = useReReadAllStoresData();
 
   // Start and limit by allowance
   const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
@@ -42,17 +44,19 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent, () =>
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.restaking),
-    );
+    onPromiEventAction(promiEvent, () => {
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.restaking);
+      reReadStoresData();
+    });
   }, [
-    analyticsService,
     message,
     subMessage,
     wizardsCommonTranslations,
     orbsAccountStore,
     onPromiEventAction,
     isBroadcastingMessage,
+    analyticsService,
+    reReadStoresData,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(

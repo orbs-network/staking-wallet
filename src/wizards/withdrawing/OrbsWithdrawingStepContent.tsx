@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { useStateful } from 'react-hanger';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
@@ -18,6 +18,8 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
   const withdrawingWizardTranslations = useWithdrawingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
   const analyticsService = useAnalyticsService();
+
+  const reReadStoresData = useReReadAllStoresData();
 
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
@@ -42,18 +44,20 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent, () =>
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal),
-    );
+    onPromiEventAction(promiEvent, () => {
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal);
+      reReadStoresData();
+    });
   }, [
-    analyticsService,
     message,
     subMessage,
     wizardsCommonTranslations,
     orbsAccountStore,
     onPromiEventAction,
     isBroadcastingMessage,
+    analyticsService,
     fullOrbsReadyForWithdrawal,
+    reReadStoresData,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(

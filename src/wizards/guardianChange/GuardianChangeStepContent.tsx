@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
@@ -26,6 +26,8 @@ export const GuardianChangeStepContent = observer(
     const [t] = useTranslation();
     const analyticsService = useAnalyticsService();
 
+    const reReadStoresData = useReReadAllStoresData();
+
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
@@ -48,9 +50,10 @@ export const GuardianChangeStepContent = observer(
         isBroadcastingMessage.setTrue();
       });
 
-      onPromiEventAction(promiEvent, () =>
-        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
-      );
+      onPromiEventAction(promiEvent, () => {
+        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange);
+        reReadStoresData();
+      });
     }, [
       message,
       subMessage,
@@ -60,6 +63,7 @@ export const GuardianChangeStepContent = observer(
       onPromiEventAction,
       isBroadcastingMessage,
       analyticsService,
+      reReadStoresData,
     ]);
 
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {

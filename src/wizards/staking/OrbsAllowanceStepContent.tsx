@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { useNumber } from 'react-hanger';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
@@ -16,6 +16,8 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const stakingWizardTranslations = useStakingWizardTranslations();
   const orbsAccountStore = useOrbsAccountStore();
+
+  const reReadStoresData = useReReadAllStoresData();
 
   // Start and limit by liquid orbs
   const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
@@ -47,16 +49,19 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       isBroadcastingMessage.setTrue();
     });
 
-    onPromiEventAction(promiEvent);
+    onPromiEventAction(promiEvent, () => {
+      reReadStoresData();
+    });
   }, [
+    orbsAllowance.value,
+    liquidOrbsAsNumber,
     message,
     subMessage,
     wizardsCommonTranslations,
     orbsAccountStore,
-    orbsAllowance.value,
     onPromiEventAction,
     isBroadcastingMessage,
-    liquidOrbsAsNumber,
+    reReadStoresData,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
