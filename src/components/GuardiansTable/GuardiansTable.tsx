@@ -76,10 +76,11 @@ interface IProps {
 }
 
 function compareGuardiansBySelectedAndThenStake(a: Guardian, b: Guardian, selectedGuardianAddress: string) {
-  if (a.EthAddress === selectedGuardianAddress) {
+  const selectedGuardianAddressLowerCase = selectedGuardianAddress.toLowerCase();
+  if (a.EthAddress.toLowerCase() === selectedGuardianAddressLowerCase) {
     return -1;
-  } else if (b.EthAddress === selectedGuardianAddress) {
-    return 11;
+  } else if (b.EthAddress.toLowerCase() === selectedGuardianAddressLowerCase) {
+    return 1;
   } else {
     return b.EffectiveStake - a.EffectiveStake;
   }
@@ -330,7 +331,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   // DEV_NOTE : O.L : This prevents displaying of a large empty table if there are less than 50 Guardians.
   const pageSize = Math.min(50, guardians.length);
 
-  // TODO : O.L : FUTURE : Consider using a 3rd party MUI table component
   return (
     <MaterialTable
       title={tableTitle || ''}
@@ -344,7 +344,10 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         pageSizeOptions: [5, 10, pageSize],
 
         rowStyle: (guardian: Guardian) => ({
-          backgroundColor: guardian.EthAddress === selectedGuardian ? 'rgba(66,66, 66, 0.55)' : 'rgba(33,33, 33, 0.55)',
+          backgroundColor:
+            guardian.EthAddress.toLowerCase() === selectedGuardian.toLowerCase()
+              ? 'rgba(66,66, 66, 0.55)'
+              : 'rgba(33,33, 33, 0.55)',
         }),
         headerStyle: {
           backgroundColor: theme.palette.primary.dark,
