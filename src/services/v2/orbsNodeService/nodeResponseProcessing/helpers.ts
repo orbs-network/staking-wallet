@@ -39,9 +39,9 @@ export async function fetchJson(url: string) {
     async () => {
       const response = await fetch(url);
 
-      console.log({ response });
+      // console.log({ response });
       const body = await response.text();
-      console.log('body', body);
+      // console.log('body', body);
       try {
         return JSON.parse(body);
       } catch (e) {
