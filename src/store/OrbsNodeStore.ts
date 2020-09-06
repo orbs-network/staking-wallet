@@ -73,6 +73,8 @@ export class OrbsNodeStore {
     this.setDoneLoading(false);
     this.setErrorLoading(false);
     try {
+      const isDefaulNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync();
+
       const { model, committeeMembers } = await this.orbsNodeService.readAndProcessModel();
       this.setModel(model);
       this.setCommitteeMemberData(committeeMembers);

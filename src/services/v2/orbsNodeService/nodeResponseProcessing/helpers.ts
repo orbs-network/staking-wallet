@@ -34,6 +34,7 @@ export function isStaleTime(referenceTimeSeconds: number | string, differenceSec
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type JsonResponse = any;
 
+// TODO : FUTURE : O.L : Move this to http service
 export async function fetchJson(url: string) {
   return await retry(
     async () => {

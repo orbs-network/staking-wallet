@@ -7,6 +7,12 @@ export interface IRootNodeData {
   Payload: {
     Guardians: IGuardianData[];
     CommitteeEvents: ICommitteeEvent[];
+
+    // Current refs
+    CurrentRefBlock: number;
+    CurrentRefTime: number;
+
+    // DEV_NOTE : O.L : We can add the fields that we need to process
     [key: string]: any;
   };
 }
