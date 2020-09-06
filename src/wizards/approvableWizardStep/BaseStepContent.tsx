@@ -7,6 +7,7 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { HtmlTooltip } from '../../components/base/HtmlTooltip';
 import Button from '@material-ui/core/Button';
 import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import { InfoToolTipIcon } from '../../components/tooltips/InfoTooltipIcon';
 
 export interface IActionButtonProps {
   title: string;
@@ -86,11 +87,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
 
   const infoTooltippedIcon = useMemo(() => {
     if (infoTitle) {
-      return (
-        <HtmlTooltip enterTouchDelay={50} leaveTouchDelay={4000} title={infoTitle} arrow interactive>
-          <HelpOutlineIcon />
-        </HtmlTooltip>
-      );
+      return <InfoToolTipIcon tooltipTitle={infoTitle} />;
     } else {
       return null;
     }
@@ -103,20 +100,20 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     <WizardContent data-testid={contentTestId}>
       {/* Title */}
       <Grid container item direction={'row'} justify={'center'} alignItems={'center'} style={{ textAlign: 'center' }}>
-        <Typography variant={'h5'} style={{ fontWeight: 'bold', paddingRight: '0.25em'}}>
+        <Typography variant={'h5'} style={{ fontWeight: 'bold', paddingRight: '0.25em' }}>
           {titleContent}
         </Typography>
         {infoTooltippedIcon}
       </Grid>
 
-        <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
-          <Typography variant={'body1'}>{message}</Typography>
-        </Grid>
+      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
+        <Typography variant={'body1'}>{message}</Typography>
+      </Grid>
 
-        {/* Sub Message */}
-        <Grid item hidden={!hasSubMessage} style={{ textAlign: 'center' }}>
-          <Typography variant={'body2'}>{subMessage}</Typography>
-        </Grid>
+      {/* Sub Message */}
+      <Grid item hidden={!hasSubMessage} style={{ textAlign: 'center' }}>
+        <Typography variant={'body2'}>{subMessage}</Typography>
+      </Grid>
 
       {/* Display loading */}
       {isLoading && (
@@ -134,20 +131,29 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       </Grid>
 
       {/* Action Buttons */}
-      { hasAnyButtons && <Grid item container justify={'space-around'} direction={'row'} spacing={0} style={{ margin: 0, width: '100%' }}>
-        {addCancelButton && (
-          <Grid item>
-            <CommonActionButton
-              style={relevantStylingForActionButtons}
-              onClick={onCancelButtonClicked}
-              disabled={disableInputs}
-            >
-              {wizardsCommonTranslations('action_close')}
-            </CommonActionButton>
-          </Grid>
-        )}
-        <Grid item>{actionButton}</Grid>
-      </Grid>}
+      {hasAnyButtons && (
+        <Grid
+          item
+          container
+          justify={'space-around'}
+          direction={'row'}
+          spacing={0}
+          style={{ margin: 0, width: '100%' }}
+        >
+          {addCancelButton && (
+            <Grid item>
+              <CommonActionButton
+                style={relevantStylingForActionButtons}
+                onClick={onCancelButtonClicked}
+                disabled={disableInputs}
+              >
+                {wizardsCommonTranslations('action_close')}
+              </CommonActionButton>
+            </Grid>
+          )}
+          <Grid item>{actionButton}</Grid>
+        </Grid>
+      )}
     </WizardContent>
   );
 });

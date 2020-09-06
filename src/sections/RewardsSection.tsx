@@ -16,6 +16,7 @@ import { useOrbsPOSDataService } from '../services/ServicesHooks';
 import { useNumber } from 'react-hanger';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
+import { InfoToolTipIcon } from '../components/tooltips/InfoTooltipIcon';
 
 export const RewardsContainer = styled((props: GridProps) => <Grid item container {...props} />)<GridProps>(
   (styledProps: { theme: Theme }) => {
@@ -139,18 +140,17 @@ export const RewardsSection = observer(() => {
           {/*    })}*/}
           {/*  </Typography>*/}
           {/*</Grid>*/}
-          <Grid item>
-            <Typography>- {rewardsText}</Typography>
+          <Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+            <Typography style={{ paddingRight: '0.25em' }}>{rewardsText} </Typography>
             {!orbsAccountStore.isGuardian ? (
-              <Typography>
-                {' '}
-                Assumes 2/3 of the current Guardian interest (
-                {orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)
-              </Typography>
+              <InfoToolTipIcon
+                tooltipTitle={`Assumes 2/3 of the current Guardian interest (
+                ${orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)`}
+              />
             ) : null}
           </Grid>
           <Grid item>
-            <Typography dangerouslySetInnerHTML={{ __html: '- ' + rewardsPageInnerHtml }} />
+            <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />
           </Grid>
         </RewardsContainer>
       </Grid>

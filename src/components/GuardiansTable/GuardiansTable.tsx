@@ -75,7 +75,7 @@ interface IProps {
   densePadding?: boolean;
 }
 
-function compareGuardiansBySelectedAndThenStake(a: Guardian, b: Guardian, selectedGuardianAddress: string) {
+function compareGuardiansBySelectedAndThenStake(a: Guardian, b: Guardian, selectedGuardianAddress = '') {
   const selectedGuardianAddressLowerCase = selectedGuardianAddress.toLowerCase();
   if (a.EthAddress.toLowerCase() === selectedGuardianAddressLowerCase) {
     return -1;
@@ -109,7 +109,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
       const actionButtonTestId = selectActionButtonTestIdFromAddress(g.EthAddress);
       const actionButtonOnClick = () => onGuardianSelect(g);
-      const isSelectedGuardian = g.EthAddress.toLowerCase() === selectedGuardian.toLowerCase();
+      const isSelectedGuardian = g.EthAddress.toLowerCase() === selectedGuardian?.toLowerCase();
 
       switch (guardianSelectionMode) {
         case 'Select':
@@ -163,7 +163,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
 
   const sortedGuardians = useMemo(
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     () => guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian)),
     [guardians, selectedGuardian],
   );
@@ -345,7 +344,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
         rowStyle: (guardian: Guardian) => ({
           backgroundColor:
-            guardian.EthAddress.toLowerCase() === selectedGuardian.toLowerCase()
+            guardian.EthAddress.toLowerCase() === selectedGuardian?.toLowerCase()
               ? 'rgba(66,66, 66, 0.55)'
               : 'rgba(33,33, 33, 0.55)',
         }),
