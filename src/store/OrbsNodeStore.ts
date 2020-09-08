@@ -122,7 +122,7 @@ export class OrbsNodeStore {
     }
   }
 
-  private async findSyncedCommitteeAndReadData(): Promise<IReadAndProcessResults {
+  private async findSyncedCommitteeAndReadData(): Promise<IReadAndProcessResults> {
     return null;
   }
 
