@@ -19,10 +19,10 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
    ```
   This will start a [Ganache](https://www.trufflesuite.com/ganache) local network that will keep running until stopped (You might want to use a separate terminal for this).
    
-* Compile and deploy the contracts to your local Ganache
+* Deploy the ORBS contracts (from the ORBS test-driver) to your local Ganache
     ```
     cd ./ganach-env
-    npm run compile-and-deploy
+    npm run deploy-driver
    ```
     Wait for the contracts to be deployed and proceed to the next step.
 
@@ -34,9 +34,17 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
 
 * Open the localhost address in your browser (localhost:8080)
 
-* In your browser, set MetaMask network to 'localhost 8545' 
+* In your browser, set MetaMask network to 'localhost 7545' 
 
 * Start using Tetra :)
+
+### Ethereum dev account
+
+* Please add the ORBS dev account (This account will get ORBS assigned to on your local network)
+
+* dev account private key :  0xf2ce3a9eddde6e5d996f6fe7c1882960b0e8ee8d799e0ef608276b8de4dc7f19
+
+* IMPORTANT : Be careful not to use this account on the mainnet !!!
 
 ## Deploy 
 * Run in terminal in root project directory:
