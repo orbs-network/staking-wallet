@@ -5,6 +5,7 @@ import DelegationsContractJson from '@orbs-network/orbs-ethereum-contracts-v2/bu
 import { Delegations } from '../../../contracts/Delegations';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 
+// TODO : ORL : Add address
 const MAIN_NET_DELEGATIONS_CONTRACT_ADDRESS = '';
 
 export class DelegationsService implements IDelegationsService {

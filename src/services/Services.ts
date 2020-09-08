@@ -25,6 +25,8 @@ import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
 import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
 import { IDelegationsService } from './v2/delegationsService/IDelegationsService';
 import { DelegationsService } from './v2/delegationsService/DelegationsService';
+import { ICommitteeService } from './v2/committeeService/ICommitteeService';
+import { CommitteeService } from './v2/committeeService/CommitteeService';
 
 export interface IServices {
   httpService: IHttpService;
@@ -36,6 +38,7 @@ export interface IServices {
   rewardsService: IOrbsRewardsService;
   orbsNodeService: IOrbsNodeService;
   delegationsService: IDelegationsService;
+  committeeService: ICommitteeService;
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosInstance): IServices {
@@ -65,5 +68,6 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
     analyticsService: analyticsService,
     orbsNodeService: new OrbsNodeService(),
     delegationsService: new DelegationsService(web3, config?.contractsAddressesOverride?.delegationsContract),
+    committeeService: new CommitteeService(web3, config?.contractsAddressesOverride.committeeContract),
   };
 }

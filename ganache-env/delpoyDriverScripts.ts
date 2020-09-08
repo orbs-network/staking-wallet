@@ -27,6 +27,7 @@ const deployDriverScripts = async () => {
       guardians: driver.guardiansRegistration.address,
       rewards: driver.rewards.address,
       delegations: driver.delegations.address,
+      committee: driver.committee.address,
     };
 
     console.log('Saving addresses to file');

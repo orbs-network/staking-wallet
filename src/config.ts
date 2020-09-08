@@ -24,6 +24,7 @@ interface IConfig {
     guardiansContract: string;
     orbsRewardsDistributionContract: string;
     delegationsContract: string;
+    committeeContract: string;
   }>;
   ETHEREUM_PROVIDER_WS: string;
   earliestBlockForDelegationOverride: number;
@@ -59,6 +60,7 @@ if (process.env.NODE_ENV !== 'production') {
     // config.contractsAddressesOverride.votingContract = VotingContractJSON.networks['5777'].address;
     config.contractsAddressesOverride.orbsRewardsDistributionContract = addresses.rewards;
     config.contractsAddressesOverride.delegationsContract = addresses.delegations;
+    config.contractsAddressesOverride.committeeContract = addresses.commitee;
 
     config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
   }

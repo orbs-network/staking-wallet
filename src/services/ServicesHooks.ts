@@ -6,6 +6,7 @@ import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/
 import { IAnalyticsService } from './analytics/IAnalyticsService';
 import { IHttpService } from './http/IHttpService';
 import { IDelegationsService } from './v2/delegationsService/IDelegationsService';
+import { ICommitteeService } from './v2/committeeService/ICommitteeService';
 
 function useServices(): IServices {
   return React.useContext(MobXProviderContext) as IServices;
@@ -29,4 +30,8 @@ export function useHttpService(): IHttpService {
 
 export function useDelegationsService(): IDelegationsService {
   return useServices().delegationsService;
+}
+
+export function useCommitteeService(): ICommitteeService {
+  return useServices().committeeService;
 }
