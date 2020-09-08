@@ -42,14 +42,14 @@
     "color": "^3.1.2",
     "copy-to-clipboard": "^3.3.1",
     "copy-webpack-plugin": "^5.1.1",
-    "i18next": "^19.4.4",
+    "i18next": "^19.7.0",
     "lodash": "^4.17.20",
-    "material-table": "^1.57.2",
-    "mobx": "^5.15.4",
-    "mobx-react": "^6.2.2",
+    "material-table": "^1.69.0",
+    "mobx": "^5.15.6",
+    "mobx-react": "^6.3.0",
     "moment": "^2.25.3",
     "orbs-client-sdk": "^2.5.0",
-    "orbs-pos-data": "^6.18.0",
+    "orbs-pos-data": "^6.19.0",
     "rc-progress": "^3.0.0",
     "react-ga": "^2.7.0",
     "react-hanger": "^2.2.1",
@@ -62,7 +62,7 @@
     "tslib": "^1.11.2",
     "typechain": "^2.0.0",
     "use-interval": "^1.2.1",
-    "web3": "^1.2.7"
+    "web3": "^1.2.11"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
