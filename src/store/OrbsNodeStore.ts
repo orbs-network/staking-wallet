@@ -3,7 +3,7 @@
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
 import { action, computed, observable } from 'mobx';
 import { Guardian, Model } from '../services/v2/orbsNodeService/model';
-import { ICommitteeMemberData } from '../services/v2/orbsNodeService/OrbsNodeTypes';
+import { ICommitteeMemberData, IReadAndProcessResults } from '../services/v2/orbsNodeService/OrbsNodeTypes';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
@@ -69,19 +69,61 @@ export class OrbsNodeStore {
     this.readAllData();
   }
 
+  // ****  Data reading ****
+
   private async readAllData() {
     this.setDoneLoading(false);
     this.setErrorLoading(false);
     try {
-      const isDefaulNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync();
+      await this.findReadAndSetNodeData();
 
-      const { model, committeeMembers } = await this.orbsNodeService.readAndProcessModel();
-      this.setModel(model);
-      this.setCommitteeMemberData(committeeMembers);
       this.setDoneLoading(true);
     } catch (e) {
       this.setErrorLoading(true);
     }
+  }
+
+  private async findReadAndSetNodeData() {
+    const { model, committeeMembers } = await this.readDataFromFirstSyncedNode();
+
+    this.setModel(model);
+    this.setCommitteeMemberData(committeeMembers);
+  }
+
+  private async readDataFromFirstSyncedNode(): Promise<IReadAndProcessResults> {
+    const defaultNodeProcessedResponse = await this.readDefaultNodeData();
+
+    if (defaultNodeProcessedResponse) {
+      return defaultNodeProcessedResponse;
+    } else {
+      return this.findSyncedCommitteeAndReadData();
+    }
+  }
+
+  private async readDefaultNodeData(): Promise<IReadAndProcessResults | null> {
+    // Check if default node is in sync
+    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync();
+
+    if (!isDefaultNodeAtSync) {
+      // TODO : ORL : Add analytic
+      console.log('Default node is not in sync');
+      return null;
+    } else {
+      try {
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessModel(
+          this.orbsNodeService.defaultNodeAddress,
+        );
+
+        return readAndProcessResult;
+      } catch (e) {
+        console.log(`Error while reading and processing default node : ${e}`);
+        return null;
+      }
+    }
+  }
+
+  private async findSyncedCommitteeAndReadData(): Promise<IReadAndProcessResults {
+    return null;
   }
 
   // ****  Observables setter actions ****

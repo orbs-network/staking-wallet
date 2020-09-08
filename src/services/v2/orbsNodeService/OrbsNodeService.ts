@@ -17,6 +17,10 @@ const EthereumWriterStatusSuffix = '/services/ethereum-writer/status';
 export class OrbsNodeService implements IOrbsNodeService {
   constructor(private defaultNodeUrl: string = MAIN_NET_DEFAULT_NODE_URL) {}
 
+  public get defaultNodeAddress(): string {
+    return this.defaultNodeUrl;
+  }
+
   async checkIfDefaultNodeIsInSync(): Promise<boolean> {
     return this.checkIfNodeIsInSync(this.defaultNodeUrl);
   }
