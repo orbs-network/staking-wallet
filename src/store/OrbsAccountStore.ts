@@ -28,6 +28,14 @@ export class OrbsAccountStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
 
+  // DEV_NOTE : O.L : This is a simple mechanism that will allow users of limited Dapp browsers to
+  //                  still have the core capabilities of Tetra.
+  // Special error indicators for contract queries that can fail due to
+  // specific DAPP browser limitations
+  @observable public errorReadingRewards = false;
+  // DEV_NOTE : O.L : This should only be an error if trying to read Guardian from events.
+  @observable public errorReadingSelectedGuardian = false;
+
   @observable public liquidOrbs = BigInt(0);
   @observable public stakingContractAllowance = BigInt(0);
   @observable public stakedOrbs = BigInt(0);
@@ -210,6 +218,9 @@ export class OrbsAccountStore {
   }
 
   private async readDataForAccount(accountAddress: string) {
+    // Reset the events based data reading error flags.
+    this.resetEventReadingErrorFlags();
+
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
@@ -224,7 +235,8 @@ export class OrbsAccountStore {
     await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading selected guardian : ${e}`);
       console.error(`Error in reading selected guardian : ${e}`);
-      throw e;
+      this.setErrorReadingSelectedGuardian(true);
+      // throw e;
     });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading contract allowance: ${e}`);
@@ -239,7 +251,8 @@ export class OrbsAccountStore {
     await this.readAndSetRewards(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading rewards : ${e}`);
       console.error(`Error in reading rewards : ${e}`);
-      throw e;
+      this.setErrorReadingRewards(true);
+      // throw e;
     });
     await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading rewards history : ${e}`);
@@ -370,6 +383,11 @@ export class OrbsAccountStore {
     this.setDoneLoading(true);
   }
 
+  private resetEventReadingErrorFlags() {
+    this.setErrorReadingRewards(false);
+    this.setErrorReadingSelectedGuardian(false);
+  }
+
   // ****  Observables setter actions ****
 
   @action('setLiquidOrbs')
@@ -410,6 +428,16 @@ export class OrbsAccountStore {
   @action('setErrorLoading')
   private setErrorLoading(errorLoading: boolean) {
     this.errorLoading = errorLoading;
+  }
+
+  @action('setErrorLoading')
+  private setErrorReadingRewards(errorReadingRewards: boolean) {
+    this.errorReadingRewards = errorReadingRewards;
+  }
+
+  @action('setErrorLoading')
+  private setErrorReadingSelectedGuardian(errorReadingSelectedGuardian: boolean) {
+    this.errorReadingSelectedGuardian = errorReadingSelectedGuardian;
   }
 
   @action('setAccumulatedRewards')
