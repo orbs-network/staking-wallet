@@ -44,7 +44,7 @@
     "mobx-react": "^6.2.2",
     "moment": "^2.25.3",
     "orbs-client-sdk": "^2.5.0",
-    "orbs-pos-data": "^6.19.0",
+    "orbs-pos-data": "^6.20.0",
     "react-ga": "^2.7.0",
     "react-hanger": "^2.2.1",
     "react-i18next": "^11.4.0",
