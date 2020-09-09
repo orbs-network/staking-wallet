@@ -32,7 +32,8 @@ export class OrbsAccountStore {
   //                  still have the core capabilities of Tetra.
   // Special error indicators for contract queries that can fail due to
   // specific DAPP browser limitations
-  @observable public errorReadingRewards = false;
+  @observable public errorReadingAccumulatedRewards = false;
+  @observable public errorReadingRewardsDistribution = false;
   // DEV_NOTE : O.L : This should only be an error if trying to read Guardian from events.
   @observable public errorReadingSelectedGuardian = false;
 
@@ -251,13 +252,14 @@ export class OrbsAccountStore {
     await this.readAndSetRewards(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading rewards : ${e}`);
       console.error(`Error in reading rewards : ${e}`);
-      this.setErrorReadingRewards(true);
+      this.setErrorReadingAccumulatedRewards(true);
       // throw e;
     });
     await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading rewards history : ${e}`);
       console.error(`Error in reading rewards history : ${e}`);
-      throw e;
+      this.setErrorReadingRewardsDistribution(true);
+      // throw e;
     });
   }
 
@@ -384,7 +386,8 @@ export class OrbsAccountStore {
   }
 
   private resetEventReadingErrorFlags() {
-    this.setErrorReadingRewards(false);
+    this.setErrorReadingAccumulatedRewards(false);
+    this.setErrorReadingRewardsDistribution(false);
     this.setErrorReadingSelectedGuardian(false);
   }
 
@@ -430,12 +433,17 @@ export class OrbsAccountStore {
     this.errorLoading = errorLoading;
   }
 
-  @action('setErrorLoading')
-  private setErrorReadingRewards(errorReadingRewards: boolean) {
-    this.errorReadingRewards = errorReadingRewards;
+  @action('setErrorReadingAccumulatedRewards')
+  private setErrorReadingAccumulatedRewards(errorReadingAccumulatedRewards: boolean) {
+    this.errorReadingAccumulatedRewards = errorReadingAccumulatedRewards;
   }
 
-  @action('setErrorLoading')
+  @action('setErrorReadingRewardsDistribution')
+  private setErrorReadingRewardsDistribution(errorReadingRewardsDistribution: boolean) {
+    this.errorReadingRewardsDistribution = errorReadingRewardsDistribution;
+  }
+
+  @action('setErrorReadingSelectedGuardian')
   private setErrorReadingSelectedGuardian(errorReadingSelectedGuardian: boolean) {
     this.errorReadingSelectedGuardian = errorReadingSelectedGuardian;
   }

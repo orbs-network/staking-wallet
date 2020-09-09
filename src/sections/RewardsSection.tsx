@@ -83,10 +83,10 @@ export const RewardsSection = observer(() => {
   const gridPadding = theme.spacing(2);
 
   // DEV_NOTE : O.L : If there was an error reading the rewards, we will show dashes (instead of the default 0)
-  const totalDistributedRewardsString = orbsAccountStore.errorReadingRewards
+  const totalDistributedRewardsString = orbsAccountStore.errorReadingRewardsDistribution
     ? '--'
     : orbsAccountStore.totalDistributedRewards.toLocaleString();
-  const totalAccumulatedRewardsString = orbsAccountStore.errorReadingRewards
+  const totalAccumulatedRewardsString = orbsAccountStore.errorReadingAccumulatedRewards
     ? '--'
     : orbsAccountStore.totalAccumulatedRewards.toLocaleString();
 
