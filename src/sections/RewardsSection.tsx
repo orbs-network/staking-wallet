@@ -82,6 +82,14 @@ export const RewardsSection = observer(() => {
   const gridMargin = theme.spacing(0);
   const gridPadding = theme.spacing(2);
 
+  // DEV_NOTE : O.L : If there was an error reading the rewards, we will show dashes (instead of the default 0)
+  const totalDistributedRewardsString = orbsAccountStore.errorReadingRewards
+    ? '--'
+    : orbsAccountStore.totalDistributedRewards.toLocaleString();
+  const totalAccumulatedRewardsString = orbsAccountStore.errorReadingRewards
+    ? '--'
+    : orbsAccountStore.totalAccumulatedRewards.toLocaleString();
+
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
     <Section>
@@ -118,7 +126,7 @@ export const RewardsSection = observer(() => {
             <Typography>
               -{' '}
               {rewardsSectionTranslations('text__totalDistributedRewards', {
-                totalDistributedRewards: orbsAccountStore.totalDistributedRewards.toLocaleString(),
+                totalDistributedRewards: totalDistributedRewardsString,
               })}
             </Typography>
           </Grid>
@@ -126,7 +134,7 @@ export const RewardsSection = observer(() => {
             <Typography>
               -{' '}
               {rewardsSectionTranslations('text__totalAccumulatedRewards', {
-                totalAccumulatedRewards: orbsAccountStore.totalAccumulatedRewards.toLocaleString(),
+                totalAccumulatedRewards: totalAccumulatedRewardsString,
               })}
             </Typography>
           </Grid>
