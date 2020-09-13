@@ -1,7 +1,9 @@
 import React from 'react';
 import { Guardian } from '../../services/v2/orbsNodeService/model';
-import { Tooltip, Typography } from '@material-ui/core';
+import { Icon, SvgIcon, Tooltip, Typography } from '@material-ui/core';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
+import { ReactComponent as GuardianShield } from './assets/guardian_normal.svg';
+import { ReactComponent as CommitteeGuardianShield } from './assets/guardian_committee.svg';
 import Moment from 'moment';
 
 interface IProps {
@@ -11,13 +13,18 @@ interface IProps {
 
 export const GuardianQualifications = React.memo<IProps>((props) => {
   const { guardian, committeeMembershipData } = props;
+
+  const SelectedIcon = committeeMembershipData ? CommitteeGuardianShield : GuardianShield;
+
   return (
     <Tooltip
+      enterTouchDelay={100}
       title={<GuardianQualificationsTooltip committeeMembershipData={committeeMembershipData} guardian={guardian} />}
       arrow
       placement={'right'}
     >
       <div style={{ height: '3rem', width: '3rem', border: '1px solid white' }}>
+        <SvgIcon component={SelectedIcon} viewBox='0 0 40.371 47.178' style={{ height: '100%', width: '100%' }} />
         {committeeMembershipData ? 'In committee' : null}
         {guardian.IsCertified ? 'Certified' : null}
       </div>

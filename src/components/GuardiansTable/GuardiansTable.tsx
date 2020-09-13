@@ -46,10 +46,6 @@ const NameBox = styled('div')(() => ({
   justifyItems: 'center',
 }));
 
-const NameContainer = styled.span(({ theme }) => ({
-  paddingLeft: theme.spacing(2),
-}));
-
 const useStyles = makeStyles((theme) => ({
   toolbarWrapper: {
     '& .MuiToolbar-gutters': {
@@ -191,15 +187,15 @@ export const GuardiansTable = React.memo<IProps>((props) => {
             committeeMembershipData={getCommitteeMemberData(guardian.EthAddress)}
           />
         ),
+        // cellStyle: (data) => ({ width: '20px' }),
+        width: 'fit-content',
       },
       {
         title: guardiansTableTranslations('columnHeader_name'),
         field: 'Name',
         render: (guardian) => (
           <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
-            <NameContainer>
-              <Typography>{guardian.Name}</Typography>
-            </NameContainer>
+            <Typography>{guardian.Name}</Typography>
           </NameBox>
         ),
         headerStyle: {
@@ -277,7 +273,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       },
       {
         title: 'Capacity',
-        field: 'ParticipationPercentage',
+        field: 'SelfStake',
         render: (guardian) => {
           // const textColor = false ? yesColor : noColor;
           // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
@@ -291,9 +287,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
             <Tooltip
               title={
                 <>
-                  <Typography>Self stake: {SelfStake} ORBS</Typography>
-                  <Typography>Delegated stake: {DelegatedStake} ORBS</Typography>
-                  <Typography>% self stake: {selfStakePercentage}%</Typography>
+                  <Typography>Self stake: {SelfStake?.toLocaleString()} ORBS</Typography>
+                  <Typography>Delegated stake: {DelegatedStake?.toLocaleString()} ORBS</Typography>
+                  <Typography>% self stake: {selfStakePercentage?.toLocaleString()}%</Typography>
                 </>
               }
             >
