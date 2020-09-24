@@ -36,10 +36,6 @@ const secondsToDaysString = (seconds: number) => +(seconds / (60 * 60 * 24)).toF
 
 const getWebsiteAddress = (url: string) => (url.toLowerCase().indexOf('http') === 0 ? url : `http://${url}`);
 
-const SelectButton = styled(Button)`
-  min-width: 130px;
-`;
-
 const NameBox = styled('div')(() => ({
   display: 'flex',
   alignItems: 'center',
@@ -51,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiToolbar-gutters': {
       backgroundColor: theme.palette.primary.dark,
     },
+  },
+
+  selectButton: {
+    minWidth: '130px',
   },
 }));
 
@@ -110,14 +110,15 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       switch (guardianSelectionMode) {
         case 'Select':
           selectedGuardianCell = (
-            <SelectButton
+            <Button
+              className={classes.selectButton}
               variant='contained'
               size='small'
               data-testid={actionButtonTestId}
               onClick={actionButtonOnClick}
             >
               {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
-            </SelectButton>
+            </Button>
           );
           break;
         case 'Change':
@@ -187,7 +188,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
             committeeMembershipData={getCommitteeMemberData(guardian.EthAddress)}
           />
         ),
-        // cellStyle: (data) => ({ width: '20px' }),
         width: 'fit-content',
       },
       {
