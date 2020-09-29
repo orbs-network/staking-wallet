@@ -17,7 +17,9 @@
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-prod": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
-    "deploy": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
+    "deployOld": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
+    "predeploy": "rm -rf ./dist && npm run build",
+    "deploy": "gh-pages -d dist -r git@github.com:orbs-network/staking.git",
     "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
     "postinstall": "npm run generate_types && npm run mkd",
     "generate_types": "typechain --target web3-v1 --outDir ./src/contracts './node_modules/@orbs-network/orbs-ethereum-contracts-v2/build/contracts/*.json'"
@@ -111,6 +113,7 @@
     "favicons-webpack-plugin": "^3.0.1",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^4.1.3",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.0.1",
     "jest-expect-message": "^1.0.2",
