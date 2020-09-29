@@ -6,7 +6,7 @@ import { Delegations } from '../../../contracts/Delegations';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 // TODO : ORL : Add address
-const MAIN_NET_DELEGATIONS_CONTRACT_ADDRESS = '';
+const MAIN_NET_DELEGATIONS_CONTRACT_ADDRESS = '0xBb5B5E9333e155cad6fe299B18dED3F4107EF294';
 
 export class DelegationsService implements IDelegationsService {
   private delegationsContract: Delegations;

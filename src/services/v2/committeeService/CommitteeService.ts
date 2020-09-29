@@ -5,7 +5,7 @@ import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 
 // TODO : ORL : Add address
-const MAIN_NET_COMMITTEE_CONTRACT_ADDRESS = '';
+const MAIN_NET_COMMITTEE_CONTRACT_ADDRESS = '0xbfb2bac25daaabf79e5c94a8036b28c553ee75f5';
 
 export class CommitteeService implements ICommitteeService {
   private committeeContract: Committee;
