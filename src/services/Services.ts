@@ -68,6 +68,6 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
     analyticsService: analyticsService,
     orbsNodeService: new OrbsNodeService(),
     delegationsService: new DelegationsService(web3, config?.contractsAddressesOverride?.delegationsContract),
-    committeeService: new CommitteeService(web3, config?.contractsAddressesOverride.committeeContract),
+    committeeService: new CommitteeService(web3, config?.contractsAddressesOverride?.committeeContract),
   };
 }
