@@ -1,10 +1,8 @@
 import {
   IOrbsPOSDataService,
-  IOrbsTokenService,
   IStakingService,
   OrbsClientService,
   orbsPOSDataServiceFactory,
-  OrbsTokenService,
   StakingService,
   IOrbsClientService,
   OrbsRewardsService,
@@ -23,10 +21,14 @@ import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
 import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
 import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
-import { IDelegationsService } from './v2/delegationsService/IDelegationsService';
-import { DelegationsService } from './v2/delegationsService/DelegationsService';
-import { ICommitteeService } from './v2/committeeService/ICommitteeService';
-import { CommitteeService } from './v2/committeeService/CommitteeService';
+import {
+  CommitteeService,
+  DelegationsService,
+  ICommitteeService,
+  IDelegationsService,
+  IOrbsTokenService,
+  OrbsTokenService,
+} from '@orbs-network/contracts-js';
 
 export interface IServices {
   httpService: IHttpService;
