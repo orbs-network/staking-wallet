@@ -262,7 +262,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           return (
             <>
               <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
-              <Typography>{ParticipationPercentage}%</Typography>
+              <Typography>{ParticipationPercentage.toFixed(2)}%</Typography>
             </>
           );
         },
@@ -295,7 +295,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
             >
               <div>
                 <Line percent={Capacity} strokeWidth={5} strokeColor={color} />
-                <Typography>{Capacity}%</Typography>
+                <Typography>{Capacity.toFixed(2)}%</Typography>
               </div>
             </Tooltip>
           );
