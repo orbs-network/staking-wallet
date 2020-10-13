@@ -153,7 +153,15 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
       return selectedGuardianCell;
     },
-    [theme, guardianSelectionMode, guardiansTableTranslations, onGuardianSelect, selectedGuardian],
+    [
+      selectedGuardian,
+      guardianSelectionMode,
+      onGuardianSelect,
+      classes.selectButton,
+      guardiansTableTranslations,
+      theme.palette.secondary.main,
+      theme.palette.grey,
+    ],
   );
 
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
@@ -238,11 +246,29 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         sorting: false,
       },
       {
-        title: 'Rewards Distribution Frequency',
-        field: 'DistributionFrequency',
-        render: (guardian) => (
-          <Typography variant={'button'}>{secondsToDaysString(guardian.DistributionFrequency)} days</Typography>
-        ),
+        title: 'Effective Stake',
+        field: 'EffectiveStake',
+        render: (guardian) => {
+          const { EffectiveStake, SelfStake, DelegatedStake } = guardian;
+
+          const effectiveStakeInUnits =
+            EffectiveStake > 1_000_000
+              ? `${(EffectiveStake / 1_000_000).toFixed(2).replace(/[.,]00$/, '')} M`
+              : `${(EffectiveStake / 1_000).toFixed(2).replace(/[.,]00$/, '')} K`;
+
+          return (
+            <Tooltip
+              title={
+                <>
+                  <Typography>Self stake: {SelfStake?.toLocaleString()} ORBS</Typography>
+                  <Typography>Delegated stake: {DelegatedStake?.toLocaleString()} ORBS</Typography>
+                </>
+              }
+            >
+              <Typography>{effectiveStakeInUnits}</Typography>
+            </Tooltip>
+          );
+        },
         cellStyle: {
           textAlign: 'center',
         },
@@ -252,9 +278,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: 'Participation',
         field: 'ParticipationPercentage',
         render: (guardian) => {
-          // const textColor = false ? yesColor : noColor;
-          // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
-
           const { ParticipationPercentage } = guardian;
           // TODO : ORL : Make this color gradient
           const color = ParticipationPercentage <= 30 ? 'red' : ParticipationPercentage <= 80 ? 'yellow' : 'green';
@@ -275,9 +298,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: 'Capacity',
         field: 'SelfStake',
         render: (guardian) => {
-          // const textColor = false ? yesColor : noColor;
-          // const text = false ? guardiansTableTranslations('didVote_yes') : guardiansTableTranslations('didVote_no');
-
           const { Capacity, SelfStake, DelegatedStake } = guardian;
           const selfStakePercentage = +((SelfStake / DelegatedStake) * 100).toFixed(2);
           // TODO : ORL : Make this color gradient
