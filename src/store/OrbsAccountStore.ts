@@ -1,13 +1,7 @@
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import {
-  IOrbsPOSDataService,
-  IStakingService,
-  IOrbsTokenService,
-  IOrbsRewardsService,
-  IRewardsDistributionEvent,
-} from 'orbs-pos-data';
+import { IOrbsPOSDataService, IOrbsTokenService, IOrbsRewardsService, IRewardsDistributionEvent } from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   subscribeToOrbsInCooldownChange,
@@ -19,10 +13,10 @@ import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
-import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
 import { OrbsNodeStore } from './OrbsNodeStore';
-import { configureMobx } from './storesInitialization';
 import { Guardian } from '../services/v2/orbsNodeService/model';
+import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
+import { IDelegationsService, IStakingService } from '@orbs-network/contracts-js';
 
 export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
@@ -135,6 +129,7 @@ export class OrbsAccountStore {
     private orbsNodeStore: OrbsNodeStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
+    private stakingRewardsService: IStakingRewardsService,
     private orbsTokenService: IOrbsTokenService,
     private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,

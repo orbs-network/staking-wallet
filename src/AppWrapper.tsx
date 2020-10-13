@@ -33,6 +33,7 @@ const services = buildServices(ethereumProvider, axios);
 const stores = getStores(
   services.orbsPOSDataService,
   services.stakingService,
+  services.stakingRewardsService,
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
   services.rewardsService,

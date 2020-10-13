@@ -1,6 +1,6 @@
 import { configure } from 'mobx';
 import { IStores } from './stores';
-import { IOrbsPOSDataService, IStakingService, IOrbsTokenService, IOrbsRewardsService } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IOrbsTokenService, IOrbsRewardsService } from 'orbs-pos-data';
 
 // This import ensures mobx batching
 import 'mobx-react-lite/batchingForReactDom';
@@ -11,7 +11,7 @@ import { OrbsAccountStore } from './OrbsAccountStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { OrbsNodeStore } from './OrbsNodeStore';
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
-import { IDelegationsService } from '../services/v2/delegationsService/IDelegationsService';
+import { IDelegationsService, IStakingRewardsService, IStakingService } from '@orbs-network/contracts-js';
 
 /**
  * Configures the mobx library. Should get called at App's initialization.
@@ -28,6 +28,7 @@ export function configureMobx() {
 export function getStores(
   orbsPOSDataService: IOrbsPOSDataService,
   stakingService: IStakingService,
+  stakingRewardsService: IStakingRewardsService,
   orbsTokenService: IOrbsTokenService,
   cryptoWalletConnectionService: ICryptoWalletConnectionService,
   orbsRewardsService: IOrbsRewardsService,
@@ -43,6 +44,7 @@ export function getStores(
     orbsNodeStore,
     orbsPOSDataService,
     stakingService,
+    stakingRewardsService,
     orbsTokenService,
     orbsRewardsService,
     analyticsService,
