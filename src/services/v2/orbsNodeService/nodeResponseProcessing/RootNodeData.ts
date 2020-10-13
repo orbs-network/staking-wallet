@@ -1,7 +1,7 @@
 // DEV_NOTE : This file is manually made and represents the properties of the status json
 // TODO : ORL : Read it from a shared library.
 
-export interface IRootNodeData {
+export interface IManagementStatusResponse {
   Status: string;
   Timestamp: string;
   Payload: {

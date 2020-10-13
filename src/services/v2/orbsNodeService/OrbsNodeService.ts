@@ -5,7 +5,7 @@ import { Model } from './model';
 import { updateModel } from './nodeResponseProcessing/processor-public';
 import RootNodeData from '../../../local/StatusResponse.json';
 import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
-import { IRootNodeData } from './nodeResponseProcessing/RootNodeData';
+import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import { IEthereumWriterStatusResponse } from './nodeResponseProcessing/EthereumWriterStatusResponse';
 import Moment from 'moment';
 
@@ -28,7 +28,7 @@ export class OrbsNodeService implements IOrbsNodeService {
 
   async checkIfNodeIsInSync(nodeAddress: string): Promise<boolean> {
     try {
-      const rootNodeData: IRootNodeData = await this.fetchNodeManagementStatus(nodeAddress);
+      const managementStatusResponse: IManagementStatusResponse = await this.fetchNodeManagementStatus(nodeAddress);
       const ethereumWriterStatusResponse: IEthereumWriterStatusResponse = await this.fetchNodeEthereumWriterStatus(
         nodeAddress,
       );
@@ -40,7 +40,7 @@ export class OrbsNodeService implements IOrbsNodeService {
       const ACCEPTED_RANGE_IN_SECONDS = 60 * 60; // 60 minutes
       const earliestAcceptedTimestamp = currentTimestamp - ACCEPTED_RANGE_IN_SECONDS;
 
-      const nodeRefTime = rootNodeData.Payload.CurrentRefTime;
+      const nodeRefTime = managementStatusResponse.Payload.CurrentRefTime;
       const isManagementServiceReferenceFresh = nodeRefTime >= earliestAcceptedTimestamp;
 
       const isNodeInSync = isManagementServiceReferenceFresh && isEthereumWriterInSync;
@@ -56,23 +56,27 @@ export class OrbsNodeService implements IOrbsNodeService {
     const nodeUrl = nodeAddress || this.defaultNodeUrl;
     const model = new Model();
 
-    const rootNodeData = await this.fetchNodeManagementStatus(nodeUrl);
+    const managementStatusResponse = await this.fetchNodeManagementStatus(nodeUrl);
 
-    updateModel(model, rootNodeData);
+    updateModel(model, managementStatusResponse);
 
     return {
       model,
-      committeeMembers: rootNodeData.Payload.CurrentCommittee,
+      committeeMembers: managementStatusResponse.Payload.CurrentCommittee,
     };
   }
 
-  private async fetchNodeManagementStatus(nodeAddress: string): Promise<IRootNodeData> {
-    const rootNodeData: IRootNodeData = await fetchJson(`${nodeAddress}${ManagementStatusSuffix}`);
-    return rootNodeData;
+  private async fetchNodeManagementStatus(nodeAddress: string): Promise<IManagementStatusResponse> {
+    const managementStatusResponse: IManagementStatusResponse = await fetchJson(
+      `${nodeAddress}${ManagementStatusSuffix}`,
+    );
+    return managementStatusResponse;
   }
 
   private async fetchNodeEthereumWriterStatus(nodeAddress: string): Promise<IEthereumWriterStatusResponse> {
-    const rootNodeData: IEthereumWriterStatusResponse = await fetchJson(`${nodeAddress}${EthereumWriterStatusSuffix}`);
-    return rootNodeData;
+    const ethereumWriterStatusResponse: IEthereumWriterStatusResponse = await fetchJson(
+      `${nodeAddress}${EthereumWriterStatusSuffix}`,
+    );
+    return ethereumWriterStatusResponse;
   }
 }

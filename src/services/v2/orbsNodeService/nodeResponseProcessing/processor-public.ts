@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Model, VirtualChain, Service, Guardians, HealthLevel, Guardian } from '../model';
 import { getCurrentClockTime, isStaleTime } from './helpers';
 import { generateNodeManagmentUrl, generateVirtualChainUrls } from './url-generator';
-import { IRootNodeData, IGuardianData, ICommitteeEvent } from './RootNodeData';
+import { IManagementStatusResponse, IGuardianData, ICommitteeEvent } from './RootNodeData';
 
 // DEV_NOTE : IMPORTANT: O.L : This file is taken from the 'Status-page' backend, we should unite them
 // TODO : Extract the functionality to a library.
@@ -35,7 +35,7 @@ const defaultConfiguration = {
 const ManagementStatusSuffix = '/services/management-service/status';
 const EthWriterStatusSuffix = '/services/ethereum-writer/status';
 
-export function updateModel(model: Model, rootNodeData: IRootNodeData) {
+export function updateModel(model: Model, rootNodeData: IManagementStatusResponse) {
   // const rootNodeData = await fetchJson(`${config.RootNodeEndpoint}${ManagementStatusSuffix}`);
 
   const virtualChainList = readVirtualChains(rootNodeData, defaultConfiguration);
@@ -75,7 +75,7 @@ export function updateModel(model: Model, rootNodeData: IRootNodeData) {
   model.StandByNodes = standByMembers;
 }
 
-function readVirtualChains(rootNodeData: IRootNodeData, config: Configuration): VirtualChain[] {
+function readVirtualChains(rootNodeData: IManagementStatusResponse, config: Configuration): VirtualChain[] {
   return _.map(rootNodeData.Payload.CurrentVirtualChains, (vcData, vcId) => {
     const expirationTime = _.isNumber(vcData.Expiration) ? vcData.Expiration : -1;
     let healthLevel = HealthLevel.Green;
@@ -103,7 +103,7 @@ function readVirtualChains(rootNodeData: IRootNodeData, config: Configuration): 
   });
 }
 
-function readGuardians(rootNodeData: IRootNodeData): Guardian[] {
+function readGuardians(rootNodeData: IManagementStatusResponse): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
     const guardian: Guardian = {
