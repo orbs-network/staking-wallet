@@ -23,6 +23,7 @@ interface IConfig {
     erc20Contract: string;
     guardiansContract: string;
     orbsRewardsDistributionContract: string;
+    stakingRewardsContract: string;
     delegationsContract: string;
     committeeContract: string;
   }>;
@@ -59,6 +60,7 @@ if (process.env.NODE_ENV !== 'production') {
     config.contractsAddressesOverride.erc20Contract = addresses.erc20;
     config.contractsAddressesOverride.guardiansContract = addresses.guardians;
     config.contractsAddressesOverride.orbsRewardsDistributionContract = addresses.rewards;
+    config.contractsAddressesOverride.stakingRewardsContract = addresses.stakingRewards;
     config.contractsAddressesOverride.delegationsContract = addresses.delegations;
     config.contractsAddressesOverride.committeeContract = addresses.commitee;
 
@@ -88,6 +90,7 @@ if (ethereumNetwork === 'ropsten') {
   config.contractsAddressesOverride.erc20Contract = ROPSTEN_ERC20;
   config.contractsAddressesOverride.guardiansContract = ROPSTEN_GUARDIANS;
   config.contractsAddressesOverride.orbsRewardsDistributionContract = ROPSTEN_REWARDS;
+  config.contractsAddressesOverride.stakingRewardsContract = '';
   config.contractsAddressesOverride.delegationsContract = ROPSTEN_DELEGATIONS;
   config.contractsAddressesOverride.committeeContract = ROPSTEN_COMMITTEE;
 

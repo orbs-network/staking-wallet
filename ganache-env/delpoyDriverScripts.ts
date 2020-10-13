@@ -25,7 +25,7 @@ const deployDriverScripts = async () => {
       staking: driver.staking.address,
       erc20: driver.erc20.address,
       guardians: driver.guardiansRegistration.address,
-      rewards: driver.rewards.address,
+      stakingRewards: driver.stakingRewards.address,
       delegations: driver.delegations.address,
       committee: driver.committee.address,
     };

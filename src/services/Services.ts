@@ -1,9 +1,7 @@
 import {
   IOrbsPOSDataService,
-  IStakingService,
   OrbsClientService,
   orbsPOSDataServiceFactory,
-  StakingService,
   IOrbsClientService,
   OrbsRewardsService,
   IOrbsRewardsService,
@@ -27,8 +25,12 @@ import {
   ICommitteeService,
   IDelegationsService,
   IOrbsTokenService,
+  IStakingService,
   OrbsTokenService,
+  StakingService,
 } from '@orbs-network/contracts-js';
+import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
+import { StakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/StakingRewardsV2Service';
 
 export interface IServices {
   httpService: IHttpService;
@@ -38,6 +40,7 @@ export interface IServices {
   orbsTokenService: IOrbsTokenService;
   analyticsService: IAnalyticsService;
   rewardsService: IOrbsRewardsService;
+  stakingRewardsService: IStakingRewardsService;
   orbsNodeService: IOrbsNodeService;
   delegationsService: IDelegationsService;
   committeeService: ICommitteeService;
@@ -67,6 +70,7 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
       orbsClientService,
       config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
     ),
+    stakingRewardsService: new StakingRewardsService(web3, config?.contractsAddressesOverride?.stakingRewardsContract),
     analyticsService: analyticsService,
     orbsNodeService: new OrbsNodeService(),
     delegationsService: new DelegationsService(web3, config?.contractsAddressesOverride?.delegationsContract),
