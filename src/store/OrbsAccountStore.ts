@@ -124,6 +124,7 @@ export class OrbsAccountStore {
   private orbsInCooldownAmountChangeUnsubscribeFunction: () => void;
   private selectedGuardianChangeUnsubscribeFunction: () => void;
 
+  // TODO : ORL : Remove the old 'orbsRewardsService' and implement new rewards calculation with 'Staking rewards'
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
     private orbsNodeStore: OrbsNodeStore,
