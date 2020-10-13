@@ -1,8 +1,8 @@
 import { IOrbsNodeService } from './IOrbsNodeService';
 import Web3 from 'web3';
 import { fetchJson } from './nodeResponseProcessing/helpers';
-import { Model } from './model';
-import { updateModel } from './nodeResponseProcessing/processor-public';
+import { SystemState } from './systemState';
+import { updateSystemState } from './nodeResponseProcessing/processor-public';
 import RootNodeData from '../../../local/StatusResponse.json';
 import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
@@ -52,16 +52,16 @@ export class OrbsNodeService implements IOrbsNodeService {
     }
   }
 
-  async readAndProcessModel(nodeAddress?: string): Promise<IReadAndProcessResults> {
+  async readAndProcessSystemState(nodeAddress?: string): Promise<IReadAndProcessResults> {
     const nodeUrl = nodeAddress || this.defaultNodeUrl;
-    const model = new Model();
+    const systemState = new SystemState();
 
     const managementStatusResponse = await this.fetchNodeManagementStatus(nodeUrl);
 
-    updateModel(model, managementStatusResponse);
+    updateSystemState(systemState, managementStatusResponse);
 
     return {
-      model,
+      systemState,
       committeeMembers: managementStatusResponse.Payload.CurrentCommittee,
     };
   }

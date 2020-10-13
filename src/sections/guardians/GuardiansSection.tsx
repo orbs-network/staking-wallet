@@ -21,7 +21,7 @@ import { CommonDialog } from '../../components/modal/CommonDialog';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
-import { Guardian } from '../../services/v2/orbsNodeService/model';
+import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();

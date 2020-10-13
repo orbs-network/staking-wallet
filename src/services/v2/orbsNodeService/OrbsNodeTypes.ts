@@ -1,7 +1,7 @@
-import { Model } from './model';
+import { SystemState } from './systemState';
 
 export interface IReadAndProcessResults {
-  model: Model;
+  systemState: SystemState;
   committeeMembers: ICommitteeMemberData[];
 }
 

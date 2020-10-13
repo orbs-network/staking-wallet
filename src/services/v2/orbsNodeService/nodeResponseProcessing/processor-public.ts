@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define,@typescript-eslint/interface-name-prefix */
 import _ from 'lodash';
 // import { fetchJson, isStaleTime, getCurrentClockTime } from '../helpers';
-import { Model, VirtualChain, Service, Guardians, HealthLevel, Guardian } from '../model';
+import { SystemState, VirtualChain, Service, Guardians, HealthLevel, Guardian } from '../systemState';
 import { getCurrentClockTime, isStaleTime } from './helpers';
 import { generateNodeManagmentUrl, generateVirtualChainUrls } from './url-generator';
 import { IManagementStatusResponse, IGuardianData, ICommitteeEvent } from './RootNodeData';
@@ -31,11 +31,7 @@ const defaultConfiguration = {
   ExpirationWarningTimeInDays: 30,
 };
 
-// Important URLS for public-network - init explore of network from these.
-const ManagementStatusSuffix = '/services/management-service/status';
-const EthWriterStatusSuffix = '/services/ethereum-writer/status';
-
-export function updateModel(model: Model, rootNodeData: IManagementStatusResponse) {
+export function updateSystemState(systemState: SystemState, rootNodeData: IManagementStatusResponse) {
   // const rootNodeData = await fetchJson(`${config.RootNodeEndpoint}${ManagementStatusSuffix}`);
 
   const virtualChainList = readVirtualChains(rootNodeData, defaultConfiguration);
@@ -52,7 +48,7 @@ export function updateModel(model: Model, rootNodeData: IManagementStatusRespons
     Service.Rewards,
   ];
 
-  const guardians = readGuardians(rootNodeData);
+  const guardians = extractGuardians(rootNodeData);
   const committeeMembersAddresses = _.map(rootNodeData.Payload.CurrentCommittee, 'EthAddress');
   const committeeMembers = _.pick(guardians, committeeMembersAddresses);
   if (_.size(committeeMembers) === 0) {
@@ -64,15 +60,12 @@ export function updateModel(model: Model, rootNodeData: IManagementStatusRespons
   );
   const standByMembers = _.pick(guardians, standbyMembersAddresses);
 
-  // DEV_NOTE : O.L : For now we do not handle reputation in Tetra.
-  // calcReputation(`${config.RootNodeEndpoint}${EthWriterStatusSuffix}`, committeeMembers);
-
-  model.TimeSeconds = getCurrentClockTime();
-  model.Timestamp = new Date().toISOString();
-  model.VirtualChains = virtualChainList;
-  model.Services = services;
-  model.CommitteeNodes = committeeMembers;
-  model.StandByNodes = standByMembers;
+  systemState.TimeSeconds = getCurrentClockTime();
+  systemState.Timestamp = new Date().toISOString();
+  systemState.VirtualChains = virtualChainList;
+  systemState.Services = services;
+  systemState.CommitteeNodes = committeeMembers;
+  systemState.StandByNodes = standByMembers;
 }
 
 function readVirtualChains(rootNodeData: IManagementStatusResponse, config: Configuration): VirtualChain[] {
@@ -103,7 +96,7 @@ function readVirtualChains(rootNodeData: IManagementStatusResponse, config: Conf
   });
 }
 
-function readGuardians(rootNodeData: IManagementStatusResponse): Guardian[] {
+function extractGuardians(rootNodeData: IManagementStatusResponse): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
     const guardian: Guardian = {
@@ -192,65 +185,3 @@ function calculateCapacity(guardianData: IGuardianData): number {
 
   return capacity;
 }
-
-// async function calcReputation(url: string, committeeMembers: Guardians) {
-//   const data = await fetchJson(url);
-//
-//   let orbsToEthAddr: { [key: string]: string } = {};
-//   _.map(committeeMembers, (node) => {
-//     orbsToEthAddr[node.OrbsAddress] = node.EthAddress;
-//   });
-//
-//   const allReputation = data.Payload?.VchainReputations || {};
-//   _.map(allReputation, (vc, vcId: string) => {
-//     _.map(vc, (reputation: number, orbsAddress: string) => {
-//       if (_.has(orbsToEthAddr, orbsAddress)) {
-//         const nodeId = orbsToEthAddr[orbsAddress];
-//         if (_.has(committeeMembers, nodeId)) {
-//           committeeMembers[nodeId].NodeReputation.NodeVirtualChainReputations[vcId] = reputation;
-//         } else {
-//           Logger.error(`While calculating reputations, a node EthAddress ${nodeId} was found, that is not a committee member.`);
-//         }
-//       } else {
-//         Logger.error(`While calculating reputations, a node OrbsAddress ${orbsAddress} was found, that is not a committee member.`);
-//       }
-//     });
-//   });
-//
-//   const allBadReputation = data.Payload?.TimeEnteredBadReputation || {};
-//   _.map(allBadReputation, (badRepData, nodeId: string) => {
-//     if (_.has(committeeMembers, nodeId)) {
-//       let vcBadRep = committeeMembers[nodeId].NodeReputation.NodeVirtualChainBadReputations;
-//       _.map(badRepData, (badRep: number, vcId: string) => {
-//         vcBadRep[vcId] = badRep;
-//       });
-//     } else {
-//       Logger.error(`While calculating bad reputations, a node address ${nodeId} was found, that is not a committee member.`);
-//     }
-//   });
-//
-//   _.map(committeeMembers, (node) => {
-//     let rep = node.NodeReputation;
-//     let result: string[] = [];
-//     _.map(rep.NodeVirtualChainBadReputations, (value, key) => {
-//       if (value !== 0) {
-//         result.push(`${key}=${value}`);
-//       }
-//     });
-//     if (result.length > 0) {
-//       rep.ReputationStatus = HealthLevel.Red;
-//       rep.ReputationToolTip = `Some VCs have non-zero time to be voted out (${result.join(',')})`;
-//     } else {
-//       result = [];
-//       _.map(rep.NodeVirtualChainReputations, (value, key) => {
-//         if (value !== 0) {
-//           result.push(`${key}=${value}`);
-//         }
-//       });
-//       if (result.length > 0) {
-//         rep.ReputationStatus = HealthLevel.Yellow;
-//         rep.ReputationToolTip = `Some VCs have non-zero reputations (${result.join(',')})`;
-//       }
-//     }
-//   });
-// }

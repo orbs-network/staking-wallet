@@ -1,5 +1,5 @@
 import React from 'react';
-import { Guardian } from '../../services/v2/orbsNodeService/model';
+import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { Icon, SvgIcon, Tooltip, Typography } from '@material-ui/core';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { ReactComponent as GuardianShield } from './assets/guardian_normal.svg';

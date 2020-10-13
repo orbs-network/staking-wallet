@@ -9,7 +9,7 @@ import { Grid } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import { Guardian } from '../../services/v2/orbsNodeService/model';
+import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;

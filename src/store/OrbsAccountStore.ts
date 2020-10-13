@@ -14,7 +14,7 @@ import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
 import { OrbsNodeStore } from './OrbsNodeStore';
-import { Guardian } from '../services/v2/orbsNodeService/model';
+import { Guardian } from '../services/v2/orbsNodeService/systemState';
 import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
 import { IDelegationsService, IStakingService } from '@orbs-network/contracts-js';
 

@@ -2,21 +2,21 @@
 
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
 import { action, computed, observable } from 'mobx';
-import { Guardian, Model } from '../services/v2/orbsNodeService/model';
+import { Guardian, SystemState } from '../services/v2/orbsNodeService/systemState';
 import { ICommitteeMemberData, IReadAndProcessResults } from '../services/v2/orbsNodeService/OrbsNodeTypes';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
-  @observable public model: Model = new Model();
+  @observable public systemState: SystemState = new SystemState();
   @observable public committeeMembers: ICommitteeMemberData[] = [];
 
   @computed public get committeeGuardians(): Guardian[] {
-    return Object.values(this.model.CommitteeNodes);
+    return Object.values(this.systemState.CommitteeNodes);
   }
 
   @computed public get nonCommitteeGuardians(): Guardian[] {
-    return Object.values(this.model.StandByNodes);
+    return Object.values(this.systemState.StandByNodes);
   }
 
   @computed public get guardians(): Guardian[] {
@@ -84,9 +84,9 @@ export class OrbsNodeStore {
   }
 
   private async findReadAndSetNodeData() {
-    const { model, committeeMembers } = await this.readDataFromFirstSyncedNode();
+    const { systemState, committeeMembers } = await this.readDataFromFirstSyncedNode();
 
-    this.setModel(model);
+    this.setSystemState(systemState);
     this.setCommitteeMemberData(committeeMembers);
   }
 
@@ -110,7 +110,7 @@ export class OrbsNodeStore {
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessModel(
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(
           this.orbsNodeService.defaultNodeAddress,
         );
 
@@ -137,9 +137,9 @@ export class OrbsNodeStore {
     this.errorLoading = errorLoading;
   }
 
-  @action('setModel')
-  private setModel(model: Model) {
-    this.model = model;
+  @action('setSystemState')
+  private setSystemState(systemState: SystemState) {
+    this.systemState = systemState;
   }
 
   @action('setCommitteeMemberData')

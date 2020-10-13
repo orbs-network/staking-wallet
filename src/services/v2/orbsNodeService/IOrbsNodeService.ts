@@ -1,9 +1,9 @@
-import { Model } from './model';
+import { SystemState } from './systemState';
 import { IReadAndProcessResults } from './OrbsNodeTypes';
 
 export interface IOrbsNodeService {
   defaultNodeAddress: string;
-  readAndProcessModel(nodeAddress?: string): Promise<IReadAndProcessResults>;
+  readAndProcessSystemState(nodeAddress?: string): Promise<IReadAndProcessResults>;
   checkIfDefaultNodeIsInSync(): Promise<boolean>;
   checkIfNodeIsInSync(nodeAddress: string): Promise<boolean>;
 }

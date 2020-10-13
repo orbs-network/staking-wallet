@@ -23,7 +23,7 @@ import { useGuardiansTableTranslations } from '../../translations/translationsHo
 import { ReactComponent as GlobeIcon } from '../../../assets/globe.svg';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { TABLE_ICONS } from '../tables/TableIcons';
-import { Guardian } from '../../services/v2/orbsNodeService/model';
+import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { GuardianQualifications } from './GuardianQualifications';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { Line } from 'rc-progress';
