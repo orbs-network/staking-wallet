@@ -6,12 +6,16 @@ import { IOrbsPOSDataService, IOrbsTokenService, IOrbsRewardsService } from 'orb
 import 'mobx-react-lite/batchingForReactDom';
 
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { OrbsAccountStore } from './OrbsAccountStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { OrbsNodeStore } from './OrbsNodeStore';
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
-import { IDelegationsService, IStakingRewardsService, IStakingService } from '@orbs-network/contracts-js';
+import {
+  ICryptoWalletConnectionService,
+  IDelegationsService,
+  IStakingRewardsService,
+  IStakingService,
+} from '@orbs-network/contracts-js';
 
 /**
  * Configures the mobx library. Should get called at App's initialization.

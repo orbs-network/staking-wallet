@@ -9,9 +9,6 @@ import {
 import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
 import config from '../config';
-import { CryptoWalletConnectionService } from './cryptoWalletConnectionService/CryptoWalletConnectionService';
-import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
-import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
 import { BuildOrbsClient } from './OrbsClientFactory';
 import { AnalyticsService } from './analytics/analyticsService';
 import { IAnalyticsService } from './analytics/IAnalyticsService';
@@ -21,16 +18,19 @@ import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
 import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
 import {
   CommitteeService,
+  CryptoWalletConnectionService,
   DelegationsService,
   ICommitteeService,
+  ICryptoWalletConnectionService,
   IDelegationsService,
+  IEthereumProvider,
   IOrbsTokenService,
   IStakingService,
   OrbsTokenService,
   StakingService,
+  IStakingRewardsService,
+  StakingRewardsService,
 } from '@orbs-network/contracts-js';
-import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
-import { StakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/StakingRewardsV2Service';
 
 export interface IServices {
   httpService: IHttpService;
