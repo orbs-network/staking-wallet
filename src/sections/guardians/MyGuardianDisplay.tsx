@@ -3,6 +3,7 @@ import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import useTheme from '@material-ui/core/styles/useTheme';
 
 interface IProps {
   openGuardianSelectionWizard: () => void;
@@ -11,6 +12,8 @@ interface IProps {
 export const MyGuardianDisplay = observer<React.FC<IProps>>((props) => {
   const { openGuardianSelectionWizard } = props;
   const orbsAccountStore = useOrbsAccountStore();
+
+  const theme = useTheme();
 
   // TODO : ORL : TRANSLATION
 
@@ -41,8 +44,9 @@ export const MyGuardianDisplay = observer<React.FC<IProps>>((props) => {
         <Grid item>
           <Typography>{delegationMessage}</Typography>
           {!orbsAccountStore.isSelectedGuardianRegistered && (
-            <Typography color={'error'}>
-              Note: delegated to an unregistered Guardian. Only delegation to committee members entitles rewards.
+            <Typography style={{ color: theme.palette.warning.main }}>
+              Note: Your ORBS tokens are delegated to an unregistered Guardian. <br />
+              Only delegation to a guardian elected to the committee (top 22) is entitled to rewards.
             </Typography>
           )}
         </Grid>
