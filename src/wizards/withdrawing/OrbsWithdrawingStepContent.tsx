@@ -82,6 +82,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       actionButtonProps={actionButtonProps}
       addCancelButton
       onCancelButtonClicked={closeWizard}
+      cancelButtonText={wizardsCommonTranslations('action_close')}
     />
   );
 });

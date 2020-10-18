@@ -85,6 +85,7 @@ export const GuardianChangeStepContent = observer(
         actionButtonProps={changeGuardianActionButtonProps}
         addCancelButton
         onCancelButtonClicked={closeWizard}
+        cancelButtonText={wizardsCommonTranslations('action_close')}
       />
     );
   },

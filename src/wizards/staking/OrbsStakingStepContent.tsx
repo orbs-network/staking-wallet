@@ -11,78 +11,88 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 
-export const OrbsStakingStepContent = observer((props: ITransactionCreationStepProps) => {
-  const { disableInputs, onPromiEventAction, txError } = props;
+export interface IOrbsStakingStepContentProps {
+  goBackToApproveStep: () => void;
+}
 
-  const wizardsCommonTranslations = useWizardsCommonTranslations();
-  const stakingWizardTranslations = useStakingWizardTranslations();
-  const orbsAccountStore = useOrbsAccountStore();
-  const analyticsService = useAnalyticsService();
+export const OrbsStakingStepContent = observer(
+  (props: ITransactionCreationStepProps & IOrbsStakingStepContentProps) => {
+    const { disableInputs, onPromiEventAction, txError, goBackToApproveStep } = props;
 
-  const reReadStoresData = useReReadAllStoresData();
+    const wizardsCommonTranslations = useWizardsCommonTranslations();
+    const stakingWizardTranslations = useStakingWizardTranslations();
+    const orbsAccountStore = useOrbsAccountStore();
+    const analyticsService = useAnalyticsService();
 
-  // Start and limit by allowance
-  const orbsForStaking = orbsAccountStore.stakingContractAllowance;
-  const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
-  const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
+    const reReadStoresData = useReReadAllStoresData();
 
-  // Handle error by displaying the proper error message
-  useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
+    // Start and limit by allowance
+    const orbsForStaking = orbsAccountStore.stakingContractAllowance;
+    const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
+    const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
-  const stakeTokens = useCallback(() => {
-    message.setValue('');
-    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
+    // Handle error by displaying the proper error message
+    useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-    const promiEvent = orbsAccountStore.stakeTokens(orbsForStaking);
+    const stakeTokens = useCallback(() => {
+      message.setValue('');
+      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
-    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-    promiEvent.on('transactionHash', (txHash) => {
-      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-      isBroadcastingMessage.setTrue();
-    });
+      const promiEvent = orbsAccountStore.stakeTokens(orbsForStaking);
 
-    onPromiEventAction(promiEvent, () => {
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.staking, fullOrbsForStaking);
-      reReadStoresData();
-    });
-  }, [
-    message,
-    subMessage,
-    wizardsCommonTranslations,
-    orbsAccountStore,
-    orbsForStaking,
-    onPromiEventAction,
-    isBroadcastingMessage,
-    analyticsService,
-    fullOrbsForStaking,
-    reReadStoresData,
-  ]);
+      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
+      promiEvent.on('transactionHash', (txHash) => {
+        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
+        isBroadcastingMessage.setTrue();
+      });
 
-  const actionButtonProps = useMemo<IActionButtonProps>(
-    () => ({
-      onClick: stakeTokens,
-      title: 'Stake',
-    }),
-    [stakeTokens],
-  );
+      onPromiEventAction(promiEvent, () => {
+        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.staking, fullOrbsForStaking);
+        reReadStoresData();
+      });
+    }, [
+      message,
+      subMessage,
+      wizardsCommonTranslations,
+      orbsAccountStore,
+      orbsForStaking,
+      onPromiEventAction,
+      isBroadcastingMessage,
+      analyticsService,
+      fullOrbsForStaking,
+      reReadStoresData,
+    ]);
 
-  // TODO : ORL : TRANSLATIONS
-  const infoTitleToTranslate =
-    'This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators and Guardians to participate.';
+    const actionButtonProps = useMemo<IActionButtonProps>(
+      () => ({
+        onClick: stakeTokens,
+        title: 'Stake',
+      }),
+      [stakeTokens],
+    );
 
-  return (
-    <BaseStepContent
-      message={message.value}
-      subMessage={subMessage.value}
-      title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-        orbsForStaking: fullOrbsForStaking.toLocaleString(),
-      })}
-      // infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
-      infoTitle={infoTitleToTranslate}
-      disableInputs={disableInputs}
-      isLoading={isBroadcastingMessage.value}
-      contentTestId={'wizard_sub_step_initiate_staking_tx'}
-      actionButtonProps={actionButtonProps}
-    />
-  );
-});
+    // TODO : ORL : TRANSLATIONS
+    const infoTitleToTranslate =
+      'This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators and Guardians to participate.';
+    const cancelButtonText = 'Change amount';
+
+    return (
+      <BaseStepContent
+        message={message.value}
+        subMessage={subMessage.value}
+        title={stakingWizardTranslations('stakingSubStep_stepTitle', {
+          orbsForStaking: fullOrbsForStaking.toLocaleString(),
+        })}
+        // infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
+        infoTitle={infoTitleToTranslate}
+        disableInputs={disableInputs}
+        isLoading={isBroadcastingMessage.value}
+        contentTestId={'wizard_sub_step_initiate_staking_tx'}
+        actionButtonProps={actionButtonProps}
+        addCancelButton={true}
+        onCancelButtonClicked={goBackToApproveStep}
+        cancelButtonText={cancelButtonText}
+      />
+    );
+  },
+);

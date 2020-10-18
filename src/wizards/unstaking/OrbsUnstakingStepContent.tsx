@@ -132,6 +132,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       innerContent={unstakingInput}
       addCancelButton
       onCancelButtonClicked={closeWizard}
+      cancelButtonText={wizardsCommonTranslations('action_close')}
     />
   );
 });

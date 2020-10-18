@@ -29,6 +29,7 @@ interface IProps {
 
   // Cancel button
   addCancelButton?: boolean;
+  cancelButtonText?: string;
   onCancelButtonClicked?: () => void;
 
   // Tests props
@@ -52,6 +53,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     innerContent,
     actionButtonProps,
     addCancelButton,
+    cancelButtonText,
     onCancelButtonClicked,
     infoTitle,
   } = props;
@@ -147,7 +149,9 @@ export const BaseStepContent = React.memo<IProps>((props) => {
                 onClick={onCancelButtonClicked}
                 disabled={disableInputs}
               >
-                {wizardsCommonTranslations('action_close')}
+                {/* TODO : ORL : Make default 'cancel' */}
+                {/*{cancelButtonText || wizardsCommonTranslations('action_close')}*/}
+                {cancelButtonText || 'Cancel'}
               </CommonActionButton>
             </Grid>
           )}

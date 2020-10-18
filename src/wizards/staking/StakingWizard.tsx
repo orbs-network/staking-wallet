@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { useNumber } from 'react-hanger';
-import { OrbsStakingStepContent } from './OrbsStakingStepContent';
+import { IOrbsStakingStepContentProps, OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
@@ -37,6 +37,7 @@ export const StakingWizard = observer(
     // DEV_NOTE : O.L : if a user has an unused allowance it probably means that his process was cut in the middle.
     const initialStep = orbsAccountStore.hasUnusedAllowance ? STEPS_INDEXES.stakeOrbs : STEPS_INDEXES.allowTransfer;
     const activeStep = useNumber(initialStep);
+    const goToSelectAmountStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.allowTransfer), [activeStep]);
     const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
     const goToFinishStep = useCallback(() => {
@@ -52,6 +53,12 @@ export const StakingWizard = observer(
         selectedGuardianAddress: orbsAccountStore.selectedGuardianAddress,
       };
     }, [orbsAccountStore.selectedGuardianAddress]);
+
+    const extraPropsForOrbsStaking = useMemo<IOrbsStakingStepContentProps>(() => {
+      return {
+        goBackToApproveStep: goToSelectAmountStep,
+      };
+    }, [goToSelectAmountStep]);
 
     // DEV_NOTE : In certain cases, such as when the user already has a selected guardian or the user is a Guardian himself,
     //            we would like to skip on the 'guardian selection' sub-step.
@@ -110,6 +117,7 @@ export const StakingWizard = observer(
               moveToNextStepTitle={nextStepAfterStakingTitle}
               closeWizard={closeWizard}
               key={'stakingStep'}
+              propsForTransactionCreationSubStepContent={extraPropsForOrbsStaking}
             />
           );
         // Select a guardian
@@ -140,6 +148,7 @@ export const StakingWizard = observer(
       activeStep.value,
       closeWizard,
       extraPropsForGuardianSelection,
+      extraPropsForOrbsStaking,
       goToFinishStep,
       goToNextStepAfterStaking,
       goToStakeOrbsStep,

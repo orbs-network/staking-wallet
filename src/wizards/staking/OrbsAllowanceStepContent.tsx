@@ -97,6 +97,7 @@ export const OrbsAllowanceStepContent = observer((props: ITransactionCreationSte
       innerContent={allowanceInput}
       addCancelButton
       onCancelButtonClicked={closeWizard}
+      cancelButtonText={wizardsCommonTranslations('action_close')}
     />
   );
 });
