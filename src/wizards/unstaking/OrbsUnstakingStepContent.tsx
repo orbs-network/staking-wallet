@@ -113,13 +113,18 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     stakedOrbsNumericalFormat,
   ]);
 
+  // TODO : ORL : TRANSLATIONS
+  const infoTitleToTranslate =
+    "This will take your ORBS out of their staked state and start a 14-day cooldown period, after which you'll be able to withdraw them to your wallet. During those 14 days, you may choose to re-stake your tokens.";
+
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
       title={unstakingWizardTranslations('unstakingSubStep_stepTitle')}
-      infoTitle={unstakingWizardTranslations('unstakingSubStep_stepExplanation')}
+      // infoTitle={unstakingWizardTranslations('unstakingSubStep_stepExplanation')}
+      infoTitle={infoTitleToTranslate}
       disableInputs={disableInputs}
       isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}

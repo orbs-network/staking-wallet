@@ -66,6 +66,10 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
     [stakeTokens],
   );
 
+  // TODO : ORL : TRANSLATIONS
+  const infoTitleToTranslate =
+    'This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators and Guardians to participate.';
+
   return (
     <BaseStepContent
       message={message.value}
@@ -73,7 +77,8 @@ export const OrbsStakingStepContent = observer((props: ITransactionCreationStepP
       title={stakingWizardTranslations('stakingSubStep_stepTitle', {
         orbsForStaking: fullOrbsForStaking.toLocaleString(),
       })}
-      infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
+      // infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
+      infoTitle={infoTitleToTranslate}
       disableInputs={disableInputs}
       isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_staking_tx'}
