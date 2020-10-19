@@ -60,6 +60,7 @@ interface IProps {
   guardianSelectionMode: TGuardianSelectionMode;
   guardians: Guardian[];
   committeeMembers: ICommitteeMemberData[];
+  guardiansToDelegatorsCut: { [guardianAddress: string]: number };
 
   selectedGuardian?: string;
   onGuardianSelect?: (guardian: Guardian) => void;
@@ -88,6 +89,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     guardians,
     onGuardianSelect,
     selectedGuardian,
+    guardiansToDelegatorsCut,
     tableTestId,
     extraStyle,
     tableTitle,
@@ -246,6 +248,40 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         sorting: false,
       },
       {
+        title: 'Reward % To Delegators',
+        field: '',
+        render: (guardian) => {
+          const { EthAddress } = guardian;
+
+          const hasData = guardiansToDelegatorsCut[EthAddress] != undefined;
+
+          const text = hasData ? `${guardiansToDelegatorsCut[EthAddress]}%` : '--';
+
+          return (
+            <Tooltip
+              title={
+                <>
+                  <Typography>This Guardian gives {text} of the rewards to the Delegators</Typography>
+                </>
+              }
+            >
+              <Typography>{text}</Typography>
+            </Tooltip>
+          );
+        },
+        cellStyle: {
+          textAlign: 'center',
+        },
+        customSort: (data1, data2) => {
+          // DEV_NOTE : This is quick, might cause 'un-deterministic' sort, but it's acceptable
+          const delegatorsCut1 = guardiansToDelegatorsCut[data1.EthAddress] || 0;
+          const delegatorsCut2 = guardiansToDelegatorsCut[data2.EthAddress] || 0;
+
+          return delegatorsCut2 - delegatorsCut1;
+        },
+        defaultSort: 'desc',
+      },
+      {
         title: 'Effective Stake',
         field: 'EffectiveStake',
         render: (guardian) => {
@@ -341,7 +377,13 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     }
 
     return columns;
-  }, [addSelectionColumn, getCommitteeMemberData, getGuardianSelectionCellContent, guardiansTableTranslations]);
+  }, [
+    addSelectionColumn,
+    getCommitteeMemberData,
+    getGuardianSelectionCellContent,
+    guardiansTableTranslations,
+    guardiansToDelegatorsCut,
+  ]);
 
   // DEV_NOTE : O.L : This prevents displaying of a large empty table if there are less than 50 Guardians.
   const pageSize = Math.min(50, guardians.length);

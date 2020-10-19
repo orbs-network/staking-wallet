@@ -4,7 +4,13 @@ import { IOrbsPOSDataService } from 'orbs-pos-data';
 import { IServices } from './Services';
 import { IAnalyticsService } from './analytics/IAnalyticsService';
 import { IHttpService } from './http/IHttpService';
-import { ICommitteeService, ICryptoWalletConnectionService, IDelegationsService } from '@orbs-network/contracts-js';
+import {
+  ICommitteeService,
+  ICryptoWalletConnectionService,
+  IDelegationsService,
+  IGuardiansService,
+  IStakingRewardsService,
+} from '@orbs-network/contracts-js';
 
 function useServices(): IServices {
   return React.useContext(MobXProviderContext) as IServices;
@@ -20,6 +26,14 @@ export function useCryptoWalletConnectionService(): ICryptoWalletConnectionServi
 
 export function useAnalyticsService(): IAnalyticsService {
   return useServices().analyticsService;
+}
+
+export function useGuardiansService(): IGuardiansService {
+  return useServices().guardiansService;
+}
+
+export function useStakingRewardsService(): IStakingRewardsService {
+  return useServices().stakingRewardsService;
 }
 
 export function useHttpService(): IHttpService {

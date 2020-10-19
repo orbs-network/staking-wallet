@@ -30,6 +30,8 @@ import {
   StakingService,
   IStakingRewardsService,
   StakingRewardsService,
+  IGuardiansService,
+  GuardiansService,
 } from '@orbs-network/contracts-js';
 
 export interface IServices {
@@ -41,6 +43,7 @@ export interface IServices {
   analyticsService: IAnalyticsService;
   rewardsService: IOrbsRewardsService;
   stakingRewardsService: IStakingRewardsService;
+  guardiansService: IGuardiansService;
   orbsNodeService: IOrbsNodeService;
   delegationsService: IDelegationsService;
   committeeService: ICommitteeService;
@@ -71,6 +74,7 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
       config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
     ),
     stakingRewardsService: new StakingRewardsService(web3, config?.contractsAddressesOverride?.stakingRewardsContract),
+    guardiansService: new GuardiansService(web3, config?.contractsAddressesOverride?.guardiansContract),
     analyticsService: analyticsService,
     orbsNodeService: new OrbsNodeService(),
     delegationsService: new DelegationsService(web3, config?.contractsAddressesOverride?.delegationsContract),

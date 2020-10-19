@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBoolean } from 'react-hanger';
 import { Button, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -22,6 +22,7 @@ import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
+import { useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -32,6 +33,9 @@ export const GuardiansSection = observer(() => {
   const showGuardianChangingModal = useBoolean(false);
   const showGuardianSelectionModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
+
+  const guardiansService = useGuardiansService();
+  const stakingRewardsService = useStakingRewardsService();
 
   const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
 
@@ -50,13 +54,36 @@ export const GuardiansSection = observer(() => {
   const isLoadingData = !orbsNodeStore.doneLoading || !orbsAccountStore.doneLoading;
   const isErrorOnLoading = orbsNodeStore.errorLoading || orbsAccountStore.errorLoading;
 
+  const totalStake = orbsNodeStore.totalStake;
+  const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
+
+  const [guardianAddressToDelegatorsCut, setGuardianAddressToDelegatorsCut] = useState<{ [address: string]: number }>(
+    {},
+  );
+
+  useEffect(() => {
+    async function read() {
+      const addressTodelegatorsCut: { [address: string]: number } = {};
+      // const contractRewardsSettings = await stakingRewardsService.readContractRewardsSettings();
+      // const { defaultDelegatorsStakingRewardsPercent } = contractRewardsSettings;
+
+      for (const guardian of orbsNodeStore.guardians) {
+        const delegatorsCut = await stakingRewardsService.readDelegatorsCutPercentage(guardian.EthAddress);
+        addressTodelegatorsCut[guardian.EthAddress] = delegatorsCut;
+      }
+
+      return addressTodelegatorsCut;
+    }
+
+    read().then((obj) => {
+      setGuardianAddressToDelegatorsCut(obj);
+    });
+  }, [orbsNodeStore.guardians, stakingRewardsService]);
+
   // Before data was loaded
   if (isLoadingData) {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
-
-  const totalStake = orbsNodeStore.totalStake;
-  const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
 
   // TODO : ORL : Fix display of total and effective stake.
 
@@ -96,6 +123,7 @@ export const GuardiansSection = observer(() => {
               onGuardianSelect={onGuardianSelect}
               tableTestId={'guardians-table'}
               committeeMembers={orbsNodeStore.committeeMembers}
+              guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             />
           </Grid>
 
