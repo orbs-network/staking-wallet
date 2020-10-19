@@ -9,6 +9,10 @@ import { GridJustification } from '@material-ui/core/Grid/Grid';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { TypographyTypeMap } from '@material-ui/core/Typography/Typography';
 import { Variant } from '@material-ui/core/styles/createTypography';
+import { Button, IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 const SectionHeaderGrid = styled<typeof Grid>((props) => (
   <Grid item container direction={'row'} alignItems={'center'} {...props} />
@@ -53,7 +57,7 @@ export const SectionHeader: React.FC<IProps> = (props) => {
 
     return (
       <Grid container item direction={'row'} sm={12} md={8} justify={justification}>
-        <SideTitle data-testid='side-title' variant={typographyVariant} style={extraMarginStyle} >
+        <SideTitle data-testid='side-title' variant={typographyVariant} style={extraMarginStyle}>
           {sideTitle}
         </SideTitle>
       </Grid>
@@ -72,12 +76,18 @@ export const SectionHeader: React.FC<IProps> = (props) => {
 
   return (
     <SectionHeaderGrid style={extraStyleForHeaderGrid}>
-      <Typography></Typography>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
         <SvgIcon component={MyIcon} />
-        <Title variant={'h6'} >{title}</Title>
+        <Title variant={'h6'}>{title}</Title>
       </Grid>
       {sidTitleComponent}
+      {/*<Grid item xs={12} container direction={'row'} style={{ justifyContent: 'flex-end' }}>*/}
+      {/*  <Grid item>*/}
+      {/*    <IconButton>*/}
+      {/*      <KeyboardArrowUpIcon />*/}
+      {/*    </IconButton>*/}
+      {/*  </Grid>*/}
+      {/*</Grid>*/}
     </SectionHeaderGrid>
   );
 };
