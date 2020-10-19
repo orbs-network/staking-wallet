@@ -31,7 +31,11 @@ const defaultConfiguration = {
   ExpirationWarningTimeInDays: 30,
 };
 
-export function updateSystemState(systemState: SystemState, rootNodeData: IManagementStatusResponse) {
+export function updateSystemState(
+  systemState: SystemState,
+  rootNodeData: IManagementStatusResponse,
+  currentTimestamp: number,
+) {
   // const rootNodeData = await fetchJson(`${config.RootNodeEndpoint}${ManagementStatusSuffix}`);
 
   const virtualChainList = readVirtualChains(rootNodeData, defaultConfiguration);
@@ -48,7 +52,7 @@ export function updateSystemState(systemState: SystemState, rootNodeData: IManag
     Service.Rewards,
   ];
 
-  const guardians = extractGuardians(rootNodeData);
+  const guardians = extractGuardians(rootNodeData, currentTimestamp);
   const committeeMembersAddresses = _.map(rootNodeData.Payload.CurrentCommittee, 'EthAddress');
   const committeeMembers = _.pick(guardians, committeeMembersAddresses);
   if (_.size(committeeMembers) === 0) {
@@ -96,7 +100,7 @@ function readVirtualChains(rootNodeData: IManagementStatusResponse, config: Conf
   });
 }
 
-function extractGuardians(rootNodeData: IManagementStatusResponse): Guardian[] {
+function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimestamp: number): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
     const guardian: Guardian = {
@@ -122,6 +126,7 @@ function extractGuardians(rootNodeData: IManagementStatusResponse): Guardian[] {
       ParticipationPercentage: calculateParticipationPercentage(
         guardianData.EthAddress,
         rootNodeData.Payload.CommitteeEvents,
+        currentTimestamp,
       ),
       Capacity: calculateCapacity(guardianData),
       DelegatedStake: guardianData.DelegatedStake,
@@ -150,23 +155,32 @@ function extractDistributionFrequency(guardianData: IGuardianData): number {
   return manuallySetValue ? manuallySetValue : DEFAULT_DISTRIBUTION_FREQUENCY;
 }
 
-function calculateParticipationPercentage(guardianAddress: string, committeeEvents: ICommitteeEvent[]): number {
-  // TODO : ORL : Filter for last 30 days
-  const firstEvent = committeeEvents[0];
-  const lastEvent = committeeEvents[committeeEvents.length - 1];
+function calculateParticipationPercentage(
+  guardianAddress: string,
+  committeeEvents: ICommitteeEvent[],
+  currentTimestamp: number,
+): number {
+  // DEV_NOTE : O.L : Filtering for 30 days is just a prod decision.
+  const TIME_RANGE_IN_SECONDS = 60 * 60 * 24 * 30;
+  const earliestRefTime = currentTimestamp - TIME_RANGE_IN_SECONDS;
+  const eventsFromLast30Days = committeeEvents.filter((committeeEvent) => committeeEvent.RefTime >= earliestRefTime);
+
+  const firstEvent = eventsFromLast30Days[0];
+
+  const lastEvent = eventsFromLast30Days[eventsFromLast30Days.length - 1];
   const totalTime = lastEvent.RefTime - firstEvent.RefTime;
   let participationTime = 0;
 
   // DEV_NOTE : We start with 1 as we start the period between events
-  for (let i = 1; i < committeeEvents.length; i++) {
-    const committeeEvent = committeeEvents[i];
+  for (let i = 1; i < eventsFromLast30Days.length; i++) {
+    const committeeEvent = eventsFromLast30Days[i];
 
     if (
       committeeEvent.Committee.map((committeeMember) => committeeMember.EthAddress.toLowerCase()).includes(
         guardianAddress.toLowerCase(),
       )
     ) {
-      const previousCommitteeEvent = committeeEvents[i - 1];
+      const previousCommitteeEvent = eventsFromLast30Days[i - 1];
       const period = committeeEvent.RefTime - previousCommitteeEvent.RefTime;
       participationTime += period;
     }

@@ -58,7 +58,8 @@ export class OrbsNodeService implements IOrbsNodeService {
 
     const managementStatusResponse = await this.fetchNodeManagementStatus(nodeUrl);
 
-    updateSystemState(systemState, managementStatusResponse);
+    const currentTimeStamp = Math.floor(Date.now() / 1000);
+    updateSystemState(systemState, managementStatusResponse, currentTimeStamp);
 
     return {
       systemState,
