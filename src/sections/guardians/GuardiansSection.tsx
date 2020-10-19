@@ -118,7 +118,7 @@ export const GuardiansSection = observer(() => {
           <Grid item xs={12}>
             <GuardiansTable
               guardianSelectionMode={'Change'}
-              selectedGuardian={orbsAccountStore.selectedGuardianAddress}
+              selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
               guardians={orbsNodeStore.guardians}
               onGuardianSelect={onGuardianSelect}
               tableTestId={'guardians-table'}
