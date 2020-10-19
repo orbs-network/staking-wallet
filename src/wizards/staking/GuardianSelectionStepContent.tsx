@@ -8,7 +8,7 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { Grid } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
-import { useAnalyticsService } from '../../services/ServicesHooks';
+import { useAnalyticsService, useGuardiansDelegatorsCut, useStakingRewardsService } from '../../services/ServicesHooks';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 
 export interface IGuardianSelectionStepContentProps {
@@ -26,6 +26,9 @@ export const GuardianSelectionStepContent = observer(
     const analyticsService = useAnalyticsService();
 
     const reReadStoresData = useReReadAllStoresData();
+
+    const stakingRewardsService = useStakingRewardsService();
+    const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
@@ -86,11 +89,18 @@ export const GuardianSelectionStepContent = observer(
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
             committeeMembers={orbsNodeStore.committeeMembers}
+            guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             densePadding
           />
         </Grid>
       );
-    }, [orbsNodeStore.committeeMembers, orbsNodeStore.guardians, selectGuardian, selectedGuardianAddress]);
+    }, [
+      guardianAddressToDelegatorsCut,
+      orbsNodeStore.committeeMembers,
+      orbsNodeStore.guardians,
+      selectGuardian,
+      selectedGuardianAddress,
+    ]);
 
     return (
       <BaseStepContent

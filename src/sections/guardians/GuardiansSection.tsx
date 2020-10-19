@@ -22,7 +22,7 @@ import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import { useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
+import { useGuardiansDelegatorsCut, useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -34,6 +34,7 @@ export const GuardiansSection = observer(() => {
   const showGuardianSelectionModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
+  orbsNodeStore.guardians;
   const guardiansService = useGuardiansService();
   const stakingRewardsService = useStakingRewardsService();
 
@@ -57,28 +58,7 @@ export const GuardiansSection = observer(() => {
   const totalStake = orbsNodeStore.totalStake;
   const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
 
-  const [guardianAddressToDelegatorsCut, setGuardianAddressToDelegatorsCut] = useState<{ [address: string]: number }>(
-    {},
-  );
-
-  useEffect(() => {
-    async function read() {
-      const addressTodelegatorsCut: { [address: string]: number } = {};
-      // const contractRewardsSettings = await stakingRewardsService.readContractRewardsSettings();
-      // const { defaultDelegatorsStakingRewardsPercent } = contractRewardsSettings;
-
-      for (const guardian of orbsNodeStore.guardians) {
-        const delegatorsCut = await stakingRewardsService.readDelegatorsCutPercentage(guardian.EthAddress);
-        addressTodelegatorsCut[guardian.EthAddress] = delegatorsCut;
-      }
-
-      return addressTodelegatorsCut;
-    }
-
-    read().then((obj) => {
-      setGuardianAddressToDelegatorsCut(obj);
-    });
-  }, [orbsNodeStore.guardians, stakingRewardsService]);
+  const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
   // Before data was loaded
   if (isLoadingData) {
