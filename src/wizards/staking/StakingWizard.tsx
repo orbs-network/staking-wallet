@@ -153,6 +153,7 @@ export const StakingWizard = observer(
       extraPropsForGuardianSelection,
       extraPropsForOrbsStaking,
       goToFinishStep,
+      goToSelectAmountStep,
       goToStakeOrbsStep,
       stakingWizardTranslations,
       wizardsCommonTranslations,
@@ -160,9 +161,9 @@ export const StakingWizard = observer(
 
     const stepperTitles = useMemo(() => {
       return [
+        stakingWizardTranslations('stepLabel_selectGuardian'),
         stakingWizardTranslations('stepLabel_approve'),
         stakingWizardTranslations('stepLabel_stake'),
-        stakingWizardTranslations('stepLabel_selectGuardian'),
         wizardsCommonTranslations('stepLabel_finish'),
       ];
     }, [stakingWizardTranslations, wizardsCommonTranslations]);
