@@ -196,6 +196,10 @@ export class OrbsAccountStore {
     return this.delegationsService.delegate(delegationTargetAddress);
   }
 
+  public claimRewards(): PromiEvent<TransactionReceipt> {
+    return this.stakingRewardsService.claimRewards(this.cryptoWalletIntegrationStore.mainAddress);
+  }
+
   // **** Current address changed ****
 
   private async reactToConnectedAddressChanged(currentAddress) {
@@ -219,7 +223,7 @@ export class OrbsAccountStore {
     this.stakingService.setFromAccount(accountAddress);
     this.orbsTokenService.setFromAccount(accountAddress);
     this.delegationsService.setFromAccount(accountAddress);
-    // this.guardiansService.setFromAccount(accountAddress);
+    this.stakingRewardsService.setFromAccount(accountAddress);
   }
 
   // **** Data reading and setting ****

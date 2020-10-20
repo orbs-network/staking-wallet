@@ -5,6 +5,7 @@ export const MODAL_IDS = {
   withdrawing: 'Withdrawing',
   guardianChange: 'GuardianChange',
   guardianSelection: 'GuardianSelection',
+  rewardsClaiming: 'Rewards Claim',
 };
 
 export const STAKING_ACTIONS = {
@@ -13,6 +14,7 @@ export const STAKING_ACTIONS = {
   restaking: 'Restaking',
   withdrawing: 'Withdrawing',
   guardianChange: 'GuardianChange',
+  rewardsClaiming: 'RewardsClaim',
 };
 
 export const USER_EVENT_ACTIONS = {

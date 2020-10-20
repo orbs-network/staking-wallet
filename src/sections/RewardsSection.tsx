@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
 
 import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
@@ -13,11 +13,13 @@ import { renderToString } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useOrbsPOSDataService } from '../services/ServicesHooks';
-import { useNumber } from 'react-hanger';
+import { useBoolean, useNumber } from 'react-hanger';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { InfoToolTipIcon } from '../components/tooltips/InfoTooltipIcon';
 import { CommonActionButton } from '../components/base/CommonActionButton';
+import { CommonDialog } from '../components/modal/CommonDialog';
+import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimingWizard';
 
 export const RewardsContainer = styled((props: GridProps) => <Grid item container {...props} />)<GridProps>(
   (styledProps: { theme: Theme }) => {
@@ -39,14 +41,7 @@ export const RewardsSection = observer(() => {
 
   const nextElectionBlock = useNumber(0);
 
-  useEffect(() => {
-    async function readAndSetNextElectionBlock() {
-      const nextElectionsEthereumBlock = await orbsPOSDataService.readUpcomingElectionBlockNumber();
-      nextElectionBlock.setValue(nextElectionsEthereumBlock);
-    }
-
-    readAndSetNextElectionBlock();
-  }, [orbsPOSDataService, nextElectionBlock]);
+  const showClaimingModal = useBoolean(false);
 
   const innerLinkLang = useMemo(() => {
     if (!translation?.i18n?.language) {
@@ -69,21 +64,6 @@ export const RewardsSection = observer(() => {
       </a>,
     ),
   });
-
-  const nextElectionsInnerHtml = rewardsSectionTranslations('text__NextElectionRoundWillTakePlaceAtEthereumBlock', {
-    nextElectionBlockNumberLink: renderToString(
-      <a
-        style={{ color: theme.palette.secondary.main }}
-        target={'_blank'}
-        rel={'noopener noreferrer'}
-        href={`https://etherscan.io/block/countdown/${nextElectionBlock.value}`}
-      >
-        {nextElectionBlock.value.toLocaleString()}
-      </a>,
-    ),
-  });
-
-  const gridMargin = theme.spacing(0);
   const gridPadding = theme.spacing(2);
 
   // TODO : ORL : TRANSLATION
@@ -140,7 +120,9 @@ export const RewardsSection = observer(() => {
           </Grid>
 
           <Grid item>
-            <CommonActionButton title={'Claim'}>Claim your rewards</CommonActionButton>
+            <CommonActionButton title={'Claim'} onClick={showClaimingModal.setTrue}>
+              Claim your rewards
+            </CommonActionButton>
           </Grid>
 
           {/* Rewards page link */}
@@ -149,6 +131,11 @@ export const RewardsSection = observer(() => {
           </Grid>
         </RewardsContainer>
       </Grid>
+
+      {/* Staking */}
+      <CommonDialog open={showClaimingModal.value} onClose={showClaimingModal.setFalse}>
+        <RewardsClaimingWizard closeWizard={showClaimingModal.setFalse} />
+      </CommonDialog>
     </Section>
   );
 });
