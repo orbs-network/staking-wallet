@@ -29,8 +29,12 @@ export class OrbsAccountStore {
   @observable public stakedOrbs = BigInt(0);
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
+
   @observable public accumulatedRewards: IAccumulatedRewards;
   @observable public rewardsDistributionsHistory: TRewardsDistributionHistory;
+
+  @observable public rewardsBalance: number = 0;
+
   @observable public _selectedGuardianAddress: string;
 
   @computed get isGuardian(): boolean {
@@ -232,31 +236,35 @@ export class OrbsAccountStore {
   private async readDataForAccount(accountAddress: string) {
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
-      console.error(`Error in reading liquid orbs : ${e}`);
+      console.error(`Error in read-n-set liquid orbs : ${e}`);
       throw e;
     });
     await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
-      console.error(`Error in reading staked orbs : ${e}`);
+      console.error(`Error in read-n-set staked orbs : ${e}`);
       throw e;
     });
     await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
-      console.error(`Error in reading selected guardian : ${e}`);
+      console.error(`Error in read-n-set selected guardian : ${e}`);
       throw e;
     });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
-      console.error(`Error in reading contract allowance: ${e}`);
+      console.error(`Error in read-n-set contract allowance: ${e}`);
       throw e;
     });
     await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
-      console.error(`Error in reading cooldown status : ${e}`);
+      console.error(`Error in read-n-set cooldown status : ${e}`);
       throw e;
     });
     await this.readAndSetRewards(accountAddress).catch((e) => {
-      console.error(`Error in reading rewards : ${e}`);
+      console.error(`Error in read-n-set rewards : ${e}`);
       throw e;
     });
     await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
-      console.error(`Error in reading rewards history : ${e}`);
+      console.error(`Error in read-n-set rewards history : ${e}`);
+      throw e;
+    });
+    await this.readAndSetRewardsBalance(accountAddress).catch((e) => {
+      console.error(`Error in read-n-set rewards balance : ${e}`);
       throw e;
     });
   }
@@ -303,6 +311,11 @@ export class OrbsAccountStore {
   private async readAndSetRewardsHistory(accountAddress: string) {
     const rewardsDistributionHistory = await this.orbsRewardsService.readRewardsDistributionsHistory(accountAddress);
     this.setRewardsDistributionsHistory(rewardsDistributionHistory);
+  }
+
+  private async readAndSetRewardsBalance(accountAddress: string) {
+    const rewardsBalance = await this.stakingRewardsService.readRewardsBalanceFullOrbs(accountAddress);
+    this.setRewardsBalance(rewardsBalance);
   }
 
   // ****  Subscriptions ****
@@ -427,5 +440,11 @@ export class OrbsAccountStore {
   @action('setRewardsDistributionsHistory')
   private setRewardsDistributionsHistory(rewardsDistributionsHistory: any) {
     this.rewardsDistributionsHistory = rewardsDistributionsHistory;
+  }
+
+  @action('setRewardsBalance')
+  private setRewardsBalance(rewardsBalance: number) {
+    console.log({ rewardsBalance });
+    this.rewardsBalance = rewardsBalance;
   }
 }
