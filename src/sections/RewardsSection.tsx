@@ -17,6 +17,7 @@ import { useNumber } from 'react-hanger';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { InfoToolTipIcon } from '../components/tooltips/InfoTooltipIcon';
+import { CommonActionButton } from '../components/base/CommonActionButton';
 
 export const RewardsContainer = styled((props: GridProps) => <Grid item container {...props} />)<GridProps>(
   (styledProps: { theme: Theme }) => {
@@ -120,35 +121,29 @@ export const RewardsSection = observer(() => {
           // textAlign: 'center',
         }}
       >
-        {/*<Grid item>*/}
-        {/*  <Typography dangerouslySetInnerHTML={{ __html: '- ' + nextElectionsInnerHtml }} />*/}
-        {/*</Grid>*/}
+        <RewardsContainer direction={'column'} spacing={3}>
+          {/*<Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>*/}
+          {/*  <Typography style={{ paddingRight: '0.25em' }}>{rewardsText} </Typography>*/}
+          {/*  {!orbsAccountStore.isGuardian ? (*/}
+          {/*    <InfoToolTipIcon*/}
+          {/*      tooltipTitle={`Assumes 2/3 of the current Guardian interest (*/}
+          {/*      ${orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)`}*/}
+          {/*    />*/}
+          {/*  ) : null}*/}
+          {/*</Grid>*/}
 
-        <RewardsContainer direction={'column'} spacing={1}>
-          {/*<Grid item>*/}
-          {/*  <Typography>*/}
-          {/*    - {rewardsSectionTranslations('text__totalDistributedRewards', {*/}
-          {/*      totalDistributedRewards: orbsAccountStore.totalDistributedRewards.toLocaleString(),*/}
-          {/*    })}*/}
-          {/*  </Typography>*/}
-          {/*</Grid>*/}
-          {/*<Grid item>*/}
-          {/*  <Typography>*/}
-          {/*    -{' '}*/}
-          {/*    {rewardsSectionTranslations('text__totalAccumulatedRewards', {*/}
-          {/*      totalAccumulatedRewards: orbsAccountStore.totalAccumulatedRewards.toLocaleString(),*/}
-          {/*    })}*/}
-          {/*  </Typography>*/}
-          {/*</Grid>*/}
           <Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-            <Typography style={{ paddingRight: '0.25em' }}>{rewardsText} </Typography>
-            {!orbsAccountStore.isGuardian ? (
-              <InfoToolTipIcon
-                tooltipTitle={`Assumes 2/3 of the current Guardian interest (
-                ${orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)`}
-              />
-            ) : null}
+            <Typography style={{ paddingRight: '0.25em' }}>
+              Current reward balance : {orbsAccountStore.rewardsBalance.toLocaleString()} ORBS
+            </Typography>
+            <InfoToolTipIcon tooltipTitle={``} />
           </Grid>
+
+          <Grid item>
+            <CommonActionButton title={'Claim'}>Claim your rewards</CommonActionButton>
+          </Grid>
+
+          {/* Rewards page link */}
           <Grid item>
             <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />
           </Grid>
