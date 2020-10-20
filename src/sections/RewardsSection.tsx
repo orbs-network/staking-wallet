@@ -120,7 +120,11 @@ export const RewardsSection = observer(() => {
           </Grid>
 
           <Grid item>
-            <CommonActionButton title={'Claim'} onClick={showClaimingModal.setTrue}>
+            <CommonActionButton
+              disabled={orbsAccountStore.rewardsBalance === 0}
+              title={orbsAccountStore.rewardsBalance !== 0 ? 'Claim' : 'No Rewards available'}
+              onClick={showClaimingModal.setTrue}
+            >
               Claim your rewards
             </CommonActionButton>
           </Grid>
