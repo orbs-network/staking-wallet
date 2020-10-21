@@ -12,6 +12,13 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   paddingRight: '1.25em',
   paddingLeft: '1.25em',
   paddingBottom: '1.5em',
+
+  transition: 'background-color 0.5s, color 0.5s',
+
+  '&:hover': {
+    backgroundColor: 'rgba(33,33, 33, 0.2)',
+    color: theme.palette.secondary.main,
+  },
 }));
 
 interface IProps {
@@ -62,7 +69,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId}>
       <Grid item>
-        <Typography variant={'body'}>{titleElement}</Typography>
+        <Typography variant={'body1'}>{titleElement}</Typography>
         <CommonDivider />
       </Grid>
 
