@@ -61,7 +61,7 @@ export const CommonDialog = React.memo<DialogProps>((props) => {
 
   return (
     <StyledDialog
-      disableBackdropClick
+      // disableBackdropClick
       // fullScreen={fullScreen}
       // fullWidth={!fullScreen}
       maxWidth={'lg'}

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useNumber } from 'react-hanger';
 import { IOrbsStakingStepContentProps, OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
-import { OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
+import { IOrbsAllowanceStepContentProps, OrbsAllowanceStepContent } from './OrbsAllowanceStepContent';
 import { observer } from 'mobx-react';
 import { GuardianSelectionStepContent, IGuardianSelectionStepContentProps } from './GuardianSelectionStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
@@ -36,7 +36,13 @@ export const StakingWizard = observer(
     const orbsAccountStore = useOrbsAccountStore();
     // DEV_NOTE : O.L : if a user has an unused allowance it probably means that his process was cut in the middle.
     // const initialStep = orbsAccountStore.hasUnusedAllowance ? STEPS_INDEXES.stakeOrbs : STEPS_INDEXES.allowTransfer;
-    const initialStep = STEPS_INDEXES.selectGuardian;
+    // const initialStep = STEPS_INDEXES.selectGuardian;
+    const initialStep = orbsAccountStore.hasSelectedGuardian
+      ? orbsAccountStore.hasUnusedAllowance
+        ? STEPS_INDEXES.stakeOrbs
+        : STEPS_INDEXES.allowTransfer
+      : STEPS_INDEXES.selectGuardian;
+
     const activeStep = useNumber(initialStep);
     const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
     const goToSelectAmountStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.allowTransfer), [activeStep]);
@@ -60,6 +66,12 @@ export const StakingWizard = observer(
         goBackToApproveStep: goToSelectAmountStep,
       };
     }, [goToSelectAmountStep]);
+
+    const extraPropsForOrbsAllowance = useMemo<IOrbsAllowanceStepContentProps>(() => {
+      return {
+        goBackToChooseGuardianStep: goToSelectGuardianStep,
+      };
+    }, [goToSelectGuardianStep]);
 
     // DEV_NOTE : O.L : After moving the Guardian selection to be the first step, this logic is no longer required.
     // DEV_NOTE : In certain cases, such as when the user already has a selected guardian or the user is a Guardian himself,
@@ -95,6 +107,21 @@ export const StakingWizard = observer(
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
+        // TODO : ORL : TRANSLATIONS
+        // Select a guardian
+        case STEPS_INDEXES.selectGuardian:
+          return (
+            <ApprovableWizardStep
+              transactionCreationSubStepContent={GuardianSelectionStepContent}
+              displayCongratulationsSubStep={false}
+              finishedActionName={stakingWizardTranslations('finishedAction_selectedGuardian')}
+              moveToNextStepAction={goToSelectAmountStep}
+              moveToNextStepTitle={'Stake'}
+              closeWizard={closeWizard}
+              propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
+              key={'guardianSelectionStep'}
+            />
+          );
         // Stake orbs
         case STEPS_INDEXES.allowTransfer:
           return (
@@ -105,6 +132,7 @@ export const StakingWizard = observer(
               moveToNextStepAction={goToStakeOrbsStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
               closeWizard={closeWizard}
+              propsForTransactionCreationSubStepContent={extraPropsForOrbsAllowance}
               key={'approvingStep'}
             />
           );
@@ -118,23 +146,8 @@ export const StakingWizard = observer(
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               closeWizard={closeWizard}
-              key={'stakingStep'}
               propsForTransactionCreationSubStepContent={extraPropsForOrbsStaking}
-            />
-          );
-        // TODO : ORL : TRANSLATIONS
-        // Select a guardian
-        case STEPS_INDEXES.selectGuardian:
-          return (
-            <ApprovableWizardStep
-              transactionCreationSubStepContent={GuardianSelectionStepContent}
-              displayCongratulationsSubStep={false}
-              finishedActionName={stakingWizardTranslations('stepLabel_approve')}
-              moveToNextStepAction={goToSelectAmountStep}
-              moveToNextStepTitle={'Stake'}
-              key={'guardianSelectionStep'}
-              closeWizard={closeWizard}
-              propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
+              key={'stakingStep'}
             />
           );
         case STEPS_INDEXES.finish:

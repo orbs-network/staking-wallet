@@ -46,7 +46,7 @@ export const GuardianSelectionStepContent = observer(
         subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
         // No need to re-select an already selected guardian
-        if (guardian.EthAddress === selectedGuardianAddress) {
+        if (guardian.EthAddress.toLowerCase() === selectedGuardianAddress.toLowerCase()) {
           skipToSuccess();
         } else {
           const promiEvent = orbsAccountStore.delegate(guardian.EthAddress);
