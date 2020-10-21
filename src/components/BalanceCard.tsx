@@ -18,9 +18,15 @@ interface IProps {
   title: string | React.ElementType;
   toolTipTitle?: string | React.ElementType;
   amount: number;
-  actionButtonTitle: string;
-  actionButtonActive: boolean;
-  onActionButtonPressed: () => void;
+
+  // Action buttons (main + secondary)
+  actionButtonTitle?: string;
+  onActionButtonPressed?: () => void;
+  actionButtonActive?: boolean;
+
+  secondaryActionButtonTitle?: string;
+  onSecondaryActionButtonPressed?: () => void;
+  secondaryActionButtonActive?: boolean;
 
   // Testing
   balanceCardTestId?: string;
@@ -32,12 +38,18 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     toolTipTitle,
     amount,
     actionButtonTitle,
-    actionButtonActive,
     onActionButtonPressed,
+    actionButtonActive,
+    secondaryActionButtonTitle,
+    onSecondaryActionButtonPressed,
+    secondaryActionButtonActive,
     balanceCardTestId,
   } = props;
 
   const titleElement = useStringOrElement(title);
+
+  const hasMainButton = actionButtonTitle || onActionButtonPressed;
+  const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
 
   const balanceItem = (
     <Grid item>
@@ -50,18 +62,20 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId}>
       <Grid item>
-        <Typography variant={'caption'}>{titleElement}</Typography>
+        <Typography variant={'body'}>{titleElement}</Typography>
         <CommonDivider />
       </Grid>
 
       {toolTipTitle && <Tooltip title={toolTipTitle}>{balanceItem}</Tooltip>}
       {!toolTipTitle && balanceItem}
 
-      <Grid item>
-        <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
-          {actionButtonTitle}
-        </CommonActionButton>
-      </Grid>
+      {hasMainButton && (
+        <Grid item>
+          <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
+            {actionButtonTitle}
+          </CommonActionButton>
+        </Grid>
+      )}
     </StyledGrid>
   );
 };

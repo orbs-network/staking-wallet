@@ -20,6 +20,11 @@ import { InfoToolTipIcon } from '../components/tooltips/InfoTooltipIcon';
 import { CommonActionButton } from '../components/base/CommonActionButton';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimingWizard';
+import { BalanceCard } from '../components/BalanceCard';
+
+const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
+  return {};
+});
 
 export const RewardsContainer = styled((props: GridProps) => <Grid item container {...props} />)<GridProps>(
   (styledProps: { theme: Theme }) => {
@@ -83,58 +88,77 @@ export const RewardsSection = observer(() => {
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
 
       <CommonDivider />
+      <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
+        <GridItem>
+          <BalanceCard title={'Total rewards awarded (ORBS)'} amount={12345.12345} />
+        </GridItem>
 
-      <Grid
-        item
-        container
-        direction={'column'}
-        spacing={1}
-        style={{
-          width: '100%',
-          alignSelf: 'center',
-          // backgroundColor: 'rgba(47, 47, 47, 0.6)',
-          // marginRight: gridMargin,
-          // marginLeft: gridMargin,
-          paddingLeft: gridPadding,
-          paddingRight: gridPadding,
-          marginBottom: 0,
-          // textAlign: 'center',
-        }}
-      >
-        <RewardsContainer direction={'column'} spacing={3}>
-          {/*<Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>*/}
-          {/*  <Typography style={{ paddingRight: '0.25em' }}>{rewardsText} </Typography>*/}
-          {/*  {!orbsAccountStore.isGuardian ? (*/}
-          {/*    <InfoToolTipIcon*/}
-          {/*      tooltipTitle={`Assumes 2/3 of the current Guardian interest (*/}
-          {/*      ${orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)`}*/}
-          {/*    />*/}
-          {/*  ) : null}*/}
-          {/*</Grid>*/}
+        <GridItem>
+          <BalanceCard title={'Rewards rate (ORBS/week)'} amount={68.12345} />
+        </GridItem>
 
-          <Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-            <Typography style={{ paddingRight: '0.25em' }}>
-              Current reward balance : {orbsAccountStore.rewardsBalance.toLocaleString()} ORBS
-            </Typography>
-            <InfoToolTipIcon tooltipTitle={``} />
-          </Grid>
-
-          <Grid item>
-            <CommonActionButton
-              disabled={orbsAccountStore.rewardsBalance === 0}
-              title={orbsAccountStore.rewardsBalance !== 0 ? 'Claim' : 'No Rewards available'}
-              onClick={showClaimingModal.setTrue}
-            >
-              Claim your rewards
-            </CommonActionButton>
-          </Grid>
-
-          {/* Rewards page link */}
-          <Grid item>
-            <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />
-          </Grid>
-        </RewardsContainer>
+        <GridItem>
+          <BalanceCard
+            title={'Rewards balance (ORBS)'}
+            amount={1780.123456}
+            secondaryActionButtonActive
+            secondaryActionButtonTitle={'Claim'}
+            onSecondaryActionButtonPressed={() => console.log('Claim pressed')}
+          />
+        </GridItem>
       </Grid>
+
+      {/*<Grid*/}
+      {/*  item*/}
+      {/*  container*/}
+      {/*  direction={'column'}*/}
+      {/*  spacing={1}*/}
+      {/*  style={{*/}
+      {/*    width: '100%',*/}
+      {/*    alignSelf: 'center',*/}
+      {/*    // backgroundColor: 'rgba(47, 47, 47, 0.6)',*/}
+      {/*    // marginRight: gridMargin,*/}
+      {/*    // marginLeft: gridMargin,*/}
+      {/*    paddingLeft: gridPadding,*/}
+      {/*    paddingRight: gridPadding,*/}
+      {/*    marginBottom: 0,*/}
+      {/*    // textAlign: 'center',*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <RewardsContainer direction={'column'} spacing={3}>*/}
+      {/*    /!*<Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>*!/*/}
+      {/*    /!*  <Typography style={{ paddingRight: '0.25em' }}>{rewardsText} </Typography>*!/*/}
+      {/*    /!*  {!orbsAccountStore.isGuardian ? (*!/*/}
+      {/*    /!*    <InfoToolTipIcon*!/*/}
+      {/*    /!*      tooltipTitle={`Assumes 2/3 of the current Guardian interest (*!/*/}
+      {/*    /!*      ${orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)`}*!/*/}
+      {/*    /!*    />*!/*/}
+      {/*    /!*  ) : null}*!/*/}
+      {/*    /!*</Grid>*!/*/}
+
+      {/*    <Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>*/}
+      {/*      <Typography style={{ paddingRight: '0.25em' }}>*/}
+      {/*        Current reward balance : {orbsAccountStore.rewardsBalance.toLocaleString()} ORBS*/}
+      {/*      </Typography>*/}
+      {/*      <InfoToolTipIcon tooltipTitle={``} />*/}
+      {/*    </Grid>*/}
+
+      {/*    <Grid item>*/}
+      {/*      <CommonActionButton*/}
+      {/*        disabled={orbsAccountStore.rewardsBalance === 0}*/}
+      {/*        title={orbsAccountStore.rewardsBalance !== 0 ? 'Claim' : 'No Rewards available'}*/}
+      {/*        onClick={showClaimingModal.setTrue}*/}
+      {/*      >*/}
+      {/*        Claim your rewards*/}
+      {/*      </CommonActionButton>*/}
+      {/*    </Grid>*/}
+
+      {/*    /!* Rewards page link *!/*/}
+      {/*    <Grid item>*/}
+      {/*      <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />*/}
+      {/*    </Grid>*/}
+      {/*  </RewardsContainer>*/}
+      {/*</Grid>*/}
 
       {/* Staking */}
       <CommonDialog open={showClaimingModal.value} onClose={showClaimingModal.setFalse}>
