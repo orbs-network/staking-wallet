@@ -27,6 +27,7 @@ import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { GuardianQualifications } from './GuardianQualifications';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { Line } from 'rc-progress';
+import { CommonActionButton } from '../base/CommonActionButton';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -112,15 +113,18 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       switch (guardianSelectionMode) {
         case 'Select':
           selectedGuardianCell = (
-            <Button
-              className={classes.selectButton}
-              variant='contained'
-              size='small'
-              data-testid={actionButtonTestId}
-              onClick={actionButtonOnClick}
-            >
+            // <Button
+            //   className={classes.selectButton}
+            //   variant='contained'
+            //   size='small'
+            //   data-testid={actionButtonTestId}
+            //   onClick={actionButtonOnClick}
+            // >
+            //   {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
+            // </Button>
+            <CommonActionButton variant={'outlined'}>
               {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
-            </Button>
+            </CommonActionButton>
           );
           break;
         case 'Change':
