@@ -130,6 +130,8 @@ export const BalancesSection = observer(() => {
 
       {/*<Grid item> <CommonDivider /> </Grid>*/}
 
+      {/* TODO : ORL : TRANSLATIONS */}
+
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
       {!orbsAccountStore.errorLoading && (
@@ -149,9 +151,13 @@ export const BalancesSection = observer(() => {
 
             <GridItem>
               <BalanceCard
-                title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
+                // title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
+                title={'Staked ORBS & Rewards balance'}
+                toolTipTitle={`${fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)} staked ORBS + ${
+                  orbsAccountStore.rewardsBalance
+                } in rewards`}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
-                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
                 actionButtonActive={orbsAccountStore.hasStakedOrbs}
                 onActionButtonPressed={onUnstakeTokensClicked}
                 balanceCardTestId={'balance_card_staked_orbs'}
