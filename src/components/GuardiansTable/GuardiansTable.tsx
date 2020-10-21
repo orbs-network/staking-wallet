@@ -113,16 +113,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       switch (guardianSelectionMode) {
         case 'Select':
           selectedGuardianCell = (
-            // <Button
-            //   className={classes.selectButton}
-            //   variant='contained'
-            //   size='small'
-            //   data-testid={actionButtonTestId}
-            //   onClick={actionButtonOnClick}
-            // >
-            //   {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
-            // </Button>
-            <CommonActionButton variant={'outlined'}>
+            <CommonActionButton variant={'outlined'} onClick={actionButtonOnClick} fullWidth>
               {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
             </CommonActionButton>
           );
@@ -163,7 +154,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       selectedGuardian,
       guardianSelectionMode,
       onGuardianSelect,
-      classes.selectButton,
       guardiansTableTranslations,
       theme.palette.secondary.main,
       theme.palette.grey,
