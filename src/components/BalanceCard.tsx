@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Button, Grid, Theme, Typography, Paper, Tooltip } from '@material-ui/core';
 import styled from 'styled-components';
 import { CommonDivider } from './base/CommonDivider';
 import { CommonActionButton } from './base/CommonActionButton';
 import { useStringOrElement } from './hooks/commonHooks';
+import useHover from '@react-hook/hover';
+import { makeStyles } from '@material-ui/core/styles';
+import useTheme from '@material-ui/core/styles/useTheme';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
@@ -15,9 +18,23 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 
   transition: 'background-color 0.5s, color 0.5s',
 
-  '&:hover': {
-    backgroundColor: 'rgba(33,33, 33, 0.2)',
-    color: theme.palette.secondary.main,
+  '@media (hover: hover)': {
+    '&:hover': {
+      backgroundColor: 'rgba(33,33, 33, 0.2)',
+      color: theme.palette.secondary.main,
+    },
+  },
+}));
+
+const useStyles = makeStyles((theme) => ({
+  mainActionButton: {},
+  secondaryActionButton: {
+    padding: 0,
+    fontSize: '100%',
+    fontFamily: 'inherit',
+    textTransform: 'none',
+    boxSizing: 'border-box',
+    transition: 'border 0.5s',
   },
 }));
 
@@ -40,6 +57,8 @@ interface IProps {
 }
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
+  const classes = useStyles();
+
   const {
     title,
     toolTipTitle,
@@ -53,7 +72,12 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     balanceCardTestId,
   } = props;
 
+  const theme = useTheme();
+  const hoverTargetRef = useRef();
+  const isHovering = useHover(hoverTargetRef);
   const titleElement = useStringOrElement(title);
+
+  console.log({ isHovering });
 
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
@@ -67,20 +91,17 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   );
 
   return (
-    <StyledGrid container direction={'column'} data-testid={balanceCardTestId}>
-      <Grid item container alignItems={'center'} justify={'space-between'}>
+    <StyledGrid container direction={'column'} data-testid={balanceCardTestId} ref={hoverTargetRef}>
+      <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
         <Grid item>
           <Typography variant={'body1'}>{titleElement}</Typography>
         </Grid>
         {hasSecondaryActionButton && (
           <Grid item>
             <Button
-              style={{
-                padding: 0,
-                fontSize: '100%',
-                fontFamily: 'inherit',
-                textTransform: 'none',
-              }}
+              className={classes.secondaryActionButton}
+              variant={isHovering ? 'outlined' : 'text'}
+              style={isHovering ? { backgroundColor: 'rgba(33,33, 33, 1)' } : {}}
               color={'secondary'}
               onClick={onSecondaryActionButtonPressed}
               disabled={!secondaryActionButtonActive}
