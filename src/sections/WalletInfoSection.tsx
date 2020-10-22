@@ -95,16 +95,26 @@ export const WalletInfoSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid item xs={12} >
+      <Grid item xs={12}>
         <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
       </Grid>
 
       {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
-      <Grid container item direction={smOrLarger ? 'row' : 'column'} alignItems={'center'}
-            spacing={largerThanLarge ? 2 : 1}
+      <Grid
+        container
+        item
+        direction={smOrLarger ? 'row' : 'column'}
+        alignItems={'center'}
+        spacing={largerThanLarge ? 2 : 1}
       >
         {/* Address */}
-        <Grid item sm={12} lg={9} id={'addressItem'} style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset': 'center' }}>
+        <Grid
+          item
+          sm={12}
+          lg={9}
+          id={'addressItem'}
+          style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset' : 'center' }}
+        >
           <Typography
             variant={smOrLarger ? 'h4' : 'body2'}
             data-testid={'text-active-address'}

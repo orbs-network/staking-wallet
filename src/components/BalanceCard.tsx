@@ -68,10 +68,29 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
 
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId}>
-      <Grid item>
-        <Typography variant={'body1'}>{titleElement}</Typography>
-        <CommonDivider />
+      <Grid item container alignItems={'center'} justify={'space-between'}>
+        <Grid item>
+          <Typography variant={'body1'}>{titleElement}</Typography>
+        </Grid>
+        {hasSecondaryActionButton && (
+          <Grid item>
+            <Button
+              style={{
+                padding: 0,
+                fontSize: '100%',
+                fontFamily: 'inherit',
+                textTransform: 'none',
+              }}
+              color={'secondary'}
+              onClick={onSecondaryActionButtonPressed}
+              disabled={!secondaryActionButtonActive}
+            >
+              {secondaryActionButtonTitle}
+            </Button>
+          </Grid>
+        )}
       </Grid>
+      <CommonDivider />
 
       {toolTipTitle && <Tooltip title={toolTipTitle}>{balanceItem}</Tooltip>}
       {!toolTipTitle && balanceItem}
