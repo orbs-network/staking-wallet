@@ -9,5 +9,7 @@ export const CommonActionButton = styled(({ variant, color, ...rest }: ButtonPro
     fontWeight: 'bold',
     height: '4em',
     // boxShadow: '0.15em 0.2em #469daf',
+
+    transitionDuration: '0.5s',
   };
 });

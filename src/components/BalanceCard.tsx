@@ -118,7 +118,12 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
 
       {hasMainButton && (
         <Grid item>
-          <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
+          <CommonActionButton
+            variant={isHovering ? 'outlined' : 'contained'}
+            fullWidth={true}
+            disabled={!actionButtonActive}
+            onClick={onActionButtonPressed}
+          >
             {actionButtonTitle}
           </CommonActionButton>
         </Grid>
