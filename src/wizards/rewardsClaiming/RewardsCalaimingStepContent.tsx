@@ -11,6 +11,7 @@ import {
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
+import { Typography } from '@material-ui/core';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -28,13 +29,15 @@ export const RewardsCalaimingStepContent = observer(
 
     const reReadStoresData = useReReadAllStoresData();
 
+    const m = `${orbsAccountStore.rewardsBalance.toLocaleString()} ORBS`;
+
     // TODO : ORL : TRANSLATIONS
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       // guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
-      'Claiming your rewards',
+      'Press "Claim" to claim your rewards balance. Claimed rewards are automatically staked and delegated to your Guardian',
       // guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
-      `${orbsAccountStore.rewardsBalance.toLocaleString()} ORBS`,
+      `Claiming rewards has an associated gas cost. it is recommended to claim your rewards only after acquiring significant rewards balance. `,
       false,
     );
 
@@ -70,22 +73,32 @@ export const RewardsCalaimingStepContent = observer(
 
     const claimRewardsActionButtonProps = useMemo<IActionButtonProps>(() => {
       return {
-        // title: guardianChangingWizardTranslations('guardianSelectionSubStep_action_change'),
         title: 'Claim',
         onClick: claimRewards,
       };
     }, [claimRewards]);
+
+    const rewardsClaimingInnerContent = useMemo(() => {
+      return (
+        <Typography variant={'h5'}>
+          Rewards Balance is{' '}
+          <Typography variant={'h5'} style={{ display: 'inline' }} color={'secondary'}>
+            {orbsAccountStore.rewardsBalance.toLocaleString()} ORBS
+          </Typography>
+        </Typography>
+      );
+    }, [orbsAccountStore.rewardsBalance]);
 
     return (
       <BaseStepContent
         message={message.value}
         subMessage={subMessage.value}
         // title={guardianChangingWizardTranslations('guardianSelectionSubStep_stepTitle')}
-        title={'Staking Rewards Claiming'}
+        title={'Claim your ORBS rewards balance'}
         disableInputs={disableInputs}
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
-        innerContent={null}
+        innerContent={rewardsClaimingInnerContent}
         actionButtonProps={claimRewardsActionButtonProps}
         addCancelButton
         onCancelButtonClicked={closeWizard}

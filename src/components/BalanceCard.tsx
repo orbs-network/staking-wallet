@@ -77,8 +77,6 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const isHovering = useHover(hoverTargetRef);
   const titleElement = useStringOrElement(title);
 
-  console.log({ isHovering });
-
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
 

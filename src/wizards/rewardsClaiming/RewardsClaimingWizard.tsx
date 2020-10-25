@@ -21,6 +21,8 @@ interface IProps {
   closeWizard(): void;
 }
 
+// TODO : ORL : TRANSLATIONS
+
 // TODO : O.L : FUTURE : The material-ui Modal requires passing a ref, decide what to do with this ref.
 // Connect to store
 export const RewardsClaimingWizard = observer(
@@ -51,14 +53,15 @@ export const RewardsClaimingWizard = observer(
         case STEPS_INDEXES.finish:
           return (
             <WizardFinishStep
-              finishedActionDescription={guardianChangingWizardTranslations('afterSuccessStateExplanation')}
+              // finishedActionDescription={guardianChangingWizardTranslations('afterSuccessStateExplanation')}
+              finishedActionDescription={'You have claimed your rewards'}
               onFinishClicked={closeWizard}
             />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep, guardianChangingWizardTranslations, wizardsCommonTranslations]);
+    }, [activeStep.value, closeWizard, goToFinishStep, wizardsCommonTranslations]);
 
     const stepperTitles = useMemo(() => {
       return [

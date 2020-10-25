@@ -82,6 +82,9 @@ export const RewardsSection = observer(() => {
     ? `Estimated annual guardian interest ${relevantInterest}% (${calculatedRewardsMessage})`
     : `Estimated annual interest ${relevantInterest}% (${calculatedRewardsMessage})`;
 
+  // const availableRewards = 1780.123456;
+  const availableRewards = orbsAccountStore.rewardsBalance;
+
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
     <Section>
@@ -100,10 +103,10 @@ export const RewardsSection = observer(() => {
         <GridItem>
           <BalanceCard
             title={'Rewards balance (ORBS)'}
-            amount={1780.123456}
-            secondaryActionButtonActive
+            amount={availableRewards}
+            secondaryActionButtonActive={availableRewards > 0}
             secondaryActionButtonTitle={'Claim'}
-            onSecondaryActionButtonPressed={() => console.log('Claim pressed')}
+            onSecondaryActionButtonPressed={showClaimingModal.setTrue}
           />
         </GridItem>
       </Grid>
@@ -161,7 +164,11 @@ export const RewardsSection = observer(() => {
       {/*</Grid>*/}
 
       {/* Staking */}
-      <CommonDialog open={showClaimingModal.value} onClose={showClaimingModal.setFalse}>
+      <CommonDialog
+        open={showClaimingModal.value}
+        onClose={showClaimingModal.setFalse}
+        // style={{ width: 'clamp(50%, 40rem, 95%)' }}
+      >
         <RewardsClaimingWizard closeWizard={showClaimingModal.setFalse} />
       </CommonDialog>
     </Section>

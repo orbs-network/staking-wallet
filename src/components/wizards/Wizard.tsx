@@ -45,9 +45,7 @@ export const Wizard = React.memo<IProps>((props) => {
           {stepperStepTitles}
         </WizardStepper>
       </DialogTitle>
-      <StyledDialogContent data-testid={dataTestId}>
-        {content}
-      </StyledDialogContent>
+      <StyledDialogContent data-testid={dataTestId}>{content}</StyledDialogContent>
     </>
     // <StyledDialogContent data-testid={dataTestId}>
     //   <WizardContainer>

@@ -17,9 +17,18 @@ const deployDriverScripts = async () => {
     console.log('After deploying Orbs PoS V2 contracts');
 
     const orbsV2Account = driver.accounts[0];
+    const orbsV2AccountSecond = driver.accounts[1];
     console.log(`Assigning ORBS to ${orbsV2Account}`);
     await driver.erc20.assign(orbsV2Account, new BN('1000000000000000000000000000'));
+    await driver.erc20.assign(orbsV2AccountSecond, new BN('1000000000000000000000000000'));
     console.log(`Balance of ${orbsV2Account} `, await driver.erc20.balanceOf(orbsV2Account));
+
+    // Setting delegators staking rewards
+    const rewardsInWeiBN = toWei(new BN(5_000_000));
+    await driver.erc20.approve(driver.stakingRewards.address, rewardsInWeiBN);
+    await driver.stakingRewards.acceptRewardsBalanceMigration(orbsV2Account, 0, rewardsInWeiBN, {
+      from: orbsV2Account,
+    });
 
     const addresses = {
       staking: driver.staking.address,
