@@ -1,7 +1,7 @@
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import { IOrbsPOSDataService, IOrbsTokenService, IOrbsRewardsService, IRewardsDistributionEvent } from 'orbs-pos-data';
+import { IOrbsPOSDataService, IOrbsTokenService, IOrbsRewardsService } from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   subscribeToOrbsInCooldownChange,
@@ -12,13 +12,10 @@ import moment from 'moment';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
-import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
 import { OrbsNodeStore } from './OrbsNodeStore';
 import { Guardian } from '../services/v2/orbsNodeService/systemState';
 import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
 import { IDelegationsService, IStakingService } from '@orbs-network/contracts-js';
-
-export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
 
 export class OrbsAccountStore {
   @observable public doneLoading = false;
@@ -30,12 +27,12 @@ export class OrbsAccountStore {
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
 
-  @observable public accumulatedRewards: IAccumulatedRewards;
-  @observable public rewardsDistributionsHistory: TRewardsDistributionHistory;
+  @observable public totalStakedOrbsInContract = 0;
+  @observable public totalUncappedStakedOrbs = 0;
 
-  @observable public rewardsBalance: number = 0;
-  @observable public claimedRewards: number = 0;
-  @observable public estimatedRewardsForNextWeek: number = 0;
+  @observable public rewardsBalance = 0;
+  @observable public claimedRewards = 0;
+  @observable public estimatedRewardsForNextWeek = 0;
 
   @observable public _selectedGuardianAddress: string;
 
@@ -88,6 +85,10 @@ export class OrbsAccountStore {
   }
   @computed get participatingInStaking(): boolean {
     return this.hasStakedOrbs || this.hasOrbsInCooldown || this.hasOrbsToWithdraw;
+  }
+
+  @computed get totalSystemStakedTokens(): number {
+    return this.totalStakedOrbsInContract - this.totalUncappedStakedOrbs;
   }
 
   @computed get hasClaimableRewards(): boolean {
@@ -184,6 +185,11 @@ export class OrbsAccountStore {
     return this.stakingRewardsService.claimRewards(this.cryptoWalletIntegrationStore.mainAddress);
   }
 
+  // **** Data fefresh interactions ****
+  public async refreshEstimatedRewardsRate() {
+    return this.readAndSetEstimatedRewardsForNextWeek(this.cryptoWalletIntegrationStore.mainAddress);
+  }
+
   // **** Current address changed ****
 
   private async reactToConnectedAddressChanged(currentAddress) {
@@ -243,8 +249,8 @@ export class OrbsAccountStore {
       console.error(`Error in read-n-set cooldown status : ${e}`);
       throw e;
     });
-    await this.readAndSetRewards(accountAddress).catch((e) => {
-      console.error(`Error in read-n-set available rewards : ${e}`);
+    await this.readAndSetRewardsBalance(accountAddress).catch((e) => {
+      console.error(`Error in read-n-set rewards balance : ${e}`);
       throw e;
     });
     await this.readAndSetClaimedRewards(accountAddress).catch((e) => {
@@ -253,14 +259,6 @@ export class OrbsAccountStore {
     });
     await this.readAndSetEstimatedRewardsForNextWeek(accountAddress).catch((e) => {
       console.error(`Error in read-n-set rewards estimation for the following week : ${e}`);
-      throw e;
-    });
-    await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
-      console.error(`Error in read-n-set rewards history : ${e}`);
-      throw e;
-    });
-    await this.readAndSetRewardsBalance(accountAddress).catch((e) => {
-      console.error(`Error in read-n-set rewards balance : ${e}`);
       throw e;
     });
   }
@@ -299,11 +297,6 @@ export class OrbsAccountStore {
     this.setCooldownReleaseTimestamp(releaseTimestamp);
   }
 
-  private async readAndSetRewards(accountAddress: string) {
-    const accumulatedRewards = await this.orbsRewardsService.readAccumulatedRewards(accountAddress);
-    this.setAccumulatedRewards(accumulatedRewards);
-  }
-
   private async readAndSetClaimedRewards(accountAddress: string) {
     const claimedRewardsInFullOrbs = await this.stakingRewardsService.readClaimedRewardsFullOrbs(accountAddress);
     this.setClaimedRewards(claimedRewardsInFullOrbs);
@@ -318,14 +311,19 @@ export class OrbsAccountStore {
     this.setEstimatedRewardsForNextWeek(estimateRewardsFullOrbs);
   }
 
-  private async readAndSetRewardsHistory(accountAddress: string) {
-    const rewardsDistributionHistory = await this.orbsRewardsService.readRewardsDistributionsHistory(accountAddress);
-    this.setRewardsDistributionsHistory(rewardsDistributionHistory);
-  }
-
   private async readAndSetRewardsBalance(accountAddress: string) {
     const rewardsBalance = await this.stakingRewardsService.readRewardsBalanceFullOrbs(accountAddress);
     this.setRewardsBalance(rewardsBalance);
+  }
+
+  private async readAndSetTotalStakedOrbsInContract() {
+    const totalStakedOrbsInContract = await this.stakingRewardsService.readTotalStakedInFullOrbs();
+    this.setTotalStakedOrbsInContract(totalStakedOrbsInContract);
+  }
+
+  private async readAndSetTotalUncappedStakedOrbs() {
+    const totalUncappedStakedOrbs = await this.delegationsService.readUncappedDelegatedStakeInFullOrbs();
+    this.setTotalUncappedStakedOrbs(totalUncappedStakedOrbs);
   }
 
   // ****  Subscriptions ****
@@ -442,16 +440,6 @@ export class OrbsAccountStore {
     this.errorLoading = errorLoading;
   }
 
-  @action('setAccumulatedRewards')
-  private setAccumulatedRewards(accumulatedRewards: any) {
-    this.accumulatedRewards = accumulatedRewards;
-  }
-
-  @action('setRewardsDistributionsHistory')
-  private setRewardsDistributionsHistory(rewardsDistributionsHistory: any) {
-    this.rewardsDistributionsHistory = rewardsDistributionsHistory;
-  }
-
   @action('setRewardsBalance')
   private setRewardsBalance(rewardsBalance: number) {
     console.log({ rewardsBalance });
@@ -466,5 +454,15 @@ export class OrbsAccountStore {
   @action('setEstimatedRewardsForNextWeek')
   private setEstimatedRewardsForNextWeek(estimatedRewardsForNextWeek: number) {
     this.estimatedRewardsForNextWeek = estimatedRewardsForNextWeek;
+  }
+
+  @action('setTotalStakedOrbsInContract')
+  private setTotalStakedOrbsInContract(totalStakedOrbsInContract: number) {
+    this.totalStakedOrbsInContract = totalStakedOrbsInContract;
+  }
+
+  @action('setTotalUncappedStakedOrbs')
+  private setTotalUncappedStakedOrbs(totalUncappedStakedOrbs: number) {
+    this.totalUncappedStakedOrbs = totalUncappedStakedOrbs;
   }
 }
