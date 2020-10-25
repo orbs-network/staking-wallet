@@ -93,11 +93,11 @@ export const RewardsSection = observer(() => {
       <CommonDivider />
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
-          <BalanceCard title={'Total rewards awarded (ORBS)'} amount={12345.12345} />
+          <BalanceCard title={'Total rewards awarded (ORBS)'} amount={orbsAccountStore.totalRewardedRewards} />
         </GridItem>
 
         <GridItem>
-          <BalanceCard title={'Rewards rate (ORBS/week)'} amount={68.12345} />
+          <BalanceCard title={'Rewards rate (ORBS/week)'} amount={orbsAccountStore.estimatedRewardsForNextWeek} />
         </GridItem>
 
         <GridItem>

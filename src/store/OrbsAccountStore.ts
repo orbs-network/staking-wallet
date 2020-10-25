@@ -89,33 +89,12 @@ export class OrbsAccountStore {
   @computed get participatingInStaking(): boolean {
     return this.hasStakedOrbs || this.hasOrbsInCooldown || this.hasOrbsToWithdraw;
   }
+
   @computed get hasClaimableRewards(): boolean {
     return this.rewardsBalance > 0;
   }
-  @computed get totalAccumulatedRewards(): number {
-    if (!this.accumulatedRewards) {
-      return 0;
-    }
-
-    // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
-    return (
-      Number(this.accumulatedRewards.delegatorReward) +
-      Number(this.accumulatedRewards.guardianReward) +
-      Number(this.accumulatedRewards.validatorReward)
-    );
-  }
-
-  @computed get totalDistributedRewards(): number {
-    if (!this.rewardsDistributionsHistory) {
-      return 0;
-    }
-
-    const totalDistributedRewards = this.rewardsDistributionsHistory.reduce((sum, distributionEvent) => {
-      // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
-      return sum + fullOrbsFromWeiOrbs(distributionEvent.amount);
-    }, 0);
-
-    return totalDistributedRewards;
+  @computed get totalRewardedRewards(): number {
+    return this.rewardsBalance + this.claimedRewards;
   }
 
   @computed get needsManualUpdatingOfState(): boolean {
