@@ -34,6 +34,8 @@ export class OrbsAccountStore {
   @observable public rewardsDistributionsHistory: TRewardsDistributionHistory;
 
   @observable public rewardsBalance: number = 0;
+  @observable public claimedRewards: number = 0;
+  @observable public estimatedRewardsForNextWeek: number = 0;
 
   @observable public _selectedGuardianAddress: string;
 
@@ -263,7 +265,15 @@ export class OrbsAccountStore {
       throw e;
     });
     await this.readAndSetRewards(accountAddress).catch((e) => {
-      console.error(`Error in read-n-set rewards : ${e}`);
+      console.error(`Error in read-n-set available rewards : ${e}`);
+      throw e;
+    });
+    await this.readAndSetClaimedRewards(accountAddress).catch((e) => {
+      console.error(`Error in read-n-set claimed rewards : ${e}`);
+      throw e;
+    });
+    await this.readAndSetEstimatedRewardsForNextWeek(accountAddress).catch((e) => {
+      console.error(`Error in read-n-set rewards estimation for the following week : ${e}`);
       throw e;
     });
     await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
@@ -313,6 +323,20 @@ export class OrbsAccountStore {
   private async readAndSetRewards(accountAddress: string) {
     const accumulatedRewards = await this.orbsRewardsService.readAccumulatedRewards(accountAddress);
     this.setAccumulatedRewards(accumulatedRewards);
+  }
+
+  private async readAndSetClaimedRewards(accountAddress: string) {
+    const claimedRewardsInFullOrbs = await this.stakingRewardsService.readClaimedRewardsFullOrbs(accountAddress);
+    this.setClaimedRewards(claimedRewardsInFullOrbs);
+  }
+
+  private async readAndSetEstimatedRewardsForNextWeek(accountAddress: string) {
+    const oneWeekInSeconds = 60 * 60 * 24 * 7;
+    const estimateRewardsFullOrbs = await this.stakingRewardsService.estimateFutureRewardsFullOrbs(
+      accountAddress,
+      oneWeekInSeconds,
+    );
+    this.setEstimatedRewardsForNextWeek(estimateRewardsFullOrbs);
   }
 
   private async readAndSetRewardsHistory(accountAddress: string) {
@@ -453,5 +477,15 @@ export class OrbsAccountStore {
   private setRewardsBalance(rewardsBalance: number) {
     console.log({ rewardsBalance });
     this.rewardsBalance = rewardsBalance;
+  }
+
+  @action('setClaimedRewards')
+  private setClaimedRewards(claimedRewards: number) {
+    this.claimedRewards = claimedRewards;
+  }
+
+  @action('setEstimatedRewardsForNextWeek')
+  private setEstimatedRewardsForNextWeek(estimatedRewardsForNextWeek: number) {
+    this.estimatedRewardsForNextWeek = estimatedRewardsForNextWeek;
   }
 }
