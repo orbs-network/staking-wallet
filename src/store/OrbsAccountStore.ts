@@ -261,6 +261,14 @@ export class OrbsAccountStore {
       console.error(`Error in read-n-set rewards estimation for the following week : ${e}`);
       throw e;
     });
+    await this.readAndSetTotalStakedOrbsInContract().catch((e) => {
+      console.error(`Error in read-n-set total staked orbs in contract : ${e}`);
+      throw e;
+    });
+    await this.readAndSetTotalUncappedStakedOrbs().catch((e) => {
+      console.error(`Error in read-n-set total uncapped staked orbs : ${e}`);
+      throw e;
+    });
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {
@@ -317,7 +325,7 @@ export class OrbsAccountStore {
   }
 
   private async readAndSetTotalStakedOrbsInContract() {
-    const totalStakedOrbsInContract = await this.stakingRewardsService.readTotalStakedInFullOrbs();
+    const totalStakedOrbsInContract = await this.stakingService.readTotalStakedInFullOrbs();
     this.setTotalStakedOrbsInContract(totalStakedOrbsInContract);
   }
 
