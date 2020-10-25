@@ -87,6 +87,9 @@ export class OrbsAccountStore {
   @computed get participatingInStaking(): boolean {
     return this.hasStakedOrbs || this.hasOrbsInCooldown || this.hasOrbsToWithdraw;
   }
+  @computed get hasClaimableRewards(): boolean {
+    return this.rewardsBalance > 0;
+  }
   @computed get totalAccumulatedRewards(): number {
     if (!this.accumulatedRewards) {
       return 0;
