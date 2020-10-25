@@ -11,4 +11,20 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
   },
 
   padding: 0, // Removes the excessive padding
+
+  // Active step label
+  '& .MuiStepLabel-active': {
+    fontWeight: 'bold',
+    color: theme.palette.secondary.main,
+  },
+
+  // Visited step label
+  '& .MuiStepLabel-completed': {
+    color: theme.palette.secondary.dark,
+  },
+
+  // Active step number
+  '& .MuiStepIcon-active': {
+    fontWeight: 'bold',
+  },
 }));
