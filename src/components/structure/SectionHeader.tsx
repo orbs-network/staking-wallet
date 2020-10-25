@@ -34,7 +34,7 @@ const SideTitle = styled(Typography)<OverridableComponent<TypographyTypeMap>>`
 
 interface IProps {
   title: string;
-  sideTitle?: string;
+  sideTitle?: string[] | string;
   icon: React.ElementType<SVGProps<SVGSVGElement>>;
   bottomPadding?: boolean;
 }
@@ -50,16 +50,21 @@ export const SectionHeader: React.FC<IProps> = (props) => {
       return null;
     }
 
+    const textsArray = Array.isArray(sideTitle) ? sideTitle : [sideTitle];
+
     const justification: GridJustification = largerThanMedium ? 'flex-end' : 'flex-start';
     // DEV_NOTE : '34px' is the width of the icon
     const extraMarginStyle: CSSProperties = largerThanMedium ? {} : { marginLeft: '34px' };
     const typographyVariant: Variant = largerThanMedium ? 'h6' : 'subtitle1';
-
     return (
-      <Grid container item direction={'row'} sm={12} md={8} justify={justification}>
-        <SideTitle data-testid='side-title' variant={typographyVariant} style={extraMarginStyle}>
-          {sideTitle}
-        </SideTitle>
+      <Grid container item direction={'row'} sm={12} md={8} justify={justification} spacing={2}>
+        {textsArray.map((text) => (
+          <Grid item key={text}>
+            <SideTitle key={text} variant={typographyVariant} style={extraMarginStyle}>
+              {text}
+            </SideTitle>
+          </Grid>
+        ))}
       </Grid>
     );
   }, [sideTitle, largerThanMedium]);
@@ -75,7 +80,7 @@ export const SectionHeader: React.FC<IProps> = (props) => {
   }, [bottomPadding]);
 
   return (
-    <SectionHeaderGrid style={extraStyleForHeaderGrid}>
+    <SectionHeaderGrid style={extraStyleForHeaderGrid} spacing={1}>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
         <SvgIcon component={MyIcon} />
         <Title variant={'h6'}>{title}</Title>

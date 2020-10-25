@@ -80,7 +80,10 @@ export const GuardiansSection = observer(() => {
         //   ' ' +
         //   committeeEffectiveStake.toLocaleString()
         // }
-        sideTitle={`Total Stake: ${totalStake.toLocaleString()} Committee Stake: ${committeeEffectiveStake.toLocaleString()}`}
+        sideTitle={[
+          `Total Stake: ${totalStake.toLocaleString()}`,
+          `Committee Stake: ${committeeEffectiveStake.toLocaleString()}`,
+        ]}
         icon={ShielIcon}
         bottomPadding
       />
