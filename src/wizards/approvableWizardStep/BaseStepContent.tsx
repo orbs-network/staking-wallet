@@ -26,6 +26,7 @@ interface IProps {
 
   // Action button
   actionButtonProps?: IActionButtonProps;
+  disableActionButton?: boolean;
 
   // Cancel button
   addCancelButton?: boolean;
@@ -48,6 +49,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     message,
     subMessage,
     disableInputs,
+    disableActionButton,
     isLoading,
     contentTestId,
     innerContent,
@@ -66,7 +68,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       return (
         <CommonActionButton
           style={relevantStylingForActionButtons}
-          disabled={disableInputs}
+          disabled={disableInputs || disableActionButton}
           onClick={actionButtonProps.onClick}
         >
           {actionButtonProps.title}

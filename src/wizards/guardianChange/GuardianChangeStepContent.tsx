@@ -28,10 +28,16 @@ export const GuardianChangeStepContent = observer(
 
     const reReadStoresData = useReReadAllStoresData();
 
+    // TODO : ORL : TRANSLATIONS
+
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
-      guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
-      guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
+      orbsAccountStore.isGuardian
+        ? 'You are a registered Guardian'
+        : guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
+      orbsAccountStore.isGuardian
+        ? 'You must unregister before delegating to another Guardian'
+        : guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
       false,
     );
 
@@ -84,6 +90,7 @@ export const GuardianChangeStepContent = observer(
         innerContent={null}
         actionButtonProps={changeGuardianActionButtonProps}
         addCancelButton
+        disableActionButton={orbsAccountStore.isGuardian}
         onCancelButtonClicked={closeWizard}
         cancelButtonText={wizardsCommonTranslations('action_close')}
       />
