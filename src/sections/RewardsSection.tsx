@@ -106,7 +106,7 @@ export const RewardsSection = observer(() => {
         </GridItem>
 
         <GridItem>
-          <BalanceCard title={'Rewards rate (ORBS/week)'} amount={orbsAccountStore.estimatedRewardsForNextWeek} />
+          <BalanceCard title={'Rewards rate (ORBS / week)'} amount={orbsAccountStore.estimatedRewardsForNextWeek} />
         </GridItem>
 
         <GridItem>
