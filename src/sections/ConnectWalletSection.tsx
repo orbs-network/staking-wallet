@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
@@ -18,12 +18,20 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import styled from 'styled-components';
 import { renderToString } from 'react-dom/server';
 import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '../constants';
+import useHover from '@react-hook/hover';
 
 const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: Theme }) => ({
   // Look& Feel
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
   borderRadius: '10%',
   boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.dark}`,
+
+  transition: '0.7s',
+
+  '&:hover': {
+    backgroundColor: 'rgba(47, 47, 47, 0.2)',
+    boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.light}`,
+  },
 
   // Dimensions
   minWidth: 'fit-content',
@@ -55,6 +63,11 @@ export const ConnectWalletSection = observer(() => {
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
   const legalDocsAgreedTo = useBoolean(false);
+
+  const hoverTargetRef = useRef();
+  const isHovering = useHover(hoverTargetRef);
+
+  console.log({ isHovering });
 
   const theme = useTheme();
 
@@ -93,11 +106,11 @@ export const ConnectWalletSection = observer(() => {
       );
     }
   }, [
-    connectWalletSectionTranslations,
-    handleConnectClicked,
-    handleInstallClicked,
     walletConnectionState,
+    handleConnectClicked,
     legalDocsAgreedTo.value,
+    connectWalletSectionTranslations,
+    handleInstallClicked,
   ]);
 
   const messageComponent = useMemo(() => {
@@ -162,6 +175,7 @@ export const ConnectWalletSection = observer(() => {
         direction={'column'}
         alignItems={'center'}
         id={'walletConnectionInnerGrid'}
+        ref={hoverTargetRef}
       >
         {/* Brand logos */}
         <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
