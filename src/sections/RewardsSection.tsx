@@ -4,7 +4,11 @@ import { observer } from 'mobx-react';
 import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
-import { useRewardsSectionTranslations, useSectionsTitlesTranslations } from '../translations/translationsHooks';
+import {
+  useCommonsTranslations,
+  useRewardsSectionTranslations,
+  useSectionsTitlesTranslations,
+} from '../translations/translationsHooks';
 import Grid, { GridProps } from '@material-ui/core/Grid';
 import { Theme, Typography } from '@material-ui/core';
 import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useOrbsNodeStore } from '../store/storeHooks';
@@ -33,6 +37,7 @@ export const RewardsContainer = styled((props: GridProps) => <Grid item containe
 );
 
 export const RewardsSection = observer(() => {
+  const commonsTranslations = useCommonsTranslations();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
 
   const orbsAccountStore = useOrbsAccountStore();
@@ -84,6 +89,10 @@ export const RewardsSection = observer(() => {
 
   // const availableRewards = 1780.123456;
   const availableRewards = orbsAccountStore.rewardsBalance;
+
+  if (!orbsAccountStore.doneLoading) {
+    return <Typography>{commonsTranslations('loading')}</Typography>;
+  }
 
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
