@@ -29,6 +29,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { CommonActionButton } from '../components/base/CommonActionButton';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -56,7 +57,26 @@ const CenteredContainerGridForQr = styled((props) => (
   };
 });
 
+const useStyles = makeStyles((theme) => ({
+  button: {
+    transition: '0.7s',
+
+    '& svg path': {
+      transition: '0.7s',
+    },
+
+    '&:hover': {
+      color: theme.palette.secondary.main,
+
+      '& svg path': {
+        fill: theme.palette.secondary.light,
+      },
+    },
+  },
+}));
+
 export const WalletInfoSection = observer(() => {
+  const classes = useStyles();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const walletInfoSectionTranslations = useWalletInfoSectionTranslations();
   const alertsTranslations = useAlertsTranslations();
@@ -128,7 +148,7 @@ export const WalletInfoSection = observer(() => {
         {/* Buttons */}
         <Grid container direction={'row'} item sm={12} lg={3} justify={'flex-end'}>
           <Grid item xs={6} lg={5}>
-            <LoweCaseButton fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
+            <LoweCaseButton className={classes.button} fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
           </Grid>
@@ -138,7 +158,7 @@ export const WalletInfoSection = observer(() => {
             <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }} />
           </Hidden>
           <Grid item xs={6} lg={5}>
-            <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
+            <LoweCaseButton className={classes.button} fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
               {walletInfoSectionTranslations('qr')}
             </LoweCaseButton>
           </Grid>
