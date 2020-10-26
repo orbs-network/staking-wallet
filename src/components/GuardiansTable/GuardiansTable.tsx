@@ -162,6 +162,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       selectedGuardian,
       guardianSelectionMode,
       onGuardianSelect,
+      disableSelection,
       guardiansTableTranslations,
       theme.palette.secondary.main,
       theme.palette.grey,
