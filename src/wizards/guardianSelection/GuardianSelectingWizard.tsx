@@ -14,6 +14,7 @@ import {
   IGuardianSelectionStepContentProps,
 } from '../staking/GuardianSelectionStepContent';
 import { Wizard } from '../../components/wizards/Wizard';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const STEPS_INDEXES = {
   selectGuardian: 0,
@@ -32,6 +33,7 @@ export const GuardianSelectingWizard = observer(
     useTrackModal(MODAL_IDS.guardianSelection);
     const { closeWizard, selectedGuardianAddress } = props;
 
+    const orbsAccountStore = useOrbsAccountStore();
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardianSelectingWizardTranslations = useGuardianSelectingWizardTranslations();
     const activeStep = useNumber(0);
@@ -40,8 +42,9 @@ export const GuardianSelectingWizard = observer(
     const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
       return {
         selectedGuardianAddress: selectedGuardianAddress,
+        isRegisteredGuardian: orbsAccountStore.isGuardian,
       };
-    }, [selectedGuardianAddress]);
+    }, [orbsAccountStore.isGuardian, selectedGuardianAddress]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {

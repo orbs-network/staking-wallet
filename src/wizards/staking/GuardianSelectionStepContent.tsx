@@ -13,11 +13,19 @@ import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
+  isRegisteredGuardian: boolean;
 }
 
 export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
+    const {
+      onPromiEventAction,
+      skipToSuccess,
+      txError,
+      disableInputs,
+      selectedGuardianAddress,
+      isRegisteredGuardian,
+    } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
@@ -30,10 +38,16 @@ export const GuardianSelectionStepContent = observer(
     const stakingRewardsService = useStakingRewardsService();
     const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
+    // TODO : ORL : TRANSLATIONS
+
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
-      stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
-      stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
+      isRegisteredGuardian
+        ? 'You are a registered Guardian'
+        : stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
+      isRegisteredGuardian
+        ? 'You must unregister before delegating to another Guardian'
+        : stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
       false,
     );
 
@@ -91,6 +105,7 @@ export const GuardianSelectionStepContent = observer(
             committeeMembers={orbsNodeStore.committeeMembers}
             guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             densePadding
+            disableSelection={isRegisteredGuardian}
           />
         </Grid>
       );

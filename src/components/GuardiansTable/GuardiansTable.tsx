@@ -69,6 +69,8 @@ interface IProps {
   extraStyle?: React.CSSProperties;
   tableTitle?: string;
 
+  disableSelection?: boolean;
+
   // Styling
   densePadding?: boolean;
 }
@@ -91,6 +93,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     onGuardianSelect,
     selectedGuardian,
     guardiansToDelegatorsCut,
+    disableSelection,
     tableTestId,
     extraStyle,
     tableTitle,
@@ -113,7 +116,12 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       switch (guardianSelectionMode) {
         case 'Select':
           selectedGuardianCell = (
-            <CommonActionButton variant={'outlined'} onClick={actionButtonOnClick} fullWidth>
+            <CommonActionButton
+              disabled={disableSelection}
+              variant={'outlined'}
+              onClick={actionButtonOnClick}
+              fullWidth
+            >
               {guardiansTableTranslations(isSelectedGuardian ? 'action_keep' : 'action_select')}
             </CommonActionButton>
           );
@@ -133,7 +141,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               <IconButton
                 data-testid={actionButtonTestId}
                 onClick={actionButtonOnClick}
-                disabled={!enabled}
+                disabled={!enabled || disableSelection}
                 style={{ color: iconColor }}
               >
                 {actionButtonIcon}

@@ -58,8 +58,9 @@ export const StakingWizard = observer(
     const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
       return {
         selectedGuardianAddress: orbsAccountStore.selectedGuardianAddress,
+        isRegisteredGuardian: orbsAccountStore.isGuardian,
       };
-    }, [orbsAccountStore.selectedGuardianAddress]);
+    }, [orbsAccountStore.isGuardian, orbsAccountStore.selectedGuardianAddress]);
 
     const extraPropsForOrbsStaking = useMemo<IOrbsStakingStepContentProps>(() => {
       return {

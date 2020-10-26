@@ -77,7 +77,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     } else {
       return null;
     }
-  }, [actionButtonProps, disableInputs, relevantStylingForActionButtons]);
+  }, [actionButtonProps, disableActionButton, disableInputs, relevantStylingForActionButtons]);
   const hasAnyButtons = !!actionButton || addCancelButton;
 
   const titleContent = useMemo(() => {
