@@ -64,7 +64,7 @@ export class OrbsAccountStore {
   @computed get selectedGuardian(): Guardian | null {
     if (this.hasSelectedGuardian) {
       const guardian = this.orbsNodeStore.guardians.find(
-        (g) => g.EthAddress.toLowerCase() === this.selectedGuardianAddress,
+        (g) => g.EthAddress.toLowerCase() === this.selectedGuardianAddress.toLowerCase(),
       );
       return guardian || null;
     } else {
