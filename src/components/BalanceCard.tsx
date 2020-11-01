@@ -83,7 +83,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const balanceItem = (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
-        {amount.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+        {amount.toLocaleString(undefined, { maximumFractionDigits: 6 })}
       </Typography>
     </Grid>
   );
