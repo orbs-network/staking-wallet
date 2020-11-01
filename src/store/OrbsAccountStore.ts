@@ -461,6 +461,7 @@ export class OrbsAccountStore {
 
   @action('setEstimatedRewardsForNextWeek')
   private setEstimatedRewardsForNextWeek(estimatedRewardsForNextWeek: number) {
+    console.log({ estimatedRewardsForNextWeek });
     this.estimatedRewardsForNextWeek = estimatedRewardsForNextWeek;
   }
 

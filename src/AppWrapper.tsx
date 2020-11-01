@@ -52,7 +52,11 @@ if (ethereumProvider) {
 } else {
   ethereumProviderName = 'ORBS Infura';
 }
+
 services.analyticsService.setEthereumProvider(ethereumProviderName);
+
+// @ts-ignore
+window.services = services;
 
 const themeAndStyle = {
   ...baseTheme,
