@@ -175,15 +175,16 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     disableTxCreationInputs.value,
     txCreatingError.value,
     txCreationAction,
+    displayCongratulationsSubStep,
+    goToCongratulationSubStep,
+    moveToNextStepAction,
+    closeWizard,
     propsForTransactionCreationSubStepContent,
     txConfirmationsCount.value,
     txHash.value,
-    goToCongratulationSubStep,
-    finishedActionName,
-    moveToNextStepAction,
-    moveToNextStepTitle,
-    closeWizard,
     onTransactionApprovingSubStepFinished,
+    finishedActionName,
+    moveToNextStepTitle,
   ]);
 
   return currentSubStepContent;

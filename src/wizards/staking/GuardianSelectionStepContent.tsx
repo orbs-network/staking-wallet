@@ -105,12 +105,14 @@ export const GuardianSelectionStepContent = observer(
             committeeMembers={orbsNodeStore.committeeMembers}
             guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             densePadding
-            disableSelection={isRegisteredGuardian}
+            disableSelection={isRegisteredGuardian || disableInputs}
           />
         </Grid>
       );
     }, [
+      disableInputs,
       guardianAddressToDelegatorsCut,
+      isRegisteredGuardian,
       orbsNodeStore.committeeMembers,
       orbsNodeStore.guardians,
       selectGuardian,
