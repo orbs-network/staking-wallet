@@ -121,7 +121,6 @@ export class OrbsAccountStore {
     private stakingService: IStakingService,
     private stakingRewardsService: IStakingRewardsService,
     private orbsTokenService: IOrbsTokenService,
-    private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
     private delegationsService: IDelegationsService,
   ) {

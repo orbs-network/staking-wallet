@@ -1,11 +1,4 @@
-import {
-  IOrbsPOSDataService,
-  OrbsClientService,
-  orbsPOSDataServiceFactory,
-  IOrbsClientService,
-  OrbsRewardsService,
-  IOrbsRewardsService,
-} from 'orbs-pos-data';
+import { IOrbsPOSDataService, OrbsClientService, orbsPOSDataServiceFactory, IOrbsClientService } from 'orbs-pos-data';
 import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
 import config from '../config';
@@ -41,7 +34,6 @@ export interface IServices {
   stakingService: IStakingService;
   orbsTokenService: IOrbsTokenService;
   analyticsService: IAnalyticsService;
-  rewardsService: IOrbsRewardsService;
   stakingRewardsService: IStakingRewardsService;
   guardiansService: IGuardiansService;
   orbsNodeService: IOrbsNodeService;
@@ -68,11 +60,6 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, config?.contractsAddressesOverride),
     stakingService: new StakingService(web3, config?.contractsAddressesOverride?.stakingContract),
     orbsTokenService: new OrbsTokenService(web3, config?.contractsAddressesOverride?.erc20Contract),
-    rewardsService: new OrbsRewardsService(
-      web3,
-      orbsClientService,
-      config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
-    ),
     stakingRewardsService: new StakingRewardsService(web3, config?.contractsAddressesOverride?.stakingRewardsContract),
     guardiansService: new GuardiansService(web3, config?.contractsAddressesOverride?.guardiansContract),
     analyticsService: analyticsService,

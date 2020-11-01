@@ -35,7 +35,6 @@ export function getStores(
   stakingRewardsService: IStakingRewardsService,
   orbsTokenService: IOrbsTokenService,
   cryptoWalletConnectionService: ICryptoWalletConnectionService,
-  orbsRewardsService: IOrbsRewardsService,
   analyticsService: IAnalyticsService,
   orbsNodeService: IOrbsNodeService,
   delegationsService: IDelegationsService,
@@ -50,7 +49,6 @@ export function getStores(
     stakingService,
     stakingRewardsService,
     orbsTokenService,
-    orbsRewardsService,
     analyticsService,
     delegationsService,
   );
