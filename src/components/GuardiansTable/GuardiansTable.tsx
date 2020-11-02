@@ -29,6 +29,8 @@ import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNode
 import { Line } from 'rc-progress';
 import { CommonActionButton } from '../base/CommonActionButton';
 import { InTextLink } from '../shared/texts/InTextLink';
+import { toJS } from 'mobx';
+import { ensurePrefix } from '../../utils/stringUtils';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -178,10 +180,13 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     [guardians, selectedGuardian],
   );
 
+  console.log({ committeeMembers: toJS(committeeMembers) });
+
   const getCommitteeMemberData = useCallback(
     (guardianEthAddress: string) => {
       const committeeMemberData = committeeMembers.find(
-        (committeeMember) => committeeMember.EthAddress.toLowerCase() === guardianEthAddress.toLowerCase(),
+        (committeeMember) =>
+          ensurePrefix(committeeMember.EthAddress, '0x').toLowerCase() === guardianEthAddress.toLowerCase(),
       );
 
       return committeeMemberData;
