@@ -28,6 +28,7 @@ import { GuardianQualifications } from './GuardianQualifications';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { Line } from 'rc-progress';
 import { CommonActionButton } from '../base/CommonActionButton';
+import { InTextLink } from '../shared/texts/InTextLink';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -219,9 +220,12 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: guardiansTableTranslations('columnHeader_address'),
         field: 'EthAddress',
         render: (guardian) => (
-          <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'}>
+          <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'} interactive>
             <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>
-              {guardian.EthAddress.substring(0, 10)}...
+              <InTextLink
+                href={`https://etherscan.io/address/${guardian.EthAddress}`}
+                text={`${guardian.EthAddress.substring(0, 10)}...`}
+              />
             </Typography>
           </Tooltip>
         ),
