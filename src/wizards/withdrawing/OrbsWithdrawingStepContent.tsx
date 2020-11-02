@@ -73,7 +73,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       message={message.value}
       subMessage={subMessage.value}
       title={withdrawingWizardTranslations('withdrawingSubStep_stepTitle', {
-        orbsForWithdrawal: fullOrbsReadyForWithdrawal,
+        orbsForWithdrawal: fullOrbsReadyForWithdrawal.toLocaleString(),
       })}
       infoTitle={withdrawingWizardTranslations('withdrawingSubStep_stepExplanation')}
       disableInputs={disableInputs}
