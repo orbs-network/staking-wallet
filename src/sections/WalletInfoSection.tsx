@@ -115,9 +115,9 @@ export const WalletInfoSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid item xs={12}>
-        <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
-      </Grid>
+      {/*<Grid item xs={12}>*/}
+      {/*  <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>*/}
+      {/*</Grid>*/}
 
       {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
       <Grid

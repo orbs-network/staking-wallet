@@ -124,7 +124,7 @@ export const BalancesSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} bottomPadding />
+      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
 
       <CommonDivider />
 

@@ -97,7 +97,7 @@ export const RewardsSection = observer(() => {
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
     <Section>
-      <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} bottomPadding />
+      <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} />
 
       <CommonDivider />
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>

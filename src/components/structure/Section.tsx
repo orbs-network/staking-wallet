@@ -15,7 +15,7 @@ const StyledGrid = styled(Grid)({
 
 export const Section: React.FC<GridProps> = ({ children, ...otherProps }) => {
   return (
-    <StyledGrid item container direction={'column'} {...otherProps} spacing={2}>
+    <StyledGrid item container direction={'column'} {...otherProps}>
       {children}
     </StyledGrid>
   );
