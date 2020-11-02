@@ -102,11 +102,19 @@ export const RewardsSection = observer(() => {
       <CommonDivider />
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
-          <BalanceCard title={'Total rewards awarded (ORBS)'} amount={orbsAccountStore.totalRewardedRewards} />
+          <BalanceCard
+            title={'Total rewards awarded (ORBS)'}
+            amount={orbsAccountStore.totalRewardedRewards}
+            showFraction
+          />
         </GridItem>
 
         <GridItem>
-          <BalanceCard title={'Rewards rate (ORBS / week)'} amount={orbsAccountStore.estimatedRewardsForNextWeek} />
+          <BalanceCard
+            title={'Rewards rate (ORBS / week)'}
+            amount={orbsAccountStore.estimatedRewardsForNextWeek}
+            showFraction
+          />
         </GridItem>
 
         <GridItem>
@@ -116,6 +124,7 @@ export const RewardsSection = observer(() => {
             secondaryActionButtonActive={availableRewards > 0}
             secondaryActionButtonTitle={'Claim'}
             onSecondaryActionButtonPressed={showClaimingModal.setTrue}
+            showFraction
           />
         </GridItem>
       </Grid>

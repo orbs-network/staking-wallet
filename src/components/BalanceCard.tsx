@@ -52,6 +52,9 @@ interface IProps {
   onSecondaryActionButtonPressed?: () => void;
   secondaryActionButtonActive?: boolean;
 
+  // Display
+  showFraction?: boolean;
+
   // Testing
   balanceCardTestId?: string;
 }
@@ -69,6 +72,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     secondaryActionButtonTitle,
     onSecondaryActionButtonPressed,
     secondaryActionButtonActive,
+    showFraction,
     balanceCardTestId,
   } = props;
 
@@ -80,10 +84,20 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
 
+  const numberFormatOptions = useMemo<Intl.NumberFormatOptions>(() => {
+    const options: Intl.NumberFormatOptions = {};
+
+    if (showFraction) {
+      options.maximumFractionDigits = 6;
+    }
+
+    return options;
+  }, [showFraction]);
+
   const balanceItem = (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
-        {amount.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+        {amount.toLocaleString(undefined, numberFormatOptions)}
       </Typography>
     </Grid>
   );
