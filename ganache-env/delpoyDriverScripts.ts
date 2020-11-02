@@ -24,11 +24,11 @@ const deployDriverScripts = async () => {
     console.log(`Balance of ${orbsV2Account} `, await driver.erc20.balanceOf(orbsV2Account));
 
     // Setting delegators staking rewards
-    const rewardsInWeiBN = toWei(new BN(5_000_000));
-    await driver.erc20.approve(driver.stakingRewards.address, rewardsInWeiBN);
-    await driver.stakingRewards.acceptRewardsBalanceMigration(orbsV2Account, 0, rewardsInWeiBN, {
-      from: orbsV2Account,
-    });
+    // const rewardsInWeiBN = toWei(new BN(5_000_000));
+    // await driver.erc20.approve(driver.stakingRewards.address, rewardsInWeiBN);
+    // await driver.stakingRewards.acceptRewardsBalanceMigration(orbsV2Account, 0, rewardsInWeiBN, {
+    //   from: orbsV2Account,
+    // });
 
     const addresses = {
       staking: driver.staking.address,
