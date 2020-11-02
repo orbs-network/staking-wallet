@@ -18,15 +18,25 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
 
   return (
     <Tooltip
-      enterTouchDelay={100}
+      enterTouchDelay={0}
       title={<GuardianQualificationsTooltip committeeMembershipData={committeeMembershipData} guardian={guardian} />}
       arrow
       placement={'right'}
     >
-      <div style={{ height: '3rem', width: '3rem' }}>
+      <div style={{ height: '3rem', width: '3rem', position: 'relative', cursor: 'pointer' }}>
         <SvgIcon component={SelectedIcon} viewBox='0 0 40.371 47.178' style={{ height: '100%', width: '100%' }} />
         {/*{committeeMembershipData ? 'In committee' : null}*/}
         {/*{guardian.IsCertified ? 'Certified' : null}*/}
+        <Typography
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translateX(-55%) translateY(-50%)',
+          }}
+        >
+          {guardian.IsCertified ? 'V' : '?'}
+        </Typography>
       </div>
     </Tooltip>
   );
