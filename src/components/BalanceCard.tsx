@@ -88,9 +88,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const numberFormatOptions = useMemo<Intl.NumberFormatOptions>(() => {
     const options: Intl.NumberFormatOptions = {};
 
-    if (showFraction) {
-      options.maximumFractionDigits = 6;
-    }
+    options.maximumFractionDigits = showFraction ? 6 : 0;
 
     return options;
   }, [showFraction]);
