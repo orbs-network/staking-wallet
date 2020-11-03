@@ -129,7 +129,11 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
       </Grid>
       <CommonDivider />
 
-      {toolTipTitle && <Tooltip title={toolTipTitle}>{balanceItem}</Tooltip>}
+      {toolTipTitle && (
+        <Tooltip placement={'right'} title={toolTipTitle} arrow>
+          {balanceItem}
+        </Tooltip>
+      )}
       {!toolTipTitle && balanceItem}
 
       {hasMainButton && (

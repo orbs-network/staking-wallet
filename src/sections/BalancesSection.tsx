@@ -155,9 +155,23 @@ export const BalancesSection = observer(() => {
               <BalanceCard
                 // title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
                 title={'Staked ORBS & Rewards balance'}
-                toolTipTitle={`${fullOrbsFromWeiOrbs(
-                  orbsAccountStore.stakedOrbs,
-                ).toLocaleString()} staked ORBS + ${orbsAccountStore.rewardsBalance.toLocaleString()} in rewards`}
+                toolTipTitle={
+                  <>
+                    <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
+                      Staked Orbs:{' '}
+                    </Typography>
+                    <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
+                      {fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs).toLocaleString()}
+                    </Typography>
+                    <br />
+                    <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
+                      Pending rewards:{' '}
+                    </Typography>
+                    <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
+                      {orbsAccountStore.rewardsBalance.toLocaleString()}
+                    </Typography>
+                  </>
+                }
                 amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
                 actionButtonActive={orbsAccountStore.hasStakedOrbs || orbsAccountStore.hasClaimableRewards}
