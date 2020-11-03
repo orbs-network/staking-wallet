@@ -25,6 +25,8 @@ import { CommonActionButton } from '../components/base/CommonActionButton';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimingWizard';
 import { BalanceCard } from '../components/BalanceCard';
+import useInterval from 'use-interval';
+import config from '../config';
 
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};
@@ -89,6 +91,10 @@ export const RewardsSection = observer(() => {
 
   // const availableRewards = 1780.123456;
   const availableRewards = orbsAccountStore.rewardsBalance;
+
+  useInterval(() => {
+    orbsAccountStore.refreshAllRewardsData();
+  }, 1000 * config.rewardsRefreshRateInSeconds);
 
   if (!orbsAccountStore.doneLoading) {
     return <Typography>{commonsTranslations('loading')}</Typography>;

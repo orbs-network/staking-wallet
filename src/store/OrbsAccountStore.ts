@@ -185,8 +185,10 @@ export class OrbsAccountStore {
   }
 
   // **** Data fefresh interactions ****
-  public async refreshEstimatedRewardsRate() {
-    return this.readAndSetEstimatedRewardsForNextWeek(this.cryptoWalletIntegrationStore.mainAddress);
+  public async refreshAllRewardsData() {
+    this.readAndSetEstimatedRewardsForNextWeek(this.cryptoWalletIntegrationStore.mainAddress);
+    this.readAndSetRewardsBalance(this.cryptoWalletIntegrationStore.mainAddress);
+    this.readAndSetClaimedRewards(this.cryptoWalletIntegrationStore.mainAddress);
   }
 
   // **** Current address changed ****
@@ -315,6 +317,7 @@ export class OrbsAccountStore {
       accountAddress,
       oneWeekInSeconds,
     );
+
     this.setEstimatedRewardsForNextWeek(estimateRewardsFullOrbs);
   }
 

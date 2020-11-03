@@ -7,6 +7,7 @@ import { useStringOrElement } from './hooks/commonHooks';
 import useHover from '@react-hook/hover';
 import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
+import AnimatedNumber from 'animated-number-react';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
@@ -94,10 +95,13 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     return options;
   }, [showFraction]);
 
+  const formatValue = (value: number) => value.toLocaleString(undefined, numberFormatOptions);
+
   const balanceItem = (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
-        {amount.toLocaleString(undefined, numberFormatOptions)}
+        {/*{amount.toLocaleString(undefined, numberFormatOptions)}*/}
+        <AnimatedNumber value={amount} formatValue={formatValue} />
       </Typography>
     </Grid>
   );

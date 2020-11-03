@@ -31,6 +31,7 @@ interface IConfig {
   earliestBlockForDelegationOverride: number;
   gaTrackerId: string;
   analyticsActive: boolean;
+  rewardsRefreshRateInSeconds: number;
 }
 
 const config: IConfig = {
@@ -40,6 +41,7 @@ const config: IConfig = {
   earliestBlockForDelegationOverride: null,
   gaTrackerId: 'UA-163134097-1',
   analyticsActive: !IS_DEV,
+  rewardsRefreshRateInSeconds: 10,
 };
 
 // Webpack will remove this section on production build //
