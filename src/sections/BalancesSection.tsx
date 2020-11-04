@@ -153,7 +153,6 @@ export const BalancesSection = observer(() => {
             {/* Staked&Rewards */}
             <GridItem>
               <BalanceCard
-                // title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
                 title={'Staked ORBS & Rewards balance'}
                 toolTipTitle={
                   <>
