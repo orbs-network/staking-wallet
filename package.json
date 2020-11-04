@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "homepage": "https://orbs-network.github.io/staking",
+  "homepage": "https://orlavy.github.io/mainet-example",
   "engines": {
     "node": "10.17.0"
   },
@@ -19,7 +19,7 @@
     "build-server": "tsc -p ./src/server",
     "deployOld": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
     "predeploy": "rm -rf ./dist && npm run build",
-    "deploy": "gh-pages -d dist -r git@github.com:orbs-network/staking.git",
+    "deploy": "gh-pages -d dist -r git@github.com:orlavy/mainet-example.git",
     "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
     "postinstall": "npm run mkd"
   },
@@ -37,7 +37,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "@material-ui/icons": "^4.9.1",
-    "@orbs-network/contracts-js": "0.0.33",
+    "@orbs-network/contracts-js": "0.0.34",
     "@react-hook/hover": "^4.0.0",
     "animated-number-react": "^0.1.1",
     "axios": "^0.19.2",
