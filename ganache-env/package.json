@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@orbs-network/orbs-ethereum-contracts-v2": "0.0.33",
+    "@orbs-network/orbs-ethereum-contracts-v2": "0.0.36",
     "bn.js": "^5.1.2",
     "ganache-cli": "^6.9.1",
     "openzeppelin-solidity": "2.0.1",
