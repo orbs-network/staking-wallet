@@ -243,7 +243,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: guardiansTableTranslations('columnHeader_website'),
         field: 'Website',
         render: (guardian) => (
-          <Tooltip title={<Typography>{guardian.Website}</Typography>}>
+          <Tooltip arrow title={<Typography>{guardian.Website}</Typography>}>
             <a
               data-testid={`guardian-${guardian.EthAddress}-website`}
               href={getWebsiteAddress(guardian.Website)}
@@ -271,6 +271,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
           return (
             <Tooltip
+              arrow
               title={
                 <>
                   <Typography>This Guardian gives {text} of the rewards to the Delegators</Typography>
@@ -306,6 +307,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
           return (
             <Tooltip
+              arrow
               title={
                 <>
                   <Typography>Self stake: {SelfStake?.toLocaleString()} ORBS</Typography>
@@ -353,6 +355,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
           return (
             <Tooltip
+              arrow
               title={
                 <>
                   <Typography>Self stake: {SelfStake?.toLocaleString()} ORBS</Typography>
