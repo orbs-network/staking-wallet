@@ -8,6 +8,7 @@ import useHover from '@react-hook/hover';
 import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import AnimatedNumber from 'animated-number-react';
+import { IReactComponent } from 'mobx-react/dist/types/IReactComponent';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
@@ -40,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  title: string | React.ElementType;
-  toolTipTitle?: string | React.ElementType;
+  title: string | React.ElementType | JSX.Element;
+  toolTipTitle?: string | React.ElementType | JSX.Element;
   amount: number;
 
   // Action buttons (main + secondary)

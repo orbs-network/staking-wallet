@@ -27,7 +27,7 @@ const deployDriverScripts = async () => {
     // Setting delegators staking rewards
     const rewardsInWeiBN = toWei(new BN(5_000));
     await driver.erc20.approve(driver.stakingRewards.address, rewardsInWeiBN);
-    await driver.stakingRewards.acceptRewardsBalanceMigration(orbsV2Account, 0, rewardsInWeiBN, {
+    await driver.stakingRewards.acceptRewardsBalanceMigration([orbsV2Account], [0], [rewardsInWeiBN], rewardsInWeiBN, {
       from: orbsV2Account,
     });
 

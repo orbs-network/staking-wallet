@@ -67,8 +67,8 @@ export const BalancesSection = observer(() => {
     balancesSectionTranslations,
     canWithdrawCooldownOrbs,
     hasOrbsInCooldown,
-    showRestakingModal.setTrue,
-    showWithdrawingModal.setTrue,
+    showRestakingModal,
+    showWithdrawingModal,
   ]);
 
   const { orbsInCooldownBoxTitle, orbsInCooldownBoxEnabled } = useMemo(() => {
