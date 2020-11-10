@@ -333,10 +333,21 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           const color = ParticipationPercentage <= 30 ? 'red' : ParticipationPercentage <= 80 ? 'yellow' : 'green';
 
           return (
-            <>
-              <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
-              <Typography>{ParticipationPercentage.toFixed(2)}%</Typography>
-            </>
+            <Tooltip
+              arrow
+              title={
+                <>
+                  <Typography>
+                    Percentage of committees in the last 30 days in which this Guardian was a member
+                  </Typography>
+                </>
+              }
+            >
+              <div>
+                <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
+                <Typography>{ParticipationPercentage.toFixed(2)}%</Typography>
+              </div>
+            </Tooltip>
           );
         },
         cellStyle: {
