@@ -37,7 +37,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "@material-ui/icons": "^4.9.1",
-    "@orbs-network/contracts-js": "0.0.34",
+    "@orbs-network/contracts-js": "0.0.35",
     "@react-hook/hover": "^4.0.0",
     "animated-number-react": "^0.1.1",
     "axios": "^0.19.2",
