@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { WizardContainer } from './WizardContainer';
-import { DialogContent, DialogTitle, Grid, Step, StepLabel } from '@material-ui/core';
+import { DialogContent, DialogTitle, Grid, IconButton, Step, StepLabel } from '@material-ui/core';
 import { WizardStepper } from './WizardStepper';
 import styled from 'styled-components';
+import CloseIcon from '@material-ui/icons/Close';
 
 interface IProps {
   stepperTitles: string[];
@@ -41,6 +42,11 @@ export const Wizard = React.memo<IProps>((props) => {
   return (
     <>
       <DialogTitle>
+        {/*<div style={{ position: 'absolute', right: '0rem', top: '0px' }}>*/}
+        {/*  <IconButton style={{}} onClick={() => console.log('should close')}>*/}
+        {/*    <CloseIcon />*/}
+        {/*  </IconButton>*/}
+        {/*</div>*/}
         <WizardStepper activeStep={activeStep} alternativeLabel>
           {stepperStepTitles}
         </WizardStepper>
