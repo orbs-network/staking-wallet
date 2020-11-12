@@ -267,18 +267,22 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
           const hasData = guardiansToDelegatorsCut[EthAddress] != undefined;
 
-          const text = hasData ? `${guardiansToDelegatorsCut[EthAddress]}%` : '--';
+          const percentageText = hasData ? `${guardiansToDelegatorsCut[EthAddress]}%` : '--';
 
           return (
             <Tooltip
               arrow
               title={
                 <>
-                  <Typography>This Guardian gives {text} of the rewards to the Delegators</Typography>
+                  <Typography>
+                    {guardiansTableTranslations('message_guardianGivesXPercentageToDelegators', {
+                      percentage: percentageText,
+                    })}
+                  </Typography>
                 </>
               }
             >
-              <Typography>{text}</Typography>
+              <Typography>{percentageText}</Typography>
             </Tooltip>
           );
         },

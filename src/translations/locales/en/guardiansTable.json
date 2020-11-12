@@ -20,5 +20,6 @@
   "message_sinceDate": "Since {{dateText}}",
   "message_certified": "Certified",
   "message_notCertified": "Not certified",
-  "message_registeredSinceDate": "Registered since {{dateText}}"
+  "message_registeredSinceDate": "Registered since {{dateText}}",
+  "message_guardianGivesXPercentageToDelegators": "This Guardian gives {{percentage}} of the rewards to the Delegators"
 }

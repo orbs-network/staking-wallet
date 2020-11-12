@@ -90,7 +90,7 @@ export interface IGuardiansTableTranslations {
   columnHeader_votedInLastElection: string;
   columnHeader_selection: string;
 
-  // Tooltips and titles
+  // Messages for Guardian qualifications
   message_inCommittee: string;
   message_notInCommittee: string;
   message_pleaseNote: string;
@@ -99,6 +99,9 @@ export interface IGuardiansTableTranslations {
   message_certified: string;
   message_notCertified: string;
   message_registeredSinceDate: string;
+
+  // Messages for other columns
+  message_guardianGivesXPercentageToDelegators;
 
   // Unused
   columnHeader_stakingPercentageInLastElections: string;
