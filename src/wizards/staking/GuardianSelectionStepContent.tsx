@@ -43,10 +43,10 @@ export const GuardianSelectionStepContent = observer(
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       isRegisteredGuardian
-        ? 'You are a registered Guardian'
+        ? stakingWizardTranslations('guardianSelectionSubStep_message_youAreAGuardian')
         : stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
       isRegisteredGuardian
-        ? 'You must unregister before delegating to another Guardian'
+        ? stakingWizardTranslations('guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation')
         : stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
       false,
     );

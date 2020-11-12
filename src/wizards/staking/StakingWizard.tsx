@@ -35,8 +35,6 @@ export const StakingWizard = observer(
     const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
     // DEV_NOTE : O.L : if a user has an unused allowance it probably means that his process was cut in the middle.
-    // const initialStep = orbsAccountStore.hasUnusedAllowance ? STEPS_INDEXES.stakeOrbs : STEPS_INDEXES.allowTransfer;
-    // const initialStep = STEPS_INDEXES.selectGuardian;
     const initialStep = orbsAccountStore.hasSelectedGuardian
       ? orbsAccountStore.hasUnusedAllowance
         ? STEPS_INDEXES.stakeOrbs
@@ -74,38 +72,6 @@ export const StakingWizard = observer(
       };
     }, [goToSelectGuardianStep]);
 
-    // DEV_NOTE : O.L : After moving the Guardian selection to be the first step, this logic is no longer required.
-    // DEV_NOTE : In certain cases, such as when the user already has a selected guardian or the user is a Guardian himself,
-    //            we would like to skip on the 'guardian selection' sub-step.
-    // const { nextStepAfterStakingTitle, goToNextStepAfterStaking } = useMemo<{
-    //   goToNextStepAfterStaking: () => void;
-    //   nextStepAfterStakingTitle: string;
-    // }>(() => {
-    //   let goToNextStepAfterStaking: () => void;
-    //   let nextStepAfterStakingTitle: string;
-    //   const shouldSkipGuardianSelection = orbsAccountStore.isGuardian || orbsAccountStore.hasSelectedGuardian;
-    //
-    //   if (shouldSkipGuardianSelection) {
-    //     goToNextStepAfterStaking = goToFinishStep;
-    //     nextStepAfterStakingTitle = wizardsCommonTranslations('moveToStep_finish');
-    //   } else {
-    //     goToNextStepAfterStaking = goToSelectGuardianStep;
-    //     nextStepAfterStakingTitle = stakingWizardTranslations('moveToStep_selectGuardian');
-    //   }
-    //
-    //   return {
-    //     goToNextStepAfterStaking,
-    //     nextStepAfterStakingTitle,
-    //   };
-    // }, [
-    //   goToFinishStep,
-    //   goToSelectGuardianStep,
-    //   orbsAccountStore.hasSelectedGuardian,
-    //   orbsAccountStore.isGuardian,
-    //   stakingWizardTranslations,
-    //   wizardsCommonTranslations,
-    // ]);
-
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
         // TODO : ORL : TRANSLATIONS
@@ -117,7 +83,7 @@ export const StakingWizard = observer(
               displayCongratulationsSubStep={false}
               finishedActionName={stakingWizardTranslations('finishedAction_selectedGuardian')}
               moveToNextStepAction={goToSelectAmountStep}
-              moveToNextStepTitle={'Stake'}
+              moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
               closeWizard={closeWizard}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
               key={'guardianSelectionStep'}
@@ -165,6 +131,7 @@ export const StakingWizard = observer(
       activeStep.value,
       closeWizard,
       extraPropsForGuardianSelection,
+      extraPropsForOrbsAllowance,
       extraPropsForOrbsStaking,
       goToFinishStep,
       goToSelectAmountStep,

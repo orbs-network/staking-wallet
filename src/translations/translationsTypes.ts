@@ -137,6 +137,7 @@ export interface IStakingWizardTranslations {
   finishedAction_selectedGuardian: string;
   moveToStep_stake: string;
   moveToStep_selectGuardian: string;
+  moveToStep_approve: string;
   afterSuccessStateExplanation: string;
 
   // Allowance approval selection sub step
@@ -152,7 +153,9 @@ export interface IStakingWizardTranslations {
 
   // Guardian selection sub step
   guardianSelectionSubStep_message_selectGuardian: string;
+  guardianSelectionSubStep_message_youAreAGuardian: string;
   guardianSelectionSubStep_subMessage_pressSelectAndApprove: string;
+  guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation: string;
   guardianSelectionSubStep_stepTitle: string;
   guardianSelectionSubStep_stepExplanation: string;
 }
