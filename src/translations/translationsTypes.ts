@@ -27,6 +27,7 @@ export interface ICommonsTranslations {
 
   termsOfUse: string;
   privacyPolicy: string;
+  xOrbs: string;
 }
 
 export interface ISectionTitlesTranslations {
@@ -235,8 +236,10 @@ export interface IRewardsClaimingWizardTranslation {
   afterSuccessStateExplanation: string;
 
   // // Claiming sub step
-  // rewardsClaimingSubStep_subMessage_pressWithdrawAndApprove: string;
-  // rewardsClaimingSubStep_stepTitle: string;
+  rewardsClaimingSubStep_message_pressClaimWithExplanation: string;
+  rewardsClaimingSubStep_subMessage_claimingHasCost: string;
+  rewardsClaimingSubStep_stepTitle: string;
+  rewardsClaimingSubStep_text_rewardsBalanceIs: string;
   // rewardsClaimingSubStep_stepExplanation: string;
   // rewardsClaimingSubStep_action_withdraw: string;
 }

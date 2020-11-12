@@ -3,9 +3,9 @@ import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHo
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
-import { useTranslation } from 'react-i18next';
 import {
-  useGuardianChangingWizardTranslations,
+  useCommonsTranslations,
+  useRewardsClaimingWizardTranslations,
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
@@ -21,23 +21,18 @@ export const RewardsCalaimingStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianChangeStepContentProps) => {
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress, closeWizard } = props;
 
+    const commonsTranslations = useCommonsTranslations();
     const wizardsCommonTranslations = useWizardsCommonTranslations();
-    const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
+    const rewardsClaimingWizardTranslations = useRewardsClaimingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
-    const [t] = useTranslation();
     const analyticsService = useAnalyticsService();
 
     const reReadStoresData = useReReadAllStoresData();
 
-    const m = `${orbsAccountStore.rewardsBalance.toLocaleString()} ORBS`;
-
-    // TODO : ORL : TRANSLATIONS
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
-      // guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
-      'Press "Claim" to claim your rewards balance. Claimed rewards are automatically staked and delegated to your Guardian',
-      // guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
-      `Claiming rewards has an associated gas cost. it is recommended to claim your rewards only after acquiring significant rewards balance. `,
+      rewardsClaimingWizardTranslations('rewardsClaimingSubStep_message_pressClaimWithExplanation'),
+      rewardsClaimingWizardTranslations('rewardsClaimingSubStep_subMessage_claimingHasCost'),
       false,
     );
 
@@ -81,20 +76,19 @@ export const RewardsCalaimingStepContent = observer(
     const rewardsClaimingInnerContent = useMemo(() => {
       return (
         <Typography variant={'h5'}>
-          Rewards Balance is{' '}
+          {rewardsClaimingWizardTranslations('rewardsClaimingSubStep_text_rewardsBalanceIs')}{' '}
           <Typography variant={'h5'} style={{ display: 'inline' }} color={'secondary'}>
-            {orbsAccountStore.rewardsBalance.toLocaleString()} ORBS
+            {commonsTranslations('xOrbs', { amount: orbsAccountStore.rewardsBalance.toLocaleString() })}
           </Typography>
         </Typography>
       );
-    }, [orbsAccountStore.rewardsBalance]);
+    }, [commonsTranslations, orbsAccountStore.rewardsBalance, rewardsClaimingWizardTranslations]);
 
     return (
       <BaseStepContent
         message={message.value}
         subMessage={subMessage.value}
-        // title={guardianChangingWizardTranslations('guardianSelectionSubStep_stepTitle')}
-        title={'Claim your ORBS rewards balance'}
+        title={rewardsClaimingWizardTranslations('rewardsClaimingSubStep_stepTitle')}
         disableInputs={disableInputs}
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_change_tx'}
