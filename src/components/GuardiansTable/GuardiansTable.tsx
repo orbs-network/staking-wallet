@@ -194,8 +194,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     [committeeMembers],
   );
 
-  // TODO : ORL : TRANSLATIONS
-
   const columns = useMemo(() => {
     const columns: Column<Guardian>[] = [
       {

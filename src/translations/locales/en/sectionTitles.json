@@ -1,6 +1,7 @@
 {
   "allGuardians": "All Guardians",
-  "allGuardians_sideTitle": "Participating stake: {{totalParticipatingTokens}}",
+  "allGuardians_sideTitleTotalStake": "Total Stake",
+  "allGuardians_sideTitleCommitteeStake": "Committee Stake",
   "balance": "Balance",
   "connectWallet": "Connect your wallet",
   "rewards": "Rewards",

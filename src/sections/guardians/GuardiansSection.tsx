@@ -73,16 +73,13 @@ export const GuardiansSection = observer(() => {
     <Section data-testid='guardians-section'>
       <SectionHeader
         title={sectionTitlesTranslations('allGuardians')}
-        // sideTitle={
-        //   sectionTitlesTranslations('allGuardians_sideTitle', {
-        //     totalParticipatingTokens: totalStake.toLocaleString(),
-        //   }) +
-        //   ' ' +
-        //   committeeEffectiveStake.toLocaleString()
-        // }
         sideTitle={[
-          `Total Stake: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
-          `Committee Stake: ${committeeEffectiveStake.toLocaleString()}`,
+          `${sectionTitlesTranslations(
+            'allGuardians_sideTitleTotalStake',
+          )}: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
+          `${sectionTitlesTranslations(
+            'allGuardians_sideTitleCommitteeStake',
+          )}: ${committeeEffectiveStake.toLocaleString()}`,
         ]}
         icon={ShielIcon}
         bottomPadding

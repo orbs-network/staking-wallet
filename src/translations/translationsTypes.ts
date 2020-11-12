@@ -34,7 +34,8 @@ export interface ISectionTitlesTranslations {
   balance: string;
   rewards: string;
   allGuardians: string;
-  allGuardians_sideTitle: string;
+  allGuardians_sideTitleTotalStake: string;
+  allGuardians_sideTitleCommitteeStake: string;
 }
 
 export interface IWalletInfoSectionTranslations {
