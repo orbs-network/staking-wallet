@@ -3,7 +3,11 @@ import { useNumber } from 'react-hanger';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { OrbsUntakingStepContent } from './OrbsUnstakingStepContent';
-import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import {
+  useRewardsClaimingWizardTranslations,
+  useUnstakingWizardTranslations,
+  useWizardsCommonTranslations,
+} from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
@@ -32,6 +36,7 @@ export const UnstakingWizard = observer(
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const unstakingWizardTranslations = useUnstakingWizardTranslations();
+    const rewardsClaimingWizardTranslations = useRewardsClaimingWizardTranslations();
     const activeStep = useNumber(
       orbsAccountStore.hasClaimableRewards ? STEPS_INDEXES.claimRewards : STEPS_INDEXES.unstakeOrbs,
     );
@@ -47,7 +52,7 @@ export const UnstakingWizard = observer(
             <ApprovableWizardStep
               transactionCreationSubStepContent={RewardsCalaimingStepContent}
               displayCongratulationsSubStep={false}
-              finishedActionName={'Claimed your rewards'}
+              finishedActionName={rewardsClaimingWizardTranslations('finishedAction_claim')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'rewardsClaimingStep'}
@@ -77,15 +82,22 @@ export const UnstakingWizard = observer(
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep, unstakingWizardTranslations, wizardsCommonTranslations]);
+    }, [
+      activeStep.value,
+      closeWizard,
+      goToFinishStep,
+      rewardsClaimingWizardTranslations,
+      unstakingWizardTranslations,
+      wizardsCommonTranslations,
+    ]);
 
     const stepperTitles = useMemo(() => {
       return [
-        'Claim Rewards',
+        rewardsClaimingWizardTranslations('stepLabel_claim'),
         unstakingWizardTranslations('stepLabel_unstake'),
         wizardsCommonTranslations('stepLabel_finish'),
       ];
-    }, [unstakingWizardTranslations, wizardsCommonTranslations]);
+    }, [rewardsClaimingWizardTranslations, unstakingWizardTranslations, wizardsCommonTranslations]);
 
     return (
       <Wizard
