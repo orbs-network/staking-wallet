@@ -82,9 +82,10 @@ export interface IGuardiansTableTranslations {
   columnHeader_name: string;
   columnHeader_address: string;
   columnHeader_website: string;
-  columnHeader_stakingPercentageInLastElections: string;
   columnHeader_votedInLastElection: string;
   columnHeader_selection: string;
+  // Unused
+  columnHeader_stakingPercentageInLastElections: string;
 }
 
 export interface IApprovableWizardStepTranslations {
