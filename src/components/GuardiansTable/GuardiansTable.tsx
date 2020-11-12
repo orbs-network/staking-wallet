@@ -427,6 +427,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   // DEV_NOTE : O.L : This prevents displaying of a large empty table if there are less than 50 Guardians.
   const pageSize = Math.min(50, guardians.length);
 
+  // TODO : ORL : Add translations to table here.
   return (
     <MaterialTable
       title={tableTitle || ''}

@@ -20,8 +20,6 @@ import { useOrbsPOSDataService } from '../services/ServicesHooks';
 import { useBoolean, useNumber } from 'react-hanger';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
-import { InfoToolTipIcon } from '../components/tooltips/InfoTooltipIcon';
-import { CommonActionButton } from '../components/base/CommonActionButton';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimingWizard';
 import { BalanceCard } from '../components/BalanceCard';
@@ -32,12 +30,6 @@ const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={
   return {};
 });
 
-export const RewardsContainer = styled((props: GridProps) => <Grid item container {...props} />)<GridProps>(
-  (styledProps: { theme: Theme }) => {
-    return {};
-  },
-);
-
 export const RewardsSection = observer(() => {
   const commonsTranslations = useCommonsTranslations();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -46,50 +38,13 @@ export const RewardsSection = observer(() => {
   const orbsNodeStore = useOrbsNodeStore();
   const rewardsSectionTranslations = useRewardsSectionTranslations();
   const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
-  const orbsPOSDataService = useOrbsPOSDataService();
 
   const theme = useTheme();
   const translation = useTranslation();
 
-  const nextElectionBlock = useNumber(0);
-
   const showClaimingModal = useBoolean(false);
 
-  const innerLinkLang = useMemo(() => {
-    if (!translation?.i18n?.language) {
-      return '';
-    } else {
-      return `${translation.i18n.language}/`;
-    }
-  }, [translation]);
-
-  // TODO : Find a better way to combine the translations with changing order links
-  const rewardsPageInnerHtml = rewardsSectionTranslations('text__forDetailedRewardsPleaseVisitThe', {
-    rewardsPageTextLink: renderToString(
-      <a
-        style={{ color: theme.palette.secondary.main }}
-        target={'_blank'}
-        rel={'noopener noreferrer'}
-        href={`https://orbs-network.github.io/voting/${innerLinkLang}reward?address=${cryptoWalletConnectionStore.mainAddress}`}
-      >
-        {rewardsSectionTranslations('linkText_rewardsPage')}
-      </a>,
-    ),
-  });
-  const gridPadding = theme.spacing(2);
-
   // TODO : ORL : TRANSLATION
-  const relevantInterest = orbsAccountStore.isGuardian
-    ? orbsNodeStore.currentGuardiansAnnualRewardsInterest
-    : orbsNodeStore.currentDelegatorsAnnualRewardsInterest;
-  const fullOrbsStaked = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
-  const annualRewardsForCurrentStake = +(fullOrbsStaked * (relevantInterest / 100)).toFixed(2);
-  const calculatedRewardsMessage = `${annualRewardsForCurrentStake.toLocaleString()} ORBS for ${fullOrbsStaked.toLocaleString()} staked ORBS`;
-  const rewardsText = orbsAccountStore.isGuardian
-    ? `Estimated annual guardian interest ${relevantInterest}% (${calculatedRewardsMessage})`
-    : `Estimated annual interest ${relevantInterest}% (${calculatedRewardsMessage})`;
-
-  // const availableRewards = 1780.123456;
   const availableRewards = orbsAccountStore.rewardsBalance;
 
   useInterval(() => {
@@ -109,7 +64,7 @@ export const RewardsSection = observer(() => {
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
           <BalanceCard
-            title={'Total rewards awarded (ORBS)'}
+            title={rewardsSectionTranslations('title_totalRewardsAwarded')}
             amount={orbsAccountStore.totalRewardedRewards}
             showFraction
           />
@@ -117,7 +72,9 @@ export const RewardsSection = observer(() => {
 
         <GridItem>
           <BalanceCard
-            title={'Rewards rate (ORBS / week)'}
+            title={`${rewardsSectionTranslations('title_rewardsRate')} (${rewardsSectionTranslations(
+              'title_quantity_orbsPerWeek',
+            )})`}
             amount={orbsAccountStore.estimatedRewardsForNextWeek}
             showFraction
           />
@@ -125,74 +82,20 @@ export const RewardsSection = observer(() => {
 
         <GridItem>
           <BalanceCard
-            title={'Rewards balance (ORBS)'}
+            title={`${rewardsSectionTranslations('title_rewardsBalance')} (${rewardsSectionTranslations(
+              'title_quantity_orbs',
+            )})`}
             amount={availableRewards}
             secondaryActionButtonActive={availableRewards > 0}
-            secondaryActionButtonTitle={'Claim'}
+            secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}
             onSecondaryActionButtonPressed={showClaimingModal.setTrue}
             showFraction
           />
         </GridItem>
       </Grid>
 
-      {/*<Grid*/}
-      {/*  item*/}
-      {/*  container*/}
-      {/*  direction={'column'}*/}
-      {/*  spacing={1}*/}
-      {/*  style={{*/}
-      {/*    width: '100%',*/}
-      {/*    alignSelf: 'center',*/}
-      {/*    // backgroundColor: 'rgba(47, 47, 47, 0.6)',*/}
-      {/*    // marginRight: gridMargin,*/}
-      {/*    // marginLeft: gridMargin,*/}
-      {/*    paddingLeft: gridPadding,*/}
-      {/*    paddingRight: gridPadding,*/}
-      {/*    marginBottom: 0,*/}
-      {/*    // textAlign: 'center',*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <RewardsContainer direction={'column'} spacing={3}>*/}
-      {/*    /!*<Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>*!/*/}
-      {/*    /!*  <Typography style={{ paddingRight: '0.25em' }}>{rewardsText} </Typography>*!/*/}
-      {/*    /!*  {!orbsAccountStore.isGuardian ? (*!/*/}
-      {/*    /!*    <InfoToolTipIcon*!/*/}
-      {/*    /!*      tooltipTitle={`Assumes 2/3 of the current Guardian interest (*!/*/}
-      {/*    /!*      ${orbsNodeStore.currentGuardiansAnnualRewardsInterest.toFixed(2)}%)`}*!/*/}
-      {/*    /!*    />*!/*/}
-      {/*    /!*  ) : null}*!/*/}
-      {/*    /!*</Grid>*!/*/}
-
-      {/*    <Grid item style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>*/}
-      {/*      <Typography style={{ paddingRight: '0.25em' }}>*/}
-      {/*        Current reward balance : {orbsAccountStore.rewardsBalance.toLocaleString()} ORBS*/}
-      {/*      </Typography>*/}
-      {/*      <InfoToolTipIcon tooltipTitle={``} />*/}
-      {/*    </Grid>*/}
-
-      {/*    <Grid item>*/}
-      {/*      <CommonActionButton*/}
-      {/*        disabled={orbsAccountStore.rewardsBalance === 0}*/}
-      {/*        title={orbsAccountStore.rewardsBalance !== 0 ? 'Claim' : 'No Rewards available'}*/}
-      {/*        onClick={showClaimingModal.setTrue}*/}
-      {/*      >*/}
-      {/*        Claim your rewards*/}
-      {/*      </CommonActionButton>*/}
-      {/*    </Grid>*/}
-
-      {/*    /!* Rewards page link *!/*/}
-      {/*    <Grid item>*/}
-      {/*      <Typography dangerouslySetInnerHTML={{ __html: rewardsPageInnerHtml }} />*/}
-      {/*    </Grid>*/}
-      {/*  </RewardsContainer>*/}
-      {/*</Grid>*/}
-
       {/* Staking */}
-      <CommonDialog
-        open={showClaimingModal.value}
-        onClose={showClaimingModal.setFalse}
-        // style={{ width: 'clamp(50%, 40rem, 95%)' }}
-      >
+      <CommonDialog open={showClaimingModal.value} onClose={showClaimingModal.setFalse}>
         <RewardsClaimingWizard closeWizard={showClaimingModal.setFalse} />
       </CommonDialog>
     </Section>

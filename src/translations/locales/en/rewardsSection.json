@@ -4,5 +4,11 @@
   "text__forDetailedRewardsPleaseVisitThe": "For Detailed rewards please visit the {{rewardsPageTextLink}}",
   "text__totalAccumulatedRewards": "Total accumulated rewards : {{totalAccumulatedRewards}}",
   "text__totalDistributedRewards": "Total distributed rewards : {{totalDistributedRewards}}",
-  "text_visitThe": "Visit the"
+  "text_visitThe": "Visit the",
+  "title_totalRewardsAwarded":  "Total rewards awarded",
+  "title_rewardsRate": "Rewards rate",
+  "title_rewardsBalance":  "Rewards balance",
+  "title_quantity_orbsPerWeek": "ORBS / Week",
+  "title_quantity_orbs":  "ORBS",
+  "action_claim": "Claim"
 }

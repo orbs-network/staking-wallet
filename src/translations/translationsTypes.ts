@@ -234,6 +234,14 @@ export interface IBalancesSectionTranslations {
 }
 
 export interface IRewardsSectionTranslations {
+  title_totalRewardsAwarded: string;
+  title_rewardsRate: string;
+  title_rewardsBalance: string;
+  title_quantity_orbsPerWeek: string;
+  title_quantity_orbs: string;
+  action_claim: string;
+
+  // Unused
   text_visitThe: string;
   text__totalDistributedRewards: string;
   text__totalAccumulatedRewards: string;
