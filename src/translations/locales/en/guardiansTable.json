@@ -12,5 +12,13 @@
   "columnHeader_votedInLastElection": "Voted in previous election",
   "columnHeader_website": "Website",
   "didVote_no": "No",
-  "didVote_yes": "Yes"
+  "didVote_yes": "Yes",
+  "message_inCommittee": "In committee",
+  "message_notInCommittee": "Not in committee",
+  "message_pleaseNote": "Please note",
+  "message_onlyCommitteeMembersAreEntitledToRewards": "only committee members and their delegators are entitled to rewards",
+  "message_sinceDate": "Since {{dateText}}",
+  "message_certified": "Certified",
+  "message_notCertified": "Not certified",
+  "message_registeredSinceDate": "Registered since {{dateText}}"
 }

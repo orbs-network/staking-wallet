@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import { Icon, SvgIcon, Tooltip, Typography } from '@material-ui/core';
+import { SvgIcon, Tooltip, Typography } from '@material-ui/core';
 import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { ReactComponent as GuardianShield } from './assets/guardian_normal.svg';
 import { ReactComponent as CommitteeGuardianShield } from './assets/guardian_committee.svg';
@@ -8,6 +8,7 @@ import { ReactComponent as CertifiedCommitteeGuardianShield } from './assets/gua
 import Moment from 'moment';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
+import { useGuardiansTableTranslations } from '../../translations/translationsHooks';
 
 interface IProps {
   guardian: Guardian;
@@ -42,19 +43,6 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
     >
       <div style={{ height: '3rem', width: '3rem', position: 'relative', cursor: 'pointer' }}>
         <SvgIcon component={SelectedIcon} viewBox='0 0 40.371 47.178' style={{ height: '100%', width: '100%' }} />
-        {/*{committeeMembershipData ? 'In committee' : null}*/}
-        {/*{guardian.IsCertified ? 'Certified' : null}*/}
-        {/*<Typography*/}
-        {/*  style={{*/}
-        {/*    position: 'absolute',*/}
-        {/*    top: '50%',*/}
-        {/*    left: '50%',*/}
-        {/*    transform: 'translateX(-55%) translateY(-50%)',*/}
-        {/*  }}*/}
-        {/*  color={'secondary'}*/}
-        {/*>*/}
-        {/*  {guardian.IsCertified ? 'V' : '?'}*/}
-        {/*</Typography>*/}
       </div>
     </Tooltip>
   );
@@ -77,37 +65,35 @@ const GuardianQualificationsTooltip = React.memo<{
   committeeMembershipData?: ICommitteeMemberData;
 }>((props) => {
   const { guardian, committeeMembershipData } = props;
+  const guardiansTableTranslations = useGuardiansTableTranslations();
   const classes = useStylesTooltip();
   const theme = useTheme();
 
   const isInCommittee = !!committeeMembershipData;
 
-  // TODO : ORL : TRANSLATIONS
   const committeePart = useMemo(() => {
     let committeeMessage;
 
     if (isInCommittee) {
       committeeMessage = (
         <Typography className={classes.textValue} style={{ color: theme.palette.success.main }}>
-          - In committee{' '}
+          - {guardiansTableTranslations('message_inCommittee')}{' '}
           <Typography className={classes.textValue} style={{ color: theme.palette.text.primary }}>
-            (since {Moment.unix(committeeMembershipData.EnterTime).utc().format('DD/MM/YYYY hh:mm')})
+            {guardiansTableTranslations('message_sinceDate', {
+              dateText: Moment.unix(committeeMembershipData.EnterTime).utc().format('DD/MM/YYYY hh:mm'),
+            })}
           </Typography>
         </Typography>
       );
     } else {
-      committeeMessage = <Typography>Not in committee</Typography>;
+      committeeMessage = <Typography>{guardiansTableTranslations('message_notInCommittee')}</Typography>;
     }
 
-    return (
-      <>
-        {/*<Typography className={classes.textField}>Committee membership: </Typography> */}
-        {committeeMessage}
-      </>
-    );
+    return <>{committeeMessage}</>;
   }, [
     classes.textValue,
     committeeMembershipData.EnterTime,
+    guardiansTableTranslations,
     isInCommittee,
     theme.palette.success.main,
     theme.palette.text.primary,
@@ -117,9 +103,9 @@ const GuardianQualificationsTooltip = React.memo<{
     if (!isInCommittee) {
       return (
         <>
-          <Typography className={classes.textField}>Note: </Typography>
+          <Typography className={classes.textField}>{guardiansTableTranslations('message_pleaseNote')}: </Typography>
           <Typography className={classes.textValue}>
-            only committee members and their delegators are entitled to rewards
+            {guardiansTableTranslations('message_onlyCommitteeMembersAreEntitledToRewards')}
           </Typography>
           <br />
         </>
@@ -127,15 +113,16 @@ const GuardianQualificationsTooltip = React.memo<{
     } else {
       return null;
     }
-  }, [classes.textField, classes.textValue, isInCommittee]);
+  }, [classes.textField, classes.textValue, guardiansTableTranslations, isInCommittee]);
 
   const registeredSincePart = useMemo(() => {
     if (guardian.RegistrationTime) {
       return (
         <>
-          {/*<Typography className={classes.textField}>Registered since: </Typography>*/}
           <Typography className={classes.textValue} color={'secondary'}>
-            Registered since {Moment.unix(guardian.RegistrationTime).utc().format('DD/MM/YYYY')}
+            {guardiansTableTranslations('message_registeredSinceDate', {
+              dateText: Moment.unix(guardian.RegistrationTime).utc().format('DD/MM/YYYY'),
+            })}
           </Typography>
           <br />
         </>
@@ -143,9 +130,11 @@ const GuardianQualificationsTooltip = React.memo<{
     } else {
       return null;
     }
-  }, [classes.textValue, guardian.RegistrationTime]);
+  }, [classes.textValue, guardian.RegistrationTime, guardiansTableTranslations]);
 
-  const certifiedMessage = guardian.IsCertified ? 'Certified' : 'Not certified';
+  const certifiedMessage = guardian.IsCertified
+    ? guardiansTableTranslations('message_certified')
+    : guardiansTableTranslations('message_notCertified');
 
   return (
     <>
@@ -157,7 +146,6 @@ const GuardianQualificationsTooltip = React.memo<{
       {committeeNote}
 
       {/* Certified */}
-      {/*<Typography className={classes.textField}>Certification: </Typography>*/}
       <Typography
         className={classes.textValue}
         style={{ color: guardian.IsCertified ? theme.palette.success.main : theme.palette.warning.main }}

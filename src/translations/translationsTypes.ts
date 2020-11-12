@@ -75,10 +75,11 @@ export interface IWizardsCommonsTranslations {
 }
 
 export interface IGuardiansTableTranslations {
+  // Actions
   action_keep: string;
   action_select: string;
-  didVote_yes: string;
-  didVote_no: string;
+
+  // Column Headers
   columnHeader_name: string;
   columnHeader_address: string;
   columnHeader_website: string;
@@ -88,8 +89,21 @@ export interface IGuardiansTableTranslations {
   columnHeader_capacity: string;
   columnHeader_votedInLastElection: string;
   columnHeader_selection: string;
+
+  // Tooltips and titles
+  message_inCommittee: string;
+  message_notInCommittee: string;
+  message_pleaseNote: string;
+  message_onlyCommitteeMembersAreEntitledToRewards: string;
+  message_sinceDate: string;
+  message_certified: string;
+  message_notCertified: string;
+  message_registeredSinceDate: string;
+
   // Unused
   columnHeader_stakingPercentageInLastElections: string;
+  didVote_yes: string;
+  didVote_no: string;
 }
 
 export interface IApprovableWizardStepTranslations {
