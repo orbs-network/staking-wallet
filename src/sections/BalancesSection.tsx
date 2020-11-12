@@ -128,8 +128,6 @@ export const BalancesSection = observer(() => {
 
       <CommonDivider />
 
-      {/*<Grid item> <CommonDivider /> </Grid>*/}
-
       {/* TODO : ORL : TRANSLATIONS */}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
@@ -153,18 +151,18 @@ export const BalancesSection = observer(() => {
             {/* Staked&Rewards */}
             <GridItem>
               <BalanceCard
-                title={'Staked ORBS & Rewards balance'}
+                title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
                 toolTipTitle={
                   <>
                     <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
-                      Staked Orbs:{' '}
+                      {balancesSectionTranslations('tooltipTitle_stakedOrbs')}:{' '}
                     </Typography>
                     <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
                       {fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs).toLocaleString()}
                     </Typography>
                     <br />
                     <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
-                      Pending rewards:{' '}
+                      {balancesSectionTranslations('tooltipTitle_pendingRewards')}:{' '}
                     </Typography>
                     <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
                       {orbsAccountStore.rewardsBalance.toLocaleString()}

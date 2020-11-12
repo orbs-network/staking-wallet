@@ -230,6 +230,7 @@ export interface IWithdrawingWizardTranslation {
 export interface IBalancesSectionTranslations {
   title_unstakedOrbsInYourWallet: string;
   title_stakedOrbsInSmartContract: string;
+  title_stakedOrbsAndRewardsBalance: string;
   title_tokensReadyForWithdrawal: string;
   title_noTokensInCooldown: string;
   title_tokensInCooldown: string;
@@ -237,6 +238,8 @@ export interface IBalancesSectionTranslations {
   action_unstakeYourTokens: string;
   action_restakeYourTokens: string;
   action_withdrawYourTokens: string;
+  tooltipTitle_stakedOrbs: string;
+  tooltipTitle_pendingRewards: string;
 }
 
 export interface IRewardsSectionTranslations {
