@@ -138,6 +138,8 @@ export interface IStakingWizardTranslations {
   moveToStep_stake: string;
   moveToStep_selectGuardian: string;
   moveToStep_approve: string;
+  backToStep_changeGuardian: string;
+  backToStep_changeAmount: string;
   afterSuccessStateExplanation: string;
 
   // Allowance approval selection sub step
@@ -150,6 +152,7 @@ export interface IStakingWizardTranslations {
   // Staking sub step
   stakingSubStep_stepTitle: string;
   stakingSubStep_stepExplanation: string;
+  stakingSubStep_action_stake: string;
 
   // Guardian selection sub step
   guardianSelectionSubStep_message_selectGuardian: string;

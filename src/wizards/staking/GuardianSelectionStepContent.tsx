@@ -38,8 +38,6 @@ export const GuardianSelectionStepContent = observer(
     const stakingRewardsService = useStakingRewardsService();
     const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
-    // TODO : ORL : TRANSLATIONS
-
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       isRegisteredGuardian

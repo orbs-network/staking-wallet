@@ -105,7 +105,7 @@ export const OrbsAllowanceStepContent = observer(
         addCancelButton
         onCancelButtonClicked={goBackToChooseGuardianStep}
         // cancelButtonText={wizardsCommonTranslations('action_close')}
-        cancelButtonText={'Change Guardian'}
+        cancelButtonText={stakingWizardTranslations('backToStep_changeGuardian')}
       />
     );
   },

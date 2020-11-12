@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useStateful } from 'react-hanger';
+import React, { useCallback, useMemo } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
@@ -66,15 +64,10 @@ export const OrbsStakingStepContent = observer(
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
         onClick: stakeTokens,
-        title: 'Stake',
+        title: stakingWizardTranslations('stakingSubStep_action_stake'),
       }),
-      [stakeTokens],
+      [stakeTokens, stakingWizardTranslations],
     );
-
-    // TODO : ORL : TRANSLATIONS
-    const infoTitleToTranslate =
-      'This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators and Guardians to participate.';
-    const cancelButtonText = 'Change amount';
 
     return (
       <BaseStepContent
@@ -83,15 +76,14 @@ export const OrbsStakingStepContent = observer(
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
           orbsForStaking: fullOrbsForStaking.toLocaleString(),
         })}
-        // infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
-        infoTitle={infoTitleToTranslate}
+        infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
         disableInputs={disableInputs}
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_staking_tx'}
         actionButtonProps={actionButtonProps}
         addCancelButton={true}
         onCancelButtonClicked={goBackToApproveStep}
-        cancelButtonText={cancelButtonText}
+        cancelButtonText={stakingWizardTranslations('backToStep_changeAmount')}
       />
     );
   },

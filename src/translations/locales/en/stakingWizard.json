@@ -17,8 +17,11 @@
   "moveToStep_selectGuardian": "Select a Guardian",
   "moveToStep_stake": "Stake your ORBS",
   "moveToStep_approve": "Approve usage of your ORBS",
-  "stakingSubStep_stepExplanation": "This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators, Guardians, and Validators to participate.",
+  "backToStep_changeGuardian": "Change Guardian",
+  "backToStep_changeAmount": "Change amount",
+  "stakingSubStep_stepExplanation": "This step will transfer your ORBS to the staking contract and stake them. Staking makes the Orbs Network more secure and incentivizes the Delegators and Guardians to participate.",
   "stakingSubStep_stepTitle": "In this step you will stake {{orbsForStaking}} ORBS",
+  "stakingSubStep_action_stake": "Stake",
   "stepLabel_approve": "Approve ORBS usage",
   "stepLabel_selectGuardian": "Select Guardian",
   "stepLabel_stake": "Stake ORBS"
