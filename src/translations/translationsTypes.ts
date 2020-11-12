@@ -100,8 +100,15 @@ export interface IGuardiansTableTranslations {
   message_notCertified: string;
   message_registeredSinceDate: string;
 
+  // General Texts
+  xOrbs: string;
+
   // Messages for other columns
-  message_guardianGivesXPercentageToDelegators;
+  message_guardianGivesXPercentageToDelegators: string;
+  message_selfStake: string;
+  message_delegatedStake: string;
+  message_selfStakePercentage: string;
+  message_participationExplanation: string;
 
   // Unused
   columnHeader_stakingPercentageInLastElections: string;

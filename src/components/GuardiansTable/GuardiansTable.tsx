@@ -314,8 +314,15 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               arrow
               title={
                 <>
-                  <Typography>Self stake: {SelfStake?.toLocaleString()} ORBS</Typography>
-                  <Typography>Delegated stake: {DelegatedStake?.toLocaleString()} ORBS</Typography>
+                  <Typography>
+                    {guardiansTableTranslations('message_selfStake')}:{' '}
+                    {guardiansTableTranslations('xOrbs', { amount: SelfStake?.toLocaleString() })}
+                  </Typography>
+
+                  <Typography>
+                    {guardiansTableTranslations('message_delegatedStake')}:{' '}
+                    {guardiansTableTranslations('xOrbs', { amount: DelegatedStake?.toLocaleString() })}
+                  </Typography>
                 </>
               }
             >
@@ -341,9 +348,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               arrow
               title={
                 <>
-                  <Typography>
-                    Percentage of committees in the last 30 days in which this Guardian was a member
-                  </Typography>
+                  <Typography>{guardiansTableTranslations('message_participationExplanation')}</Typography>
                 </>
               }
             >
@@ -373,9 +378,15 @@ export const GuardiansTable = React.memo<IProps>((props) => {
               arrow
               title={
                 <>
-                  <Typography>Self stake: {SelfStake?.toLocaleString()} ORBS</Typography>
-                  <Typography>Delegated stake: {DelegatedStake?.toLocaleString()} ORBS</Typography>
-                  <Typography>% self stake: {selfStakePercentage?.toLocaleString()}%</Typography>
+                  <Typography>
+                    {guardiansTableTranslations('message_selfStake')}:{' '}
+                    {guardiansTableTranslations('xOrbs', { amount: SelfStake?.toLocaleString() })} {'  '}(
+                    {selfStakePercentage?.toLocaleString()}%)
+                  </Typography>
+                  <Typography>
+                    {guardiansTableTranslations('message_delegatedStake')}:{' '}
+                    {guardiansTableTranslations('xOrbs', { amount: DelegatedStake?.toLocaleString() })}
+                  </Typography>
                 </>
               }
             >

@@ -13,6 +13,7 @@
   "columnHeader_website": "Website",
   "didVote_no": "No",
   "didVote_yes": "Yes",
+  "xOrbs": "{{amount}} ORBS",
   "message_inCommittee": "In committee",
   "message_notInCommittee": "Not in committee",
   "message_pleaseNote": "Please note",
@@ -21,5 +22,9 @@
   "message_certified": "Certified",
   "message_notCertified": "Not certified",
   "message_registeredSinceDate": "Registered since {{dateText}}",
-  "message_guardianGivesXPercentageToDelegators": "This Guardian gives {{percentage}} of the rewards to the Delegators"
+  "message_guardianGivesXPercentageToDelegators": "This Guardian gives {{percentage}} of the rewards to the Delegators",
+  "message_selfStake": "Self stake",
+  "message_delegatedStake": "Delegated stake",
+  "message_selfStakePercentage": "Self stake %",
+  "message_participationExplanation": "Percentage of committees in the last 30 days in which this Guardian was a member"
 }
