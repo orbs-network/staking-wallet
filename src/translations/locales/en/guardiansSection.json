@@ -1,0 +1,11 @@
+{
+  "myGuardianDisplay_error_noSelectedGuardianOrSelfDelegatingWhileNotGuardian": "No selected guardian / Self delegating (Your address is not registered as a Guardian)",
+  "myGuardianDisplay_warning_delegatedToAnUnregisteredGuardian": "Your ORBS tokens are delegated to an unregistered Guardian.",
+  "myGuardianDisplay_warning_onlyCommitteeDelegationEntitlesRewards": "Only delegation to a guardian elected to the committee (top 22) is entitled to rewards.",
+  "myGuardianDisplay_info_onlyDelegationToCommitteeMembersEntitlesRewards": "Note : Only delegation to committee members entitles rewards.",
+  "myGuardianDisplay_action_youAre": "You are {{name}}",
+  "myGuardianDisplay_action_selectAGuardian": "Select a guardian",
+  "myGuardianDisplay_text_selectedGuardianIs": "Selected guardian is {{guardianName}}",
+  "myGuardianDisplay_text_selectedGuardianAddressIs": "Selected guardian address is {{guardianAddress}}",
+  "myGuardianDisplay_text_unregistered": "Unregistered"
+}

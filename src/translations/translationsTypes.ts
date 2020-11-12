@@ -5,6 +5,7 @@ export interface IAppTranslations {
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
   rewardsSection: IRewardsSectionTranslations;
+  guardiansSection: IGuardiansSectionTranslations;
   guardiansTable: IGuardiansTableTranslations;
   wizardsCommons: IWizardsCommonsTranslations;
   approvableWizardStep: IApprovableWizardStepTranslations;
@@ -274,6 +275,18 @@ export interface IRewardsSectionTranslations {
   text__forDetailedRewardsPleaseVisitThe: string;
   text__NextElectionRoundWillTakePlaceAtEthereumBlock: string;
   linkText_rewardsPage: string;
+}
+
+export interface IGuardiansSectionTranslations {
+  myGuardianDisplay_error_noSelectedGuardianOrSelfDelegatingWhileNotGuardian: string;
+  myGuardianDisplay_warning_delegatedToAnUnregisteredGuardian: string;
+  myGuardianDisplay_warning_onlyCommitteeDelegationEntitlesRewards: string;
+  myGuardianDisplay_info_onlyDelegationToCommitteeMembersEntitlesRewards: string;
+  myGuardianDisplay_action_youAre: string;
+  myGuardianDisplay_action_selectAGuardian: string;
+  myGuardianDisplay_text_selectedGuardianIs: string;
+  myGuardianDisplay_text_selectedGuardianAddressIs: string;
+  myGuardianDisplay_text_unregistered: string;
 }
 
 export interface IAlertsTranslations {

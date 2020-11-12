@@ -86,8 +86,6 @@ export const GuardiansSection = observer(() => {
       />
       <CommonDivider />
 
-      {/*<CommonDivider />*/}
-
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {isErrorOnLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
       {!isErrorOnLoading && (

@@ -5,6 +5,7 @@ import approvableWizardStepTextsJson from './locales/en/approvableWizardStep.jso
 import balancesSectionTextsJson from './locales/en/balancesSection.json';
 import commonsTextsJson from './locales/en/commons.json';
 import connectWalletSectionTextsJson from './locales/en/connectWalletSection.json';
+import guardiansSectionTextsJson from './locales/en/guardiansSection.json';
 import guardianChangingWizardTextsJson from './locales/en/guardianChangingWizard.json';
 import guardianSelectingWizardTextsJson from './locales/en/guardianSelectingWizard.json';
 import guardiansTableTextsJson from './locales/en/guardiansTable.json';
@@ -25,6 +26,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   walletInfoSection: walletInfoSectionTextsJson,
   balancesSection: balancesSectionTextsJson,
   rewardsSection: rewardsSectionTextsJson,
+  guardiansSection: guardiansSectionTextsJson,
   guardiansTable: guardiansTableTextsJson,
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,

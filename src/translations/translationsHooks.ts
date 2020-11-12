@@ -9,6 +9,7 @@ import {
   IConnectWalletSectionTranslations,
   IGuardianChangingWizardTranslation,
   IGuardianSelectingWizardTranslation,
+  IGuardiansSectionTranslations,
   IGuardiansTableTranslations,
   IRestakingWizardTranslation,
   IRewardsClaimingWizardTranslation,
@@ -45,6 +46,10 @@ export function useBalancesSectionTranslations() {
 
 export function useRewardsSectionTranslations() {
   return useSpecificTypeSafeTFunction<IRewardsSectionTranslations>('rewardsSection');
+}
+
+export function useGuardiansSectionTranslations() {
+  return useSpecificTypeSafeTFunction<IGuardiansSectionTranslations>('guardiansSection');
 }
 
 export function useConnectWalletSectionTranslations() {
