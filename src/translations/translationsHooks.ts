@@ -11,6 +11,7 @@ import {
   IGuardianSelectingWizardTranslation,
   IGuardiansTableTranslations,
   IRestakingWizardTranslation,
+  IRewardsClaimingWizardTranslation,
   IRewardsSectionTranslations,
   ISectionTitlesTranslations,
   IStakingWizardTranslations,
@@ -88,6 +89,10 @@ export function useUnstakingWizardTranslations() {
 
 export function useWithdrawingWizardTranslations() {
   return useSpecificTypeSafeTFunction<IWithdrawingWizardTranslation>('withdrawingWizard');
+}
+
+export function useRewardsClaimingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IRewardsClaimingWizardTranslation>('rewardsClaimingWizard');
 }
 
 export function useAlertsTranslations() {

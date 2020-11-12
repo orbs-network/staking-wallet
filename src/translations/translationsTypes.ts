@@ -14,6 +14,7 @@ export interface IAppTranslations {
   restakingWizard: IRestakingWizardTranslation;
   unstakingWizard: IUnstakingWizardTranslation;
   withdrawingWizard: IWithdrawingWizardTranslation;
+  rewardsClaimingWizard: IRewardsClaimingWizardTranslation;
   alerts: IAlertsTranslations;
   commons: ICommonsTranslations;
 }
@@ -225,6 +226,19 @@ export interface IWithdrawingWizardTranslation {
   withdrawingSubStep_stepTitle: string;
   withdrawingSubStep_stepExplanation: string;
   withdrawingSubStep_action_withdraw: string;
+}
+
+export interface IRewardsClaimingWizardTranslation {
+  stepLabel_claim: string;
+
+  finishedAction_claim: string;
+  afterSuccessStateExplanation: string;
+
+  // // Claiming sub step
+  // rewardsClaimingSubStep_subMessage_pressWithdrawAndApprove: string;
+  // rewardsClaimingSubStep_stepTitle: string;
+  // rewardsClaimingSubStep_stepExplanation: string;
+  // rewardsClaimingSubStep_action_withdraw: string;
 }
 
 export interface IBalancesSectionTranslations {

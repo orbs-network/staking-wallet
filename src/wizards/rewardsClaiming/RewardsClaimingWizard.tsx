@@ -4,7 +4,7 @@ import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardSt
 import { observer } from 'mobx-react';
 import { RewardsCalaimingStepContent } from './RewardsCalaimingStepContent';
 import {
-  useGuardianChangingWizardTranslations,
+  useRewardsClaimingWizardTranslations,
   useWizardsCommonTranslations,
 } from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
@@ -21,17 +21,14 @@ interface IProps {
   closeWizard(): void;
 }
 
-// TODO : ORL : TRANSLATIONS
-
 // TODO : O.L : FUTURE : The material-ui Modal requires passing a ref, decide what to do with this ref.
-// Connect to store
 export const RewardsClaimingWizard = observer(
   React.forwardRef<any, IProps>((props, ref) => {
     useTrackModal(MODAL_IDS.rewardsClaiming);
     const { closeWizard } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
-    const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
+    const rewardsClaimingWizardTranslations = useRewardsClaimingWizardTranslations();
     const activeStep = useNumber(STEPS_INDEXES.claimRewards);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
@@ -43,7 +40,7 @@ export const RewardsClaimingWizard = observer(
             <ApprovableWizardStep
               transactionCreationSubStepContent={RewardsCalaimingStepContent}
               displayCongratulationsSubStep={false}
-              finishedActionName={'Claimed your rewards'}
+              finishedActionName={rewardsClaimingWizardTranslations('finishedAction_claim')}
               moveToNextStepAction={goToFinishStep}
               moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
               key={'rewardsClaimingStep'}
@@ -53,23 +50,18 @@ export const RewardsClaimingWizard = observer(
         case STEPS_INDEXES.finish:
           return (
             <WizardFinishStep
-              // finishedActionDescription={guardianChangingWizardTranslations('afterSuccessStateExplanation')}
-              finishedActionDescription={'You have claimed your rewards'}
+              finishedActionDescription={rewardsClaimingWizardTranslations('afterSuccessStateExplanation')}
               onFinishClicked={closeWizard}
             />
           );
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep, wizardsCommonTranslations]);
+    }, [activeStep.value, closeWizard, goToFinishStep, rewardsClaimingWizardTranslations, wizardsCommonTranslations]);
 
     const stepperTitles = useMemo(() => {
-      return [
-        // guardianChangingWizardTranslations('stepLabel_changeGuardian'),
-        'Claim Rewards',
-        wizardsCommonTranslations('stepLabel_finish'),
-      ];
-    }, [wizardsCommonTranslations]);
+      return [rewardsClaimingWizardTranslations('stepLabel_claim'), wizardsCommonTranslations('stepLabel_finish')];
+    }, [rewardsClaimingWizardTranslations, wizardsCommonTranslations]);
 
     return (
       <Wizard

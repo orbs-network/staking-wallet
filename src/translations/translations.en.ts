@@ -13,6 +13,7 @@ import rewardsSectionTextsJson from './locales/en/rewardsSection.json';
 import sectionTitlesTextsJson from './locales/en/sectionTitles.json';
 import stakingWizardTextsJson from './locales/en/stakingWizard.json';
 import unstakingWizardTextsJson from './locales/en/unstakingWizard.json';
+import rewardsClaimingWizardTextsJson from './locales/en/rewardsClaimingWizard.json';
 import walletInfoSectionTextsJson from './locales/en/walletInfoSection.json';
 import withdrawingWizardTextsJson from './locales/en/withdrawingWizard.json';
 import wizardsCommonsTextsJson from './locales/en/wizardsCommons.json';
@@ -33,6 +34,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,
+  rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
   commons: commonsTextsJson,
 };
