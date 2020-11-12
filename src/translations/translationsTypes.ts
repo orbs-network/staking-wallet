@@ -82,6 +82,10 @@ export interface IGuardiansTableTranslations {
   columnHeader_name: string;
   columnHeader_address: string;
   columnHeader_website: string;
+  columnHeader_rewardsPercentageToDelegators: string;
+  columnHeader_effectiveStake: string;
+  columnHeader_participation: string;
+  columnHeader_capacity: string;
   columnHeader_votedInLastElection: string;
   columnHeader_selection: string;
   // Unused

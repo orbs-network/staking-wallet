@@ -260,7 +260,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         sorting: false,
       },
       {
-        title: 'Reward % To Delegators',
+        title: guardiansTableTranslations('columnHeader_rewardsPercentageToDelegators'),
         field: '',
         render: (guardian) => {
           const { EthAddress } = guardian;
@@ -295,7 +295,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: 'Effective Stake',
+        title: guardiansTableTranslations('columnHeader_effectiveStake'),
         field: 'EffectiveStake',
         render: (guardian) => {
           const { EffectiveStake, SelfStake, DelegatedStake } = guardian;
@@ -325,7 +325,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: 'Participation',
+        title: guardiansTableTranslations('columnHeader_participation'),
         field: 'ParticipationPercentage',
         render: (guardian) => {
           const { ParticipationPercentage } = guardian;
@@ -356,7 +356,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: 'Capacity',
+        title: guardiansTableTranslations('columnHeader_capacity'),
         field: 'SelfStake',
         render: (guardian) => {
           const { Capacity, SelfStake, DelegatedStake } = guardian;
