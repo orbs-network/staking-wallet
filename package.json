@@ -21,7 +21,8 @@
     "predeploy": "rm -rf ./dist && npm run build",
     "deploy": "gh-pages -d dist -r git@github.com:orlavy/mainet-example.git",
     "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
-    "postinstall": "npm run mkd"
+    "postinstall": "npm run mkd",
+    "sync-translations": "./src/translations/syncTranslations.zsh"
   },
   "keywords": [
     "typescript",
