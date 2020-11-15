@@ -1,9 +1,9 @@
 {
-  "stepLabel_claim": "Claim",
-  "finishedAction_claim": "Claimed your rewards",
   "afterSuccessStateExplanation": "You have claimed your rewards",
+  "finishedAction_claim": "Claimed your rewards",
   "rewardsClaimingSubStep_message_pressClaimWithExplanation": "Press \"Claim\" to claim your rewards balance. Claimed rewards are automatically staked and delegated to your Guardian",
-  "rewardsClaimingSubStep_subMessage_claimingHasCost": "Claiming rewards has an associated gas cost. it is recommended to claim your rewards only after acquiring significant rewards balance.",
   "rewardsClaimingSubStep_stepTitle": "Claim your ORBS rewards balance",
-  "rewardsClaimingSubStep_text_rewardsBalanceIs": "Rewards Balance is"
+  "rewardsClaimingSubStep_subMessage_claimingHasCost": "Claiming rewards has an associated gas cost. it is recommended to claim your rewards only after acquiring significant rewards balance.",
+  "rewardsClaimingSubStep_text_rewardsBalanceIs": "Rewards Balance is",
+  "stepLabel_claim": "Claim"
 }

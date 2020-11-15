@@ -1,1 +1,11 @@
-{}
+{
+  "myGuardianDisplay_action_selectAGuardian": "가디언 선택하기",
+  "myGuardianDisplay_action_youAre": "당신의 이름: {{name}}",
+  "myGuardianDisplay_error_noSelectedGuardianOrSelfDelegatingWhileNotGuardian": "선택한 가디언이 없음 / 자신에게 위임 중\n(이 주소는 등록된 가디언이 아닙니다)",
+  "myGuardianDisplay_info_onlyDelegationToCommitteeMembersEntitlesRewards": "알림: 위원회 멤버에게 위임해야 리워드가 발생됩니다.",
+  "myGuardianDisplay_text_selectedGuardianAddressIs": "현재 선택한 가디언 주소: {{guardianAddress}}",
+  "myGuardianDisplay_text_selectedGuardianIs": "산택한 가디언 이름: {{guardianName}}",
+  "myGuardianDisplay_text_unregistered": "등록해제됨",
+  "myGuardianDisplay_warning_delegatedToAnUnregisteredGuardian": "귀하의 토큰은 더이상 활동하지 않는 가디언에게 위임되어 있습니다.",
+  "myGuardianDisplay_warning_onlyCommitteeDelegationEntitlesRewards": "상위 22개(위원회 소속)의 가디언만이 리워드를 받습니다."
+}
