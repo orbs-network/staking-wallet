@@ -5,7 +5,7 @@ import approvableWizardStepTextsJson from './locales/ja/approvableWizardStep.jso
 import balancesSectionTextsJson from './locales/ja/balancesSection.json';
 import commonsTextsJson from './locales/ja/commons.json';
 import connectWalletSectionTextsJson from './locales/ja/connectWalletSection.json';
-import guardiansSectionTextsJson from './locales/js/guardiansSection.json';
+import guardiansSectionTextsJson from './locales/ja/guardiansSection.json';
 import guardianChangingWizardTextsJson from './locales/ja/guardianChangingWizard.json';
 import guardianSelectingWizardTextsJson from './locales/ja/guardianSelectingWizard.json';
 import guardiansTableTextsJson from './locales/ja/guardiansTable.json';
