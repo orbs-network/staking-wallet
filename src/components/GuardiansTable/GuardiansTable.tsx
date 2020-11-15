@@ -367,9 +367,16 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         field: 'SelfStake',
         render: (guardian) => {
           const { Capacity, SelfStake, DelegatedStake } = guardian;
-          const selfStakePercentage = +((SelfStake / DelegatedStake) * 100).toFixed(2);
           // TODO : ORL : Make this color gradient
           const color = Capacity <= 30 ? 'green' : Capacity <= 80 ? 'yellow' : 'red';
+          // const
+          const selfStakePercentage = +((SelfStake / DelegatedStake) * 100).toFixed(2);
+          // const selfStakePercentageText =
+
+          const capacityText = !isNaN(Capacity) ? `${Capacity.toFixed(2)}%` : '--';
+
+          // console.log(`${guardian.Name} capacity : ${Capacity}`);
+          // console.log(`${guardian.Name} capacity : ${SelfStake} - ${DelegatedStake}`);
 
           return (
             <Tooltip
@@ -390,7 +397,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
             >
               <div>
                 <Line percent={Capacity} strokeWidth={5} strokeColor={color} />
-                <Typography>{Capacity.toFixed(2)}%</Typography>
+                <Typography>{capacityText}</Typography>
               </div>
             </Tooltip>
           );
