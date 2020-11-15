@@ -7,8 +7,8 @@
   "text__totalDistributedRewards": "Total distributed rewards : {{totalDistributedRewards}}",
   "text_visitThe": "Visit the",
   "title_quantity_orbs": "ORBS",
-  "title_quantity_orbsPerWeek": "ORBS / Week",
-  "title_rewardsBalance": "Rewards balance",
-  "title_rewardsRate": "Rewards rate",
-  "title_totalRewardsAwarded": "Total rewards awarded"
+  "title_quantity_orbsPerWeek": "ORBS/week",
+  "title_rewardsBalance": "Unclaimed",
+  "title_rewardsRate": "Rewards Rate",
+  "title_totalRewardsAwarded": "Total rewards"
 }

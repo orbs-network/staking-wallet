@@ -64,7 +64,9 @@ export const RewardsSection = observer(() => {
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
           <BalanceCard
-            title={rewardsSectionTranslations('title_totalRewardsAwarded')}
+            title={`${rewardsSectionTranslations('title_totalRewardsAwarded')} (${rewardsSectionTranslations(
+              'title_quantity_orbs',
+            )})`}
             amount={orbsAccountStore.totalRewardedRewards}
             showFraction
           />
