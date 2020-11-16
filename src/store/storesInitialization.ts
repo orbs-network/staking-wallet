@@ -38,6 +38,7 @@ export function getStores(
   analyticsService: IAnalyticsService,
   orbsNodeService: IOrbsNodeService,
   delegationsService: IDelegationsService,
+  alertErrors = false,
 ): IStores {
   // Create stores instances + Hydrate the stores
   const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
@@ -51,6 +52,7 @@ export function getStores(
     orbsTokenService,
     analyticsService,
     delegationsService,
+    alertErrors,
   );
 
   const stores: IStores = {

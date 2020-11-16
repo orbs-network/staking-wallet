@@ -28,6 +28,9 @@ moment.locale('en');
 
 configureMobx();
 
+const urlParams = new URLSearchParams(window.location.search);
+const alertErrors = !!urlParams.get('alertErrors');
+
 const ethereumProvider = (window as any).ethereum;
 const services = buildServices(ethereumProvider, axios);
 const stores = getStores(
@@ -39,6 +42,7 @@ const stores = getStores(
   services.analyticsService,
   services.orbsNodeService,
   services.delegationsService,
+  alertErrors,
 );
 
 // TODO : FUTURE : O.L : Move this to a better location

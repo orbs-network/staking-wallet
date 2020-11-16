@@ -21,6 +21,15 @@ export class OrbsAccountStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
 
+  // DEV_NOTE : O.L : This is a simple mechanism that will allow users of limited Dapp browsers to
+  //                  still have the core capabilities of Tetra.
+  // Special error indicators for contract queries that can fail due to
+  // specific DAPP browser limitations
+  @observable public errorReadingAccumulatedRewards = false;
+  @observable public errorReadingRewardsDistribution = false;
+  // DEV_NOTE : O.L : This should only be an error if trying to read Guardian from events.
+  @observable public errorReadingSelectedGuardian = false;
+
   @observable public liquidOrbs = BigInt(0);
   @observable public stakingContractAllowance = BigInt(0);
   @observable public stakedOrbs = BigInt(0);
@@ -113,7 +122,6 @@ export class OrbsAccountStore {
   private orbsInCooldownAmountChangeUnsubscribeFunction: () => void;
   private selectedGuardianChangeUnsubscribeFunction: () => void;
 
-  // TODO : ORL : Remove the old 'orbsRewardsService' and implement new rewards calculation with 'Staking rewards'
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
     private orbsNodeStore: OrbsNodeStore,
@@ -123,6 +131,7 @@ export class OrbsAccountStore {
     private orbsTokenService: IOrbsTokenService,
     private analyticsService: IAnalyticsService,
     private delegationsService: IDelegationsService,
+    private alertErrors = false,
   ) {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
@@ -205,6 +214,11 @@ export class OrbsAccountStore {
         await this.readDataForAccount(currentAddress);
       } catch (e) {
         this.failLoadingProcess(e);
+
+        if (this.alertErrors) {
+          alert(`Error on orbs account store : ${e}`);
+        }
+
         console.error('Error in reacting to address change in Orbs Account Store', e);
       }
     }
@@ -231,45 +245,61 @@ export class OrbsAccountStore {
   private async readDataForAccount(accountAddress: string) {
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
       console.error(`Error in read-n-set liquid orbs : ${e}`);
       throw e;
     });
     await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading staked orbs : ${e}`);
       console.error(`Error in read-n-set staked orbs : ${e}`);
       throw e;
     });
     await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading selected guardian : ${e}`);
       console.error(`Error in read-n-set selected guardian : ${e}`);
       throw e;
     });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading contract allowance: ${e}`);
       console.error(`Error in read-n-set contract allowance: ${e}`);
       throw e;
     });
     await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading cooldown status : ${e}`);
       console.error(`Error in read-n-set cooldown status : ${e}`);
       throw e;
     });
     await this.readAndSetRewardsBalance(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading: ${e}`);
       console.error(`Error in read-n-set rewards balance : ${e}`);
       throw e;
     });
     await this.readAndSetClaimedRewards(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading Claimed Rewards: ${e}`);
       console.error(`Error in read-n-set claimed rewards : ${e}`);
       throw e;
     });
     await this.readAndSetEstimatedRewardsForNextWeek(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading EstimatedRewardsForNextWeek: ${e}`);
       console.error(`Error in read-n-set rewards estimation for the following week : ${e}`);
       throw e;
     });
     await this.readAndSetTotalStakedOrbsInContract().catch((e) => {
+      this.alertIfEnabled(`Error in reading TotalStakedOrbsInContract: ${e}`);
       console.error(`Error in read-n-set total staked orbs in contract : ${e}`);
       throw e;
     });
     await this.readAndSetTotalUncappedStakedOrbs().catch((e) => {
+      this.alertIfEnabled(`Error in reading Total uncapped staked Orbs: ${e}`);
       console.error(`Error in read-n-set total uncapped staked orbs : ${e}`);
       throw e;
     });
+  }
+
+  private alertIfEnabled(error: string) {
+    if (this.alertErrors) {
+      alert(error);
+    }
   }
 
   private async readAndSetLiquidOrbs(accountAddress: string) {

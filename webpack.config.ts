@@ -27,6 +27,11 @@ const plugins = [
       from: './404.html',
     },
   ]),
+  new CopyWebpackPlugin([
+    {
+      from: './CNAME',
+    },
+  ]),
   // Adds the favicons to the dist
   new FaviconsWebpackPlugin('./assets/favicons/tetra_favicon.svg'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.

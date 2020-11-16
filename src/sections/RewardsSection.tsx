@@ -55,6 +55,14 @@ export const RewardsSection = observer(() => {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 
+  // DEV_NOTE : O.L : If there was an error reading the rewards, we will show dashes (instead of the default 0)
+  const totalDistributedRewardsString = orbsAccountStore.errorReadingRewardsDistribution
+    ? '--'
+    : orbsAccountStore.totalDistributedRewards.toLocaleString();
+  const totalAccumulatedRewardsString = orbsAccountStore.errorReadingAccumulatedRewards
+    ? '--'
+    : orbsAccountStore.totalAccumulatedRewards.toLocaleString();
+
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
     <Section>
