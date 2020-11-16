@@ -13,13 +13,22 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { Typography } from '@material-ui/core';
 
-export interface IGuardianChangeStepContentProps {
-  newGuardianAddress: string;
+export interface IRewardsClaimingStepContentProps {
+  shouldAddSkip?: boolean;
+  skipToNextStep?: () => void;
 }
 
 export const RewardsCalaimingStepContent = observer(
-  (props: ITransactionCreationStepProps & IGuardianChangeStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress, closeWizard } = props;
+  (props: ITransactionCreationStepProps & IRewardsClaimingStepContentProps) => {
+    const {
+      onPromiEventAction,
+      skipToSuccess,
+      txError,
+      disableInputs,
+      shouldAddSkip,
+      skipToNextStep,
+      closeWizard,
+    } = props;
 
     const commonsTranslations = useCommonsTranslations();
     const wizardsCommonTranslations = useWizardsCommonTranslations();
@@ -95,8 +104,10 @@ export const RewardsCalaimingStepContent = observer(
         innerContent={rewardsClaimingInnerContent}
         actionButtonProps={claimRewardsActionButtonProps}
         addCancelButton
-        onCancelButtonClicked={closeWizard}
-        cancelButtonText={wizardsCommonTranslations('action_close')}
+        onCancelButtonClicked={shouldAddSkip ? (skipToNextStep ? skipToNextStep : closeWizard) : closeWizard}
+        cancelButtonText={
+          shouldAddSkip ? wizardsCommonTranslations('action_skip') : wizardsCommonTranslations('action_close')
+        }
       />
     );
   },

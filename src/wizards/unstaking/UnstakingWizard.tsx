@@ -12,7 +12,10 @@ import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 import { Wizard } from '../../components/wizards/Wizard';
-import { RewardsCalaimingStepContent } from '../rewardsClaiming/RewardsCalaimingStepContent';
+import {
+  IRewardsClaimingStepContentProps,
+  RewardsCalaimingStepContent,
+} from '../rewardsClaiming/RewardsCalaimingStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const STEPS_INDEXES = {
@@ -40,9 +43,19 @@ export const UnstakingWizard = observer(
     const activeStep = useNumber(
       orbsAccountStore.hasClaimableRewards ? STEPS_INDEXES.claimRewards : STEPS_INDEXES.unstakeOrbs,
     );
+    const goToUnstakeStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.unstakeOrbs), [activeStep]);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
 
     // TODO : ORL : TRANSLATIONS
+
+    const extraStepsForRewardsClaiming = useMemo<IRewardsClaimingStepContentProps>(() => {
+      const stepProps: IRewardsClaimingStepContentProps = {
+        shouldAddSkip: true,
+        skipToNextStep: goToUnstakeStep,
+      };
+
+      return stepProps;
+    }, [goToUnstakeStep]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
@@ -51,6 +64,7 @@ export const UnstakingWizard = observer(
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={RewardsCalaimingStepContent}
+              propsForTransactionCreationSubStepContent={extraStepsForRewardsClaiming}
               displayCongratulationsSubStep={false}
               finishedActionName={rewardsClaimingWizardTranslations('finishedAction_claim')}
               moveToNextStepAction={goToFinishStep}

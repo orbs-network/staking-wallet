@@ -70,6 +70,7 @@ export interface IWizardsCommonsTranslations {
 
   // Modal managing
   action_close: string;
+  action_skip: string;
 
   // Message for TX errors
   txCreationError_userCanceled_message: string;

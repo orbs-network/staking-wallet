@@ -1,6 +1,7 @@
 {
   "action_close": "Close",
   "action_finish": "Finish",
+  "action_skip": "Skip",
   "message_errorOccurred": "An error occurred while trying to send transaction to the staking wallet.",
   "message_userCanceledTransactions": "You have canceled the transaction.",
   "moveToStep_finish": "Finish",
