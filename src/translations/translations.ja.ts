@@ -5,6 +5,7 @@ import approvableWizardStepTextsJson from './locales/ja/approvableWizardStep.jso
 import balancesSectionTextsJson from './locales/ja/balancesSection.json';
 import commonsTextsJson from './locales/ja/commons.json';
 import connectWalletSectionTextsJson from './locales/ja/connectWalletSection.json';
+import guardiansSectionTextsJson from './locales/ja/guardiansSection.json';
 import guardianChangingWizardTextsJson from './locales/ja/guardianChangingWizard.json';
 import guardianSelectingWizardTextsJson from './locales/ja/guardianSelectingWizard.json';
 import guardiansTableTextsJson from './locales/ja/guardiansTable.json';
@@ -16,6 +17,7 @@ import unstakingWizardTextsJson from './locales/ja/unstakingWizard.json';
 import walletInfoSectionTextsJson from './locales/ja/walletInfoSection.json';
 import withdrawingWizardTextsJson from './locales/ja/withdrawingWizard.json';
 import wizardsCommonsTextsJson from './locales/ja/wizardsCommons.json';
+import rewardsClaimingWizardTextsJson from './locales/en/rewardsClaimingWizard.json';
 
 export const JAPANESE_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',
@@ -24,6 +26,7 @@ export const JAPANESE_TEXTS: IAppTranslations = {
   walletInfoSection: walletInfoSectionTextsJson,
   balancesSection: balancesSectionTextsJson,
   rewardsSection: rewardsSectionTextsJson,
+  guardiansSection: guardiansSectionTextsJson,
   guardiansTable: guardiansTableTextsJson,
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
@@ -33,6 +36,7 @@ export const JAPANESE_TEXTS: IAppTranslations = {
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,
+  rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
   commons: commonsTextsJson,
 };

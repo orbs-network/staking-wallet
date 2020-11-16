@@ -1,7 +1,7 @@
 import { action, computed, observable, reaction } from 'mobx';
-import { ICryptoWalletConnectionService } from '../services/cryptoWalletConnectionService/ICryptoWalletConnectionService';
 import { IReactionDisposer } from 'mobx/lib/core/reaction';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
+import { ICryptoWalletConnectionService } from '@orbs-network/contracts-js';
 
 export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
@@ -53,7 +53,7 @@ export class CryptoWalletConnectionStore {
   public get isConnectedToWallet(): boolean {
     return (
       this.hasEthereumProvider &&
-      (this.cryptoWalletConnectionService.didUserApproveWalletInThePast || this.walletConnectionRequestApproved)
+      (this.cryptoWalletConnectionService.didUserApproveDappInThePast || this.walletConnectionRequestApproved)
     );
   }
 

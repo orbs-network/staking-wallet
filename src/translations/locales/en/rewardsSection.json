@@ -1,8 +1,14 @@
 {
+  "action_claim": "Claim",
   "linkText_rewardsPage": "Rewards page",
   "text__NextElectionRoundWillTakePlaceAtEthereumBlock": "Next election round will take place at Ethereum block {{nextElectionBlockNumberLink}}",
   "text__forDetailedRewardsPleaseVisitThe": "For Detailed rewards please visit the {{rewardsPageTextLink}}",
   "text__totalAccumulatedRewards": "Total accumulated rewards : {{totalAccumulatedRewards}}",
   "text__totalDistributedRewards": "Total distributed rewards : {{totalDistributedRewards}}",
-  "text_visitThe": "Visit the"
+  "text_visitThe": "Visit the",
+  "title_quantity_orbs": "ORBS",
+  "title_quantity_orbsPerWeek": "ORBS/week",
+  "title_rewardsBalance": "Unclaimed",
+  "title_rewardsRate": "Rewards Rate",
+  "title_totalRewardsAwarded": "Total rewards"
 }

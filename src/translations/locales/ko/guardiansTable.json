@@ -2,11 +2,17 @@
   "action_keep": "유지",
   "action_select": "선택",
   "columnHeader_address": "주소",
+  "columnHeader_capacity": "Capacity",
+  "columnHeader_effectiveStake": "유효 스테이킹",
   "columnHeader_name": "이름",
+  "columnHeader_participation": "참여구분",
+  "columnHeader_rewardsPercentageToDelegators": "델리게이터 배포 비율 %",
   "columnHeader_selection": "선택",
   "columnHeader_stakingPercentageInLastElections": "지난 선거 점유율 %",
   "columnHeader_votedInLastElection": "지난 선거 참여여부",
   "columnHeader_website": "웹사이트",
   "didVote_no": "아니오",
-  "didVote_yes": "예"
+  "didVote_yes": "예",
+  "message_certified": "인증",
+  "message_delegatedStake": "위임된 스테이킹"
 }

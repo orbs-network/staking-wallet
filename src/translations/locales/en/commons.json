@@ -3,5 +3,6 @@
   "loadingFailed": "Loading failed",
   "privacyPolicy": "Privacy Policy",
   "termsOfUse": "Terms of Use",
-  "timeLeft": "{{timePhrase}} left"
+  "timeLeft": "{{timePhrase}} left",
+  "xOrbs": "{{amount}} ORBS"
 }

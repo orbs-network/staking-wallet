@@ -19,6 +19,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
     // Dimensions
     maxHeight: '90%',
+    maxWidth: '100%',
+    width: 'fit-content',
 
     // Colors
     backgroundColor: Color(theme.palette.primary.dark)
@@ -59,7 +61,7 @@ export const CommonDialog = React.memo<DialogProps>((props) => {
 
   return (
     <StyledDialog
-      disableBackdropClick
+      // disableBackdropClick
       // fullScreen={fullScreen}
       // fullWidth={!fullScreen}
       maxWidth={'lg'}

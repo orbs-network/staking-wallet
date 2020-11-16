@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBoolean } from 'react-hanger';
 import { Button, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -7,10 +7,9 @@ import { observer } from 'mobx-react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
-import { useGuardiansStore, useOrbsAccountStore } from '../../store/storeHooks';
-import { GuardiansTable } from '../../components/GuardiansTable';
+import { useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
+import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
-import { TGuardianInfoExtended } from '../../store/GuardiansStore';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
 import {
   useAlertsTranslations,
@@ -22,52 +21,70 @@ import { CommonDialog } from '../../components/modal/CommonDialog';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
+import { Guardian } from '../../services/v2/orbsNodeService/systemState';
+import { useGuardiansDelegatorsCut, useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
-  const guardiansStore = useGuardiansStore();
+  const orbsNodeStore = useOrbsNodeStore();
   const orbsAccountStore = useOrbsAccountStore();
   const showGuardianChangingModal = useBoolean(false);
   const showGuardianSelectionModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
+  orbsNodeStore.guardians;
+  const guardiansService = useGuardiansService();
+  const stakingRewardsService = useStakingRewardsService();
+
   const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
 
   const onGuardianSelect = useCallback(
-    (guardian: TGuardianInfoExtended) => {
-      if (guardian.address === orbsAccountStore.selectedGuardianAddress) {
+    (guardian: Guardian) => {
+      if (guardian.EthAddress === orbsAccountStore.selectedGuardianAddress) {
         showSnackbarMessage.setTrue();
       } else {
-        setSelectedGuardianAddress(guardian.address);
+        setSelectedGuardianAddress(guardian.EthAddress);
         showGuardianChangingModal.setTrue();
       }
     },
     [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
 
-  const isLoadingData = !guardiansStore.doneLoading || !orbsAccountStore.doneLoading;
-  const isErrorOnLoading = guardiansStore.errorLoading || orbsAccountStore.errorLoading;
+  const isLoadingData = !orbsNodeStore.doneLoading || !orbsAccountStore.doneLoading;
+  const isErrorOnLoading = orbsNodeStore.errorLoading || orbsAccountStore.errorLoading;
+
+  const totalStake = orbsNodeStore.totalStake;
+  const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
+
+  const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
   // Before data was loaded
   if (isLoadingData) {
     return <Typography>{commonsTranslations('loading')}</Typography>;
   }
 
+  // TODO : ORL : Fix display of total and effective stake.
+
+  // TODO : ORL : TRANSLATION
+
   return (
     <Section data-testid='guardians-section'>
       <SectionHeader
         title={sectionTitlesTranslations('allGuardians')}
-        sideTitle={sectionTitlesTranslations('allGuardians_sideTitle', {
-          totalParticipatingTokens: guardiansStore.totalParticipatingTokens.toLocaleString(),
-        })}
+        sideTitle={[
+          `${sectionTitlesTranslations(
+            'allGuardians_sideTitleTotalStake',
+          )}: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
+          `${sectionTitlesTranslations(
+            'allGuardians_sideTitleCommitteeStake',
+          )}: ${committeeEffectiveStake.toLocaleString()}`,
+        ]}
         icon={ShielIcon}
         bottomPadding
       />
       <CommonDivider />
-
-      {/*<CommonDivider />*/}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {isErrorOnLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
@@ -79,10 +96,12 @@ export const GuardiansSection = observer(() => {
           <Grid item xs={12}>
             <GuardiansTable
               guardianSelectionMode={'Change'}
-              selectedGuardian={orbsAccountStore.selectedGuardianAddress}
-              guardians={guardiansStore.guardiansList}
+              selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
+              guardians={orbsNodeStore.guardians}
               onGuardianSelect={onGuardianSelect}
               tableTestId={'guardians-table'}
+              committeeMembers={orbsNodeStore.committeeMembers}
+              guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             />
           </Grid>
 

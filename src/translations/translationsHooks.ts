@@ -9,8 +9,10 @@ import {
   IConnectWalletSectionTranslations,
   IGuardianChangingWizardTranslation,
   IGuardianSelectingWizardTranslation,
+  IGuardiansSectionTranslations,
   IGuardiansTableTranslations,
   IRestakingWizardTranslation,
+  IRewardsClaimingWizardTranslation,
   IRewardsSectionTranslations,
   ISectionTitlesTranslations,
   IStakingWizardTranslations,
@@ -44,6 +46,10 @@ export function useBalancesSectionTranslations() {
 
 export function useRewardsSectionTranslations() {
   return useSpecificTypeSafeTFunction<IRewardsSectionTranslations>('rewardsSection');
+}
+
+export function useGuardiansSectionTranslations() {
+  return useSpecificTypeSafeTFunction<IGuardiansSectionTranslations>('guardiansSection');
 }
 
 export function useConnectWalletSectionTranslations() {
@@ -88,6 +94,10 @@ export function useUnstakingWizardTranslations() {
 
 export function useWithdrawingWizardTranslations() {
   return useSpecificTypeSafeTFunction<IWithdrawingWizardTranslation>('withdrawingWizard');
+}
+
+export function useRewardsClaimingWizardTranslations() {
+  return useSpecificTypeSafeTFunction<IRewardsClaimingWizardTranslation>('rewardsClaimingWizard');
 }
 
 export function useAlertsTranslations() {

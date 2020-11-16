@@ -1,14 +1,7 @@
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
-import {
-  IOrbsPOSDataService,
-  IStakingService,
-  IOrbsTokenService,
-  IGuardiansService,
-  IOrbsRewardsService,
-  IRewardsDistributionEvent,
-} from 'orbs-pos-data';
+import { IOrbsPOSDataService, IOrbsTokenService, IOrbsRewardsService } from 'orbs-pos-data';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   subscribeToOrbsInCooldownChange,
@@ -16,13 +9,13 @@ import {
 } from './contractsStateSubscriptions/combinedEventsSubscriptions';
 import { EMPTY_ADDRESS } from '../constants';
 import moment from 'moment';
-import { GuardiansStore } from './GuardiansStore';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
-import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
-import { IAccumulatedRewards } from 'orbs-pos-data/dist/interfaces/IAccumulatedRewards';
-
-export type TRewardsDistributionHistory = IRewardsDistributionEvent[];
+import { OrbsNodeStore } from './OrbsNodeStore';
+import { Guardian } from '../services/v2/orbsNodeService/systemState';
+import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
+import { IDelegationsService, IStakingService } from '@orbs-network/contracts-js';
 
 export class OrbsAccountStore {
   @observable public doneLoading = false;
@@ -42,14 +35,18 @@ export class OrbsAccountStore {
   @observable public stakedOrbs = BigInt(0);
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
-  @observable public accumulatedRewards: IAccumulatedRewards;
-  @observable public rewardsDistributionsHistory: TRewardsDistributionHistory;
+
+  @observable public totalStakedOrbsInContract = 0;
+  @observable public totalUncappedStakedOrbs = 0;
+
+  @observable public rewardsBalance = 0;
+  @observable public claimedRewards = 0;
+  @observable public estimatedRewardsForNextWeek = 0;
+
   @observable public _selectedGuardianAddress: string;
 
   @computed get isGuardian(): boolean {
-    return this.guardiansStore.guardiansAddresses.includes(
-      this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase(),
-    );
+    return this.orbsNodeStore.guardiansAddresses.includes(this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase());
   }
 
   @computed get selectedGuardianAddress(): string {
@@ -60,7 +57,31 @@ export class OrbsAccountStore {
     }
   }
   @computed get hasSelectedGuardian(): boolean {
-    return !isNil(this.selectedGuardianAddress) && this.selectedGuardianAddress !== EMPTY_ADDRESS;
+    if (this.isGuardian) {
+      return true;
+    } else if (
+      !isNil(this.selectedGuardianAddress) &&
+      this.selectedGuardianAddress !== EMPTY_ADDRESS &&
+      this.selectedGuardianAddress !== this.cryptoWalletIntegrationStore.mainAddress
+    ) {
+      // DEV_NOTE : O.L : We want to make sure that the selected guardian address is not empty, directed to null (zero address) or the default one (default in V2 is auto self-delegation)
+      return true;
+    } else {
+      return false;
+    }
+  }
+  @computed get selectedGuardian(): Guardian | null {
+    if (this.hasSelectedGuardian) {
+      const guardian = this.orbsNodeStore.guardians.find(
+        (g) => g.EthAddress.toLowerCase() === this.selectedGuardianAddress.toLowerCase(),
+      );
+      return guardian || null;
+    } else {
+      return null;
+    }
+  }
+  @computed get isSelectedGuardianRegistered(): boolean {
+    return this.selectedGuardian !== null;
   }
   @computed get hasOrbsToWithdraw(): boolean {
     return this.orbsInCoolDown > 0 && this.cooldownReleaseTimestamp <= moment.utc().unix();
@@ -74,30 +95,16 @@ export class OrbsAccountStore {
   @computed get participatingInStaking(): boolean {
     return this.hasStakedOrbs || this.hasOrbsInCooldown || this.hasOrbsToWithdraw;
   }
-  @computed get totalAccumulatedRewards(): number {
-    if (!this.accumulatedRewards) {
-      return 0;
-    }
 
-    // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
-    return (
-      Number(this.accumulatedRewards.delegatorReward) +
-      Number(this.accumulatedRewards.guardianReward) +
-      Number(this.accumulatedRewards.validatorReward)
-    );
+  @computed get totalSystemStakedTokens(): number {
+    return this.totalStakedOrbsInContract - this.totalUncappedStakedOrbs;
   }
 
-  @computed get totalDistributedRewards(): number {
-    if (!this.rewardsDistributionsHistory) {
-      return 0;
-    }
-
-    const totalDistributedRewards = this.rewardsDistributionsHistory.reduce((sum, distributionEvent) => {
-      // DEV_NOTE : The rewards are in whole orbs, we can safely convert them to numbers.
-      return sum + fullOrbsFromWeiOrbs(distributionEvent.amount);
-    }, 0);
-
-    return totalDistributedRewards;
+  @computed get hasClaimableRewards(): boolean {
+    return this.rewardsBalance > 0;
+  }
+  @computed get totalRewardedRewards(): number {
+    return this.rewardsBalance + this.claimedRewards;
   }
 
   @computed get needsManualUpdatingOfState(): boolean {
@@ -117,13 +124,13 @@ export class OrbsAccountStore {
 
   constructor(
     private cryptoWalletIntegrationStore: CryptoWalletConnectionStore,
-    private guardiansStore: GuardiansStore,
+    private orbsNodeStore: OrbsNodeStore,
     private orbsPOSDataService: IOrbsPOSDataService,
     private stakingService: IStakingService,
+    private stakingRewardsService: IStakingRewardsService,
     private orbsTokenService: IOrbsTokenService,
-    private guardiansService: IGuardiansService,
-    private orbsRewardsService: IOrbsRewardsService,
     private analyticsService: IAnalyticsService,
+    private delegationsService: IDelegationsService,
     private alertErrors = false,
   ) {
     this.addressChangeReaction = reaction(
@@ -178,6 +185,21 @@ export class OrbsAccountStore {
     return this.stakingService.restake();
   }
 
+  public delegate(delegationTargetAddress: string): PromiEvent<TransactionReceipt> {
+    return this.delegationsService.delegate(delegationTargetAddress);
+  }
+
+  public claimRewards(): PromiEvent<TransactionReceipt> {
+    return this.stakingRewardsService.claimRewards(this.cryptoWalletIntegrationStore.mainAddress);
+  }
+
+  // **** Data fefresh interactions ****
+  public async refreshAllRewardsData() {
+    this.readAndSetEstimatedRewardsForNextWeek(this.cryptoWalletIntegrationStore.mainAddress);
+    this.readAndSetRewardsBalance(this.cryptoWalletIntegrationStore.mainAddress);
+    this.readAndSetClaimedRewards(this.cryptoWalletIntegrationStore.mainAddress);
+  }
+
   // **** Current address changed ****
 
   private async reactToConnectedAddressChanged(currentAddress) {
@@ -205,6 +227,8 @@ export class OrbsAccountStore {
   private setDefaultAccountAddress(accountAddress: string) {
     this.stakingService.setFromAccount(accountAddress);
     this.orbsTokenService.setFromAccount(accountAddress);
+    this.delegationsService.setFromAccount(accountAddress);
+    this.stakingRewardsService.setFromAccount(accountAddress);
   }
 
   // **** Data reading and setting ****
@@ -219,47 +243,56 @@ export class OrbsAccountStore {
   }
 
   private async readDataForAccount(accountAddress: string) {
-    // Reset the events based data reading error flags.
-    this.resetEventReadingErrorFlags();
-
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
-      console.error(`Error in reading liquid orbs : ${e}`);
+      console.error(`Error in read-n-set liquid orbs : ${e}`);
       throw e;
     });
     await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading staked orbs : ${e}`);
-      console.error(`Error in reading staked orbs : ${e}`);
+      console.error(`Error in read-n-set staked orbs : ${e}`);
       throw e;
     });
     await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading selected guardian : ${e}`);
-      console.error(`Error in reading selected guardian : ${e}`);
-      this.setErrorReadingSelectedGuardian(true);
-      // throw e;
+      console.error(`Error in read-n-set selected guardian : ${e}`);
+      throw e;
     });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading contract allowance: ${e}`);
-      console.error(`Error in reading contract allowance: ${e}`);
+      console.error(`Error in read-n-set contract allowance: ${e}`);
       throw e;
     });
     await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading cooldown status : ${e}`);
-      console.error(`Error in reading cooldown status : ${e}`);
+      console.error(`Error in read-n-set cooldown status : ${e}`);
       throw e;
     });
-    await this.readAndSetRewards(accountAddress).catch((e) => {
-      this.alertIfEnabled(`Error in reading rewards : ${e}`);
-      console.error(`Error in reading rewards : ${e}`);
-      this.setErrorReadingAccumulatedRewards(true);
-      // throw e;
+    await this.readAndSetRewardsBalance(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading: ${e}`);
+      console.error(`Error in read-n-set rewards balance : ${e}`);
+      throw e;
     });
-    await this.readAndSetRewardsHistory(accountAddress).catch((e) => {
-      this.alertIfEnabled(`Error in reading rewards history : ${e}`);
-      console.error(`Error in reading rewards history : ${e}`);
-      this.setErrorReadingRewardsDistribution(true);
-      // throw e;
+    await this.readAndSetClaimedRewards(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading Claimed Rewards: ${e}`);
+      console.error(`Error in read-n-set claimed rewards : ${e}`);
+      throw e;
+    });
+    await this.readAndSetEstimatedRewardsForNextWeek(accountAddress).catch((e) => {
+      this.alertIfEnabled(`Error in reading EstimatedRewardsForNextWeek: ${e}`);
+      console.error(`Error in read-n-set rewards estimation for the following week : ${e}`);
+      throw e;
+    });
+    await this.readAndSetTotalStakedOrbsInContract().catch((e) => {
+      this.alertIfEnabled(`Error in reading TotalStakedOrbsInContract: ${e}`);
+      console.error(`Error in read-n-set total staked orbs in contract : ${e}`);
+      throw e;
+    });
+    await this.readAndSetTotalUncappedStakedOrbs().catch((e) => {
+      this.alertIfEnabled(`Error in reading Total uncapped staked Orbs: ${e}`);
+      console.error(`Error in read-n-set total uncapped staked orbs : ${e}`);
+      throw e;
     });
   }
 
@@ -275,7 +308,7 @@ export class OrbsAccountStore {
   }
 
   private async readAndSetSelectedGuardianAddress(accountAddress: string) {
-    const selectedGuardianAddress = await this.guardiansService.readSelectedGuardianAddress(accountAddress);
+    const selectedGuardianAddress = await this.delegationsService.readDelegation(accountAddress);
     this.setSelectedGuardianAddress(selectedGuardianAddress);
   }
 
@@ -303,14 +336,34 @@ export class OrbsAccountStore {
     this.setCooldownReleaseTimestamp(releaseTimestamp);
   }
 
-  private async readAndSetRewards(accountAddress: string) {
-    const accumulatedRewards = await this.orbsRewardsService.readAccumulatedRewards(accountAddress);
-    this.setAccumulatedRewards(accumulatedRewards);
+  private async readAndSetClaimedRewards(accountAddress: string) {
+    const claimedRewardsInFullOrbs = await this.stakingRewardsService.readClaimedRewardsFullOrbs(accountAddress);
+    this.setClaimedRewards(claimedRewardsInFullOrbs);
   }
 
-  private async readAndSetRewardsHistory(accountAddress: string) {
-    const rewardsDistributionHistory = await this.orbsRewardsService.readRewardsDistributionsHistory(accountAddress);
-    this.setRewardsDistributionsHistory(rewardsDistributionHistory);
+  private async readAndSetEstimatedRewardsForNextWeek(accountAddress: string) {
+    const oneWeekInSeconds = 60 * 60 * 24 * 7;
+    const estimateRewardsFullOrbs = await this.stakingRewardsService.estimateFutureRewardsFullOrbs(
+      accountAddress,
+      oneWeekInSeconds,
+    );
+
+    this.setEstimatedRewardsForNextWeek(estimateRewardsFullOrbs);
+  }
+
+  private async readAndSetRewardsBalance(accountAddress: string) {
+    const rewardsBalance = await this.stakingRewardsService.readRewardsBalanceFullOrbs(accountAddress);
+    this.setRewardsBalance(rewardsBalance);
+  }
+
+  private async readAndSetTotalStakedOrbsInContract() {
+    const totalStakedOrbsInContract = await this.stakingService.readTotalStakedInFullOrbs();
+    this.setTotalStakedOrbsInContract(totalStakedOrbsInContract);
+  }
+
+  private async readAndSetTotalUncappedStakedOrbs() {
+    const totalUncappedStakedOrbs = await this.delegationsService.readUncappedDelegatedStakeInFullOrbs();
+    this.setTotalUncappedStakedOrbs(totalUncappedStakedOrbs);
   }
 
   // ****  Subscriptions ****
@@ -351,10 +404,10 @@ export class OrbsAccountStore {
     );
 
     // Selected guardian
-    this.selectedGuardianChangeUnsubscribeFunction = this.guardiansService.subscribeToDelegateEvent(
-      accountAddress,
-      (error, delegator, delegatee, delegationCounter) => this.setSelectedGuardianAddress(delegatee),
-    );
+    // this.selectedGuardianChangeUnsubscribeFunction = this.guardiansService.subscribeToDelegateEvent(
+    //   accountAddress,
+    //   (error, delegator, delegatee, delegationCounter) => this.setSelectedGuardianAddress(delegatee),
+    // );
   }
 
   private cancelAllCurrentSubscriptions() {
@@ -383,12 +436,6 @@ export class OrbsAccountStore {
   private failLoadingProcess(error: Error) {
     this.setErrorLoading(true);
     this.setDoneLoading(true);
-  }
-
-  private resetEventReadingErrorFlags() {
-    this.setErrorReadingAccumulatedRewards(false);
-    this.setErrorReadingRewardsDistribution(false);
-    this.setErrorReadingSelectedGuardian(false);
   }
 
   // ****  Observables setter actions ****
@@ -433,28 +480,30 @@ export class OrbsAccountStore {
     this.errorLoading = errorLoading;
   }
 
-  @action('setErrorReadingAccumulatedRewards')
-  private setErrorReadingAccumulatedRewards(errorReadingAccumulatedRewards: boolean) {
-    this.errorReadingAccumulatedRewards = errorReadingAccumulatedRewards;
+  @action('setRewardsBalance')
+  private setRewardsBalance(rewardsBalance: number) {
+    console.log({ rewardsBalance });
+    this.rewardsBalance = rewardsBalance;
   }
 
-  @action('setErrorReadingRewardsDistribution')
-  private setErrorReadingRewardsDistribution(errorReadingRewardsDistribution: boolean) {
-    this.errorReadingRewardsDistribution = errorReadingRewardsDistribution;
+  @action('setClaimedRewards')
+  private setClaimedRewards(claimedRewards: number) {
+    this.claimedRewards = claimedRewards;
   }
 
-  @action('setErrorReadingSelectedGuardian')
-  private setErrorReadingSelectedGuardian(errorReadingSelectedGuardian: boolean) {
-    this.errorReadingSelectedGuardian = errorReadingSelectedGuardian;
+  @action('setEstimatedRewardsForNextWeek')
+  private setEstimatedRewardsForNextWeek(estimatedRewardsForNextWeek: number) {
+    console.log({ estimatedRewardsForNextWeek });
+    this.estimatedRewardsForNextWeek = estimatedRewardsForNextWeek;
   }
 
-  @action('setAccumulatedRewards')
-  private setAccumulatedRewards(accumulatedRewards: any) {
-    this.accumulatedRewards = accumulatedRewards;
+  @action('setTotalStakedOrbsInContract')
+  private setTotalStakedOrbsInContract(totalStakedOrbsInContract: number) {
+    this.totalStakedOrbsInContract = totalStakedOrbsInContract;
   }
 
-  @action('setRewardsDistributionsHistory')
-  private setRewardsDistributionsHistory(rewardsDistributionsHistory: any) {
-    this.rewardsDistributionsHistory = rewardsDistributionsHistory;
+  @action('setTotalUncappedStakedOrbs')
+  private setTotalUncappedStakedOrbs(totalUncappedStakedOrbs: number) {
+    this.totalUncappedStakedOrbs = totalUncappedStakedOrbs;
   }
 }

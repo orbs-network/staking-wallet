@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useStateful } from 'react-hanger';
-import { useGuardiansStore } from '../../store/storeHooks';
+import React, { useCallback, useMemo } from 'react';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
-import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { useTranslation } from 'react-i18next';
 import {
   useGuardianChangingWizardTranslations,
@@ -25,14 +22,22 @@ export const GuardianChangeStepContent = observer(
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
-    const guardiansStore = useGuardiansStore();
+    const orbsAccountStore = useOrbsAccountStore();
     const [t] = useTranslation();
     const analyticsService = useAnalyticsService();
 
+    const reReadStoresData = useReReadAllStoresData();
+
+    // TODO : ORL : TRANSLATIONS
+
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
-      guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
-      guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
+      orbsAccountStore.isGuardian
+        ? 'You are a registered Guardian'
+        : guardianChangingWizardTranslations('guardianSelectionSubStep_message_changeGuardian', { newGuardianAddress }),
+      orbsAccountStore.isGuardian
+        ? 'You must unregister before delegating to another Guardian'
+        : guardianChangingWizardTranslations('guardianSelectionSubStep_subMessage_pressChangeAndApprove'),
       false,
     );
 
@@ -43,7 +48,7 @@ export const GuardianChangeStepContent = observer(
       message.setValue('');
       subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
-      const promiEvent = guardiansStore.selectGuardian(newGuardianAddress);
+      const promiEvent = orbsAccountStore.delegate(newGuardianAddress);
 
       // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
       promiEvent.on('transactionHash', (txHash) => {
@@ -51,18 +56,20 @@ export const GuardianChangeStepContent = observer(
         isBroadcastingMessage.setTrue();
       });
 
-      onPromiEventAction(promiEvent, () =>
-        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
-      );
+      onPromiEventAction(promiEvent, () => {
+        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange);
+        reReadStoresData();
+      });
     }, [
-      analyticsService,
       message,
       subMessage,
       wizardsCommonTranslations,
-      guardiansStore,
+      orbsAccountStore,
       newGuardianAddress,
       onPromiEventAction,
       isBroadcastingMessage,
+      analyticsService,
+      reReadStoresData,
     ]);
 
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
@@ -83,7 +90,9 @@ export const GuardianChangeStepContent = observer(
         innerContent={null}
         actionButtonProps={changeGuardianActionButtonProps}
         addCancelButton
+        disableActionButton={orbsAccountStore.isGuardian}
         onCancelButtonClicked={closeWizard}
+        cancelButtonText={wizardsCommonTranslations('action_close')}
       />
     );
   },

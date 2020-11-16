@@ -1,29 +1,31 @@
-import {
-  GuardiansService,
-  IGuardiansService,
-  IOrbsPOSDataService,
-  IOrbsTokenService,
-  IStakingService,
-  OrbsClientService,
-  orbsPOSDataServiceFactory,
-  OrbsTokenService,
-  StakingService,
-  IOrbsClientService,
-  OrbsRewardsService,
-  IOrbsRewardsService,
-} from 'orbs-pos-data';
+import { IOrbsPOSDataService, OrbsClientService, orbsPOSDataServiceFactory, IOrbsClientService } from 'orbs-pos-data';
 import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
 import config from '../config';
-import { CryptoWalletConnectionService } from './cryptoWalletConnectionService/CryptoWalletConnectionService';
-import { ICryptoWalletConnectionService } from './cryptoWalletConnectionService/ICryptoWalletConnectionService';
-import { IEthereumProvider } from './cryptoWalletConnectionService/IEthereumProvider';
 import { BuildOrbsClient } from './OrbsClientFactory';
 import { AnalyticsService } from './analytics/analyticsService';
-import { IAnalyticsService, TEthereumProviderName } from './analytics/IAnalyticsService';
+import { IAnalyticsService } from './analytics/IAnalyticsService';
 import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
-import { detectEthereumProviderName } from './analytics/analyticsUtils';
+import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
+import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
+import {
+  CommitteeService,
+  CryptoWalletConnectionService,
+  DelegationsService,
+  ICommitteeService,
+  ICryptoWalletConnectionService,
+  IDelegationsService,
+  IEthereumProvider,
+  IOrbsTokenService,
+  IStakingService,
+  OrbsTokenService,
+  StakingService,
+  IStakingRewardsService,
+  StakingRewardsService,
+  IGuardiansService,
+  GuardiansService,
+} from '@orbs-network/contracts-js';
 
 export interface IServices {
   httpService: IHttpService;
@@ -31,9 +33,12 @@ export interface IServices {
   cryptoWalletConnectionService: ICryptoWalletConnectionService;
   stakingService: IStakingService;
   orbsTokenService: IOrbsTokenService;
-  guardiansService: IGuardiansService;
   analyticsService: IAnalyticsService;
-  rewardsService: IOrbsRewardsService;
+  stakingRewardsService: IStakingRewardsService;
+  guardiansService: IGuardiansService;
+  orbsNodeService: IOrbsNodeService;
+  delegationsService: IDelegationsService;
+  committeeService: ICommitteeService;
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosInstance): IServices {
@@ -55,21 +60,11 @@ export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosI
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, config?.contractsAddressesOverride),
     stakingService: new StakingService(web3, config?.contractsAddressesOverride?.stakingContract),
     orbsTokenService: new OrbsTokenService(web3, config?.contractsAddressesOverride?.erc20Contract),
-    guardiansService: new GuardiansService(
-      web3,
-      orbsClientService,
-      config?.contractsAddressesOverride,
-      config.earliestBlockForDelegationOverride !== null
-        ? {
-            earliestBlockForDelegation: config.earliestBlockForDelegationOverride,
-          }
-        : undefined,
-    ),
-    rewardsService: new OrbsRewardsService(
-      web3,
-      orbsClientService,
-      config?.contractsAddressesOverride?.orbsRewardsDistributionContract,
-    ),
+    stakingRewardsService: new StakingRewardsService(web3, config?.contractsAddressesOverride?.stakingRewardsContract),
+    guardiansService: new GuardiansService(web3, config?.contractsAddressesOverride?.guardiansContract),
     analyticsService: analyticsService,
+    orbsNodeService: new OrbsNodeService(),
+    delegationsService: new DelegationsService(web3, config?.contractsAddressesOverride?.delegationsContract),
+    committeeService: new CommitteeService(web3, config?.contractsAddressesOverride?.committeeContract),
   };
 }

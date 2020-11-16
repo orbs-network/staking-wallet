@@ -5,6 +5,7 @@ export interface IAppTranslations {
   walletInfoSection: IWalletInfoSectionTranslations;
   balancesSection: IBalancesSectionTranslations;
   rewardsSection: IRewardsSectionTranslations;
+  guardiansSection: IGuardiansSectionTranslations;
   guardiansTable: IGuardiansTableTranslations;
   wizardsCommons: IWizardsCommonsTranslations;
   approvableWizardStep: IApprovableWizardStepTranslations;
@@ -14,6 +15,7 @@ export interface IAppTranslations {
   restakingWizard: IRestakingWizardTranslation;
   unstakingWizard: IUnstakingWizardTranslation;
   withdrawingWizard: IWithdrawingWizardTranslation;
+  rewardsClaimingWizard: IRewardsClaimingWizardTranslation;
   alerts: IAlertsTranslations;
   commons: ICommonsTranslations;
 }
@@ -26,6 +28,7 @@ export interface ICommonsTranslations {
 
   termsOfUse: string;
   privacyPolicy: string;
+  xOrbs: string;
 }
 
 export interface ISectionTitlesTranslations {
@@ -34,7 +37,8 @@ export interface ISectionTitlesTranslations {
   balance: string;
   rewards: string;
   allGuardians: string;
-  allGuardians_sideTitle: string;
+  allGuardians_sideTitleTotalStake: string;
+  allGuardians_sideTitleCommitteeStake: string;
 }
 
 export interface IWalletInfoSectionTranslations {
@@ -66,6 +70,7 @@ export interface IWizardsCommonsTranslations {
 
   // Modal managing
   action_close: string;
+  action_skip: string;
 
   // Message for TX errors
   txCreationError_userCanceled_message: string;
@@ -75,16 +80,45 @@ export interface IWizardsCommonsTranslations {
 }
 
 export interface IGuardiansTableTranslations {
+  // Actions
   action_keep: string;
   action_select: string;
-  didVote_yes: string;
-  didVote_no: string;
+
+  // Column Headers
   columnHeader_name: string;
   columnHeader_address: string;
   columnHeader_website: string;
-  columnHeader_stakingPercentageInLastElections: string;
+  columnHeader_rewardsPercentageToDelegators: string;
+  columnHeader_effectiveStake: string;
+  columnHeader_participation: string;
+  columnHeader_capacity: string;
   columnHeader_votedInLastElection: string;
   columnHeader_selection: string;
+
+  // Messages for Guardian qualifications
+  message_inCommittee: string;
+  message_notInCommittee: string;
+  message_pleaseNote: string;
+  message_onlyCommitteeMembersAreEntitledToRewards: string;
+  message_sinceDate: string;
+  message_certified: string;
+  message_notCertified: string;
+  message_registeredSinceDate: string;
+
+  // General Texts
+  xOrbs: string;
+
+  // Messages for other columns
+  message_guardianGivesXPercentageToDelegators: string;
+  message_selfStake: string;
+  message_delegatedStake: string;
+  message_selfStakePercentage: string;
+  message_participationExplanation: string;
+
+  // Unused
+  columnHeader_stakingPercentageInLastElections: string;
+  didVote_yes: string;
+  didVote_no: string;
 }
 
 export interface IApprovableWizardStepTranslations {
@@ -107,6 +141,9 @@ export interface IStakingWizardTranslations {
   finishedAction_selectedGuardian: string;
   moveToStep_stake: string;
   moveToStep_selectGuardian: string;
+  moveToStep_approve: string;
+  backToStep_changeGuardian: string;
+  backToStep_changeAmount: string;
   afterSuccessStateExplanation: string;
 
   // Allowance approval selection sub step
@@ -119,10 +156,13 @@ export interface IStakingWizardTranslations {
   // Staking sub step
   stakingSubStep_stepTitle: string;
   stakingSubStep_stepExplanation: string;
+  stakingSubStep_action_stake: string;
 
   // Guardian selection sub step
   guardianSelectionSubStep_message_selectGuardian: string;
+  guardianSelectionSubStep_message_youAreAGuardian: string;
   guardianSelectionSubStep_subMessage_pressSelectAndApprove: string;
+  guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation: string;
   guardianSelectionSubStep_stepTitle: string;
   guardianSelectionSubStep_stepExplanation: string;
 }
@@ -191,9 +231,25 @@ export interface IWithdrawingWizardTranslation {
   withdrawingSubStep_action_withdraw: string;
 }
 
+export interface IRewardsClaimingWizardTranslation {
+  stepLabel_claim: string;
+
+  finishedAction_claim: string;
+  afterSuccessStateExplanation: string;
+
+  // // Claiming sub step
+  rewardsClaimingSubStep_message_pressClaimWithExplanation: string;
+  rewardsClaimingSubStep_subMessage_claimingHasCost: string;
+  rewardsClaimingSubStep_stepTitle: string;
+  rewardsClaimingSubStep_text_rewardsBalanceIs: string;
+  // rewardsClaimingSubStep_stepExplanation: string;
+  // rewardsClaimingSubStep_action_withdraw: string;
+}
+
 export interface IBalancesSectionTranslations {
   title_unstakedOrbsInYourWallet: string;
   title_stakedOrbsInSmartContract: string;
+  title_stakedOrbsAndRewardsBalance: string;
   title_tokensReadyForWithdrawal: string;
   title_noTokensInCooldown: string;
   title_tokensInCooldown: string;
@@ -201,15 +257,37 @@ export interface IBalancesSectionTranslations {
   action_unstakeYourTokens: string;
   action_restakeYourTokens: string;
   action_withdrawYourTokens: string;
+  tooltipTitle_stakedOrbs: string;
+  tooltipTitle_pendingRewards: string;
 }
 
 export interface IRewardsSectionTranslations {
+  title_totalRewardsAwarded: string;
+  title_rewardsRate: string;
+  title_rewardsBalance: string;
+  title_quantity_orbsPerWeek: string;
+  title_quantity_orbs: string;
+  action_claim: string;
+
+  // Unused
   text_visitThe: string;
   text__totalDistributedRewards: string;
   text__totalAccumulatedRewards: string;
   text__forDetailedRewardsPleaseVisitThe: string;
   text__NextElectionRoundWillTakePlaceAtEthereumBlock: string;
   linkText_rewardsPage: string;
+}
+
+export interface IGuardiansSectionTranslations {
+  myGuardianDisplay_error_noSelectedGuardianOrSelfDelegatingWhileNotGuardian: string;
+  myGuardianDisplay_warning_delegatedToAnUnregisteredGuardian: string;
+  myGuardianDisplay_warning_onlyCommitteeDelegationEntitlesRewards: string;
+  myGuardianDisplay_info_onlyDelegationToCommitteeMembersEntitlesRewards: string;
+  myGuardianDisplay_action_youAre: string;
+  myGuardianDisplay_action_selectAGuardian: string;
+  myGuardianDisplay_text_selectedGuardianIs: string;
+  myGuardianDisplay_text_selectedGuardianAddressIs: string;
+  myGuardianDisplay_text_unregistered: string;
 }
 
 export interface IAlertsTranslations {

@@ -36,11 +36,12 @@ const services = buildServices(ethereumProvider, axios);
 const stores = getStores(
   services.orbsPOSDataService,
   services.stakingService,
+  services.stakingRewardsService,
   services.orbsTokenService,
   services.cryptoWalletConnectionService,
-  services.guardiansService,
-  services.rewardsService,
   services.analyticsService,
+  services.orbsNodeService,
+  services.delegationsService,
   alertErrors,
 );
 
@@ -54,7 +55,11 @@ if (ethereumProvider) {
 } else {
   ethereumProviderName = 'ORBS Infura';
 }
+
 services.analyticsService.setEthereumProvider(ethereumProviderName);
+
+// @ts-ignore
+window.services = services;
 
 const themeAndStyle = {
   ...baseTheme,

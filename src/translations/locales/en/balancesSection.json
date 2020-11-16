@@ -4,8 +4,11 @@
   "action_unstakeYourTokens": "Unstake your tokens",
   "action_withdrawYourTokens": "Withdraw your tokens",
   "title_noTokensInCooldown": "No tokens in cooldown",
+  "title_stakedOrbsAndRewardsBalance": "Staked ORBS (with rewards)",
   "title_stakedOrbsInSmartContract": "Staked ORBS in smart contract",
   "title_tokensInCooldown": "Tokens in cooldown",
   "title_tokensReadyForWithdrawal": "Tokens ready for withdrawal",
-  "title_unstakedOrbsInYourWallet": "Unstaked ORBS in your wallet"
+  "title_unstakedOrbsInYourWallet": "Unstaked ORBS in your wallet",
+  "tooltipTitle_pendingRewards": "Pending rewards",
+  "tooltipTitle_stakedOrbs": "Staked Orbs"
 }

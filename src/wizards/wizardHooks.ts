@@ -10,6 +10,7 @@ export type TUseWizardStateHook = (
 ) => {
   message: UseStateful<string>;
   subMessage: UseStateful<string>;
+  txHash: UseStateful<string | null>;
   isBroadcastingMessage: UseBoolean;
 };
 
@@ -24,11 +25,14 @@ export const useWizardState: TUseWizardStateHook = (initialMessage, initialSubMe
   const message = useStateful(initialMessage);
   const subMessage = useStateful(initialSubMessage);
   const isBroadcastingMessage = useBoolean(initialIsBroadcasting);
+  // DEV_NOTE : O.L : This is a bit hacky, added the txHash here until we will move it to a centrelized store.
+  const txHash = useStateful(null);
 
   return {
     message,
     subMessage,
     isBroadcastingMessage,
+    txHash,
   };
 };
 

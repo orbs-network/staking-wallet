@@ -1,0 +1,1 @@
+locize sync --api-key d8f93ba6-f558-49da-bca7-b13d7c99134f --project-id 1ec1db23-b4bc-471d-bf85-e7ceb99ff98c --path ./src/translations/locales

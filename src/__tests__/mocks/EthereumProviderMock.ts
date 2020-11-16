@@ -1,4 +1,4 @@
-import { IEthereumProvider, TNetworkVersion } from '../../services/cryptoWalletConnectionService/IEthereumProvider';
+import { IEthereumProvider, TNetworkVersion } from '@orbs-network/contracts-js';
 
 export class EthereumProviderMock implements IEthereumProvider {
   private shouldApproveFutureEnable = true;
@@ -81,7 +81,7 @@ export class EthereumProviderMock implements IEthereumProvider {
    */
   initiateEvent(action: string, ...args) {
     if (!Array.isArray(this.events[action])) return;
-    this.events[action].forEach(listener => {
+    this.events[action].forEach((listener) => {
       listener(...args);
     });
   }

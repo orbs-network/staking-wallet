@@ -3,5 +3,6 @@
   "loadingFailed": "로딩 실패",
   "privacyPolicy": "개인정보 처리방침",
   "termsOfUse": "이용 약관",
-  "timeLeft": "{{timePhrase}} 남음"
+  "timeLeft": "{{timePhrase}} 남음",
+  "xOrbs": "{{amount}} ORBS"
 }

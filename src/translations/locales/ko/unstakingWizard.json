@@ -5,7 +5,7 @@
   "unstakingSubStep_action_unstake": "락업 해제",
   "unstakingSubStep_inputLabel": "락업 해제",
   "unstakingSubStep_message_selectAmountOfOrbs": "락업 해제할 ORBS 수량을 입력하세요",
-  "unstakingSubStep_stepExplanation": "이 작업은 입력수량만큼의 토큰을 락업 상태에서 해제시키며, 다시 지갑으로 회수가능하기까지 21일간의 해제기간을 가지게 됩니다. 이 21일 동안 다시 락업하는 것은 가능합니다.",
+  "unstakingSubStep_stepExplanation": "이 작업은 입력수량만큼의 토큰을 락업 상태에서 해제시키며, 다시 지갑으로 회수가능하기까지 14일간의 해제기간을 가지게 됩니다. 이 14일 동안 다시 락업하는 것은 가능합니다.",
   "unstakingSubStep_stepTitle": "토큰 락업 해제",
   "unstakingSubStep_subMessage_pressUnstakeAndApprove": "락업 해제” 버튼을 누르시고 트랜잭션을 진행해주세요",
   "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "언락 수량을 추가할 경우 전체 수량에 대해 쿨다운 기간이 다시 30일로 리셋됩니다.",

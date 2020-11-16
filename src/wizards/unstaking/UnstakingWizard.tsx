@@ -3,15 +3,25 @@ import { useNumber } from 'react-hanger';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { OrbsUntakingStepContent } from './OrbsUnstakingStepContent';
-import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
+import {
+  useRewardsClaimingWizardTranslations,
+  useUnstakingWizardTranslations,
+  useWizardsCommonTranslations,
+} from '../../translations/translationsHooks';
 import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 import { Wizard } from '../../components/wizards/Wizard';
+import {
+  IRewardsClaimingStepContentProps,
+  RewardsCalaimingStepContent,
+} from '../rewardsClaiming/RewardsCalaimingStepContent';
+import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const STEPS_INDEXES = {
-  unstakeOrbs: 0,
-  finish: 1,
+  claimRewards: 0,
+  unstakeOrbs: 1,
+  finish: 2,
 };
 
 interface IProps {
@@ -25,13 +35,44 @@ export const UnstakingWizard = observer(
     useTrackModal(MODAL_IDS.unstaking);
     const { closeWizard } = props;
 
+    const orbsAccountStore = useOrbsAccountStore();
+
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const unstakingWizardTranslations = useUnstakingWizardTranslations();
-    const activeStep = useNumber(0);
+    const rewardsClaimingWizardTranslations = useRewardsClaimingWizardTranslations();
+    const activeStep = useNumber(
+      orbsAccountStore.hasClaimableRewards ? STEPS_INDEXES.claimRewards : STEPS_INDEXES.unstakeOrbs,
+    );
+    const goToUnstakeStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.unstakeOrbs), [activeStep]);
     const goToFinishStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.finish), [activeStep]);
+
+    // TODO : ORL : TRANSLATIONS
+
+    const extraStepsForRewardsClaiming = useMemo<IRewardsClaimingStepContentProps>(() => {
+      const stepProps: IRewardsClaimingStepContentProps = {
+        shouldAddSkip: true,
+        skipToNextStep: goToUnstakeStep,
+      };
+
+      return stepProps;
+    }, [goToUnstakeStep]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
+        // Un-Stake orbs
+        case STEPS_INDEXES.claimRewards:
+          return (
+            <ApprovableWizardStep
+              transactionCreationSubStepContent={RewardsCalaimingStepContent}
+              propsForTransactionCreationSubStepContent={extraStepsForRewardsClaiming}
+              displayCongratulationsSubStep={false}
+              finishedActionName={rewardsClaimingWizardTranslations('finishedAction_claim')}
+              moveToNextStepAction={goToFinishStep}
+              moveToNextStepTitle={wizardsCommonTranslations('moveToStep_finish')}
+              key={'rewardsClaimingStep'}
+              closeWizard={closeWizard}
+            />
+          );
         // Un-Stake orbs
         case STEPS_INDEXES.unstakeOrbs:
           return (
@@ -55,11 +96,22 @@ export const UnstakingWizard = observer(
         default:
           throw new Error(`Unsupported step value of ${activeStep.value}`);
       }
-    }, [activeStep.value, closeWizard, goToFinishStep, unstakingWizardTranslations, wizardsCommonTranslations]);
+    }, [
+      activeStep.value,
+      closeWizard,
+      goToFinishStep,
+      rewardsClaimingWizardTranslations,
+      unstakingWizardTranslations,
+      wizardsCommonTranslations,
+    ]);
 
     const stepperTitles = useMemo(() => {
-      return [unstakingWizardTranslations('stepLabel_unstake'), wizardsCommonTranslations('stepLabel_finish')];
-    }, [unstakingWizardTranslations, wizardsCommonTranslations]);
+      return [
+        rewardsClaimingWizardTranslations('stepLabel_claim'),
+        unstakingWizardTranslations('stepLabel_unstake'),
+        wizardsCommonTranslations('stepLabel_finish'),
+      ];
+    }, [rewardsClaimingWizardTranslations, unstakingWizardTranslations, wizardsCommonTranslations]);
 
     return (
       <Wizard

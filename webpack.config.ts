@@ -120,6 +120,7 @@ const config: Configuration = {
   plugins,
   devServer: {
     historyApiFallback: true,
+    open: true,
   },
   externals: {
     react: 'React',

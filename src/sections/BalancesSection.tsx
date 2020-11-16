@@ -67,8 +67,8 @@ export const BalancesSection = observer(() => {
     balancesSectionTranslations,
     canWithdrawCooldownOrbs,
     hasOrbsInCooldown,
-    showRestakingModal.setTrue,
-    showWithdrawingModal.setTrue,
+    showRestakingModal,
+    showWithdrawingModal,
   ]);
 
   const { orbsInCooldownBoxTitle, orbsInCooldownBoxEnabled } = useMemo(() => {
@@ -124,11 +124,11 @@ export const BalancesSection = observer(() => {
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} bottomPadding />
+      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
 
       <CommonDivider />
 
-      {/*<Grid item> <CommonDivider /> </Grid>*/}
+      {/* TODO : ORL : TRANSLATIONS */}
 
       {/* TODO : O.L : Find a better mechanism to display error vs content*/}
       {orbsAccountStore.errorLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
@@ -136,6 +136,7 @@ export const BalancesSection = observer(() => {
         <>
           {/* TODO : FUTURE : O.L : Consider reducing the spacing when flex goes to column display */}
           <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
+            {/* Liquid ORBS */}
             <GridItem>
               <BalanceCard
                 title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
@@ -147,17 +148,36 @@ export const BalancesSection = observer(() => {
               />
             </GridItem>
 
+            {/* Staked&Rewards */}
             <GridItem>
               <BalanceCard
-                title={balancesSectionTranslations('title_stakedOrbsInSmartContract')}
+                title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
+                toolTipTitle={
+                  <>
+                    <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
+                      {balancesSectionTranslations('tooltipTitle_stakedOrbs')}:{' '}
+                    </Typography>
+                    <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
+                      {fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs).toLocaleString()}
+                    </Typography>
+                    <br />
+                    <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
+                      {balancesSectionTranslations('tooltipTitle_pendingRewards')}:{' '}
+                    </Typography>
+                    <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
+                      {orbsAccountStore.rewardsBalance.toLocaleString()}
+                    </Typography>
+                  </>
+                }
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
-                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs)}
-                actionButtonActive={orbsAccountStore.hasStakedOrbs}
+                actionButtonActive={orbsAccountStore.hasStakedOrbs || orbsAccountStore.hasClaimableRewards}
                 onActionButtonPressed={onUnstakeTokensClicked}
                 balanceCardTestId={'balance_card_staked_orbs'}
               />
             </GridItem>
 
+            {/* Cooldown & withdraw/restake */}
             <GridItem>
               <BalanceCard
                 title={orbsInCooldownBoxTitle}

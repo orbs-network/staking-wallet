@@ -1,35 +1,51 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useStateful } from 'react-hanger';
-import { useGuardiansStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useOrbsNodeStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { GuardiansTable } from '../../components/GuardiansTable';
-import { TGuardianInfoExtended } from '../../store/GuardiansStore';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
+import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
-import { useAnalyticsService } from '../../services/ServicesHooks';
+import { useAnalyticsService, useGuardiansDelegatorsCut, useStakingRewardsService } from '../../services/ServicesHooks';
+import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
+  isRegisteredGuardian: boolean;
 }
 
 export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
+    const {
+      onPromiEventAction,
+      skipToSuccess,
+      txError,
+      disableInputs,
+      selectedGuardianAddress,
+      isRegisteredGuardian,
+    } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
-    const guardiansStore = useGuardiansStore();
+    const orbsAccountStore = useOrbsAccountStore();
+    const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
+
+    const reReadStoresData = useReReadAllStoresData();
+
+    const stakingRewardsService = useStakingRewardsService();
+    const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
-      stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
-      stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
+      isRegisteredGuardian
+        ? stakingWizardTranslations('guardianSelectionSubStep_message_youAreAGuardian')
+        : stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
+      isRegisteredGuardian
+        ? stakingWizardTranslations('guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation')
+        : stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
       false,
     );
 
@@ -37,15 +53,15 @@ export const GuardianSelectionStepContent = observer(
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
     const selectGuardian = useCallback(
-      (guardian: TGuardianInfoExtended) => {
+      (guardian: Guardian) => {
         message.setValue('');
         subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
         // No need to re-select an already selected guardian
-        if (guardian.address === selectedGuardianAddress) {
+        if (guardian.EthAddress.toLowerCase() === selectedGuardianAddress.toLowerCase()) {
           skipToSuccess();
         } else {
-          const promiEvent = guardiansStore.selectGuardian(guardian.address);
+          const promiEvent = orbsAccountStore.delegate(guardian.EthAddress);
 
           // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
           promiEvent.on('transactionHash', (txHash) => {
@@ -55,21 +71,23 @@ export const GuardianSelectionStepContent = observer(
             isBroadcastingMessage.setTrue();
           });
 
-          onPromiEventAction(promiEvent, () =>
-            analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
-          );
+          onPromiEventAction(promiEvent, () => {
+            analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange);
+            reReadStoresData();
+          });
         }
       },
       [
-        guardiansStore,
-        analyticsService,
         message,
-        onPromiEventAction,
-        selectedGuardianAddress,
-        skipToSuccess,
         subMessage,
         wizardsCommonTranslations,
+        selectedGuardianAddress,
+        skipToSuccess,
+        orbsAccountStore,
+        onPromiEventAction,
         isBroadcastingMessage,
+        analyticsService,
+        reReadStoresData,
       ],
     );
 
@@ -77,16 +95,27 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
-            guardians={guardiansStore.guardiansList}
+            guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
+            committeeMembers={orbsNodeStore.committeeMembers}
+            guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             densePadding
+            disableSelection={isRegisteredGuardian || disableInputs}
           />
         </Grid>
       );
-    }, [guardiansStore.guardiansList, selectGuardian, selectedGuardianAddress]);
+    }, [
+      disableInputs,
+      guardianAddressToDelegatorsCut,
+      isRegisteredGuardian,
+      orbsNodeStore.committeeMembers,
+      orbsNodeStore.guardians,
+      selectGuardian,
+      selectedGuardianAddress,
+    ]);
 
     return (
       <BaseStepContent

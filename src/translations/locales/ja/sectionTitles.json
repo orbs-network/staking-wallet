@@ -1,6 +1,5 @@
 {
   "allGuardians": "全てのガーディアン",
-  "allGuardians_sideTitle": "ステーキング中：{{totalParticipatingTokens}}",
   "balance": "残高",
   "connectWallet": "ウォレットを接続",
   "rewards": "リワード",

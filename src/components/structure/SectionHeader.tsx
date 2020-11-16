@@ -9,6 +9,10 @@ import { GridJustification } from '@material-ui/core/Grid/Grid';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { TypographyTypeMap } from '@material-ui/core/Typography/Typography';
 import { Variant } from '@material-ui/core/styles/createTypography';
+import { Button, IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 const SectionHeaderGrid = styled<typeof Grid>((props) => (
   <Grid item container direction={'row'} alignItems={'center'} {...props} />
@@ -30,7 +34,7 @@ const SideTitle = styled(Typography)<OverridableComponent<TypographyTypeMap>>`
 
 interface IProps {
   title: string;
-  sideTitle?: string;
+  sideTitle?: string[] | string;
   icon: React.ElementType<SVGProps<SVGSVGElement>>;
   bottomPadding?: boolean;
 }
@@ -46,16 +50,21 @@ export const SectionHeader: React.FC<IProps> = (props) => {
       return null;
     }
 
+    const textsArray = Array.isArray(sideTitle) ? sideTitle : [sideTitle];
+
     const justification: GridJustification = largerThanMedium ? 'flex-end' : 'flex-start';
     // DEV_NOTE : '34px' is the width of the icon
     const extraMarginStyle: CSSProperties = largerThanMedium ? {} : { marginLeft: '34px' };
     const typographyVariant: Variant = largerThanMedium ? 'h6' : 'subtitle1';
-
     return (
-      <Grid container item direction={'row'} sm={12} md={8} justify={justification}>
-        <SideTitle data-testid='side-title' variant={typographyVariant} style={extraMarginStyle} >
-          {sideTitle}
-        </SideTitle>
+      <Grid container item direction={'row'} sm={12} md={8} justify={justification} spacing={2}>
+        {textsArray.map((text) => (
+          <Grid item key={text}>
+            <SideTitle key={text} variant={typographyVariant} style={extraMarginStyle}>
+              {text}
+            </SideTitle>
+          </Grid>
+        ))}
       </Grid>
     );
   }, [sideTitle, largerThanMedium]);
@@ -71,13 +80,19 @@ export const SectionHeader: React.FC<IProps> = (props) => {
   }, [bottomPadding]);
 
   return (
-    <SectionHeaderGrid style={extraStyleForHeaderGrid}>
-      <Typography></Typography>
+    <SectionHeaderGrid style={extraStyleForHeaderGrid} spacing={1}>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
         <SvgIcon component={MyIcon} />
-        <Title variant={'h6'} >{title}</Title>
+        <Title variant={'h6'}>{title}</Title>
       </Grid>
       {sidTitleComponent}
+      {/*<Grid item xs={12} container direction={'row'} style={{ justifyContent: 'flex-end' }}>*/}
+      {/*  <Grid item>*/}
+      {/*    <IconButton>*/}
+      {/*      <KeyboardArrowUpIcon />*/}
+      {/*    </IconButton>*/}
+      {/*  </Grid>*/}
+      {/*</Grid>*/}
     </SectionHeaderGrid>
   );
 };

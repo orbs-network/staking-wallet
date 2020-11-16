@@ -5,6 +5,7 @@ import approvableWizardStepTextsJson from './locales/en/approvableWizardStep.jso
 import balancesSectionTextsJson from './locales/en/balancesSection.json';
 import commonsTextsJson from './locales/en/commons.json';
 import connectWalletSectionTextsJson from './locales/en/connectWalletSection.json';
+import guardiansSectionTextsJson from './locales/en/guardiansSection.json';
 import guardianChangingWizardTextsJson from './locales/en/guardianChangingWizard.json';
 import guardianSelectingWizardTextsJson from './locales/en/guardianSelectingWizard.json';
 import guardiansTableTextsJson from './locales/en/guardiansTable.json';
@@ -13,6 +14,7 @@ import rewardsSectionTextsJson from './locales/en/rewardsSection.json';
 import sectionTitlesTextsJson from './locales/en/sectionTitles.json';
 import stakingWizardTextsJson from './locales/en/stakingWizard.json';
 import unstakingWizardTextsJson from './locales/en/unstakingWizard.json';
+import rewardsClaimingWizardTextsJson from './locales/en/rewardsClaimingWizard.json';
 import walletInfoSectionTextsJson from './locales/en/walletInfoSection.json';
 import withdrawingWizardTextsJson from './locales/en/withdrawingWizard.json';
 import wizardsCommonsTextsJson from './locales/en/wizardsCommons.json';
@@ -24,6 +26,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   walletInfoSection: walletInfoSectionTextsJson,
   balancesSection: balancesSectionTextsJson,
   rewardsSection: rewardsSectionTextsJson,
+  guardiansSection: guardiansSectionTextsJson,
   guardiansTable: guardiansTableTextsJson,
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
@@ -33,6 +36,7 @@ export const ENGLISH_TEXTS: IAppTranslations = {
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,
+  rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
   commons: commonsTextsJson,
 };

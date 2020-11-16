@@ -29,6 +29,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { CommonActionButton } from '../components/base/CommonActionButton';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -56,7 +57,26 @@ const CenteredContainerGridForQr = styled((props) => (
   };
 });
 
+const useStyles = makeStyles((theme) => ({
+  button: {
+    transition: '0.7s',
+
+    '& svg path': {
+      transition: '0.7s',
+    },
+
+    '&:hover': {
+      color: theme.palette.secondary.main,
+
+      '& svg path': {
+        fill: theme.palette.secondary.light,
+      },
+    },
+  },
+}));
+
 export const WalletInfoSection = observer(() => {
+  const classes = useStyles();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const walletInfoSectionTranslations = useWalletInfoSectionTranslations();
   const alertsTranslations = useAlertsTranslations();
@@ -95,16 +115,26 @@ export const WalletInfoSection = observer(() => {
 
       <CommonDivider />
 
-      <Grid item xs={12} >
-        <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>
-      </Grid>
+      {/*<Grid item xs={12}>*/}
+      {/*  <Typography variant={smOrLarger ? 'body1' : 'caption'}>{walletInfoSectionTranslations('address')}</Typography>*/}
+      {/*</Grid>*/}
 
       {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
-      <Grid container item direction={smOrLarger ? 'row' : 'column'} alignItems={'center'}
-            spacing={largerThanLarge ? 2 : 1}
+      <Grid
+        container
+        item
+        direction={smOrLarger ? 'row' : 'column'}
+        alignItems={'center'}
+        spacing={largerThanLarge ? 2 : 1}
       >
         {/* Address */}
-        <Grid item sm={12} lg={9} id={'addressItem'} style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset': 'center' }}>
+        <Grid
+          item
+          sm={12}
+          lg={9}
+          id={'addressItem'}
+          style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset' : 'center' }}
+        >
           <Typography
             variant={smOrLarger ? 'h4' : 'body2'}
             data-testid={'text-active-address'}
@@ -118,7 +148,7 @@ export const WalletInfoSection = observer(() => {
         {/* Buttons */}
         <Grid container direction={'row'} item sm={12} lg={3} justify={'flex-end'}>
           <Grid item xs={6} lg={5}>
-            <LoweCaseButton fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
+            <LoweCaseButton className={classes.button} fullWidth onClick={copyAddress} startIcon={<CopyIcon />}>
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
           </Grid>
@@ -128,7 +158,7 @@ export const WalletInfoSection = observer(() => {
             <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }} />
           </Hidden>
           <Grid item xs={6} lg={5}>
-            <LoweCaseButton fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
+            <LoweCaseButton className={classes.button} fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
               {walletInfoSectionTranslations('qr')}
             </LoweCaseButton>
           </Grid>
