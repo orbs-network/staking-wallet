@@ -65,6 +65,16 @@ export const Footer = () => {
                     <Typography variant={'subtitle2'}>{commonsTranslations('termsOfUse')}</Typography>
                   </a>
                 </Grid>
+                <Grid item>
+                  <a
+                    href={'https://staking-v1.orbs.network'}
+                    target={'_blank'}
+                    rel={'noopener noreferrer'}
+                    style={{ color: 'inherit' }}
+                  >
+                    <Typography variant={'subtitle2'}>Tetra V1 (Old)</Typography>
+                  </a>
+                </Grid>
               </Grid>
             </StyledToolBar>
           </ContentContainer>
