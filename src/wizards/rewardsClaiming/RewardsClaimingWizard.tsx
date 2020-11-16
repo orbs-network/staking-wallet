@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useNumber } from 'react-hanger';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { RewardsCalaimingStepContent } from './RewardsCalaimingStepContent';
+import { RewardsClaimingStepContent } from './RewardsClaimingStepContent';
 import {
   useRewardsClaimingWizardTranslations,
   useWizardsCommonTranslations,
@@ -38,7 +38,7 @@ export const RewardsClaimingWizard = observer(
         case STEPS_INDEXES.claimRewards:
           return (
             <ApprovableWizardStep
-              transactionCreationSubStepContent={RewardsCalaimingStepContent}
+              transactionCreationSubStepContent={RewardsClaimingStepContent}
               displayCongratulationsSubStep={false}
               finishedActionName={rewardsClaimingWizardTranslations('finishedAction_claim')}
               moveToNextStepAction={goToFinishStep}

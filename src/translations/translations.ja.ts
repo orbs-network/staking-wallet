@@ -21,15 +21,22 @@ import rewardsClaimingWizardTextsJson from './locales/en/rewardsClaimingWizard.j
 
 export const JAPANESE_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',
+  // @ts-ignore
   sectionTitles: sectionTitlesTextsJson,
   connectWalletSection: connectWalletSectionTextsJson,
   walletInfoSection: walletInfoSectionTextsJson,
+  // @ts-ignore
   balancesSection: balancesSectionTextsJson,
+  // @ts-ignore
   rewardsSection: rewardsSectionTextsJson,
+  // @ts-ignore
   guardiansSection: guardiansSectionTextsJson,
+  // @ts-ignore
   guardiansTable: guardiansTableTextsJson,
+  // @ts-ignore
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
+  // @ts-ignore
   stakingWizard: stakingWizardTextsJson,
   guardianChangingWizard: guardianChangingWizardTextsJson,
   guardianSelectingWizard: guardianSelectingWizardTextsJson,
@@ -38,5 +45,6 @@ export const JAPANESE_TEXTS: IAppTranslations = {
   withdrawingWizard: withdrawingWizardTextsJson,
   rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
+  // @ts-ignore
   commons: commonsTextsJson,
 };

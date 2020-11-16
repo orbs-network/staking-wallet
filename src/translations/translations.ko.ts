@@ -17,25 +17,31 @@ import unstakingWizardTextsJson from './locales/ko/unstakingWizard.json';
 import walletInfoSectionTextsJson from './locales/ko/walletInfoSection.json';
 import withdrawingWizardTextsJson from './locales/ko/withdrawingWizard.json';
 import wizardsCommonsTextsJson from './locales/ko/wizardsCommons.json';
-import rewardsClaimingWizardTextsJson from './locales/en/rewardsClaimingWizard.json';
+import rewardsClaimingWizardTextsJson from './locales/ko/rewardsClaimingWizard.json';
 
 export const KOREAN_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',
+  // @ts-ignore
   sectionTitles: sectionTitlesTextsJson,
   connectWalletSection: connectWalletSectionTextsJson,
   walletInfoSection: walletInfoSectionTextsJson,
   balancesSection: balancesSectionTextsJson,
+  // @ts-ignore
   rewardsSection: rewardsSectionTextsJson,
   guardiansSection: guardiansSectionTextsJson,
+  // @ts-ignore
   guardiansTable: guardiansTableTextsJson,
+  // @ts-ignore
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
+  // @ts-ignore
   stakingWizard: stakingWizardTextsJson,
   guardianChangingWizard: guardianChangingWizardTextsJson,
   guardianSelectingWizard: guardianSelectingWizardTextsJson,
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,
+  // @ts-ignore
   rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
   commons: commonsTextsJson,

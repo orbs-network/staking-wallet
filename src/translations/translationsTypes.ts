@@ -242,8 +242,8 @@ export interface IRewardsClaimingWizardTranslation {
   rewardsClaimingSubStep_subMessage_claimingHasCost: string;
   rewardsClaimingSubStep_stepTitle: string;
   rewardsClaimingSubStep_text_rewardsBalanceIs: string;
+  rewardsClaimingSubStep_action_claim: string;
   // rewardsClaimingSubStep_stepExplanation: string;
-  // rewardsClaimingSubStep_action_withdraw: string;
 }
 
 export interface IBalancesSectionTranslations {

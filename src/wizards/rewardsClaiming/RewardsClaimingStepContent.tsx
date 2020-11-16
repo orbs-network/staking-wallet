@@ -18,7 +18,7 @@ export interface IRewardsClaimingStepContentProps {
   skipToNextStep?: () => void;
 }
 
-export const RewardsCalaimingStepContent = observer(
+export const RewardsClaimingStepContent = observer(
   (props: ITransactionCreationStepProps & IRewardsClaimingStepContentProps) => {
     const {
       onPromiEventAction,
@@ -77,10 +77,10 @@ export const RewardsCalaimingStepContent = observer(
 
     const claimRewardsActionButtonProps = useMemo<IActionButtonProps>(() => {
       return {
-        title: 'Claim',
+        title: rewardsClaimingWizardTranslations('rewardsClaimingSubStep_action_claim'),
         onClick: claimRewards,
       };
-    }, [claimRewards]);
+    }, [claimRewards, rewardsClaimingWizardTranslations]);
 
     const rewardsClaimingInnerContent = useMemo(() => {
       return (

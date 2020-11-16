@@ -14,8 +14,8 @@ import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 import { Wizard } from '../../components/wizards/Wizard';
 import {
   IRewardsClaimingStepContentProps,
-  RewardsCalaimingStepContent,
-} from '../rewardsClaiming/RewardsCalaimingStepContent';
+  RewardsClaimingStepContent,
+} from '../rewardsClaiming/RewardsClaimingStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const STEPS_INDEXES = {
@@ -63,7 +63,7 @@ export const UnstakingWizard = observer(
         case STEPS_INDEXES.claimRewards:
           return (
             <ApprovableWizardStep
-              transactionCreationSubStepContent={RewardsCalaimingStepContent}
+              transactionCreationSubStepContent={RewardsClaimingStepContent}
               propsForTransactionCreationSubStepContent={extraStepsForRewardsClaiming}
               displayCongratulationsSubStep={false}
               finishedActionName={rewardsClaimingWizardTranslations('finishedAction_claim')}

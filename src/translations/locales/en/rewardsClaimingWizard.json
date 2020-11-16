@@ -5,5 +5,6 @@
   "rewardsClaimingSubStep_stepTitle": "Claim your ORBS rewards balance",
   "rewardsClaimingSubStep_subMessage_claimingHasCost": "Claiming rewards has an associated gas cost. it is recommended to claim your rewards only after acquiring significant rewards balance.",
   "rewardsClaimingSubStep_text_rewardsBalanceIs": "Rewards Balance is",
-  "stepLabel_claim": "Claim"
+  "stepLabel_claim": "Claim",
+  "rewardsClaimingSubStep_action_claim": "Claim"
 }
