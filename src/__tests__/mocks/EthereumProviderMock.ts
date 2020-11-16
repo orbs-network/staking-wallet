@@ -81,7 +81,7 @@ export class EthereumProviderMock implements IEthereumProvider {
    */
   initiateEvent(action: string, ...args) {
     if (!Array.isArray(this.events[action])) return;
-    this.events[action].forEach(listener => {
+    this.events[action].forEach((listener) => {
       listener(...args);
     });
   }

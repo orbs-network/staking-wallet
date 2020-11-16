@@ -53,7 +53,7 @@ export const SectionHeader: React.FC<IProps> = (props) => {
 
     return (
       <Grid container item direction={'row'} sm={12} md={8} justify={justification}>
-        <SideTitle data-testid='side-title' variant={typographyVariant} style={extraMarginStyle} >
+        <SideTitle data-testid='side-title' variant={typographyVariant} style={extraMarginStyle}>
           {sideTitle}
         </SideTitle>
       </Grid>
@@ -75,7 +75,7 @@ export const SectionHeader: React.FC<IProps> = (props) => {
       <Typography></Typography>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
         <SvgIcon component={MyIcon} />
-        <Title variant={'h6'} >{title}</Title>
+        <Title variant={'h6'}>{title}</Title>
       </Grid>
       {sidTitleComponent}
     </SectionHeaderGrid>
