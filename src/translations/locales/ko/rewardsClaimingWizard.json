@@ -1,1 +1,9 @@
-{}
+{
+  "afterSuccessStateExplanation": "리워드를 정산하였습니다",
+  "finishedAction_claim": "리워드가 정산되었습니다",
+  "rewardsClaimingSubStep_message_pressClaimWithExplanation": "리워드 수량을 입금받기위해서는 \"정산\"을 눌러주세요. 정산된 리워드는 자동으로 스테이킹되며 가디언 위임수량에 더해집니다",
+  "rewardsClaimingSubStep_stepTitle": "ORBS 리워드 정산",
+  "rewardsClaimingSubStep_subMessage_claimingHasCost": "리워드 정산에는 가스비가 소모됩니다. 어느정도 의미있는 리워드 수량이 확보되었을 때 정산하기를 권장합니다.",
+  "rewardsClaimingSubStep_text_rewardsBalanceIs": "리워드 수량 ",
+  "stepLabel_claim": "정산"
+}

@@ -72,7 +72,7 @@ export const Footer = () => {
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
-                    <Typography variant={'subtitle2'}>Tetra V1 (Old)</Typography>
+                    <Typography variant={'subtitle2'}>Tetra V1</Typography>
                   </a>
                 </Grid>
               </Grid>

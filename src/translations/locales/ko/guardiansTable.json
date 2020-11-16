@@ -14,5 +14,17 @@
   "didVote_no": "아니오",
   "didVote_yes": "예",
   "message_certified": "인증",
-  "message_delegatedStake": "위임된 스테이킹"
+  "message_delegatedStake": "위임된 스테이킹",
+  "message_guardianGivesXPercentageToDelegators": "가디언이 델리게이터에게 배포해주는 리워드 비율: {{percentage}}",
+  "message_inCommittee": "위원회",
+  "message_notCertified": "미인증상태",
+  "message_notInCommittee": "위원회에 속하지 않음",
+  "message_onlyCommitteeMembersAreEntitledToRewards": "위원회 멤버와 해당 델리게이터에게만 리워드가 발생합니다",
+  "message_participationExplanation": "지난 30일간 이 가디언이 속한 위원회 비율",
+  "message_pleaseNote": "Please note",
+  "message_registeredSinceDate": "등록일: {{dateText}}",
+  "message_selfStake": "자체 스테이킹 수량",
+  "message_selfStakePercentage": "자체 수량 비율 %",
+  "message_sinceDate": "{{dateText}} 이후",
+  "xOrbs": "{{amount}} ORBS"
 }

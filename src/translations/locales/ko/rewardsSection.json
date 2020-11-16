@@ -1,8 +1,14 @@
 {
+  "action_claim": "정산",
   "linkText_rewardsPage": "리워드 정보",
   "text__NextElectionRoundWillTakePlaceAtEthereumBlock": "다음 투표는 이더리움 블록 {{nextElectionBlockNumberLink}}에 진행됩니다",
   "text__forDetailedRewardsPleaseVisitThe": "더 자세한 리워드 정보는 {{rewardsPageTextLink}}에서 확인해주세요",
   "text__totalAccumulatedRewards": "총 누적 리워드 :  {{totalAccumulatedRewards}}",
   "text__totalDistributedRewards": "총 배포된 리워드 : {{totalDistributedRewards}}",
-  "text_visitThe": "방문해주세요"
+  "text_visitThe": "방문해주세요",
+  "title_quantity_orbs": "ORBS",
+  "title_quantity_orbsPerWeek": "ORBS / 주",
+  "title_rewardsBalance": "리워드 수량",
+  "title_rewardsRate": "리워드 비율",
+  "title_totalRewardsAwarded": "총 부여된 리워드"
 }
