@@ -21,20 +21,16 @@ import rewardsClaimingWizardTextsJson from './locales/ko/rewardsClaimingWizard.j
 
 export const KOREAN_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',
-  // @ts-ignore
   sectionTitles: sectionTitlesTextsJson,
   connectWalletSection: connectWalletSectionTextsJson,
   walletInfoSection: walletInfoSectionTextsJson,
   balancesSection: balancesSectionTextsJson,
-  // @ts-ignore
   rewardsSection: rewardsSectionTextsJson,
   guardiansSection: guardiansSectionTextsJson,
-  // @ts-ignore
   guardiansTable: guardiansTableTextsJson,
   // @ts-ignore
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
-  // @ts-ignore
   stakingWizard: stakingWizardTextsJson,
   guardianChangingWizard: guardianChangingWizardTextsJson,
   guardianSelectingWizard: guardianSelectingWizardTextsJson,
