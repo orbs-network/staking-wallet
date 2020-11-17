@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "homepage": "https://orlavy.github.io/mainet-example",
+  "homepage": "https://staking.orbs.network",
   "engines": {
     "node": "10.17.0"
   },
@@ -19,7 +19,7 @@
     "build-server": "tsc -p ./src/server",
     "deployOld": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
     "predeploy": "rm -rf ./dist && npm run build",
-    "deploy": "gh-pages -d dist -r git@github.com:orlavy/mainet-example.git",
+    "deploy": "gh-pages -d dist -r git@github.com:orbs-network/staking.git",
     "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
     "postinstall": "npm run mkd",
     "sync-translations": "./src/translations/syncTranslations.zsh"
