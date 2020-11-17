@@ -4,5 +4,7 @@
   "privacyPolicy": "Privacy Policy",
   "termsOfUse": "Terms of Use",
   "timeLeft": "{{timePhrase}} left",
-  "xOrbs": "{{amount}} ORBS"
+  "xOrbs": "{{amount}} ORBS",
+  "tetraV1ChangeV1Delegation" : "Tetra V1 - Change V1 delegation",
+  "v1HistoricRewards" : "Historic V1 Rewards"
 }

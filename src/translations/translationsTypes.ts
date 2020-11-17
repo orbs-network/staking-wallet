@@ -29,6 +29,10 @@ export interface ICommonsTranslations {
   termsOfUse: string;
   privacyPolicy: string;
   xOrbs: string;
+
+  // Temps
+  tetraV1ChangeV1Delegation: string;
+  v1HistoricRewards: string;
 }
 
 export interface ISectionTitlesTranslations {

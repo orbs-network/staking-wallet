@@ -40,5 +40,6 @@ export const KOREAN_TEXTS: IAppTranslations = {
   // @ts-ignore
   rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
+  // @ts-ignore
   commons: commonsTextsJson,
 };

@@ -2,13 +2,12 @@ import { AppBarProps, Grid, Slide, ToolbarProps, Typography, useScrollTrigger } 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
-import { LanguagesSelector } from './LanguagesSelector';
 import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
-import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
-import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
 import { useCommonsTranslations } from '../../translations/translationsHooks';
 import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '../../constants';
+import { observer } from 'mobx-react';
+import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -32,7 +31,8 @@ const HideOnScroll = React.memo((props) => {
   );
 });
 
-export const Footer = () => {
+export const Footer = observer(() => {
+  const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
   const commonsTranslations = useCommonsTranslations();
 
   return (
@@ -72,7 +72,18 @@ export const Footer = () => {
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
-                    <Typography variant={'subtitle2'}>Tetra V1</Typography>
+                    <Typography variant={'subtitle2'}>{commonsTranslations('tetraV1ChangeV1Delegation')}</Typography>
+                  </a>
+                </Grid>
+
+                <Grid item>
+                  <a
+                    href={`https://orbs-network.github.io/voting/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
+                    target={'_blank'}
+                    rel={'noopener noreferrer'}
+                    style={{ color: 'inherit' }}
+                  >
+                    <Typography variant={'subtitle2'}>{commonsTranslations('v1HistoricRewards')}</Typography>
                   </a>
                 </Grid>
               </Grid>
@@ -82,4 +93,4 @@ export const Footer = () => {
       </HideOnScroll>
     </>
   );
-};
+});
