@@ -1,6 +1,7 @@
 {
   "action_close": "閉じる",
   "action_finish": "完了",
+  "action_skip": "スキップ",
   "message_errorOccurred": "ステーキングの最中にエラーが発生しました",
   "message_userCanceledTransactions": "トランザクションがキャンセルされました",
   "moveToStep_finish": "完了",

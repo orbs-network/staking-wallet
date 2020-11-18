@@ -1,1 +1,10 @@
-{}
+{
+  "afterSuccessStateExplanation": "リワードを請求しました。",
+  "finishedAction_claim": "請求済みリワード",
+  "rewardsClaimingSubStep_action_claim": "請求",
+  "rewardsClaimingSubStep_message_pressClaimWithExplanation": "「請求」を選択するとリワード残高を請求できます。請求済みリワードは自動的にステーキングに追加され、ガーディアンに委任されます。",
+  "rewardsClaimingSubStep_stepTitle": "ORBSのリワード残高を請求する",
+  "rewardsClaimingSubStep_subMessage_claimingHasCost": "リワードの請求にはガス費用がかかるため、一定のリワード残高が貯まってから請求することをお勧めします。",
+  "rewardsClaimingSubStep_text_rewardsBalanceIs": "リワード残高は",
+  "stepLabel_claim": "請求"
+}

@@ -4,8 +4,11 @@
   "action_unstakeYourTokens": "トークンのステーキングを解除する",
   "action_withdrawYourTokens": "トークンを出金する",
   "title_noTokensInCooldown": "クールダウン中のトークンはありません",
+  "title_stakedOrbsAndRewardsBalance": "ステーキング済みORBSとリワード合計",
   "title_stakedOrbsInSmartContract": "スマートコントラクト内のステーキング済みORBS",
   "title_tokensInCooldown": "クールダウン中のトークン",
   "title_tokensReadyForWithdrawal": "出金可能なトークン",
-  "title_unstakedOrbsInYourWallet": "ウォレット内のステーキングされていないORBS"
+  "title_unstakedOrbsInYourWallet": "ウォレット内のステーキングされていないORBS",
+  "tooltipTitle_pendingRewards": "保留中のリワード",
+  "tooltipTitle_stakedOrbs": "ステーキング中ORBS"
 }

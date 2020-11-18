@@ -5,7 +5,7 @@
   "unstakingSubStep_action_unstake": "ステーキングを解除",
   "unstakingSubStep_inputLabel": "ステーキングを解除する",
   "unstakingSubStep_message_selectAmountOfOrbs": "ステーキングを解除するORBS数量を選択",
-  "unstakingSubStep_stepExplanation": "この手続きでは、ステーキング中のトークンのロックアップを解除します。30日間のクールダウン期間が過ぎるとウォレットから回収ことができます。クールダウン中に再度ステーキングすることも可能です。",
+  "unstakingSubStep_stepExplanation": "こちらの手続きでは、ステーキング中のトークンのロックアップを解除し、14日間のクールダウンを開始します。クールダウン期間が過ぎるとトークンをウォレットに回収することができます。またクールダウン中に再度ステーキングすることも可能です。",
   "unstakingSubStep_stepTitle": "保有するトークンのステーキングを解除",
   "unstakingSubStep_subMessage_pressUnstakeAndApprove": "”ステーキングを解除”を押してトランザクションを認証",
   "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "今ステーキングを解除することで、全てのトークンに30日間のクールダウンが適応されます",

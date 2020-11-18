@@ -1,5 +1,7 @@
 {
   "allGuardians": "全てのガーディアン",
+  "allGuardians_sideTitleCommitteeStake": "委員会ステーキング",
+  "allGuardians_sideTitleTotalStake": "合計ステーキング",
   "balance": "残高",
   "connectWallet": "ウォレットを接続",
   "rewards": "リワード",

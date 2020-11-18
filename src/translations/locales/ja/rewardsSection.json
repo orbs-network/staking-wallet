@@ -1,8 +1,14 @@
 {
+  "action_claim": "請求",
   "linkText_rewardsPage": "リワードページ",
   "text__NextElectionRoundWillTakePlaceAtEthereumBlock": "次回投票はイーサリアムのブロックが{{nextElectionBlockNumberLink}}の時",
   "text__forDetailedRewardsPleaseVisitThe": "リワードの詳細は{{rewardsPageTextLink}}をご参照ください",
   "text__totalAccumulatedRewards": "累計リワード数：{{totalAccumulatedRewards}}",
   "text__totalDistributedRewards": "合計配布済みリワード数：{{totalDistributedRewards}}",
-  "text_visitThe": "参照"
+  "text_visitThe": "参照",
+  "title_quantity_orbs": "ORBS",
+  "title_quantity_orbsPerWeek": "ORBS/週",
+  "title_rewardsBalance": "リワード合計",
+  "title_rewardsRate": "リワード率",
+  "title_totalRewardsAwarded": "合計受領済みリワード"
 }

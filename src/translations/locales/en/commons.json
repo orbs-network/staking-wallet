@@ -3,8 +3,8 @@
   "loadingFailed": "Loading failed",
   "privacyPolicy": "Privacy Policy",
   "termsOfUse": "Terms of Use",
+  "tetraV1ChangeV1Delegation": "Tetra V1 - Change V1 delegation",
   "timeLeft": "{{timePhrase}} left",
-  "xOrbs": "{{amount}} ORBS",
-  "tetraV1ChangeV1Delegation" : "Tetra V1 - Change V1 delegation",
-  "v1HistoricRewards" : "Historic V1 Rewards"
+  "v1HistoricRewards": "Historic V1 Rewards",
+  "xOrbs": "{{amount}} ORBS"
 }

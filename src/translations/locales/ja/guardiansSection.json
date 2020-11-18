@@ -1,1 +1,11 @@
-{}
+{
+  "myGuardianDisplay_action_selectAGuardian": "ガーディアンを選択",
+  "myGuardianDisplay_action_youAre": "名前{{name}}",
+  "myGuardianDisplay_error_noSelectedGuardianOrSelfDelegatingWhileNotGuardian": "ガーディアンが選択されていないか、自己委任ができない状態です（ご自身のアドレスはガーディアンとして登録されていません）",
+  "myGuardianDisplay_info_onlyDelegationToCommitteeMembersEntitlesRewards": "注意：委員会メンバーへの委任のみがリワードの対象となります。",
+  "myGuardianDisplay_text_selectedGuardianAddressIs": "選択したガーディアンのアドレスは {{guardianAddress}}",
+  "myGuardianDisplay_text_selectedGuardianIs": "選択したガーディアンは {{guardianName}}",
+  "myGuardianDisplay_text_unregistered": "未登録",
+  "myGuardianDisplay_warning_delegatedToAnUnregisteredGuardian": "ご自身のORBSトークンは、未登録のガーディアンに委任されています。",
+  "myGuardianDisplay_warning_onlyCommitteeDelegationEntitlesRewards": "委員会に選出されたガーディアン（上位22名）のみがリワードを受け取る資格があります。"
+}

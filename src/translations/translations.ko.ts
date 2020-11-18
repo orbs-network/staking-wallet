@@ -28,7 +28,6 @@ export const KOREAN_TEXTS: IAppTranslations = {
   rewardsSection: rewardsSectionTextsJson,
   guardiansSection: guardiansSectionTextsJson,
   guardiansTable: guardiansTableTextsJson,
-  // @ts-ignore
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
   stakingWizard: stakingWizardTextsJson,
@@ -37,9 +36,7 @@ export const KOREAN_TEXTS: IAppTranslations = {
   restakingWizard: restakingWizardTextsJson,
   unstakingWizard: unstakingWizardTextsJson,
   withdrawingWizard: withdrawingWizardTextsJson,
-  // @ts-ignore
   rewardsClaimingWizard: rewardsClaimingWizardTextsJson,
   alerts: alertsJson,
-  // @ts-ignore
   commons: commonsTextsJson,
 };

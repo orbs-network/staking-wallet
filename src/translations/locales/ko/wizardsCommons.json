@@ -1,6 +1,7 @@
 {
   "action_close": "닫기",
   "action_finish": "완료",
+  "action_skip": "건너뛰기",
   "message_errorOccurred": "스테이킹을 위한 트래잭션 진행 중 에러가 발생했습니다.",
   "message_userCanceledTransactions": "트랜잭션이 취소되었습니다.",
   "moveToStep_finish": "완료",

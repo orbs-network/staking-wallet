@@ -3,6 +3,8 @@
   "loadingFailed": "로딩 실패",
   "privacyPolicy": "개인정보 처리방침",
   "termsOfUse": "이용 약관",
+  "tetraV1ChangeV1Delegation": "Tetra V1 -  V1 위임 변경하기",
   "timeLeft": "{{timePhrase}} 남음",
+  "v1HistoricRewards": "V1 리워드 이력",
   "xOrbs": "{{amount}} ORBS"
 }

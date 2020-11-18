@@ -45,11 +45,11 @@ export const LanguagesSelector = React.memo((props) => {
           <StyledUsCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
-      {/*<Grid item>*/}
-      {/*  <ButtonChangeLangLink lang='jp'>*/}
-      {/*    <StyledJpCountryIconSvg />*/}
-      {/*  </ButtonChangeLangLink>*/}
-      {/*</Grid>*/}
+      <Grid item>
+        <ButtonChangeLangLink lang='jp'>
+          <StyledJpCountryIconSvg />
+        </ButtonChangeLangLink>
+      </Grid>
       <Grid item>
         <ButtonChangeLangLink lang='ko'>
           <StyledKrCountryIconSvg />
