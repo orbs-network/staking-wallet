@@ -10,7 +10,8 @@ import { IEthereumWriterStatusResponse } from './nodeResponseProcessing/Ethereum
 import Moment from 'moment';
 
 // const MAIN_NET_DEFAULT_NODE_URL = 'http://34.255.138.28';
-const MAIN_NET_DEFAULT_NODE_URL = 'https://guardian.v2beta.orbs.com';
+// const MAIN_NET_DEFAULT_NODE_URL = 'https://guardian.v2beta.orbs.com';
+const MAIN_NET_DEFAULT_NODE_URL = 'https://0xcore.orbs.com';
 const ManagementStatusSuffix = '/services/management-service/status';
 const EthereumWriterStatusSuffix = '/services/ethereum-writer/status';
 
