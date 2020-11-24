@@ -10,12 +10,11 @@ import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tet
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
-  paddingBottom: '1em',
+  paddingBottom: '0.5em',
   borderBottom: '2px solid #363636',
 });
 
-const StyledToolBar = styled(Toolbar)<ToolbarProps>({
-});
+const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 export const Header = () => {
   return (

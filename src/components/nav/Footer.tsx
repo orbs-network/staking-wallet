@@ -10,8 +10,8 @@ import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
-  paddingTop: '1em',
-  paddingBottom: '1em',
+  // paddingTop: '1em',
+  // paddingBottom: '1em',
   borderTop: '2px solid #363636',
   bottom: 0,
   top: 'auto',
