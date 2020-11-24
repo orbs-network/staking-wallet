@@ -46,7 +46,7 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
       arrow
       placement={'right'}
     >
-      <div style={{ height: '3rem', width: '3rem', position: 'relative', cursor: 'pointer' }}>
+      <div style={{ height: '3rem', width: '3rem', position: 'relative', cursor: 'pointer', color: 'rgba(0,0,0,0)' }}>
         <SvgIcon component={shieldIcon} viewBox='0 0 40.371 47.178' style={{ height: '100%', width: '100%' }} />
       </div>
     </Tooltip>
