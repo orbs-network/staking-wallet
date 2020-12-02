@@ -31,6 +31,7 @@ import { CommonActionButton } from '../base/CommonActionButton';
 import { InTextLink } from '../shared/texts/InTextLink';
 import { toJS } from 'mobx';
 import { ensurePrefix } from '../../utils/stringUtils';
+import { InfoToolTipIcon } from '../tooltips/InfoTooltipIcon';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -258,7 +259,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         sorting: false,
       },
       {
-        title: guardiansTableTranslations('columnHeader_rewardsPercentageToDelegators'),
+        title: (
+          <ColumnHeaderWithTooltip
+            headerText={guardiansTableTranslations('columnHeader_name')}
+            tooltipText={
+              'The percent of the staking rewards that is distributed to the stake holder delegating to the guardian. (0 - 66.667%)'
+            }
+          />
+        ),
         field: '',
         render: (guardian) => {
           const { EthAddress } = guardian;
@@ -297,7 +305,16 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: guardiansTableTranslations('columnHeader_effectiveStake'),
+        title: (
+          <ColumnHeaderWithTooltip
+            headerText={guardiansTableTranslations('columnHeader_effectiveStake')}
+            tooltipText={[
+              'Self stake: the stake held by the Guardian address',
+              'Delegated stake: the total stake delegated to the Guardian, including the Guardian self stake',
+              'Effective stake: the Guardian weight in the committee and rewards allocation. Min(Self stake / 8%, Delegated stake)',
+            ]}
+          />
+        ),
         field: 'EffectiveStake',
         render: (guardian) => {
           const { EffectiveStake, SelfStake, DelegatedStake } = guardian;
@@ -334,7 +351,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: guardiansTableTranslations('columnHeader_participation'),
+        title: (
+          <ColumnHeaderWithTooltip
+            headerText={guardiansTableTranslations('columnHeader_participation')}
+            tooltipText={
+              'The percentage of the time in the last 30 days that the Guardian participated in the committee.'
+            }
+          />
+        ),
         field: 'ParticipationPercentage',
         render: (guardian) => {
           const { ParticipationPercentage } = guardian;
@@ -363,7 +387,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         defaultSort: 'desc',
       },
       {
-        title: guardiansTableTranslations('columnHeader_capacity'),
+        title: (
+          <ColumnHeaderWithTooltip
+            headerText={guardiansTableTranslations('columnHeader_capacity')}
+            tooltipText={
+              'The percentage of the Guardian delegation capacity. When the capacity is over 100% additional delegation does not increase the Guardian effective stake.'
+            }
+          />
+        ),
         field: 'SelfStake',
         render: (guardian) => {
           const { Capacity, SelfStake, DelegatedStake } = guardian;
@@ -467,5 +498,19 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         ),
       }}
     />
+  );
+});
+
+interface IColumnHeaderWithTooltipProps {
+  headerText: string;
+  tooltipText: string | string[];
+}
+
+const ColumnHeaderWithTooltip = React.memo<IColumnHeaderWithTooltipProps>((props) => {
+  const { headerText, tooltipText } = props;
+  return (
+    <span style={{ display: 'flex', alignItems: 'center' }}>
+      {headerText} <span style={{ width: '0.5rem' }} /> <InfoToolTipIcon tooltipTitle={tooltipText} />
+    </span>
   );
 });
