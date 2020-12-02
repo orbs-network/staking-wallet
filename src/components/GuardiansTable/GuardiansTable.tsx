@@ -364,19 +364,27 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           const { ParticipationPercentage } = guardian;
           // TODO : ORL : Make this color gradient
           const color = ParticipationPercentage <= 30 ? 'red' : ParticipationPercentage <= 80 ? 'yellow' : 'green';
+          const timePercentageText = ParticipationPercentage.toFixed(2);
 
           return (
             <Tooltip
               arrow
               title={
                 <>
-                  <Typography>{guardiansTableTranslations('message_participationExplanation')}</Typography>
+                  <Typography>
+                    {guardiansTableTranslations('message_participationExplanation', {
+                      daysPeriod: 30,
+                      timePercentage: timePercentageText,
+                    })}
+                  </Typography>
+                  <br />
+                  <Typography>{guardiansTableTranslations('message_participationRewardsWarning')}</Typography>
                 </>
               }
             >
               <div>
                 <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
-                <Typography>{ParticipationPercentage.toFixed(2)}%</Typography>
+                <Typography>{timePercentageText}%</Typography>
               </div>
             </Tooltip>
           );

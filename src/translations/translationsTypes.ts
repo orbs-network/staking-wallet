@@ -118,6 +118,7 @@ export interface IGuardiansTableTranslations {
   message_delegatedStake: string;
   message_selfStakePercentage: string;
   message_participationExplanation: string;
+  message_participationRewardsWarning: string;
 
   // Unused
   columnHeader_stakingPercentageInLastElections: string;
