@@ -398,9 +398,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: (
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_capacity')}
-            tooltipText={
-              'The percentage of the Guardian delegation capacity. When the capacity is over 100% additional delegation does not increase the Guardian effective stake.'
-            }
+            tooltipText={[
+              'The percentage of the Guardian delegation capacity.',
+              'When the capacity is over 100% additional delegation does not increase the Guardian effective stake.',
+              'That means that no rewards will be accumulated for any additional delegations.',
+            ]}
           />
         ),
         field: 'SelfStake',

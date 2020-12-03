@@ -14,7 +14,7 @@ export const WalletSectionsWrapper = observer(() => {
 
   if (cryptoWalletIntegrationStore.isConnectedToWallet) {
     return (
-      <React.Fragment >
+      <React.Fragment>
         <WalletInfoSection />
         <BalancesSection />
         <RewardsSection />
