@@ -99,6 +99,24 @@ export interface IGuardiansTableTranslations {
   columnHeader_votedInLastElection: string;
   columnHeader_selection: string;
 
+  // Column info
+  columnHeaderInfo_rewardsPercentageToDelegators: string;
+  columnHeaderInfo_effectiveStake_effectiveStakeTitle: string;
+  columnHeaderInfo_effectiveStake_effectiveStakeExplain: string;
+  columnHeaderInfo_effectiveStake_selfStakeTitle: string;
+  columnHeaderInfo_effectiveStake_selfStakeExplanation: string;
+  columnHeaderInfo_effectiveStake_delegatedStakeTitle: string;
+  columnHeaderInfo_effectiveStake_delegatedStakeExplanation: string;
+  columnHeaderInfo_effectiveStake_ifCapacityOverTitle: string;
+  columnHeaderInfo_effectiveStake_ifCapacityOverCalculation: string;
+  columnHeaderInfo_effectiveStake_ifCapacityUnderTitle: string;
+  columnHeaderInfo_effectiveStake_ifCapacityUnderCalculation: string;
+  columnHeaderInfo_participation: string;
+  columnHeaderInfo_capacity_explanation: string;
+  columnHeaderInfo_capacity_calculation: string;
+  columnHeaderInfo_capacity_note_title: string;
+  columnHeaderInfo_capacity_note_content: string;
+
   // Messages for Guardian qualifications
   message_inCommittee: string;
   message_notInCommittee: string;

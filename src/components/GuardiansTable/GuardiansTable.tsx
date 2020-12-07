@@ -261,10 +261,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
       {
         title: (
           <ColumnHeaderWithTooltip
-            headerText={guardiansTableTranslations('columnHeader_name')}
-            tooltipText={
-              'The percent of the staking rewards that is assigned to the stake holder delegating to the guardian. (0 - 66.667%)'
-            }
+            headerText={guardiansTableTranslations('columnHeader_rewardsPercentageToDelegators')}
+            tooltipText={guardiansTableTranslations('columnHeaderInfo_rewardsPercentageToDelegators', {
+              minPercentage: 0,
+              maxPercentage: 66.667,
+            })}
           />
         ),
         field: '',
@@ -309,11 +310,24 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_effectiveStake')}
             tooltipText={[
-              'Effective stake: The Guardian weight in the committee and rewards allocation.',
-              "If 'Capacity' <= 100%, 'Effective stake' = 'Delegated stake'.",
-              "If 'Capacity' > 100% 'Effective stake' = 'Self stake' x 12.5",
-              'Self stake: the stake held by the Guardian address',
-              'Delegated stake: the total stake delegated to the Guardian, including the Guardian self stake',
+              [
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_effectiveStakeTitle'),
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_effectiveStakeExplain'),
+              ],
+              [
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_ifCapacityOverTitle'),
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_ifCapacityOverCalculation'),
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_ifCapacityUnderTitle'),
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_ifCapacityUnderCalculation'),
+              ],
+              [
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_selfStakeTitle'),
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_selfStakeExplanation'),
+              ],
+              [
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_delegatedStakeTitle'),
+                guardiansTableTranslations('columnHeaderInfo_effectiveStake_delegatedStakeExplanation'),
+              ],
             ]}
           />
         ),
@@ -356,9 +370,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         title: (
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_participation')}
-            tooltipText={
-              'The percentage of the time in the last 30 days that the Guardian participated in the committee.'
-            }
+            tooltipText={guardiansTableTranslations('columnHeaderInfo_participation')}
           />
         ),
         field: 'ParticipationPercentage',
@@ -401,10 +413,12 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_capacity')}
             tooltipText={[
-              'The Guardian ability to utilize additional delegations.',
-              'Capacity = (Delegated stake x 8%) / Self stake.',
-              'When the capacity is over 100% additional delegation does not increase the Guardian effective stake. That means that no rewards will be accumulated for any additional delegations.',
-              '',
+              guardiansTableTranslations('columnHeaderInfo_capacity_explanation'),
+              guardiansTableTranslations('columnHeaderInfo_capacity_calculation'),
+              [
+                guardiansTableTranslations('columnHeaderInfo_capacity_note_title'),
+                guardiansTableTranslations('columnHeaderInfo_capacity_note_content'),
+              ],
             ]}
           />
         ),
@@ -516,7 +530,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
 interface IColumnHeaderWithTooltipProps {
   headerText: string;
-  tooltipText: string | string[];
+  tooltipText: string | Array<string | string[]>;
 }
 
 const ColumnHeaderWithTooltip = React.memo<IColumnHeaderWithTooltipProps>((props) => {
