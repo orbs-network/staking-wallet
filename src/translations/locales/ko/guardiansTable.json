@@ -20,7 +20,7 @@
   "message_notCertified": "미인증상태",
   "message_notInCommittee": "위원회에 속하지 않음",
   "message_onlyCommitteeMembersAreEntitledToRewards": "위원회 멤버와 해당 델리게이터에게만 리워드가 발생합니다",
-  "message_participationExplanation": "지난 30일간 이 가디언이 속한 위원회 비율",
+  "message_participationExplanation": "지난 30일간 이 가디언이 위원회에 속한 기간에 대한 비율",
   "message_pleaseNote": "Please note",
   "message_registeredSinceDate": "등록일: {{dateText}}",
   "message_selfStake": "자체 스테이킹 수량",

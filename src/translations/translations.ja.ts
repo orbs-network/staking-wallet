@@ -27,6 +27,7 @@ export const JAPANESE_TEXTS: IAppTranslations = {
   balancesSection: balancesSectionTextsJson,
   rewardsSection: rewardsSectionTextsJson,
   guardiansSection: guardiansSectionTextsJson,
+  // @ts-ignore
   guardiansTable: guardiansTableTextsJson,
   wizardsCommons: wizardsCommonsTextsJson,
   approvableWizardStep: approvableWizardStepTextsJson,
