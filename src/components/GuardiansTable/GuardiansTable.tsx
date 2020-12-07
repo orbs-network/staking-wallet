@@ -263,7 +263,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_name')}
             tooltipText={
-              'The percent of the staking rewards that is distributed to the stake holder delegating to the guardian. (0 - 66.667%)'
+              'The percent of the staking rewards that is assigned to the stake holder delegating to the guardian. (0 - 66.667%)'
             }
           />
         ),
@@ -309,9 +309,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_effectiveStake')}
             tooltipText={[
+              'Effective stake: The Guardian weight in the committee and rewards allocation.',
+              "If 'Capacity' <= 100%, 'Effective stake' = 'Delegated stake'.",
+              "If 'Capacity' > 100% 'Effective stake' = 'Self stake' x 12.5",
               'Self stake: the stake held by the Guardian address',
               'Delegated stake: the total stake delegated to the Guardian, including the Guardian self stake',
-              'Effective stake: the Guardian weight in the committee and rewards allocation. Min(Self stake / 8%, Delegated stake)',
             ]}
           />
         ),
@@ -399,9 +401,10 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           <ColumnHeaderWithTooltip
             headerText={guardiansTableTranslations('columnHeader_capacity')}
             tooltipText={[
-              'The percentage of the Guardian delegation capacity.',
-              'When the capacity is over 100% additional delegation does not increase the Guardian effective stake.',
-              'That means that no rewards will be accumulated for any additional delegations.',
+              'The Guardian ability to utilize additional delegations.',
+              'Capacity = (Delegated stake x 8%) / Self stake.',
+              'When the capacity is over 100% additional delegation does not increase the Guardian effective stake. That means that no rewards will be accumulated for any additional delegations.',
+              '',
             ]}
           />
         ),
