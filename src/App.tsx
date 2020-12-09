@@ -7,6 +7,7 @@ import { ContentContainer } from './components/structure/ContentContainer';
 import i18n from 'i18next';
 import moment from 'moment';
 import { Footer } from './components/nav/Footer';
+import { GuardianDisplayPage } from './pages/GuardiansDisplayPage';
 
 function getForcedLanguage(pathname: string) {
   const langMatch = pathname.match(/\/(en|ko|jp)\/?/);
@@ -47,6 +48,10 @@ export const App = observer(() => {
       <Header />
       <ContentContainer id={'appContainer'}>
         <Switch>
+          <Route exact path='/en/guardians' component={GuardianDisplayPage} />
+          <Route exact path='/jp/guardians' component={GuardianDisplayPage} />
+          <Route exact path='/ko/guardians' component={GuardianDisplayPage} />
+          <Route exact path='/guardians' component={GuardianDisplayPage} />
           <Route exact path='/en' component={MainAppPage} />
           <Route exact path='/jp' component={MainAppPage} />
           <Route exact path='/ko' component={MainAppPage} />

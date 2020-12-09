@@ -9,6 +9,9 @@ export const ContentContainer = styled<typeof Container>((props) => {
   return <Container disableGutters={smallOrSmaller} {...props} />;
 })(({ theme }) => {
   return {
+    width: '100rem',
+    maxWidth: '90%',
+
     [theme.breakpoints.down('sm')]: {},
     [theme.breakpoints.up('sm')]: {},
     [theme.breakpoints.up('md')]: {
