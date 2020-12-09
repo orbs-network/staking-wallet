@@ -16,7 +16,7 @@ function addLangToCurrentLocation(location, preLangBasename: string, lang: strin
   const langRegexp = /\/(en|ko|jp)\//;
   const locationWithProperLang = location.pathname.match(langRegexp)
     ? location.pathname.replace(langRegexp, `/${lang}/`)
-    : `${preLangBasename}/${lang}${location.pathname}`;
+    : `/${lang}${location.pathname}`;
 
   return locationWithProperLang;
 }
@@ -26,16 +26,17 @@ function addLangToCurrentLocationBasic(lang: string, base = '') {
 }
 
 interface IProps {
+  location: any;
   lang: string;
 }
 
-export const ChangeLangLink: React.FC<IProps> = ({ lang, children, ...others }) => {
+export const ChangeLangLink: React.FC<IProps> = ({ lang, location, children, ...others }) => {
   // TODO : FUTURE : O.L : Change this 'a' to 'Link'
   return (
     // <a href={addLangToCurrentLocation(location, preLangBasename, lang)} {...others}>
     //   {children}
     // </a>
-    <Link to={addLangToCurrentLocationBasic(lang, config.urlBase)} {...others}>
+    <Link to={addLangToCurrentLocation(location, config.urlBase, lang)} {...others}>
       {children}
     </Link>
   );

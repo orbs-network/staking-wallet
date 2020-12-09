@@ -13,6 +13,7 @@ import { ReactComponent as KrCountryIconSvg } from '../../../assets/countryIcons
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 import { Theme } from '@material-ui/core';
+import { useLocation } from 'react-router';
 
 const ButtonChangeLangLink = styled(ChangeLangLink)(({ theme }) => ({
   '&:hover': {
@@ -38,20 +39,22 @@ const StyledJpCountryIconSvg = styled(JpCountryIconSvg)(buildStyleForCountryIcon
 const StyledKrCountryIconSvg = styled(KrCountryIconSvg)(buildStyleForCountryIcon);
 
 export const LanguagesSelector = React.memo((props) => {
+  const location = useLocation();
+
   return (
     <Grid container alignItems={'center'} justify={'flex-end'} spacing={1}>
       <Grid item>
-        <ButtonChangeLangLink lang='en'>
+        <ButtonChangeLangLink lang='en' location={location}>
           <StyledUsCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
       <Grid item>
-        <ButtonChangeLangLink lang='jp'>
+        <ButtonChangeLangLink lang='jp' location={location}>
           <StyledJpCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
       <Grid item>
-        <ButtonChangeLangLink lang='ko'>
+        <ButtonChangeLangLink lang='ko' location={location}>
           <StyledKrCountryIconSvg />
         </ButtonChangeLangLink>
       </Grid>
