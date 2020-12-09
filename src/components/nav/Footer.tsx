@@ -78,7 +78,7 @@ export const Footer = observer(() => {
 
                 <Grid item>
                   <a
-                    href={`https://orbs-network.github.io/voting/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
+                    href={`https://orbs-network.github.io/v1-snapshot/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
