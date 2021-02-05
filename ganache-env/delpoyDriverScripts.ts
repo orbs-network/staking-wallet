@@ -43,8 +43,10 @@ const deployDriverScripts = async () => {
       stakingRewards: driver.stakingRewards.address,
       delegations: driver.delegations.address,
       committee: driver.committee.address,
+      contractRegistry: driver.contractRegistry.address,
     };
 
+    Object.getOwnPropertyNames(addresses).forEach( c=> {console.log(c, addresses[c])});
     console.log('Saving addresses to file');
     writeFileSync('./_out/addresses.json', JSON.stringify(addresses, null, 2));
     writeFileSync('../src/local/addresses.json', JSON.stringify(addresses, null, 2));
@@ -70,7 +72,6 @@ deployDriverScripts()
   })
   .catch((e) => console.log('Script error'))
   .finally(() => {
-    console.log('Finally');
     process.exit();
   });
 
