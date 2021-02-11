@@ -6,14 +6,13 @@ import { updateSystemState } from './nodeResponseProcessing/processor-public';
 import RootNodeData from '../../../local/StatusResponse.json';
 import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
-import { IEthereumWriterStatusResponse } from './nodeResponseProcessing/EthereumWriterStatusResponse';
 import Moment from 'moment';
+import { IS_DEV } from '../../../config';
 
 // const MAIN_NET_DEFAULT_NODE_URL = 'http://34.255.138.28';
 // const MAIN_NET_DEFAULT_NODE_URL = 'https://guardian.v2beta.orbs.com';
-const MAIN_NET_DEFAULT_NODE_URL = 'https://0xcore.orbs.com';
-const ManagementStatusSuffix = '/services/management-service/status';
-const EthereumWriterStatusSuffix = '/services/ethereum-writer/status';
+const MAIN_NET_DEFAULT_NODE_URL = IS_DEV ? 'http://localhost:7666' : 'https://0xcore.orbs.com';
+const ManagementStatusSuffix = IS_DEV ? '/status' : '/services/management-service/status';
 
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
@@ -30,11 +29,6 @@ export class OrbsNodeService implements IOrbsNodeService {
   async checkIfNodeIsInSync(nodeAddress: string): Promise<boolean> {
     try {
       const managementStatusResponse: IManagementStatusResponse = await this.fetchNodeManagementStatus(nodeAddress);
-      const ethereumWriterStatusResponse: IEthereumWriterStatusResponse = await this.fetchNodeEthereumWriterStatus(
-        nodeAddress,
-      );
-
-      const isEthereumWriterInSync = ethereumWriterStatusResponse.Payload.VchainSyncStatus === 'in-sync';
 
       const currentTimestamp = Moment().unix();
 
@@ -43,8 +37,9 @@ export class OrbsNodeService implements IOrbsNodeService {
 
       const nodeRefTime = managementStatusResponse.Payload.CurrentRefTime;
       const isManagementServiceReferenceFresh = nodeRefTime >= earliestAcceptedTimestamp;
+      const isManagementServiceError = managementStatusResponse.Error?.length > 0;
 
-      const isNodeInSync = isManagementServiceReferenceFresh && isEthereumWriterInSync;
+      const isNodeInSync = IS_DEV || (isManagementServiceReferenceFresh && isManagementServiceError);
 
       return isNodeInSync;
     } catch (e) {
@@ -73,12 +68,5 @@ export class OrbsNodeService implements IOrbsNodeService {
       `${nodeAddress}${ManagementStatusSuffix}`,
     );
     return managementStatusResponse;
-  }
-
-  private async fetchNodeEthereumWriterStatus(nodeAddress: string): Promise<IEthereumWriterStatusResponse> {
-    const ethereumWriterStatusResponse: IEthereumWriterStatusResponse = await fetchJson(
-      `${nodeAddress}${EthereumWriterStatusSuffix}`,
-    );
-    return ethereumWriterStatusResponse;
   }
 }

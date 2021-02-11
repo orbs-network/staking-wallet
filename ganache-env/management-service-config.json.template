@@ -1,0 +1,19 @@
+{
+      "BootstrapMode": false,
+      "Port": 8080,
+      "EthereumGenesisContract": "{{EthereumGenesisContract}}",
+      "EthereumEndpoint": "{{EthereumEndpoint}}",
+      "DockerNamespace": "orbsnetwork",
+      "ElectionsAuditOnly": false,
+      "StatusWriteIntervalSeconds": 1,
+      "DockerHubPollIntervalSeconds": 1,
+      "RegularRolloutWindowSeconds": 2,
+      "HotfixRolloutWindowSeconds": 2,
+      "EthereumPollIntervalSeconds": 1,
+      "EthereumRequestsPerSecondLimit": 20,
+      "ElectionsStaleUpdateSeconds": 604800,
+      "FinalityBufferBlocks": 10,
+      "EthereumFirstBlock": 0,
+      "Verbose": true,
+      "node-address": "ecfcCcbc1E54852337298c7E90f5eceE79439e67"
+}

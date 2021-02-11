@@ -8,12 +8,12 @@ import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-type TSupportedNets = 'local' | 'ropsten' | 'mainnet';
+type TSupportedNets = 'local' | 'ropsten' | 'mainnet' | 'mainnet-fork';
 // @ts-ignore
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
 export const IS_DEV = process.env.NODE_ENV !== 'production';
-const SHOULD_OVERRIDE_ADDRESS = IS_DEV || ethereumNetwork === 'ropsten';
+const SHOULD_OVERRIDE_ADDRESS = ethereumNetwork === 'local' || ethereumNetwork === 'ropsten';
 
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
@@ -46,11 +46,13 @@ const config: IConfig = {
 
 // Webpack will remove this section on production build //
 if (process.env.NODE_ENV !== 'production') {
+  if (ethereumNetwork === 'local' || ethereumNetwork === 'mainnet-fork') {
+    config.ETHEREUM_PROVIDER_WS = 'ws://localhost:7545';
+  }
+
   if (ethereumNetwork === 'local') {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const addresses = require('./local/addresses.json');
-
-    config.ETHEREUM_PROVIDER_WS = 'ws://localhost:8545';
 
     config.contractsAddressesOverride.stakingContract = addresses.staking;
     config.contractsAddressesOverride.erc20Contract = addresses.erc20;
@@ -65,6 +67,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 // TODO : ORL : Adjusts these addresses for v2.
 if (ethereumNetwork === 'ropsten') {
+  config.ETHEREUM_PROVIDER_WS = 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287';
+
   const ROPSTEN_ERC20 = '0xaFcb0E4560dCD904dF059AF37D5E832A086b59a9';
   const ROPSTEN_DELEGATIONS = '0x46A8d3F3757F5534E403E616c228812b43a43aAe';
   const ROPSTEN_STAKING = '0xD950DaB449dD0e6FE85783F16A3Bc8755D414D1E';

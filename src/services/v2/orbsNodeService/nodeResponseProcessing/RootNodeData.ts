@@ -4,6 +4,7 @@
 export interface IManagementStatusResponse {
   Status: string;
   Timestamp: string;
+  Error?: string;
   Payload: {
     Guardians: IGuardianData[];
     CommitteeEvents: ICommitteeEvent[];

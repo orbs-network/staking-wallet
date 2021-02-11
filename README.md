@@ -10,28 +10,37 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   npm run test
   ``` 
 
-## Running - Local ethereum network
+### Running - Local ethereum network - synthetic committee & stake
 
 * Start local ethereum network (Ganache)
    ```
     cd ./ganach-env
-    npm run start-ganache
+    npm install 
+    npm run up-dev
    ```
-  This will start a [Ganache](https://www.trufflesuite.com/ganache) local network that will keep running until stopped (You might want to use a separate terminal for this).
-   
-* Deploy the ORBS contracts (from the ORBS test-driver) to your local Ganache
-    ```
-    cd ./ganach-env
-    npm run deploy-driver
-   ```
-    Wait for the contracts to be deployed and proceed to the next step.
-
+  
 * Start local dev server (from the root folder of the project)
 
   ```
   npm run dev
   ```    
+### Running - Local Fork from ethereum network - synthetic committee & stake
 
+* Start local ethereum network (Ganache)
+   ```
+    cd ./ganach-env
+    npm install 
+    npm run up-fork
+   ```
+  
+* Start local dev server (from the root folder of the project)
+
+  ```
+  npm run dev-fork
+  ```    
+
+## Test tetra
+ 
 * Open the localhost address in your browser (localhost:8080)
 
 * In your browser, set MetaMask network to 'localhost 7545' 

@@ -1,0 +1,11 @@
+FROM orbsnetwork/management-service:v1.3.5
+
+COPY ./management-service-config.json.template ./management-service-config.json
+
+ARG EthereumEndpoint=http://ganache:7545
+ARG EthereumGenesisContract
+
+RUN sed -i "s,{{EthereumEndpoint}},${EthereumEndpoint},g" management-service-config.json
+RUN sed -i "s,{{EthereumGenesisContract}},${EthereumGenesisContract},g" management-service-config.json
+
+CMD npm start -- --config /opt/orbs/management-service-config.json
