@@ -7,4 +7,4 @@ local/
 contracts/
 src/translations/syncTranslations.zsh
 
-ganache-env/e2e/_status/
+ganache-env/_status/
