@@ -48,8 +48,6 @@ const deployDriverScripts = async () => {
 
     Object.getOwnPropertyNames(addresses).forEach( c=> {console.log(c, addresses[c])});
     console.log('Saving addresses to file');
-    writeFileSync('./_out/addresses.json', JSON.stringify(addresses, null, 2));
-    writeFileSync('../src/local/addresses.json', JSON.stringify(addresses, null, 2));
 
     // Create a committee
     const committee: Array<Participant> = [];

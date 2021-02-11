@@ -8,9 +8,10 @@ services:
     management-service:
         image: halverneus/static-file-server:latest
         volumes:
-            - ./_status:/web
+            - ./.:/web
         environment:
-        - CORS=true
+            - CORS=true
+            - FOLDER=/web/_status
         ports:
             - 7666:8080
     init-env:
@@ -19,6 +20,6 @@ services:
         volumes:
             - ./.:/usr/src/app
         environment:
-            ETHEREUM_URL: http://ganache:7545
+            - ETHEREUM_URL=http://ganache:7545
 
         command: ./init-fork-env.sh

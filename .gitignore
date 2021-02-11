@@ -6,5 +6,3 @@ node_modules
 local/
 contracts/
 src/translations/syncTranslations.zsh
-
-ganache-env/_status/

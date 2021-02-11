@@ -9,21 +9,16 @@ import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData
 import Moment from 'moment';
 import { IS_DEV } from '../../../config';
 
-// const MAIN_NET_DEFAULT_NODE_URL = 'http://34.255.138.28';
-// const MAIN_NET_DEFAULT_NODE_URL = 'https://guardian.v2beta.orbs.com';
-const MAIN_NET_DEFAULT_NODE_URL = IS_DEV ? 'http://localhost:7666' : 'https://0xcore.orbs.com';
-const ManagementStatusSuffix = IS_DEV ? '/status' : '/services/management-service/status';
+const ManagementServiceStatusPageUrl = IS_DEV
+  ? 'http://localhost:7666/status'
+  : 'https://0xcore.orbs.com/services/management-service/status';
 
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
-  constructor(private defaultNodeUrl: string = MAIN_NET_DEFAULT_NODE_URL) {}
-
-  public get defaultNodeAddress(): string {
-    return this.defaultNodeUrl;
-  }
+  constructor(private defaultStatusUrl: string = ManagementServiceStatusPageUrl) {}
 
   async checkIfDefaultNodeIsInSync(): Promise<boolean> {
-    return this.checkIfNodeIsInSync(this.defaultNodeUrl);
+    return this.checkIfNodeIsInSync(this.defaultStatusUrl);
   }
 
   async checkIfNodeIsInSync(nodeAddress: string): Promise<boolean> {
@@ -49,7 +44,7 @@ export class OrbsNodeService implements IOrbsNodeService {
   }
 
   async readAndProcessSystemState(nodeAddress?: string): Promise<IReadAndProcessResults> {
-    const nodeUrl = nodeAddress || this.defaultNodeUrl;
+    const nodeUrl = nodeAddress || this.defaultStatusUrl;
     const systemState = new SystemState();
 
     const managementStatusResponse = await this.fetchNodeManagementStatus(nodeUrl);
@@ -63,10 +58,7 @@ export class OrbsNodeService implements IOrbsNodeService {
     };
   }
 
-  private async fetchNodeManagementStatus(nodeAddress: string): Promise<IManagementStatusResponse> {
-    const managementStatusResponse: IManagementStatusResponse = await fetchJson(
-      `${nodeAddress}${ManagementStatusSuffix}`,
-    );
-    return managementStatusResponse;
+  private async fetchNodeManagementStatus(statusUrl: string): Promise<IManagementStatusResponse> {
+    return await fetchJson(statusUrl);
   }
 }

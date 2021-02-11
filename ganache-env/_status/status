@@ -1,20 +1,20 @@
 {
-  "Status": "RefTime = 1613052217 (566 sec ago), committee size = 20, stable node = v2.0.14",
-  "Timestamp": "2021-02-11T14:13:03.069Z",
+  "Status": "RefTime = 1613061208 (694 sec ago), committee size = 20, stable node = v2.0.14",
+  "Timestamp": "2021-02-11T16:45:01.539Z",
   "Payload": {
-    "Uptime": 1397467,
+    "Uptime": 1406586,
     "MemoryUsage": {
-      "rss": 122744832,
+      "rss": 122712064,
       "heapTotal": 70914048,
-      "heapUsed": 68461776,
-      "external": 20745891,
-      "arrayBuffers": 17302611
+      "heapUsed": 67484248,
+      "external": 20684488,
+      "arrayBuffers": 17241208
     },
     "Version": {
       "Semantic": "v1.3.5"
     },
-    "CurrentRefTime": 1613052217,
-    "CurrentRefBlock": 11835718,
+    "CurrentRefTime": 1613061208,
+    "CurrentRefBlock": 11836373,
     "CurrentCommittee": [
       {
         "EthAddress": "9520f53fd81c668e8088ae194c40e3f977b73d28",
@@ -348,34 +348,34 @@
     "CurrentImageVersionsUpdater": {
       "main": {
         "management-service": {
-          "LastPollTime": 1613052772,
+          "LastPollTime": 1613061727,
           "PendingVersion": "",
           "PendingVersionTime": 0
         },
         "node": {
-          "LastPollTime": 1613052773,
+          "LastPollTime": 1613061727,
           "PendingVersion": "",
           "PendingVersionTime": 0
         },
         "signer": {
-          "LastPollTime": 1613052774,
+          "LastPollTime": 1613061728,
           "PendingVersion": "",
           "PendingVersionTime": 0
         },
         "ethereum-writer": {
-          "LastPollTime": 1613052774,
+          "LastPollTime": 1613061728,
           "PendingVersion": "",
           "PendingVersionTime": 0
         },
         "logs-service": {
-          "LastPollTime": 1613052775,
+          "LastPollTime": 1613061729,
           "PendingVersion": "",
           "PendingVersionTime": 0
         }
       },
       "canary": {
         "node": {
-          "LastPollTime": 1613052773,
+          "LastPollTime": 1613061727,
           "PendingVersion": "",
           "PendingVersionTime": 0
         }
@@ -908,7 +908,7 @@
           "LastUpdateTime": 1612746713,
           "ReadyToSync": true,
           "ReadyForCommittee": false,
-          "TimeToStale": 299296
+          "TimeToStale": 290305
         },
         "IdentityType": 0,
         "Name": "0xAUDIT",
@@ -984,7 +984,7 @@
       },
       {
         "day": "2021-02-11",
-        "count": 17130
+        "count": 20180
       }
     ],
     "CommitteeEvents": [
