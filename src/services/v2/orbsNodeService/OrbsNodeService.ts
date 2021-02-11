@@ -39,7 +39,7 @@ export class OrbsNodeService implements IOrbsNodeService {
       const isManagementServiceReferenceFresh = nodeRefTime >= earliestAcceptedTimestamp;
       const isManagementServiceError = managementStatusResponse.Error?.length > 0;
 
-      const isNodeInSync = IS_DEV || (isManagementServiceReferenceFresh && isManagementServiceError);
+      const isNodeInSync = IS_DEV || (isManagementServiceReferenceFresh && !isManagementServiceError);
 
       return isNodeInSync;
     } catch (e) {
