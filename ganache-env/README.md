@@ -1,6 +1,6 @@
-### Launch dev backend environments
+## Launch dev backend environments
 
-## locally contained dev environment
+### locally contained dev environment
 This involves dockerized Ganache, and a Orbs node management-service. 
 Both are docker-composed locally.
 - Totally contained - other than installation can run offline
@@ -11,7 +11,7 @@ Both are docker-composed locally.
 npm install
 npm run up-dev
 ```
-## forked dev environment
+### forked dev environment
 Run a dockerized Ganache instance forking ethereum
 - Reflects mainnet production identical to production env at the time of execute (option to pin a specific block if deterministic results are required)
 - Requires network access to a mainnet node, preferably an archive node
@@ -22,4 +22,16 @@ Run a dockerized Ganache instance forking ethereum
 ```bash
 npm install
 npm run up-fork
+```
+
+### Ropsten backend 
+Runs a dockerized instance of Orbs management service against Ropsten contracts
+
+
+### Deploying ropsten contracts:
+```bash
+npm install
+export ETHEREUM_URL=[url to infura or other ropsten node]
+export WEB3_DRIVER_VERBOSE=true
+npm run deploy-driver
 ```
