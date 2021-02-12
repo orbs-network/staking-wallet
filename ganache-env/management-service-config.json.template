@@ -13,7 +13,7 @@
       "EthereumRequestsPerSecondLimit": 20,
       "ElectionsStaleUpdateSeconds": 604800,
       "FinalityBufferBlocks": 10,
-      "EthereumFirstBlock": 0,
+      "EthereumFirstBlock": {{EthereumFirstBlock}},
       "Verbose": true,
       "node-address": "ecfcCcbc1E54852337298c7E90f5eceE79439e67"
 }

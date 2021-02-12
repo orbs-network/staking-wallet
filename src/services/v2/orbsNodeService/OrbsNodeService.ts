@@ -3,7 +3,6 @@ import Web3 from 'web3';
 import { fetchJson } from './nodeResponseProcessing/helpers';
 import { SystemState } from './systemState';
 import { updateSystemState } from './nodeResponseProcessing/processor-public';
-import RootNodeData from '../../../local/StatusResponse.json';
 import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';

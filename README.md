@@ -24,7 +24,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   ```
   npm run dev
   ```    
-### Running - Local Fork from ethereum network - synthetic committee & stake
+### Running - Local Fork from ethereum mainnet - current real world committee snapshot
 
 * Start local ethereum network (Ganache)
    ```
@@ -38,6 +38,21 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   ```
   npm run dev-fork
   ```    
+### Running - Local Orbs service against ropsten testnet - synthetic committee with more realistic delays and gas costs
+
+* Start local ethereum network (Ganache)
+   ```
+    cd ./ganach-env
+    npm install 
+    npm run up-rops
+   ```
+  
+* Start local dev server (from the root folder of the project)
+
+  ```
+  npm run dev-rops
+  ```    
+
 
 ## Test tetra
  

@@ -4,8 +4,10 @@ COPY ./management-service-config.json.template ./management-service-config.json
 
 ARG EthereumEndpoint=http://ganache:7545
 ARG EthereumGenesisContract
+ARG EthereumFirstBlock=0
 
 RUN sed -i "s,{{EthereumEndpoint}},${EthereumEndpoint},g" management-service-config.json
 RUN sed -i "s,{{EthereumGenesisContract}},${EthereumGenesisContract},g" management-service-config.json
+RUN sed -i "s,{{EthereumFirstBlock}},${EthereumFirstBlock},g" management-service-config.json
 
 CMD npm start -- --config /opt/orbs/management-service-config.json
