@@ -30,7 +30,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
    ```
     cd ./ganach-env
     npm install 
-    npm run up-fork
+    npm run up-mainnet-fork
    ```
   
 * Start local dev server (from the root folder of the project)
@@ -44,7 +44,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
    ```
     cd ./ganach-env
     npm install 
-    npm run up-rops
+    npm run up-ropsten
    ```
   
 * Start local dev server (from the root folder of the project)

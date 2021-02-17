@@ -4,15 +4,11 @@
   "description": "",
   "main": "truffle-config.js",
   "scripts": {
-    "clean": "rimraf build",
-    "start-ganache": "ganache-cli -p 7545 -i 5777 -b 1 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\"",
     "deploy-driver": "ts-node deployContracts.ts",
     "print-committee": "ts-node getCommittee.ts",
-    "deploy-when-ready": "./wait-for-ganache.sh $1 && npm run deploy-driver",
-    "init-fork-env": "./init-fork-env.sh $1",
     "up-dev": "docker-compose -p tetra-dev -f docker-compose.yml up",
-    "up-fork": "docker-compose -p tetra-fork -f docker-compose-fork.yml up",
-    "up-rops": "docker-compose -p tetra-rops -f docker-compose-ropsten.yml up",
+    "up-mainnet-fork": "docker-compose -p tetra-fork -f docker-compose-fork.yml up",
+    "up-ropsten": "docker-compose -p tetra-rops -f docker-compose-ropsten.yml up"
   },
   "keywords": [],
   "author": "",

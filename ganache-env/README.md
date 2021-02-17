@@ -21,7 +21,7 @@ Run a dockerized Ganache instance forking ethereum
  
 ```bash
 npm install
-npm run up-fork
+npm run up-mainnet-fork
 ```
 
 ### Ropsten backend 
