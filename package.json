@@ -5,7 +5,7 @@
   "main": "index.js",
   "homepage": "https://staking.orbs.network",
   "engines": {
-    "node": "10.17.0"
+    "node": "15.3.0"
   },
   "scripts": {
     "clean": "rimraf dist",
@@ -14,6 +14,7 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "type-check": "tsc -p ./src/tsconfig.json",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
+    "build-dev": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-prod": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
@@ -22,7 +23,8 @@
     "deploy": "gh-pages -d dist -r git@github.com:orbs-network/staking.git",
     "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
     "postinstall": "npm run mkd",
-    "sync-translations": "./src/translations/syncTranslations.zsh"
+    "sync-translations": "./src/translations/syncTranslations.zsh",
+    "serve-dev": "yarn build-dev && serve -s dist"
   },
   "keywords": [
     "typescript",
