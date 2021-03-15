@@ -6,7 +6,8 @@
   "scripts": {
     "clean": "rimraf build",
     "start-ganache": "ganache-cli -p 7545 -i 5777 -b 1 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\"",
-    "deploy-driver": "ts-node delpoyDriverScripts.ts"
+    "deploy-driver": "ts-node delpoyDriverScripts.ts",
+    "fork": "ganache-cli --fork https://mainnet.infura.io/v3/2492f25ab0f543329769d52f890180dc -p 7545 -i 5777 -b 1 -a 10 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\""
   },
   "keywords": [],
   "author": "",
