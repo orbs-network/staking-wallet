@@ -10,7 +10,7 @@ import { IS_DEV } from '../../../config';
 
 //test mobile with this url: https://statuspage.tunnelto.dev/status
 const ManagementServiceStatusPageUrl = IS_DEV
-  ? 'https://statuspage.tunnelto.dev/status'
+  ? 'http://localhost:7666/status'
   : 'https://0xcore.orbs.com/services/management-service/status';
 
 // TODO : O.L : Consider using httpService

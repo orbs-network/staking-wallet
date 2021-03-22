@@ -13,7 +13,7 @@
     "test-watch": "jest --watch --config ./src/__tests__/jest.config.js",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "type-check": "tsc -p ./src/tsconfig.json",
-    "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
+    "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-dev": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-dev-fork": "cross-env ETHEREUM_NETWORK=mainnet-fork  NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
