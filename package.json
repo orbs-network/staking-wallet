@@ -13,7 +13,9 @@
     "test-watch": "jest --watch --config ./src/__tests__/jest.config.js",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "type-check": "tsc -p ./src/tsconfig.json",
-    "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
+    "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
+    "build-dev": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
+    "build-dev-fork": "cross-env ETHEREUM_NETWORK=mainnet-fork  NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "dev": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-fork": "cross-env ETHEREUM_NETWORK=mainnet-fork NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-rops": "cross-env ETHEREUM_NETWORK=ropsten NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
@@ -24,7 +26,11 @@
     "deploy": "gh-pages -d dist -r git@github.com:orbs-network/staking.git",
     "mkd": "mkdir -p ./src/local && mkdir -p ./ganache-env/_out",
     "postinstall": "npm run mkd",
-    "sync-translations": "./src/translations/syncTranslations.zsh"
+    "sync-translations": "./src/translations/syncTranslations.zsh",
+    "serve-dev": "npm run build-dev &&  serve -s dist",
+    "serve-dev-fork": "npm run build-dev-fork &&  serve -s dist",
+    "tunnel-status": "tunnelto --port 7666 --subdomain statuspage",
+    "tunnel-ganache": "tunnelto --port 7545 --subdomain networkmock"
   },
   "keywords": [
     "typescript",
