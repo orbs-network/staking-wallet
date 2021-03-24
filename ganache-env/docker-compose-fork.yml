@@ -1,0 +1,25 @@
+version: '3'
+services:
+    ganache:
+        image: trufflesuite/ganache-cli
+        ports:
+            - 7545:7545
+        command: -p 7545 -i 5777 -b 1 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 --unlock 0xf448e36e6e6eaf67403e682f6e4cb87b9783c2aa -m "vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid" --fork "https://eth-mainnet.alchemyapi.io/v2/nVn5c9ND4qcYKSPsIem1Ek7u-SxokoZ4"
+    management-service-static:
+        image: halverneus/static-file-server:latest
+        volumes:
+            - ./.:/web
+        environment:
+            - CORS=true
+            - FOLDER=/web/_status
+        ports:
+            - 7666:8080
+    init-env:
+        image: node
+        working_dir: /usr/src/app
+        volumes:
+            - ./.:/usr/src/app
+        environment:
+            - ETHEREUM_URL=http://ganache:7545
+
+        command: ./init-fork-env.sh

@@ -110,9 +110,7 @@ export class OrbsNodeStore {
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(
-          this.orbsNodeService.defaultNodeAddress,
-        );
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState();
 
         return readAndProcessResult;
       } catch (e) {

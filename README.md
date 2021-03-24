@@ -10,41 +10,68 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   npm run test
   ``` 
 
-## Running - Local ethereum network
+### Running - Local ethereum network - synthetic committee & stake
 
 * Start local ethereum network (Ganache)
    ```
     cd ./ganach-env
-    npm run start-ganache
+    npm install 
+    npm run up-dev
    ```
-  This will start a [Ganache](https://www.trufflesuite.com/ganache) local network that will keep running until stopped (You might want to use a separate terminal for this).
-   
-* Deploy the ORBS contracts (from the ORBS test-driver) to your local Ganache
-    ```
-    cd ./ganach-env
-    npm run deploy-driver
-   ```
-    Wait for the contracts to be deployed and proceed to the next step.
-
+  
 * Start local dev server (from the root folder of the project)
 
   ```
   npm run dev
   ```    
+* [Setup Metamask wallet](#test-tetra)
 
+### Running - Local Fork from ethereum mainnet - current real world committee snapshot
+
+* Start local ethereum network (Ganache)
+   ```
+    cd ./ganach-env
+    npm install 
+    npm run up-mainnet-fork
+   ```
+  
+* Start local dev server (from the root folder of the project)
+
+  ```
+  npm run dev-fork
+  ```    
+* [Setup Metamask wallet](#test-tetra)
+
+### Running - Local Orbs service against ropsten testnet - synthetic committee with more realistic delays and gas costs
+
+* Start local ethereum network (Ganache)
+   ```
+    cd ./ganach-env
+    npm install 
+    npm run up-ropsten
+   ```
+  
+* Start local dev server (from the root folder of the project)
+
+  ```
+  npm run dev-rops
+  ```    
+
+* [Setup Metamask wallet](#test-tetra)
+
+## Test tetra
+ 
 * Open the localhost address in your browser (localhost:8080)
 
-* In your browser, set MetaMask network to 'localhost 7545' 
+* Setup Metamask:
+  * Configure your Metamask browser plugin network to `localhost:7545`
+  * Test scenarios require access to a predefined address which is preassigned with stake and rewards. To unlock this address in Metamask choose one of these two:
+     * For a separate Metamask account, use mnemonic `vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid`
+     * To test Tetra while using a different mnemonic, you can import just the Tetra test account using a private key:  `0xf2ce3a9eddde6e5d996f6fe7c1882960b0e8ee8d799e0ef608276b8de4dc7f19`
+
+__CAUTION : Be careful not to use this account on the mainnet !!!__
 
 * Start using Tetra :)
-
-### Ethereum dev account
-
-* Please add the ORBS dev account (This account will get ORBS assigned to on your local network)
-
-* dev account private key :  0xf2ce3a9eddde6e5d996f6fe7c1882960b0e8ee8d799e0ef608276b8de4dc7f19
-
-* IMPORTANT : Be careful not to use this account on the mainnet !!!
 
 ## Deploy 
 * Run in terminal in root project directory:
