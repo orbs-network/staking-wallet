@@ -6,13 +6,9 @@ import { updateSystemState } from './nodeResponseProcessing/processor-public';
 import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
-import { IS_DEV } from '../../../config';
 
 //test mobile with this url: https://statuspage.tunnelto.dev/status
-const ManagementServiceStatusPageUrl = IS_DEV
-  ? 'http://localhost:7666/status'
-  : 'https://0xcore.orbs.com/services/management-service/status';
-
+const ManagementServiceStatusPageUrl = process.env.URL_MGMT_SERV || 'http://localhost:7666/status';
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
   constructor(private defaultStatusUrl: string = ManagementServiceStatusPageUrl) {}
@@ -34,7 +30,8 @@ export class OrbsNodeService implements IOrbsNodeService {
       const isManagementServiceReferenceFresh = nodeRefTime >= earliestAcceptedTimestamp;
       const isManagementServiceError = managementStatusResponse.Error?.length > 0;
 
-      const isNodeInSync = IS_DEV || (isManagementServiceReferenceFresh && !isManagementServiceError);
+      const checkNodeSync = process.env.CHECK_NODE_SYNC && process.env.CHECK_NODE_SYNC.toLowerCase().trim() === 'true';
+      const isNodeInSync = !checkNodeSync || (isManagementServiceReferenceFresh && !isManagementServiceError);
 
       return isNodeInSync;
     } catch (e) {

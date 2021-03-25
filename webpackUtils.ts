@@ -24,8 +24,9 @@ export function overrideEnvFileValuesWithRuntimeEnv(enfFromFile: object, envFrom
     return mergedEnvObject;
   }, {});
 
-  // TODO - avoid giving NODE_ENV a special treatment - either copy all runtime variables or stop using NODE_ENV after webpack build
-  mergedEnvsObject['NODE_ENV'] = envFromRuntime['NODE_ENV'] || enfFromFile['NODE_ENV'];
+  // TODO - avoid giving NODE_ENV a special treatment
+  // either copy all runtime variables or stop using NODE_ENV after webpack build
+  mergedEnvsObject['NODE_ENV'] = enfFromFile['NODE_ENV'] || envFromRuntime['NODE_ENV'];
 
   return mergedEnvsObject;
 }
