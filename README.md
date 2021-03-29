@@ -27,15 +27,27 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   npm run dev
   ```
 
-- Start local dev server to test mobile wallet (from the root folder of the project)
-  install serve-js - npm install serve
+### Running - Local ethereum network with tunnel to test mobile wallet - synthetic committee & stake
+
+- Start local ethereum network (Ganache)
+
+  ```
+   cd ./ganach-env
+   npm install
+   npm run up-dev
+  ```
+
+- Start local dev server (from the root folder of the project)
+
   ```
   npm run tunnel-status
   npm run tunnel-ganache
   npm run serve-dev-tunnel
   ```
+
   make sure that the mobile device and computer connected to the same wifi.
   copy "On Your Network" url and paste it inside the mobile wallet app browser
+
 - [Setup Metamask wallet](#test-tetra)
 
 ### Running - Local Fork from ethereum mainnet - current real world committee snapshot
@@ -54,8 +66,17 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   npm run dev-fork
   ```
 
-* Start local dev server to test mobile wallet (from the root folder of the project)
-  install serve-js - npm install serve
+### Running - Local Fork from ethereum mainnet with tunnel to test mobile wallet - current real world committee snapshot
+
+- Start local ethereum network (Ganache)
+
+  ```
+   cd ./ganach-env
+   npm install
+   npm run up-mainnet-fork
+  ```
+
+- Start local dev server (from the root folder of the project)
   ```
   npm run tunnel-status
   npm run tunnel-ganache
@@ -63,6 +84,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   ```
   make sure that the mobile device and computer connected to the same wifi.
   copy "On Your Network" url and paste it inside the mobile wallet app browser
+
 * [Setup Metamask wallet](#test-tetra)
 
 ### Running - Local Orbs service against ropsten testnet - synthetic committee with more realistic delays and gas costs
