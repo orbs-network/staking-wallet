@@ -12,7 +12,7 @@ type TSupportedNets = 'local' | 'ropsten' | 'mainnet' | 'mainnet-fork';
 // @ts-ignore
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
-export const IS_DEV = process.env.NODE_ENV !== 'production';
+export const IS_DEV = process.env.NODE_ENV !== 'production'; // TODO - fix NODE_ENV is always development
 const SHOULD_OVERRIDE_ADDRESS = ethereumNetwork === 'local' || ethereumNetwork === 'ropsten';
 
 ////////////// CONFIG VARIABLES ///////////////
@@ -39,8 +39,8 @@ const config: IConfig = {
   contractsAddressesOverride: SHOULD_OVERRIDE_ADDRESS ? {} : null,
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,
-  gaTrackerId: 'UA-163134097-1',
-  analyticsActive: !IS_DEV,
+  gaTrackerId: process.env.GA_TRACKER_ID || '',
+  analyticsActive: process.env.GA_TRACKER_ID !== undefined,
   rewardsRefreshRateInSeconds: 10,
 };
 

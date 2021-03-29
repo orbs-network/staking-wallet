@@ -12,6 +12,7 @@ export function createEnvObjectForWebpack(env: object) {
 }
 
 export function overrideEnvFileValuesWithRuntimeEnv(enfFromFile: object, envFromRuntime: object) {
+  // TODO - consult best practice - iterate over all envFromRuntime keys instead of enfFromFile
   const mergedEnvsObject = Object.keys(enfFromFile).reduce((mergedEnvObject, nextKey) => {
     // If the runtime provides an existing key, override it
     if (envFromRuntime[nextKey]) {
@@ -24,8 +25,8 @@ export function overrideEnvFileValuesWithRuntimeEnv(enfFromFile: object, envFrom
     return mergedEnvObject;
   }, {});
 
-  // TODO - avoid giving NODE_ENV a special treatment - either copy all runtime variables or stop using NODE_ENV after webpack build
-  mergedEnvsObject['NODE_ENV'] = envFromRuntime['NODE_ENV'] || enfFromFile['NODE_ENV'];
+  // TODO - fix issue with passing non 'development' values to NODE_ENV - and then remove this force override
+  mergedEnvsObject['NODE_ENV'] = 'development';
 
   return mergedEnvsObject;
 }
