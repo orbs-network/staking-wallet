@@ -7,7 +7,6 @@ import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
 
-//test mobile with this url: https://statuspage.tunnelto.dev/status
 const ManagementServiceStatusPageUrl = process.env.URL_MGMT_SERV || 'http://localhost:7666/status';
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
