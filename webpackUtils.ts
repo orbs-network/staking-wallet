@@ -26,9 +26,7 @@ export function overrideEnvFileValuesWithRuntimeEnv(enfFromFile: object, envFrom
   }, {});
 
   // TODO - fix issue with passing non 'development' values to NODE_ENV - and then remove this force override
-  if (enfFromFile['NODE_ENV_FORCE_OVERRIDE'] !== undefined) {
-    mergedEnvsObject['NODE_ENV'] = enfFromFile['NODE_ENV_FORCE_OVERRIDE'];
-  }
+  mergedEnvsObject['NODE_ENV'] = 'development';
 
   return mergedEnvsObject;
 }
