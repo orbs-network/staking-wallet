@@ -29,7 +29,7 @@ export const MainAppPage = observer(() => {
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
 
-      {canAndShouldDisplayGuardians && <GuardiansSection />}
+      <GuardiansSection />
     </Grid>
   );
 });
