@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import { fetchJson } from './nodeResponseProcessing/helpers';
 import { SystemState } from './systemState';
 import { updateSystemState } from './nodeResponseProcessing/processor-public';
-import { ICommitteeMemberData, IReadAndProcessResults } from './OrbsNodeTypes';
+import { IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
 
@@ -11,15 +11,12 @@ const ManagementServiceStatusPageUrl = process.env.URL_MGMT_SERV || 'http://loca
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
   constructor(private defaultStatusUrl: string = ManagementServiceStatusPageUrl) {}
-
-  async checkIfDefaultNodeIsInSync(): Promise<boolean> {
-    return this.checkIfNodeIsInSync(this.defaultStatusUrl);
+  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean {
+    return this.checkIfNodeIsInSync(managementStatusResponse);
   }
 
-  async checkIfNodeIsInSync(nodeAddress: string): Promise<boolean> {
+  checkIfNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean {
     try {
-      const managementStatusResponse: IManagementStatusResponse = await this.fetchNodeManagementStatus(nodeAddress);
-
       const currentTimestamp = Moment().unix();
 
       const ACCEPTED_RANGE_IN_SECONDS = 60 * 60; // 60 minutes
@@ -34,16 +31,13 @@ export class OrbsNodeService implements IOrbsNodeService {
 
       return isNodeInSync;
     } catch (e) {
-      console.error(`Error while getting node ${nodeAddress} status: ${e}`);
+      console.error(`Error while getting node ${this.defaultStatusUrl} status: ${e}`);
       return false;
     }
   }
 
-  async readAndProcessSystemState(nodeAddress?: string): Promise<IReadAndProcessResults> {
-    const nodeUrl = nodeAddress || this.defaultStatusUrl;
+  readAndProcessSystemState(managementStatusResponse: IManagementStatusResponse): IReadAndProcessResults {
     const systemState = new SystemState();
-
-    const managementStatusResponse = await this.fetchNodeManagementStatus(nodeUrl);
 
     const currentTimeStamp = Math.floor(Date.now() / 1000);
     updateSystemState(systemState, managementStatusResponse, currentTimeStamp);
@@ -54,7 +48,9 @@ export class OrbsNodeService implements IOrbsNodeService {
     };
   }
 
-  private async fetchNodeManagementStatus(statusUrl: string): Promise<IManagementStatusResponse> {
-    return await fetchJson(statusUrl);
+  async fetchNodeManagementStatus(): Promise<IManagementStatusResponse> {
+    const statusUrl = this.defaultStatusUrl;
+
+    return fetchJson(statusUrl);
   }
 }

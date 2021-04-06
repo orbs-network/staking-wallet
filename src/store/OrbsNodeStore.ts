@@ -102,15 +102,16 @@ export class OrbsNodeStore {
 
   private async readDefaultNodeData(): Promise<IReadAndProcessResults | null> {
     // Check if default node is in sync
-    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync();
-
+    const managementStatusResponse = await this.orbsNodeService.fetchNodeManagementStatus();
+    if (!managementStatusResponse) return;
+    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync(managementStatusResponse);
     if (!isDefaultNodeAtSync) {
       // TODO : ORL : Add analytic
       console.log('Default node is not in sync');
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState();
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(managementStatusResponse);
 
         return readAndProcessResult;
       } catch (e) {
