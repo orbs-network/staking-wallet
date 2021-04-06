@@ -25,6 +25,7 @@ const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { theme: T
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
   borderRadius: '10%',
   boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.dark}`,
+  marginBottom: '50px',
 
   transition: '0.7s',
 
