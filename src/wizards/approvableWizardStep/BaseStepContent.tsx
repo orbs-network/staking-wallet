@@ -1,17 +1,14 @@
 import React, { ReactNode, useMemo } from 'react';
-import { Typography, Backdrop, CircularProgress, Box } from '@material-ui/core';
+import { Typography, CircularProgress, Box } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { HtmlTooltip } from '../../components/base/HtmlTooltip';
-import Button from '@material-ui/core/Button';
-import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { InfoToolTipIcon } from '../../components/tooltips/InfoTooltipIcon';
 
 export interface IActionButtonProps {
   title: string;
   onClick: () => void;
+  isDisabled?: boolean;
 }
 
 interface IProps {
@@ -60,18 +57,18 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     infoTitle,
   } = props;
 
-  const wizardsCommonTranslations = useWizardsCommonTranslations();
-
   const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
   const actionButton = useMemo(() => {
     if (actionButtonProps) {
+      const { onClick, title, isDisabled } = actionButtonProps;
+
       return (
         <CommonActionButton
           style={relevantStylingForActionButtons}
-          disabled={disableInputs || disableActionButton}
-          onClick={actionButtonProps.onClick}
+          disabled={disableInputs || disableActionButton || isDisabled}
+          onClick={onClick}
         >
-          {actionButtonProps.title}
+          {title}
         </CommonActionButton>
       );
     } else {
@@ -130,7 +127,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
 
       {/* Inner Content */}
       {/* DEV_NOTE : 'container' handles taking the full width*/}
-      <Grid item container justify={'center'}>
+      <Grid item container justify={'center'} style={{ position: 'relative' }}>
         {innerContent}
       </Grid>
 

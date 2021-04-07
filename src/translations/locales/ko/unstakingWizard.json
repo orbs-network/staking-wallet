@@ -9,5 +9,7 @@
   "unstakingSubStep_stepTitle": "토큰 락업 해제",
   "unstakingSubStep_subMessage_pressUnstakeAndApprove": "락업 해제” 버튼을 누르시고 트랜잭션을 진행해주세요",
   "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "언락 수량을 추가할 경우 전체 수량에 대해 쿨다운 기간이 다시 30일로 리셋됩니다.",
-  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "경고: 현재 언락 해제 진행중인 토큰이 있습니다."
+  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "경고: 현재 언락 해제 진행중인 토큰이 있습니다.",
+  "unstakingSubStep_max": "최대",
+  "unstakingSubStep_input_placeholder": "금액을 입력하세요"
 }

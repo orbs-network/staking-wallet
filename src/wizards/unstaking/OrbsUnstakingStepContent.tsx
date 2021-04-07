@@ -8,11 +8,22 @@ import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
-import { Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import { enforceNumberInRange } from '../../utils/numberUtils';
+import { CommonActionButton } from '../../components/base/CommonActionButton';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
+
+const maxBtnStyle: CSSProperties = {
+  position: 'absolute',
+  right: '10px',
+  height: '35px',
+  bottom: '20px',
+};
+const inputStyle = {
+  marginTop: '20px',
+};
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -35,7 +46,6 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     unstakingWizardTranslations('unstakingSubStep_subMessage_pressUnstakeAndApprove'),
     false,
   );
-
   // Handle error by displaying the proper error message
   useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
@@ -77,11 +87,18 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     () => ({
       onClick: unstakeTokens,
       title: unstakingWizardTranslations('unstakingSubStep_action_unstake'),
+      isDisabled:
+        !orbsForUnstaking.value || orbsForUnstaking.value === 0 || orbsForUnstaking.value > stakedOrbsNumericalFormat,
     }),
-    [unstakeTokens, unstakingWizardTranslations],
+    [orbsForUnstaking.value, stakedOrbsNumericalFormat, unstakeTokens, unstakingWizardTranslations],
   );
 
+  const handleMax = useCallback(() => {
+    orbsForUnstaking.setValue(stakedOrbsNumericalFormat);
+  }, []);
+
   const unstakingInput = useMemo(() => {
+    const showMaxBtn = orbsForUnstaking.value + 1 <= stakedOrbsNumericalFormat;
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
         <Typography style={{ color: 'orange', textAlign: 'center' }}>
@@ -98,14 +115,21 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         {orbsInCooldownWarning}
         <FullWidthOrbsInputField
           id={'orbsUnstaking'}
-          label={unstakingWizardTranslations('unstakingSubStep_inputLabel')}
           value={orbsForUnstaking.value}
-          onChange={(value) => orbsForUnstaking.setValue(enforceNumberInRange(value, 0, stakedOrbsNumericalFormat))}
+          onChange={(value) => orbsForUnstaking.setValue(value || 0)}
           disabled={disableInputs}
+          placeholder={unstakingWizardTranslations('unstakingSubStep_input_placeholder')}
+          customStyle={inputStyle}
         />
+        {showMaxBtn && (
+          <CommonActionButton style={maxBtnStyle} onClick={handleMax}>
+            {unstakingWizardTranslations('unstakingSubStep_max')}
+          </CommonActionButton>
+        )}
       </>
     );
   }, [
+    handleMax,
     orbsAccountStore.hasOrbsInCooldown,
     unstakingWizardTranslations,
     orbsForUnstaking,

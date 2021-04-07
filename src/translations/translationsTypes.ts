@@ -240,6 +240,8 @@ export interface IUnstakingWizardTranslation {
   unstakingSubStep_inputLabel: string;
   unstakingSubStep_warning_thereAreOrbsInCooldownHeader: string;
   unstakingSubStep_warning_thereAreOrbsInCooldownBody: string;
+  unstakingSubStep_max: string;
+  unstakingSubStep_input_placeholder: string;
 }
 
 export interface IWithdrawingWizardTranslation {
