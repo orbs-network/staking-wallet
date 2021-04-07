@@ -7,11 +7,11 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-import { createEnvObjectForWebpack, getEnvFilePath, overrideEnvFileValuesWithRuntimeEnv } from './webpackUtils';
+import { createEnvObjectForWebpack } from './webpackUtils';
 
-const envFilePath = getEnvFilePath(process.env);
-const envFromFile = dotenv.config({ path: envFilePath }).parsed;
-const envFromPathMergedWithRuntime = overrideEnvFileValuesWithRuntimeEnv(envFromFile, process.env);
+const envFromFile = dotenv.config({ path: process.env.ENV_FILE }).parsed;
+// const envFromPathMergedWithRuntime = overrideEnvFileValuesWithRuntimeEnv(envFromFile, process.env);
+const envFromPathMergedWithRuntime = { ...process.env, ...envFromFile };
 
 const plugins = [
   new ForkTsCheckerWebpackPlugin({
@@ -45,6 +45,8 @@ const plugins = [
 // plugins.push(new BundleAnalyzerPlugin());
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
+console.log(IS_DEV);
+
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 const config: Configuration = {

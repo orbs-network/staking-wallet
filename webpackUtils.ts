@@ -7,7 +7,6 @@ export function createEnvObjectForWebpack(env: object) {
     prev[`process.env.${next}`] = JSON.stringify(env[next]);
     return prev;
   }, {});
-
   return envKeys;
 }
 
@@ -31,7 +30,7 @@ export function overrideEnvFileValuesWithRuntimeEnv(enfFromFile: object, envFrom
   return mergedEnvsObject;
 }
 
-export function getEnvFilePath(env: object) {
+export function getEnvFilePath(NODE_ENV: string) {
   // Get the root path (assuming your webpack config is in the root of your project!)
   const currentPath = path.join(__dirname);
 
@@ -39,7 +38,7 @@ export function getEnvFilePath(env: object) {
   const basePath = currentPath + '/.env';
 
   // We're concatenating the environment name to our filename to specify the correct env file!
-  const envPath = basePath + '.' + (env as any).NODE_ENV;
+  const envPath = basePath + '.' + NODE_ENV;
 
   // Check if the file exists, otherwise fall back to the production .env
   const finalPath = fs.existsSync(envPath) ? envPath : basePath;
