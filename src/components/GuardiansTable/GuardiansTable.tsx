@@ -53,7 +53,11 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.dark,
     },
   },
-
+  breakAll: {
+    '& *': {
+      wordBreak: 'keep-all',
+    },
+  },
   selectButton: {
     minWidth: '130px',
   },
@@ -494,37 +498,39 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
   // TODO : ORL : Add translations to table here.
   return (
-    <MaterialTable
-      title={tableTitle || ''}
-      columns={columns}
-      data={sortedGuardians}
-      icons={TABLE_ICONS}
-      style={{ overflowX: 'auto' }}
-      options={{
-        padding: densePadding ? 'dense' : 'default',
-        pageSize: pageSize,
-        pageSizeOptions: [5, 10, pageSize],
+    <div className={classes.breakAll}>
+      <MaterialTable
+        title={tableTitle || ''}
+        columns={columns}
+        data={sortedGuardians}
+        icons={TABLE_ICONS}
+        style={{ overflowX: 'auto' }}
+        options={{
+          padding: densePadding ? 'dense' : 'default',
+          pageSize: pageSize,
+          pageSizeOptions: [5, 10, pageSize],
 
-        rowStyle: (guardian: Guardian) => ({
-          backgroundColor:
-            guardian.EthAddress.toLowerCase() === selectedGuardian?.toLowerCase()
-              ? 'rgba(66,66, 66, 0.55)'
-              : 'rgba(33,33, 33, 0.55)',
-        }),
-        headerStyle: {
-          backgroundColor: theme.palette.primary.dark,
-          textAlign: 'center',
-        },
-      }}
-      components={{
-        // DEV_NOTE : This 'Hack' to style the toolbar is taken from 'https://github.com/mbrn/material-table/issues/1690#issuecomment-603755197'
-        Toolbar: (props) => (
-          <div className={classes.toolbarWrapper}>
-            <MTableToolbar {...props} />
-          </div>
-        ),
-      }}
-    />
+          rowStyle: (guardian: Guardian) => ({
+            backgroundColor:
+              guardian.EthAddress.toLowerCase() === selectedGuardian?.toLowerCase()
+                ? 'rgba(66,66, 66, 0.55)'
+                : 'rgba(33,33, 33, 0.55)',
+          }),
+          headerStyle: {
+            backgroundColor: theme.palette.primary.dark,
+            textAlign: 'center',
+          },
+        }}
+        components={{
+          // DEV_NOTE : This 'Hack' to style the toolbar is taken from 'https://github.com/mbrn/material-table/issues/1690#issuecomment-603755197'
+          Toolbar: (props) => (
+            <div className={classes.toolbarWrapper}>
+              <MTableToolbar {...props} />
+            </div>
+          ),
+        }}
+      />
+    </div>
   );
 });
 
