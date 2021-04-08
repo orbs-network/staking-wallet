@@ -87,25 +87,21 @@ const config: Configuration = {
       {
         test: /\.css$/,
         use: [
-          {
-            loader: 'style-loader',
-          },
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
+              importLoaders: 1,
               modules: true,
-              localsConvention: 'camelCase',
-              sourceMap: IS_DEV,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: IS_DEV,
-              plugins: IS_DEV ? [cssnano()] : [],
             },
           },
         ],
+        include: /\.module\.css$/,
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+        exclude: /\.module\.css$/,
       },
       {
         test: /.jpe?g$|.gif$|.png$|.woff$|.woff2$|.ttf$|.eot$/,

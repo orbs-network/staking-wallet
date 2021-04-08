@@ -1,0 +1,19 @@
+.guardian-qualification {
+  height: 4rem;
+  width: 4rem;
+  position: relative;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0);
+}
+@media only screen and (max-width: 1400px) {
+  .guardian-qualification {
+    width: 40px;
+    height: 40px;
+  }
+  .guardians-table p {
+    font-size: 14px;
+  }
+  .guardians-table .MuiTableHead-root * {
+    font-size: 14px;
+  }
+}
