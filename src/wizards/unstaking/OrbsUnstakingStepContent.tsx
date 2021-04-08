@@ -12,23 +12,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import { CommonActionButton } from '../../components/base/CommonActionButton';
+import { MaxButton } from '../../components/base/maxButton';
 
 const inputStyle = {
   marginTop: '20px',
 };
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
-  const useStyles = makeStyles({
-    maxBtnStyle: {
-      maxHeight: 30,
-      marginLeft: 'auto',
-      fontSize: 10,
-      padding: 5,
-    },
-  });
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
-  const classes = useStyles();
 
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const unstakingWizardTranslations = useUnstakingWizardTranslations();
@@ -100,7 +91,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   }, []);
 
   const unstakingInput = useMemo(() => {
-    const showMaxBtn = orbsForUnstaking.value !== stakedOrbsNumericalFormat;
+    const showMaxBtn = orbsForUnstaking.value !== stakedOrbsNumericalFormat || stakedOrbsNumericalFormat === 0;
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
         <Typography style={{ color: 'orange', textAlign: 'center' }}>
@@ -111,18 +102,13 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         </Typography>
       </>
     ) : null;
-    const btn = (
-      <CommonActionButton
-        className={classes.maxBtnStyle}
-        style={{
-          opacity: showMaxBtn ? 1 : 0,
-        }}
-        disabled={!showMaxBtn}
-        onClick={handleMax}
-      >
-        {unstakingWizardTranslations('unstakingSubStep_max')}
-      </CommonActionButton>
+
+    const maxBtn = (
+      <MaxButton disabled={!showMaxBtn} onClick={handleMax}>
+        {wizardsCommonTranslations('popup_max')}
+      </MaxButton>
     );
+
     return (
       <>
         {orbsInCooldownWarning}
@@ -131,9 +117,9 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
           value={orbsForUnstaking.value}
           onChange={(value) => orbsForUnstaking.setValue(value || 0)}
           disabled={disableInputs}
-          placeholder={unstakingWizardTranslations('unstakingSubStep_input_placeholder')}
+          placeholder={wizardsCommonTranslations('popup_input_placeholder')}
           customStyle={inputStyle}
-          buttonComponent={btn}
+          buttonComponent={maxBtn}
         />
       </>
     );

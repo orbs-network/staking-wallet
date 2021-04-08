@@ -24,6 +24,5 @@
   "stakingSubStep_stepTitle": "In this step you will stake {{orbsForStaking}} ORBS",
   "stepLabel_approve": "Approve ORBS usage",
   "stepLabel_selectGuardian": "Select Guardian",
-  "stepLabel_stake": "Stake ORBS",
-  "unstakingSubStep_input_placeholder": "Enter amount"
+  "stepLabel_stake": "Stake ORBS"
 }

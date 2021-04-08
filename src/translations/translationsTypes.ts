@@ -81,6 +81,8 @@ export interface IWizardsCommonsTranslations {
   txCreationError_userCanceled_subMessage: string;
   txCreationError_generalError_message: string;
   txCreationError_generalError_subMessage: string;
+  popup_max: string;
+  popup_input_placeholder: string;
 }
 
 export interface IGuardiansTableTranslations {
@@ -188,7 +190,6 @@ export interface IStakingWizardTranslations {
   guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation: string;
   guardianSelectionSubStep_stepTitle: string;
   guardianSelectionSubStep_stepExplanation: string;
-  unstakingSubStep_input_placeholder: string;
 }
 
 export interface IGuardianChangingWizardTranslation {
@@ -241,8 +242,6 @@ export interface IUnstakingWizardTranslation {
   unstakingSubStep_inputLabel: string;
   unstakingSubStep_warning_thereAreOrbsInCooldownHeader: string;
   unstakingSubStep_warning_thereAreOrbsInCooldownBody: string;
-  unstakingSubStep_max: string;
-  unstakingSubStep_input_placeholder: string;
 }
 
 export interface IWithdrawingWizardTranslation {

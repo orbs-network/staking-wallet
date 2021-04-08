@@ -9,7 +9,5 @@
   "unstakingSubStep_stepTitle": "Unstaking your tokens",
   "unstakingSubStep_subMessage_pressUnstakeAndApprove": "Press \"Unstake\" and accept the transaction",
   "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "Unstaking more tokens now will reset the cooldown timer to 30 days for the entire sum.",
-  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "Warning: There are currently tokens in cooldown.",
-  "unstakingSubStep_max": "Max",
-  "unstakingSubStep_input_placeholder": "Enter amount"
+  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "Warning: There are currently tokens in cooldown."
 }

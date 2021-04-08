@@ -24,6 +24,5 @@
   "stakingSubStep_stepTitle": "{{orbsForStaking}} ORBS만큼 스테이킹하게 됩니다",
   "stepLabel_approve": "ORBS 승인수량 설정하기",
   "stepLabel_selectGuardian": "가디언 선택하기",
-  "stepLabel_stake": "토큰 스테이킹",
-  "unstakingSubStep_input_placeholder": "금액을 입력하세요"
+  "stepLabel_stake": "토큰 스테이킹"
 }

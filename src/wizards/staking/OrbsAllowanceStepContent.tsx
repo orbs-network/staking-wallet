@@ -9,6 +9,7 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { enforceNumberInRange } from '../../utils/numberUtils';
+import { MaxButton } from '../../components/base/maxButton';
 
 export interface IOrbsAllowanceStepContentProps {
   goBackToChooseGuardianStep: () => void;
@@ -68,26 +69,36 @@ export const OrbsAllowanceStepContent = observer(
       isBroadcastingMessage,
       reReadStoresData,
     ]);
-
+    const showMaxBtn = liquidOrbsAsNumber !== orbsAllowance.value || liquidOrbsAsNumber === 0;
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
         onClick: setTokenAllowanceForStakingContract,
         title: stakingWizardTranslations('allowanceSubStep_action_approve'),
+        isDisabled: orbsAllowance.value > liquidOrbsAsNumber || !orbsAllowance.value,
       }),
-      [setTokenAllowanceForStakingContract, stakingWizardTranslations],
+      [liquidOrbsAsNumber, orbsAllowance.value, setTokenAllowanceForStakingContract, stakingWizardTranslations],
     );
+    const handleMax = useCallback(() => {
+      orbsAllowance.setValue(liquidOrbsAsNumber);
+    }, [liquidOrbsAsNumber, orbsAllowance]);
 
     const allowanceInput = useMemo(() => {
+      const maxBtn = (
+        <MaxButton disabled={!showMaxBtn} onClick={handleMax}>
+          {wizardsCommonTranslations('popup_max')}
+        </MaxButton>
+      );
       return (
         <FullWidthOrbsInputField
           id={'orbsAllowance'}
-          placeholder={stakingWizardTranslations('unstakingSubStep_input_placeholder')}
+          placeholder={wizardsCommonTranslations('popup_input_placeholder')}
           value={orbsAllowance.value}
-          onChange={(value) => orbsAllowance.setValue(enforceNumberInRange(value, 0, liquidOrbsAsNumber))}
+          onChange={(value) => orbsAllowance.setValue(value)}
           disabled={disableInputs}
+          buttonComponent={maxBtn}
         />
       );
-    }, [stakingWizardTranslations, orbsAllowance, disableInputs, liquidOrbsAsNumber]);
+    }, [showMaxBtn, handleMax, wizardsCommonTranslations, orbsAllowance, disableInputs]);
 
     // TODO : ORL : TRANSLATIONS
 

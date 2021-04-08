@@ -9,7 +9,5 @@
   "unstakingSubStep_stepTitle": "保有するトークンのステーキングを解除",
   "unstakingSubStep_subMessage_pressUnstakeAndApprove": "”ステーキングを解除”を押してトランザクションを認証",
   "unstakingSubStep_warning_thereAreOrbsInCooldownBody": "今ステーキングを解除することで、全てのトークンに30日間のクールダウンが適応されます",
-  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "注意：現在クールダウン中のトークンがあります",
-  "unstakingSubStep_max": "最大",
-  "unstakingSubStep_input_placeholder": "金額を入力します"
+  "unstakingSubStep_warning_thereAreOrbsInCooldownHeader": "注意：現在クールダウン中のトークンがあります"
 }

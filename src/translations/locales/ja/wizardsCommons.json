@@ -14,5 +14,7 @@
   "txCreationError_generalError_message": "ステーキングの最中にエラーが発生しました",
   "txCreationError_generalError_subMessage": "再試行してください",
   "txCreationError_userCanceled_message": "トランザクションがキャンセルされました",
-  "txCreationError_userCanceled_subMessage": "続行するには再試行の後、トランザクションを認証してください"
+  "txCreationError_userCanceled_subMessage": "続行するには再試行の後、トランザクションを認証してください",
+  "popup_max": "最大",
+  "popup_input_placeholder": "金額を入力します"
 }
