@@ -8,11 +8,9 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 import { createEnvObjectForWebpack } from './webpackUtils';
-
-const envFromFile = dotenv.config({ path: process.env.ENV_FILE }).parsed;
-// const envFromPathMergedWithRuntime = overrideEnvFileValuesWithRuntimeEnv(envFromFile, process.env);
-const envFromPathMergedWithRuntime = { ...process.env, ...envFromFile };
-
+const envFilePath = process.env.ENV_FILE || '.env';
+const envFromFile = dotenv.config({ path: envFilePath }).parsed;
+const envFromPathMergedWithRuntime = { ...envFromFile, ...process.env };
 const plugins = [
   new ForkTsCheckerWebpackPlugin({
     tsconfig: path.join(__dirname, 'src', 'tsconfig.json'),
@@ -45,7 +43,6 @@ const plugins = [
 // plugins.push(new BundleAnalyzerPlugin());
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
-console.log(IS_DEV);
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
