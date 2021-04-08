@@ -92,6 +92,7 @@ export const GuardianChangeStepContent = observer(
         addCancelButton
         disableActionButton={orbsAccountStore.isGuardian}
         onCancelButtonClicked={closeWizard}
+        close={closeWizard}
         cancelButtonText={wizardsCommonTranslations('action_close')}
       />
     );

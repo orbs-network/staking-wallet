@@ -24,5 +24,6 @@
   "stakingSubStep_stepTitle": "このステップでは{{orbsForStaking}}ORBSをステーキングします",
   "stepLabel_approve": "ORBSの利用を許可する",
   "stepLabel_selectGuardian": "ガーディアンを選択",
-  "stepLabel_stake": "トークンをステーキング"
+  "stepLabel_stake": "トークンをステーキング",
+  "unstakingSubStep_input_placeholder": "金額を入力します"
 }

@@ -188,6 +188,7 @@ export interface IStakingWizardTranslations {
   guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation: string;
   guardianSelectionSubStep_stepTitle: string;
   guardianSelectionSubStep_stepExplanation: string;
+  unstakingSubStep_input_placeholder: string;
 }
 
 export interface IGuardianChangingWizardTranslation {

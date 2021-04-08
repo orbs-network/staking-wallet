@@ -4,7 +4,7 @@ import { WizardContent } from '../../components/wizards/WizardContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
 import { InfoToolTipIcon } from '../../components/tooltips/InfoTooltipIcon';
-
+import { CommonClosePopupButton } from '../../components/base/commonClosePopupButton';
 export interface IActionButtonProps {
   title: string;
   onClick: () => void;
@@ -32,6 +32,7 @@ interface IProps {
 
   // Tests props
   contentTestId?: string;
+  close?: () => void;
 }
 
 const stylingForTwoActionButtons: React.CSSProperties = {
@@ -55,6 +56,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     cancelButtonText,
     onCancelButtonClicked,
     infoTitle,
+    close,
   } = props;
 
   const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
@@ -141,6 +143,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
           spacing={0}
           style={{ margin: 0, width: '100%' }}
         >
+          {close && <CommonClosePopupButton onClick={close} />}
           {addCancelButton && (
             <Grid item>
               <CommonActionButton

@@ -104,6 +104,7 @@ export const RewardsClaimingStepContent = observer(
         innerContent={rewardsClaimingInnerContent}
         actionButtonProps={claimRewardsActionButtonProps}
         addCancelButton
+        close={closeWizard}
         onCancelButtonClicked={shouldAddSkip ? (skipToNextStep ? skipToNextStep : closeWizard) : closeWizard}
         cancelButtonText={
           shouldAddSkip ? wizardsCommonTranslations('action_skip') : wizardsCommonTranslations('action_close')

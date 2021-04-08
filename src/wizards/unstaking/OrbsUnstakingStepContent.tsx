@@ -4,29 +4,31 @@ import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHo
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { Button, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
-const maxBtnStyle: CSSProperties = {
-  position: 'absolute',
-  right: '10px',
-  height: '35px',
-  bottom: '20px',
-};
 const inputStyle = {
   marginTop: '20px',
 };
 
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
+  const useStyles = makeStyles({
+    maxBtnStyle: {
+      maxHeight: 30,
+      marginLeft: 'auto',
+      fontSize: 10,
+      padding: 5,
+    },
+  });
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
+  const classes = useStyles();
 
   const wizardsCommonTranslations = useWizardsCommonTranslations();
   const unstakingWizardTranslations = useUnstakingWizardTranslations();
@@ -98,7 +100,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   }, []);
 
   const unstakingInput = useMemo(() => {
-    const showMaxBtn = orbsForUnstaking.value + 1 <= stakedOrbsNumericalFormat;
+    const showMaxBtn = orbsForUnstaking.value !== stakedOrbsNumericalFormat;
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
         <Typography style={{ color: 'orange', textAlign: 'center' }}>
@@ -109,7 +111,18 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         </Typography>
       </>
     ) : null;
-
+    const btn = (
+      <CommonActionButton
+        className={classes.maxBtnStyle}
+        style={{
+          opacity: showMaxBtn ? 1 : 0,
+        }}
+        disabled={!showMaxBtn}
+        onClick={handleMax}
+      >
+        {unstakingWizardTranslations('unstakingSubStep_max')}
+      </CommonActionButton>
+    );
     return (
       <>
         {orbsInCooldownWarning}
@@ -120,12 +133,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
           disabled={disableInputs}
           placeholder={unstakingWizardTranslations('unstakingSubStep_input_placeholder')}
           customStyle={inputStyle}
+          buttonComponent={btn}
         />
-        {showMaxBtn && (
-          <CommonActionButton style={maxBtnStyle} onClick={handleMax}>
-            {unstakingWizardTranslations('unstakingSubStep_max')}
-          </CommonActionButton>
-        )}
       </>
     );
   }, [
@@ -154,8 +163,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}
       actionButtonProps={actionButtonProps}
       innerContent={unstakingInput}
-      addCancelButton
       onCancelButtonClicked={closeWizard}
+      close={closeWizard}
       cancelButtonText={wizardsCommonTranslations('action_close')}
     />
   );

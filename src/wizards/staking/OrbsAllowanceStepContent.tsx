@@ -81,7 +81,7 @@ export const OrbsAllowanceStepContent = observer(
       return (
         <FullWidthOrbsInputField
           id={'orbsAllowance'}
-          label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
+          placeholder={stakingWizardTranslations('unstakingSubStep_input_placeholder')}
           value={orbsAllowance.value}
           onChange={(value) => orbsAllowance.setValue(enforceNumberInRange(value, 0, liquidOrbsAsNumber))}
           disabled={disableInputs}
@@ -103,6 +103,7 @@ export const OrbsAllowanceStepContent = observer(
         actionButtonProps={actionButtonProps}
         innerContent={allowanceInput}
         addCancelButton
+        close={closeWizard}
         onCancelButtonClicked={goBackToChooseGuardianStep}
         // cancelButtonText={wizardsCommonTranslations('action_close')}
         cancelButtonText={stakingWizardTranslations('backToStep_changeGuardian')}
