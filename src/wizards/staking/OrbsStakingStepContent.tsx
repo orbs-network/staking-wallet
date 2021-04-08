@@ -15,7 +15,7 @@ export interface IOrbsStakingStepContentProps {
 
 export const OrbsStakingStepContent = observer(
   (props: ITransactionCreationStepProps & IOrbsStakingStepContentProps) => {
-    const { disableInputs, onPromiEventAction, txError, goBackToApproveStep } = props;
+    const { disableInputs, onPromiEventAction, txError, goBackToApproveStep, closeWizard } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
@@ -83,6 +83,7 @@ export const OrbsStakingStepContent = observer(
         actionButtonProps={actionButtonProps}
         addCancelButton={true}
         onCancelButtonClicked={goBackToApproveStep}
+        close={closeWizard}
         cancelButtonText={stakingWizardTranslations('backToStep_changeAmount')}
       />
     );

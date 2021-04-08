@@ -46,6 +46,8 @@ export const BalancesSection = observer(() => {
   const showWithdrawingModal = useBoolean(false);
 
   const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
+  const stakedOrbs = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
+  const liquidOrbs = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
 
   const { orbsInCooldownBoxButtonAction, orbsInCooldownBoxButtonText } = useMemo(() => {
     let orbsInCooldownBoxButtonAction;
@@ -108,7 +110,6 @@ export const BalancesSection = observer(() => {
     orbsAccountStore.cooldownReleaseTimestamp,
     rerenderNumber.increase,
   ]);
-
   const onUnstakeTokensClicked = useMemo(() => {
     if (orbsAccountStore.hasOrbsToWithdraw) {
       return () => showCannotUnstakeNowSnackbar.setTrue();
@@ -141,9 +142,9 @@ export const BalancesSection = observer(() => {
               <BalanceCard
                 title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
                 actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
-                actionButtonActive={true}
+                actionButtonActive={!!liquidOrbs}
                 onActionButtonPressed={showStakingModal.setTrue}
-                amount={fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs)}
+                amount={liquidOrbs}
                 balanceCardTestId={'balance_card_liquid_orbs'}
               />
             </GridItem>
@@ -157,9 +158,7 @@ export const BalancesSection = observer(() => {
                     <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
                       {balancesSectionTranslations('tooltipTitle_stakedOrbs')}:{' '}
                     </Typography>
-                    <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
-                      {fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs).toLocaleString()}
-                    </Typography>
+                    <Typography style={{ display: 'inline', fontWeight: 'bold' }}>{stakedOrbs}</Typography>
                     <br />
                     <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
                       {balancesSectionTranslations('tooltipTitle_pendingRewards')}:{' '}
@@ -171,7 +170,7 @@ export const BalancesSection = observer(() => {
                 }
                 amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
-                actionButtonActive={orbsAccountStore.hasStakedOrbs || orbsAccountStore.hasClaimableRewards}
+                actionButtonActive={!!stakedOrbs}
                 onActionButtonPressed={onUnstakeTokensClicked}
                 balanceCardTestId={'balance_card_staked_orbs'}
               />

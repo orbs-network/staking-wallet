@@ -80,6 +80,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       contentTestId={'wizard_sub_step_initiate_restaking_tx'}
       actionButtonProps={actionButtonProps}
       addCancelButton
+      close={closeWizard}
       onCancelButtonClicked={closeWizard}
       cancelButtonText={wizardsCommonTranslations('action_close')}
     />
