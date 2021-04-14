@@ -74,11 +74,11 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
         allowLeadingZeros={false}
         suffix={suffix}
         ref={ref}
-        style={{
-          ...style,
-          ...blurStyle,
-          textIndent: btnWidth,
-        }}
+        // style={{
+        //   ...style,
+        //   ...blurStyle,
+        //   textIndent: btnWidth,
+        // }}
       />
       <div ref={btnRef}>{buttonComponent}</div>
     </>
