@@ -1,4 +1,4 @@
-const IS_DEV = process.env.NODE_ENV !== 'production';
+const IS_DEV = process.env.IS_DEV;
 
 // Limit browser support
 const targets = IS_DEV ? { chrome: '79', firefox: '72', safari: '11.1', edge: '17' } : '> 0.25%, not dead';

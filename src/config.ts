@@ -12,7 +12,7 @@ type TSupportedNets = 'local' | 'ropsten' | 'mainnet' | 'mainnet-fork';
 // @ts-ignore
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
-export const IS_DEV = process.env.NODE_ENV !== 'production'; // TODO - fix NODE_ENV is always development
+export const IS_DEV = process.env.IS_DEV; // TODO - fix NODE_ENV is always development
 const SHOULD_OVERRIDE_ADDRESS = ethereumNetwork === 'local' || ethereumNetwork === 'ropsten';
 
 ////////////// CONFIG VARIABLES ///////////////
@@ -45,7 +45,7 @@ const config: IConfig = {
 };
 
 // Webpack will remove this section on production build //
-if (process.env.NODE_ENV !== 'production') {
+if (IS_DEV) {
   if (ethereumNetwork === 'local' || ethereumNetwork === 'mainnet-fork') {
     config.ETHEREUM_PROVIDER_WS = 'ws://localhost:7545';
   }

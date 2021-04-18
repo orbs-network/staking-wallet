@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { useTheme } from '@material-ui/core';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 interface INumberFormatCustomProps {
   // Usage props
@@ -35,7 +36,7 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
     return styleObject;
   }, [fontSize]);
 
-  const blurStyle = {
+  const blurStyle: CSSProperties = {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -74,11 +75,11 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
         allowLeadingZeros={false}
         suffix={suffix}
         ref={ref}
-        // style={{
-        //   ...style,
-        //   ...blurStyle,
-        //   textIndent: btnWidth,
-        // }}
+        style={{
+          ...style,
+          ...blurStyle,
+          textIndent: btnWidth,
+        }}
       />
       <div ref={btnRef}>{buttonComponent}</div>
     </>

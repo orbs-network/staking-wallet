@@ -42,7 +42,7 @@ const plugins = [
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // plugins.push(new BundleAnalyzerPlugin());
 
-const IS_DEV = process.env.NODE_ENV !== 'production';
+const IS_DEV = process.env.IS_DEV;
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
