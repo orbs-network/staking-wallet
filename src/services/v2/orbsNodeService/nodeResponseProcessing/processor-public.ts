@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { SystemState, VirtualChain, Service, Guardians, HealthLevel, Guardian } from '../systemState';
 import { getCurrentClockTime, isStaleTime } from './helpers';
 import { generateNodeManagmentUrl, generateVirtualChainUrls } from './url-generator';
-import { IManagementStatusResponse, IGuardianData, ICommitteeEvent } from './RootNodeData';
+import { IManagementStatusResponse, IGuardianData } from './RootNodeData';
 
 // DEV_NOTE : IMPORTANT: O.L : This file is taken from the 'Status-page' backend, we should unite them
 // TODO : Extract the functionality to a library.
@@ -103,6 +103,14 @@ function readVirtualChains(rootNodeData: IManagementStatusResponse, config: Conf
 function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimestamp: number): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
+
+    function formatParticipationPercentage(): number {
+      const raw = rootNodeData.Payload.Participation30Days[guardianData.EthAddress];
+      const safeParticipation = Math.min(raw || 0, 1); // default to 0, no more than 1 TODO ensure no more than 1 in management service
+      const formattedParticipation = parseInt((safeParticipation * 100).toFixed(2));
+      return formattedParticipation;
+    }
+
     const guardian: Guardian = {
       EthAddress: ensureAddressStartsWithPrefix(guardianData.EthAddress),
       Name: _.isString(guardianData.Name) ? guardianData.Name : '',
@@ -122,12 +130,7 @@ function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimest
       },
       RegistrationTime: guardianData.RegistrationTime,
       DistributionFrequency: extractDistributionFrequency(guardianData),
-      // ParticipationPercentage: 0,
-      ParticipationPercentage: calculateParticipationPercentage(
-        guardianData.EthAddress,
-        rootNodeData.Payload.CommitteeEvents,
-        currentTimestamp,
-      ),
+      ParticipationPercentage: formatParticipationPercentage(),
       Capacity: calculateCapacity(guardianData),
       DelegatedStake: guardianData.DelegatedStake,
       SelfStake: guardianData.SelfStake,
@@ -153,42 +156,6 @@ function extractDistributionFrequency(guardianData: IGuardianData): number {
 
   const manuallySetValue = guardianData.Metadata[REWARDS_DISTRIBUTION_KEY];
   return manuallySetValue ? manuallySetValue : DEFAULT_DISTRIBUTION_FREQUENCY;
-}
-
-function calculateParticipationPercentage(
-  guardianAddress: string,
-  committeeEvents: ICommitteeEvent[],
-  currentTimestamp: number,
-): number {
-  // DEV_NOTE : O.L : Filtering for 30 days is just a prod decision.
-  const TIME_RANGE_IN_SECONDS = 60 * 60 * 24 * 30;
-  const earliestRefTime = currentTimestamp - TIME_RANGE_IN_SECONDS;
-  const eventsFromLast30Days = committeeEvents.filter((committeeEvent) => committeeEvent.RefTime >= earliestRefTime);
-
-  const firstEvent = eventsFromLast30Days[0];
-
-  const lastEvent = eventsFromLast30Days[eventsFromLast30Days.length - 1];
-  const totalTime = lastEvent.RefTime - firstEvent.RefTime;
-  let participationTime = 0;
-
-  // DEV_NOTE : We start with 1 as we start the period between events
-  for (let i = 1; i < eventsFromLast30Days.length; i++) {
-    const committeeEvent = eventsFromLast30Days[i];
-
-    if (
-      committeeEvent.Committee.map((committeeMember) => committeeMember.EthAddress.toLowerCase()).includes(
-        guardianAddress.toLowerCase(),
-      )
-    ) {
-      const previousCommitteeEvent = eventsFromLast30Days[i - 1];
-      const period = committeeEvent.RefTime - previousCommitteeEvent.RefTime;
-      participationTime += period;
-    }
-  }
-
-  const participationPercentage = (participationTime / totalTime) * 100;
-  const roundedNumber = +participationPercentage.toFixed(2);
-  return roundedNumber;
 }
 
 function calculateCapacity(guardianData: IGuardianData): number {

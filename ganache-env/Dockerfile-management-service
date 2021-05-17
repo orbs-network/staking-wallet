@@ -1,4 +1,4 @@
-FROM orbsnetwork/management-service:v1.3.5
+FROM orbsnetwork/management-service:v1.4.0
 
 COPY ./management-service-config.json.template ./management-service-config.json
 
