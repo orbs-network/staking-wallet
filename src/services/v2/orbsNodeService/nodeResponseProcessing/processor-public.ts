@@ -100,16 +100,16 @@ function readVirtualChains(rootNodeData: IManagementStatusResponse, config: Conf
   });
 }
 
+function formatParticipationPercentage(raw: number): number {
+  const safeParticipation = Math.min(raw || 0, 1); // default to 0, no more than 1 TODO ensure no more than 1 in management service
+  const formattedParticipation = parseInt((safeParticipation * 100).toFixed(2));
+  return formattedParticipation;
+}
+
 function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimestamp: number): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
-    const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
 
-    function formatParticipationPercentage(): number {
-      const raw = rootNodeData.Payload.Participation30Days[guardianData.EthAddress];
-      const safeParticipation = Math.min(raw || 0, 1); // default to 0, no more than 1 TODO ensure no more than 1 in management service
-      const formattedParticipation = parseInt((safeParticipation * 100).toFixed(2));
-      return formattedParticipation;
-    }
+    const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
 
     const guardian: Guardian = {
       EthAddress: ensureAddressStartsWithPrefix(guardianData.EthAddress),
@@ -130,7 +130,9 @@ function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimest
       },
       RegistrationTime: guardianData.RegistrationTime,
       DistributionFrequency: extractDistributionFrequency(guardianData),
-      ParticipationPercentage: formatParticipationPercentage(),
+      ParticipationPercentage: formatParticipationPercentage(
+        rootNodeData.Payload.Participation30Days[guardianData.EthAddress],
+      ),
       Capacity: calculateCapacity(guardianData),
       DelegatedStake: guardianData.DelegatedStake,
       SelfStake: guardianData.SelfStake,
