@@ -30,6 +30,8 @@ export const MainAppPage = observer(() => {
       <WalletSectionsWrapper />
 
       <GuardiansSection />
+
+      <div style={{fontSize: 8, textAlign: 'center'}}>v1.0.16</div>
     </Grid>
   );
 });
