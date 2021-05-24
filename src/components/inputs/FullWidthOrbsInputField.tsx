@@ -34,7 +34,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>((props) => {
       label={label}
       value={val}
       placeholder={placeholder}
-      onChange={(e) => onChange(parseInt(e.target.value))}
+      onChange={(e) => onChange(parseFloat(e.target.value))}
       InputProps={{
         inputComponent: NumberFormatCustom as any,
         inputProps: {

@@ -146,9 +146,9 @@ export const BalancesSection = observer(() => {
                 onActionButtonPressed={showStakingModal.setTrue}
                 amount={liquidOrbs}
                 balanceCardTestId={'balance_card_liquid_orbs'}
+                showFraction
               />
             </GridItem>
-
             {/* Staked&Rewards */}
             <GridItem>
               <BalanceCard
@@ -173,9 +173,9 @@ export const BalancesSection = observer(() => {
                 actionButtonActive={!!stakedOrbs}
                 onActionButtonPressed={onUnstakeTokensClicked}
                 balanceCardTestId={'balance_card_staked_orbs'}
+                showFraction
               />
             </GridItem>
-
             {/* Cooldown & withdraw/restake */}
             <GridItem>
               <BalanceCard
@@ -185,6 +185,7 @@ export const BalancesSection = observer(() => {
                 actionButtonActive={orbsInCooldownBoxEnabled}
                 onActionButtonPressed={orbsInCooldownBoxButtonAction}
                 balanceCardTestId={'balance_card_cool_down_orbs'}
+                showFraction
               />
             </GridItem>
           </Grid>

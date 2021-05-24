@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { useTheme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
+import constants from '../../constants/constants';
 interface INumberFormatCustomProps {
   // Usage props
   allowNegative?: boolean;
@@ -56,7 +57,7 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
           });
         }}
         onBlur={onBlur}
-        onFocus={onFocus}
+        // onFocus={onFocus}
         onClickCapture={() => {
           // Dev Note : By design, zny leading zero will be removed only after focus lost.
           //            Our users, when on Mobile, will lose focus only when clicking the action button (and thus, will always have
@@ -70,6 +71,7 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
           }
         }}
         thousandSeparator
+        decimalScale={constants.numbersDecimalToInsertLimit}
         isNumericString
         allowNegative={!!allowNegative}
         allowLeadingZeros={false}

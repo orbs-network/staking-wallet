@@ -46,8 +46,8 @@ export const OrbsAllowanceStepContent = observer(
       }
       message.setValue('');
       subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
-      const promiEvent = orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance.value));
+      const stakingAmount = weiOrbsFromFullOrbs(orbsAllowance.value);
+      const promiEvent = orbsAccountStore.setAllowanceForStakingContract(stakingAmount);
 
       // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
       promiEvent.on('transactionHash', (txHash) => {
@@ -101,7 +101,6 @@ export const OrbsAllowanceStepContent = observer(
     }, [showMaxBtn, handleMax, wizardsCommonTranslations, orbsAllowance, disableInputs]);
 
     // TODO : ORL : TRANSLATIONS
-
     return (
       <BaseStepContent
         message={message.value}
