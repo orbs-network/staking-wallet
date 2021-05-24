@@ -39,7 +39,7 @@
     "sync-translations": "./src/translations/syncTranslations.zsh",
     "serve-dev": "rm -rf ./dist && npm run build-dev &&  serve -s dist",
     "serve-staging-ropsten": "rm -rf ./dist && npm run build-staging-ropsten &&  serve -s dist",
-    "serve-prod": "rm -rf ./dist && npm run build &&  serve -s dist",
+    "serve-prod": "rm -rf ./dist && npm run build-staging &&  serve -s dist",
     "serve-staging": "rm -rf ./dist && npm run build-staging &&  serve -s dist",
     "serve-dev-tunnel": "rm -rf ./dist && npm run build-dev-tunnel &&  serve -s dist",
     "serve-dev-fork": "rm -rf ./dist && npm run build-dev-fork &&  serve -s dist",
