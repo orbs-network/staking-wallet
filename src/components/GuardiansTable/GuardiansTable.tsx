@@ -8,18 +8,23 @@ import {
   Typography,
   Theme,
   Tooltip,
+  Snackbar,
 } from '@material-ui/core';
+import copy from 'copy-to-clipboard';
+
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import React, { useCallback, useMemo } from 'react';
 import MaterialTable, { Column, MTableToolbar } from 'material-table';
 import styled from 'styled-components';
+import { ReactComponent as CopyIcon } from '../../../assets/copy.svg';
+
 import { EMPTY_ADDRESS } from '../../constants';
 import IconButton from '@material-ui/core/IconButton';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { selectActionButtonTestIdFromAddress } from '../../__tests__/components/guardians/guardiansTestUtils';
-import { useGuardiansTableTranslations } from '../../translations/translationsHooks';
+import { useAlertsTranslations, useGuardiansTableTranslations } from '../../translations/translationsHooks';
 import { ReactComponent as GlobeIcon } from '../../../assets/globe.svg';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { TABLE_ICONS } from '../tables/TableIcons';
@@ -32,6 +37,8 @@ import { InTextLink } from '../shared/texts/InTextLink';
 import { toJS } from 'mobx';
 import { ensurePrefix } from '../../utils/stringUtils';
 import { InfoToolTipIcon } from '../tooltips/InfoTooltipIcon';
+import { useBoolean } from 'react-hanger';
+import { CustomSnackBarContent } from '../snackbar/CustomSnackBarContent';
 
 const asPercent = (num: number) =>
   (num * 100).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + '%';
@@ -112,7 +119,9 @@ export const GuardiansTable = React.memo<IProps>((props) => {
 
   const classes = useStyles();
   const theme = useTheme();
+  const alertsTranslations = useAlertsTranslations();
 
+  const showSnackbarMessage = useBoolean(false);
   const getGuardianSelectionCellContent = useCallback(
     (g: Guardian) => {
       let selectedGuardianCell = null;
@@ -177,6 +186,14 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     ],
   );
 
+  const copyAddress = useCallback(
+    (value: string) => {
+      copy(value);
+      showSnackbarMessage.setTrue();
+    },
+    [showSnackbarMessage],
+  );
+
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
 
@@ -229,7 +246,11 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         field: 'EthAddress',
         render: (guardian) => (
           <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'} interactive>
-            <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>
+            <Typography style={{ fontFamily: 'monospace', textAlign: 'center', display: 'flex' }}>
+              <CopyIcon
+                style={{ width: '20px', height: '20px', cursor: 'pointer', marginRight: '8px' }}
+                onClick={() => copyAddress(guardian.EthAddress)}
+              />
               <InTextLink
                 href={`https://etherscan.io/address/${guardian.EthAddress}`}
                 text={`${guardian.EthAddress.substring(0, 10)}...`}
@@ -491,6 +512,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     getGuardianSelectionCellContent,
     guardiansTableTranslations,
     guardiansToDelegatorsCut,
+    copyAddress,
   ]);
 
   // DEV_NOTE : O.L : This prevents displaying of a large empty table if there are less than 50 Guardians.
@@ -530,6 +552,22 @@ export const GuardiansTable = React.memo<IProps>((props) => {
           ),
         }}
       />
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={showSnackbarMessage.value}
+        autoHideDuration={1200}
+        onClose={showSnackbarMessage.setFalse}
+      >
+        <CustomSnackBarContent
+          variant={'success'}
+          message={alertsTranslations('walletAddressWasCopied')}
+          onClose={showSnackbarMessage.setFalse}
+          data-testid={'message-address-was-copied'}
+        />
+      </Snackbar>
     </div>
   );
 });

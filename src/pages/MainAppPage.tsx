@@ -31,7 +31,7 @@ export const MainAppPage = observer(() => {
 
       <GuardiansSection />
 
-      <div style={{fontSize: 8, textAlign: 'center'}}>v1.0.16</div>
+      <div style={{ fontSize: 8, textAlign: 'center' }}>v1.0.16</div>
     </Grid>
   );
 });
