@@ -28,7 +28,6 @@ export const OrbsAllowanceStepContent = observer(
     // Start and limit by liquid orbs
     const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
     const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
-
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'),
       '',
@@ -40,7 +39,7 @@ export const OrbsAllowanceStepContent = observer(
 
     const setTokenAllowanceForStakingContract = useCallback(() => {
       // TODO : FUTURE : O.L : Add written error message about out of range
-      if (orbsAllowance.value < 1 || orbsAllowance.value > liquidOrbsAsNumber) {
+      if (orbsAllowance.value <= 0 || orbsAllowance.value > liquidOrbsAsNumber) {
         console.warn(`tried to set out of range allowance of ${orbsAllowance.value}`);
         return;
       }
@@ -93,7 +92,7 @@ export const OrbsAllowanceStepContent = observer(
           id={'orbsAllowance'}
           placeholder={wizardsCommonTranslations('popup_input_placeholder')}
           value={orbsAllowance.value}
-          onChange={(value) => orbsAllowance.setValue(value)}
+          onChange={(value) => orbsAllowance.setValue(Number(value))}
           disabled={disableInputs}
           buttonComponent={maxBtn}
         />

@@ -8,3 +8,8 @@ export function fullOrbsFromWeiOrbs(weiOrbs?: bigint): number {
 export function weiOrbsFromFullOrbs(fullOrbs?: number): bigint {
   return BigInt(web3.utils.toWei(fullOrbs.toString(), 'ether'));
 }
+
+export function weiOrbsFromFullOrbsString(fullOrbs?: string): bigint {
+  const num = Number(fullOrbs);
+  return BigInt(web3.utils.toWei(num.toString(), 'ether'));
+}
