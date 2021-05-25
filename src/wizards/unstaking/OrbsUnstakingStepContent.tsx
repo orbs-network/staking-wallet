@@ -44,7 +44,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
 
   const unstakeTokens = useCallback(() => {
     // TODO : FUTURE : O.L : Add written error message about out of range
-    if (orbsForUnstaking.value < 1 || orbsForUnstaking.value > stakedOrbsNumericalFormat) {
+    if (orbsForUnstaking.value <= 0 || orbsForUnstaking.value > stakedOrbsNumericalFormat) {
       console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking.value}`);
       return;
     }
@@ -115,7 +115,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         <FullWidthOrbsInputField
           id={'orbsUnstaking'}
           value={orbsForUnstaking.value}
-          onChange={(value) => orbsForUnstaking.setValue(value || 0)}
+          onChange={(value) => orbsForUnstaking.setValue(Number(value))}
           disabled={disableInputs}
           placeholder={wizardsCommonTranslations('popup_input_placeholder')}
           customStyle={inputStyle}

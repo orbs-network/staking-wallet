@@ -9,7 +9,7 @@ interface IProps {
   id: string;
   label?: string;
   value: number | string;
-  onChange: (newValue: number) => void;
+  onChange: (newValue: string) => void;
   disabled?: boolean;
   placeholder?: string;
   customStyle?: CSSProperties;
@@ -34,7 +34,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>((props) => {
       label={label}
       value={val}
       placeholder={placeholder}
-      onChange={(e) => onChange(parseFloat(e.target.value))}
+      onChange={(e) => onChange(e.target.value)}
       InputProps={{
         inputComponent: NumberFormatCustom as any,
         inputProps: {

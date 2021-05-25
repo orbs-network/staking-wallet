@@ -8,6 +8,7 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { numberWithCommas } from '../../utils/numberUtils';
 
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
@@ -26,6 +27,7 @@ export const OrbsStakingStepContent = observer(
 
     // Start and limit by allowance
     const orbsForStaking = orbsAccountStore.stakingContractAllowance;
+
     const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
@@ -74,7 +76,7 @@ export const OrbsStakingStepContent = observer(
         message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-          orbsForStaking: fullOrbsForStaking.toLocaleString(),
+          orbsForStaking: numberWithCommas(fullOrbsForStaking),
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
         disableInputs={disableInputs}
