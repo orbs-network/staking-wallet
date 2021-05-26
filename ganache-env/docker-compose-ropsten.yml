@@ -1,12 +1,16 @@
 version: '3'
 services:
-    management-service-ropsten:
+    management-cors-proxy:
+        build:
+            context: ""
+            dockerfile: Dockerfile-nginx
+        ports:
+            - 7666:7666
+    management-service:
         build:
             context: ""
             dockerfile: Dockerfile-management-service
             args:
                 - EthereumGenesisContract=0x5D7779231a6344edE6178623f31007cF2D16DFd7
-                - EthereumEndpoint=https://ropsten.infura.io/v3/3fe9b03bd8374639809addf2164f7287
+                - EthereumEndpoint=https://ropsten.infura.io/v3/9a6f4ed09e8a4188a882760443fd053e
                 - EthereumFirstBlock=9644509
-        ports:
-            - 7666:8080
