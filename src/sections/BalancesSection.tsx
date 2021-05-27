@@ -18,6 +18,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
 import { BaseLoader } from '../components/loaders';
+import { BalanceCardLoader } from '../components/loaders/balance-card-loader';
 import {
   useAlertsTranslations,
   useBalancesSectionTranslations,
@@ -119,7 +120,8 @@ export const BalancesSection = observer(() => {
     }
   }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
 
-  const isLoading = !orbsAccountStore.doneLoading;
+  // const isLoading = !orbsAccountStore.doneLoading;
+  const isLoading = true;
   return (
     <Section>
       {/* Balance */}
@@ -138,7 +140,7 @@ export const BalancesSection = observer(() => {
           <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
             {/* Liquid ORBS */}
             <GridItem>
-              <BaseLoader isLoading={isLoading}>
+              <BaseLoader isLoading={isLoading} customLoader={<BalanceCardLoader />}>
                 <BalanceCard
                   title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
                   actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState, useEffect } from 'react';
+import React, { CSSProperties, useState, useEffect, ReactComponentElement } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaselineProps } from '@material-ui/core';
 
@@ -31,11 +31,14 @@ interface IProps {
   children: any;
   isLoading?: boolean;
   hideContent?: boolean;
+  customLoader?: any;
 }
 
-const hiddenContent = (children, isLoading, classes, style) => {
+const hiddenContent = (children, isLoading, classes, style, customLoader) => {
   if (isLoading) {
-    return (
+    return customLoader ? (
+      customLoader
+    ) : (
       <div className={`${classes.base}`} style={style}>
         <section className={`${classes.absolute} ${classes.overlay}`}></section>
       </div>
@@ -44,20 +47,23 @@ const hiddenContent = (children, isLoading, classes, style) => {
   return children;
 };
 
-export const BaseLoader = ({ style, children, isLoading, hideContent }: IProps) => {
+export const BaseLoader = ({ style, children, isLoading, hideContent, customLoader }: IProps) => {
   const classes = useLoaderStyles();
   if (hideContent) {
-    return hiddenContent(children, isLoading, classes, style);
+    return hiddenContent(children, isLoading, classes, style, customLoader);
   }
 
   return (
     <div className={classes.wrapper}>
       <div className={isLoading ? classes.children : ''}>{children}</div>
-      {isLoading && (
-        <div className={`${classes.base} ${classes.absolute}`} style={style}>
-          <section className={`${classes.absolute} ${classes.overlay}`}></section>
-        </div>
-      )}
+      {isLoading &&
+        (customLoader ? (
+          customLoader
+        ) : (
+          <div className={`${classes.base} ${classes.absolute}`} style={style}>
+            <section className={`${classes.absolute} ${classes.overlay}`}></section>
+          </div>
+        ))}
     </div>
   );
 };
