@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { useTheme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
@@ -28,6 +28,10 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
       textAlign: 'center',
       paddingRight: 10,
       paddingLeft: 10,
+      background: 'transparent',
+      border: 'none',
+      color: 'white',
+      outline: 'none',
     };
 
     if (fontSize) {
@@ -44,18 +48,20 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
   };
 
   const btnWidth = (btnRef.current && btnRef.current.clientWidth) || 0;
+
   return (
     <>
       <NumberFormat
         {...others}
         getInputRef={inputRef}
-        onValueChange={(values) => {
+        onValueChange={({ value }) => {
           onChange({
             target: {
-              value: values.value,
+              value,
             },
           });
         }}
+        // value={bigInt(String(props.value))}
         onBlur={onBlur}
         // onFocus={onFocus}
         onClickCapture={() => {
@@ -72,8 +78,8 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
         }}
         thousandSeparator
         decimalScale={constants.numbersDecimalToInsertLimit}
-        isNumericString
-        allowNegative={!!allowNegative}
+        allowNegative={false}
+        isNumericString={false}
         allowLeadingZeros={false}
         suffix={suffix}
         ref={ref}

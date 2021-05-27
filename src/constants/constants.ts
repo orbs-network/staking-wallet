@@ -1,4 +1,4 @@
 export default {
-  numbersDecimalToDisplayLimit: 3,
+  numbersDecimalToDisplayLimit: 6,
   numbersDecimalToInsertLimit: 18,
 };

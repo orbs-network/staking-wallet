@@ -10,6 +10,8 @@ import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
+import { NumberToDisplayFormat } from '../../utils/numberUtils';
+import constants from '../../constants/constants';
 
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -73,7 +75,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       message={message.value}
       subMessage={subMessage.value}
       title={withdrawingWizardTranslations('withdrawingSubStep_stepTitle', {
-        orbsForWithdrawal: fullOrbsReadyForWithdrawal.toLocaleString(),
+        orbsForWithdrawal: NumberToDisplayFormat(fullOrbsReadyForWithdrawal, constants.numbersDecimalToInsertLimit, 3),
       })}
       infoTitle={withdrawingWizardTranslations('withdrawingSubStep_stepExplanation')}
       disableInputs={disableInputs}

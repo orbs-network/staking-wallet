@@ -8,7 +8,6 @@ import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/Bas
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
-import { enforceNumberInRange } from '../../utils/numberUtils';
 import { MaxButton } from '../../components/base/maxButton';
 
 export interface IOrbsAllowanceStepContentProps {
