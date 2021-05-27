@@ -8,7 +8,8 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
-import { numberWithCommas } from '../../utils/numberUtils';
+import { NumberToDisplayFormat } from '../../utils/numberUtils';
+import constants from '../../constants/constants';
 
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
@@ -76,7 +77,7 @@ export const OrbsStakingStepContent = observer(
         message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-          orbsForStaking: numberWithCommas(fullOrbsForStaking),
+          orbsForStaking: NumberToDisplayFormat(fullOrbsForStaking, constants.numbersDecimalToInsertLimit, 4),
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
         disableInputs={disableInputs}

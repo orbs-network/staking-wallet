@@ -8,7 +8,7 @@ import useHover from '@react-hook/hover';
 import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import AnimatedNumber from 'animated-number-react';
-import { IReactComponent } from 'mobx-react/dist/types/IReactComponent';
+import { formatNumberToString, NumberToDisplayFormat } from '../utils/numberUtils';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
@@ -94,7 +94,14 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     return options;
   }, [showFraction]);
 
-  const formatValue = (value: number) => value.toLocaleString(undefined, numberFormatOptions);
+  const formatValue = (value: number) => {
+    const num = formatNumberToString(value, 6, true);
+    if (amount < 1) {
+      console.log(NumberToDisplayFormat(amount, 18, 4));
+      return NumberToDisplayFormat(amount, 18, 3);
+    }
+    return num;
+  };
 
   const balanceItem = (
     <Grid item>
