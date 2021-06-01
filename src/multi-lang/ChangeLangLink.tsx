@@ -6,9 +6,7 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-import { useLocation } from 'react-router';
-import React, { useContext } from 'react';
-import { PreLangBasenameContext } from './PreLangBasenameContext';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import config from '../config';
 

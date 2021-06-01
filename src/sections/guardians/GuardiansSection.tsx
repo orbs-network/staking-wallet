@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useBoolean } from 'react-hanger';
-import { Button, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
 import { observer } from 'mobx-react';
@@ -18,7 +18,6 @@ import {
 } from '../../translations/translationsHooks';
 import { CommonDivider } from '../../components/base/CommonDivider';
 import { CommonDialog } from '../../components/modal/CommonDialog';
-import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
