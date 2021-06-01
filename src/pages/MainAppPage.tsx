@@ -24,7 +24,6 @@ export const MainAppPage = observer(() => {
     cryptoWalletConnectionStore.hasEthereumProvider,
     cryptoWalletConnectionStore.isConnectedToWallet,
   ]);
-  const defaultVersion = '-';
   return (
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
