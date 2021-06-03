@@ -151,7 +151,6 @@ export const BalancesSection = observer(() => {
                 />
               </BaseLoader>
             </GridItem>
-
             {/* Staked&Rewards */}
             <GridItem>
               <BaseLoader isLoading={isLoading}>
@@ -180,7 +179,6 @@ export const BalancesSection = observer(() => {
                 />
               </BaseLoader>
             </GridItem>
-
             {/* Cooldown & withdraw/restake */}
             <GridItem>
               <BaseLoader isLoading={isLoading}>

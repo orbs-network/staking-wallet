@@ -5,6 +5,8 @@
   "message_errorOccurred": "ステーキングの最中にエラーが発生しました",
   "message_userCanceledTransactions": "トランザクションがキャンセルされました",
   "moveToStep_finish": "完了",
+  "popup_input_placeholder": "金額を入力",
+  "popup_max": "最大",
   "stepDoneExclamation": "素晴らしい！",
   "stepLabel_finish": "完了",
   "subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab": "トランザクションを送信中、タプを更新したり閉じたりしないでください",
@@ -14,7 +16,5 @@
   "txCreationError_generalError_message": "ステーキングの最中にエラーが発生しました",
   "txCreationError_generalError_subMessage": "再試行してください",
   "txCreationError_userCanceled_message": "トランザクションがキャンセルされました",
-  "txCreationError_userCanceled_subMessage": "続行するには再試行の後、トランザクションを認証してください",
-  "popup_max": "最大",
-  "popup_input_placeholder": "金額を入力します"
+  "txCreationError_userCanceled_subMessage": "続行するには再試行の後、トランザクションを認証してください"
 }
