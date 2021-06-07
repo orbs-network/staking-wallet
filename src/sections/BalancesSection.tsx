@@ -28,7 +28,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { CommonDialog } from '../components/modal/CommonDialog';
-
+import BalanceCardTooltip from './parts/balance-card-tooltip';
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};
 });
@@ -120,8 +120,9 @@ export const BalancesSection = observer(() => {
     }
   }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
 
-  // const isLoading = !orbsAccountStore.doneLoading;
-  const isLoading = true;
+  const isLoading = !orbsAccountStore.doneLoading;
+  console.log({ isLoading });
+
   return (
     <Section>
       {/* Balance */}
@@ -140,57 +141,47 @@ export const BalancesSection = observer(() => {
           <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
             {/* Liquid ORBS */}
             <GridItem>
-              <BaseLoader isLoading={isLoading} customLoader={<BalanceCardLoader />}>
-                <BalanceCard
-                  title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
-                  actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
-                  actionButtonActive={!!liquidOrbs}
-                  onActionButtonPressed={showStakingModal.setTrue}
-                  amount={liquidOrbs}
-                  balanceCardTestId={'balance_card_liquid_orbs'}
-                />
-              </BaseLoader>
+              <BalanceCard
+                title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
+                actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
+                actionButtonActive={!!liquidOrbs}
+                onActionButtonPressed={showStakingModal.setTrue}
+                amount={liquidOrbs}
+                balanceCardTestId={'balance_card_liquid_orbs'}
+                isLoading={isLoading}
+              />
             </GridItem>
             {/* Staked&Rewards */}
             <GridItem>
-              <BaseLoader isLoading={isLoading}>
-                <BalanceCard
-                  title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
-                  toolTipTitle={
-                    <>
-                      <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
-                        {balancesSectionTranslations('tooltipTitle_stakedOrbs')}:{' '}
-                      </Typography>
-                      <Typography style={{ display: 'inline', fontWeight: 'bold' }}>{stakedOrbs}</Typography>
-                      <br />
-                      <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
-                        {balancesSectionTranslations('tooltipTitle_pendingRewards')}:{' '}
-                      </Typography>
-                      <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
-                        {orbsAccountStore.rewardsBalance.toLocaleString()}
-                      </Typography>
-                    </>
-                  }
-                  amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
-                  actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
-                  actionButtonActive={!!stakedOrbs}
-                  onActionButtonPressed={onUnstakeTokensClicked}
-                  balanceCardTestId={'balance_card_staked_orbs'}
-                />
-              </BaseLoader>
+              <BalanceCard
+                title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
+                toolTipTitle={
+                  <BalanceCardTooltip
+                    stakedOrbs={stakedOrbs}
+                    balance={orbsAccountStore.rewardsBalance.toLocaleString()}
+                    stakedOrbsText={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
+                    pendingRewardsText={balancesSectionTranslations('tooltipTitle_pendingRewards')}
+                  />
+                }
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
+                actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
+                actionButtonActive={!!stakedOrbs}
+                onActionButtonPressed={onUnstakeTokensClicked}
+                balanceCardTestId={'balance_card_staked_orbs'}
+                isLoading={isLoading}
+              />
             </GridItem>
             {/* Cooldown & withdraw/restake */}
             <GridItem>
-              <BaseLoader isLoading={isLoading}>
-                <BalanceCard
-                  title={orbsInCooldownBoxTitle}
-                  actionButtonTitle={orbsInCooldownBoxButtonText}
-                  amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
-                  actionButtonActive={orbsInCooldownBoxEnabled}
-                  onActionButtonPressed={orbsInCooldownBoxButtonAction}
-                  balanceCardTestId={'balance_card_cool_down_orbs'}
-                />
-              </BaseLoader>
+              <BalanceCard
+                title={orbsInCooldownBoxTitle}
+                actionButtonTitle={orbsInCooldownBoxButtonText}
+                amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
+                actionButtonActive={orbsInCooldownBoxEnabled}
+                onActionButtonPressed={orbsInCooldownBoxButtonAction}
+                balanceCardTestId={'balance_card_cool_down_orbs'}
+                isLoading={isLoading}
+              />
             </GridItem>
           </Grid>
 

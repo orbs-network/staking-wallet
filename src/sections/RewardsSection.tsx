@@ -26,6 +26,7 @@ import { BalanceCard } from '../components/BalanceCard';
 import useInterval from 'use-interval';
 import config from '../config';
 import { BaseLoader } from '../components/loaders';
+import { BalanceCardLoader } from '../components/loaders/balance-card-loader';
 
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};
@@ -53,6 +54,7 @@ export const RewardsSection = observer(() => {
   }, 1000 * config.rewardsRefreshRateInSeconds);
 
   const isLoading = !orbsAccountStore.doneLoading;
+  // const isLoading = true;
 
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
@@ -62,42 +64,39 @@ export const RewardsSection = observer(() => {
       <CommonDivider />
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
-          <BaseLoader isLoading={isLoading}>
-            <BalanceCard
-              title={`${rewardsSectionTranslations('title_totalRewardsAwarded')} (${rewardsSectionTranslations(
-                'title_quantity_orbs',
-              )})`}
-              amount={orbsAccountStore.totalRewardedRewards}
-              showFraction
-            />
-          </BaseLoader>
+          <BalanceCard
+            title={`${rewardsSectionTranslations('title_totalRewardsAwarded')} (${rewardsSectionTranslations(
+              'title_quantity_orbs',
+            )})`}
+            amount={orbsAccountStore.totalRewardedRewards}
+            showFraction
+            isLoading={isLoading}
+          />
         </GridItem>
 
         <GridItem>
-          <BaseLoader isLoading={isLoading}>
-            <BalanceCard
-              title={`${rewardsSectionTranslations('title_rewardsRate')} (${rewardsSectionTranslations(
-                'title_quantity_orbsPerWeek',
-              )})`}
-              amount={orbsAccountStore.estimatedRewardsForNextWeek}
-              showFraction
-            />
-          </BaseLoader>
+          <BalanceCard
+            title={`${rewardsSectionTranslations('title_rewardsRate')} (${rewardsSectionTranslations(
+              'title_quantity_orbsPerWeek',
+            )})`}
+            amount={orbsAccountStore.estimatedRewardsForNextWeek}
+            showFraction
+            isLoading={isLoading}
+          />
         </GridItem>
 
         <GridItem>
-          <BaseLoader isLoading={isLoading}>
-            <BalanceCard
-              title={`${rewardsSectionTranslations('title_rewardsBalance')} (${rewardsSectionTranslations(
-                'title_quantity_orbs',
-              )})`}
-              amount={availableRewards}
-              secondaryActionButtonActive={availableRewards > 0}
-              secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}
-              onSecondaryActionButtonPressed={showClaimingModal.setTrue}
-              showFraction
-            />
-          </BaseLoader>
+          <BalanceCard
+            title={`${rewardsSectionTranslations('title_rewardsBalance')} (${rewardsSectionTranslations(
+              'title_quantity_orbs',
+            )})`}
+            amount={availableRewards}
+            secondaryActionButtonActive={availableRewards > 0}
+            secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}
+            onSecondaryActionButtonPressed={showClaimingModal.setTrue}
+            showFraction
+            isLoading={isLoading}
+          />
         </GridItem>
       </Grid>
 

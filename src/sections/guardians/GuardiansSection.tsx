@@ -24,7 +24,7 @@ import { GuardianSelectingWizard } from '../../wizards/guardianSelection/Guardia
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { useGuardiansDelegatorsCut, useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
 import { BaseLoader } from '../../components/loaders';
-
+import GuardiansSectionLoader from '../../components/loaders/guardians-section-loader';
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const alertsTranslations = useAlertsTranslations();
@@ -54,7 +54,6 @@ export const GuardiansSection = observer(() => {
   );
 
   const isLoadingData = !orbsNodeStore.doneLoading || !orbsAccountStore.doneLoading;
-  console.log(!orbsNodeStore.doneLoading, !orbsAccountStore.doneLoading);
   const isErrorOnLoading = orbsNodeStore.errorLoading || orbsAccountStore.errorLoading;
 
   const totalStake = orbsNodeStore.totalStake;
@@ -70,10 +69,10 @@ export const GuardiansSection = observer(() => {
   // TODO : ORL : Fix display of total and effective stake.
 
   // TODO : ORL : TRANSLATION
-
+  console.log(isLoadingData);
   return (
     <Section data-testid='guardians-section'>
-      <BaseLoader isLoading={isLoadingData} hideContent={true} style={{ height: '300px' }}>
+      <BaseLoader isLoading={isLoadingData} hideContent customLoader={<GuardiansSectionLoader />}>
         <>
           <SectionHeader
             title={sectionTitlesTranslations('allGuardians')}

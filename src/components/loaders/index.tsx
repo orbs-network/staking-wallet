@@ -1,6 +1,5 @@
-import React, { CSSProperties, useState, useEffect, ReactComponentElement } from 'react';
+import React, { CSSProperties } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaselineProps } from '@material-ui/core';
 
 export const useLoaderStyles = makeStyles((theme) => ({
   wrapper: {
@@ -28,10 +27,10 @@ export const useLoaderStyles = makeStyles((theme) => ({
 
 interface IProps {
   style?: CSSProperties;
-  children: any;
+  children?: any;
   isLoading?: boolean;
   hideContent?: boolean;
-  customLoader?: any;
+  customLoader?: JSX.Element;
 }
 
 const hiddenContent = (children, isLoading, classes, style, customLoader) => {
@@ -55,7 +54,7 @@ export const BaseLoader = ({ style, children, isLoading, hideContent, customLoad
 
   return (
     <div className={classes.wrapper}>
-      <div className={isLoading ? classes.children : ''}>{children}</div>
+      {children && <div className={isLoading ? classes.children : ''}>{children}</div>}
       {isLoading &&
         (customLoader ? (
           customLoader

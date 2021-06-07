@@ -30,7 +30,9 @@ import Hidden from '@material-ui/core/Hidden';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { CommonActionButton } from '../components/base/CommonActionButton';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-
+import useConnection from '../hooks/useConnection';
+import { BaseLoader } from '../components/loaders';
+import AddressLoader from '../components/loaders/address-loader';
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
@@ -80,14 +82,14 @@ export const WalletInfoSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const walletInfoSectionTranslations = useWalletInfoSectionTranslations();
   const alertsTranslations = useAlertsTranslations();
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
+  const { mainAddress } = useCryptoWalletIntegrationStore();
   const showSnackbarMessage = useBoolean(false);
   const showQrModal = useBoolean(false);
 
   const copyAddress = useCallback(() => {
-    copy(cryptoWalletIntegrationStore.mainAddress);
+    copy(mainAddress);
     showSnackbarMessage.setTrue();
-  }, [cryptoWalletIntegrationStore.mainAddress, showSnackbarMessage]);
+  }, [mainAddress, showSnackbarMessage]);
 
   const theme = useTheme();
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
@@ -108,6 +110,7 @@ export const WalletInfoSection = observer(() => {
     return extraStyle;
   }, [smOrLarger]);
 
+  useConnection(!!mainAddress);
   return (
     <Section>
       {/* Balance */}
@@ -135,14 +138,16 @@ export const WalletInfoSection = observer(() => {
           id={'addressItem'}
           style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset' : 'center' }}
         >
-          <Typography
-            variant={smOrLarger ? 'h4' : 'body2'}
-            data-testid={'text-active-address'}
-            style={walletAddressExtraStyle}
-            noWrap
-          >
-            {cryptoWalletIntegrationStore?.mainAddress}
-          </Typography>
+          <BaseLoader isLoading={!mainAddress} customLoader={<AddressLoader />} hideContent>
+            <Typography
+              variant={smOrLarger ? 'h4' : 'body2'}
+              data-testid={'text-active-address'}
+              style={walletAddressExtraStyle}
+              noWrap
+            >
+              {mainAddress}
+            </Typography>
+          </BaseLoader>
         </Grid>
 
         {/* Buttons */}
@@ -176,7 +181,7 @@ export const WalletInfoSection = observer(() => {
         <CenteredContainerGridForQr>
           <Grid item id={'qr-code-wrap'}>
             <QRCode
-              value={cryptoWalletIntegrationStore.mainAddress}
+              value={mainAddress}
               logoImage={'https://icodrops.com/wp-content/uploads/2018/01/Orbs-logo.jpg'}
               logoWidth={logoDimensions}
               logoHeight={logoDimensions}

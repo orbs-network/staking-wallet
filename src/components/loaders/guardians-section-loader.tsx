@@ -7,19 +7,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { LoaderFigure } from './styles';
 const StyledGrid = styled(Grid)(({ theme }) => ({
-  // backgroundColor: 'rgba(33,33, 33, 0.55)',
-
-  height: '100%',
+  backgroundColor: 'rgba(47,47,47,0.6)',
+  padding: '20px',
+  height: '300px',
   width: '100%',
   transition: 'background-color 0.5s, color 0.5s',
-  position: 'absolute',
+  position: 'relative',
   top: '0px',
   left: '0px',
 }));
 
 const useStyles = makeStyles((theme) => ({
   topFigure: {
-    maxWidth: '60%',
+    maxWidth: '350px',
   },
   bottomFigure: {
     maxWidth: '200px',
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const BalanceCardLoader = () => {
+export default () => {
   const classes = useStyles();
 
   const theme = useTheme();

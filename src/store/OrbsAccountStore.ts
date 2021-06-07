@@ -136,6 +136,7 @@ export class OrbsAccountStore {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
       async (address) => {
+        if (!address) return;
         this.setDoneLoading(false);
         await this.reactToConnectedAddressChanged(address);
         this.setDoneLoading(true);
