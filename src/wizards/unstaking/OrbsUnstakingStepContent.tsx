@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useNumber, useStateful } from 'react-hanger';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
@@ -13,6 +12,7 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { MaxButton } from '../../components/base/maxButton';
+import stakingUtil from '../../utils/stakingUtil';
 
 const inputStyle = {
   marginTop: '20px',
@@ -27,13 +27,11 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const analyticsService = useAnalyticsService();
 
   const reReadStoresData = useReReadAllStoresData();
-
-  // Start and limit by allowance
   const stakedOrbsNumericalFormat = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
-  const orbsForUnstaking = useNumber(0, {
-    lowerLimit: 0,
-    upperLimit: stakedOrbsNumericalFormat,
-  });
+
+  const stakedOrbsStringFormat = fullOrbsFromWeiOrbsString(orbsAccountStore.stakedOrbs);
+  const [orbsForUnstaking, setOrbsForUnstaking] = useState<string>(stakedOrbsStringFormat);
+
   const { message, subMessage, isBroadcastingMessage } = useWizardState(
     unstakingWizardTranslations('unstakingSubStep_message_selectAmountOfOrbs'),
     unstakingWizardTranslations('unstakingSubStep_subMessage_pressUnstakeAndApprove'),
@@ -44,15 +42,15 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
 
   const unstakeTokens = useCallback(() => {
     // TODO : FUTURE : O.L : Add written error message about out of range
-    if (orbsForUnstaking.value <= 0 || orbsForUnstaking.value > stakedOrbsNumericalFormat) {
-      console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking.value}`);
+    if (!stakingUtil.isApproveEnabled(stakedOrbsStringFormat, orbsForUnstaking)) {
+      console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking}`);
       return;
     }
 
     message.setValue('');
     subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
 
-    const promiEvent = orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking.value));
+    const promiEvent = orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking));
 
     // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
     promiEvent.on('transactionHash', (txHash) => {
@@ -61,12 +59,14 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     });
 
     onPromiEventAction(promiEvent, () => {
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, orbsForUnstaking.value);
+      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, stakedOrbsNumericalFormat);
       reReadStoresData();
     });
   }, [
-    orbsForUnstaking.value,
+    orbsForUnstaking,
+    stakedOrbsStringFormat,
     stakedOrbsNumericalFormat,
+    reReadStoresData,
     message,
     subMessage,
     wizardsCommonTranslations,
@@ -80,18 +80,17 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     () => ({
       onClick: unstakeTokens,
       title: unstakingWizardTranslations('unstakingSubStep_action_unstake'),
-      isDisabled:
-        !orbsForUnstaking.value || orbsForUnstaking.value === 0 || orbsForUnstaking.value > stakedOrbsNumericalFormat,
+      isDisabled: !stakingUtil.isApproveEnabled(stakedOrbsStringFormat, orbsForUnstaking),
     }),
-    [orbsForUnstaking.value, stakedOrbsNumericalFormat, unstakeTokens, unstakingWizardTranslations],
+    [orbsForUnstaking, stakedOrbsStringFormat, unstakeTokens, unstakingWizardTranslations],
   );
 
   const handleMax = useCallback(() => {
-    orbsForUnstaking.setValue(stakedOrbsNumericalFormat);
-  }, []);
+    setOrbsForUnstaking(stakedOrbsStringFormat);
+  }, [stakedOrbsStringFormat]);
 
   const unstakingInput = useMemo(() => {
-    const showMaxBtn = orbsForUnstaking.value !== stakedOrbsNumericalFormat || stakedOrbsNumericalFormat === 0;
+    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat);
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
         <Typography style={{ color: 'orange', textAlign: 'center' }}>
@@ -114,8 +113,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
         {orbsInCooldownWarning}
         <FullWidthOrbsInputField
           id={'orbsUnstaking'}
-          value={orbsForUnstaking.value}
-          onChange={(value) => orbsForUnstaking.setValue(Number(value))}
+          value={orbsForUnstaking}
+          onChange={(value) => setOrbsForUnstaking(value)}
           disabled={disableInputs}
           placeholder={wizardsCommonTranslations('popup_input_placeholder')}
           customStyle={inputStyle}
@@ -129,7 +128,8 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     unstakingWizardTranslations,
     orbsForUnstaking,
     disableInputs,
-    stakedOrbsNumericalFormat,
+    stakedOrbsStringFormat,
+    wizardsCommonTranslations,
   ]);
 
   // TODO : ORL : TRANSLATIONS

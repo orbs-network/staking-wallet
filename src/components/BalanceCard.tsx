@@ -7,8 +7,10 @@ import { useStringOrElement } from './hooks/commonHooks';
 import useHover from '@react-hook/hover';
 import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
-import AnimatedNumber from 'animated-number-react';
-import { formatNumberToString, NumberToDisplayFormat } from '../utils/numberUtils';
+import constants from '../constants/constants';
+import CountUp from 'react-countup';
+import { addCommasToString } from '../utils/stringUtils';
+import { numberToString } from '../utils/numberUtils';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
@@ -28,6 +30,18 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
+const handleFullNumber = (value: number) => {
+  return addCommasToString(numberToString(value));
+};
+
+const handleDecimals = (value: string) => {
+  const isOutOfLimit = value.length > constants.numbersDecimalToDisplayLimit;
+  const showDots = constants.numbersDecimalToDisplayLimit && isOutOfLimit;
+  const val = isOutOfLimit ? value.substring(0, constants.numbersDecimalToDisplayLimit) : value;
+  const result = showDots ? `${val}...` : `${val}`;
+  return `.${result}`;
+};
+
 const useStyles = makeStyles((theme) => ({
   mainActionButton: {},
   secondaryActionButton: {
@@ -43,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   title: string | React.ElementType | JSX.Element;
   toolTipTitle?: string | React.ElementType | JSX.Element;
-  amount: number;
+  amount: string;
 
   // Action buttons (main + secondary)
   actionButtonTitle?: string;
@@ -63,7 +77,6 @@ interface IProps {
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
-
   const {
     title,
     toolTipTitle,
@@ -82,32 +95,14 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const hoverTargetRef = useRef();
   const isHovering = useHover(hoverTargetRef);
   const titleElement = useStringOrElement(title);
-
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
-
-  const numberFormatOptions = useMemo<Intl.NumberFormatOptions>(() => {
-    const options: Intl.NumberFormatOptions = {};
-
-    options.maximumFractionDigits = showFraction ? 6 : 0;
-
-    return options;
-  }, [showFraction]);
-
-  const formatValue = (value: number) => {
-    const num = formatNumberToString(value, 6, true);
-    if (amount < 1) {
-      console.log(NumberToDisplayFormat(amount, 18, 4));
-      return NumberToDisplayFormat(amount, 18, 3);
-    }
-    return num;
-  };
-
+  const [full, decimal] = amount.split('.');
   const balanceItem = (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
-        {/*{amount.toLocaleString(undefined, numberFormatOptions)}*/}
-        <AnimatedNumber value={amount} formatValue={formatValue} />
+        <CountUp preserveValue end={full as any} formattingFn={handleFullNumber} />
+        {decimal && <CountUp preserveValue end={decimal as any} formattingFn={() => handleDecimals(decimal)} />}
       </Typography>
     </Grid>
   );

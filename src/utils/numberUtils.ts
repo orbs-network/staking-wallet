@@ -1,4 +1,6 @@
+import Big from 'big.js';
 import constants from '../constants/constants';
+import { addCommasToString } from './stringUtils';
 
 export function enforceNumberInRange(value: number, minValue: number, maxValue: number): number {
   if (maxValue < minValue) {
@@ -10,30 +12,20 @@ export function enforceNumberInRange(value: number, minValue: number, maxValue: 
   return bottomAndTopEnforced;
 }
 
-export const numberWithCommas = (n: number) => {
-  const parts = n.toString().split('.');
-  return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (parts[1] ? '.' + parts[1] : '');
-};
-
-export const formatNumberToString = (
-  value: number,
-  limit: number | undefined = constants.numbersDecimalToInsertLimit,
-  keepFormat?: boolean,
-) => {
-  return keepFormat
-    ? value.toLocaleString(undefined, { maximumFractionDigits: limit, minimumFractionDigits: 0 })
-    : value.toLocaleString(undefined, { maximumFractionDigits: limit, minimumFractionDigits: 0 }).replace(/,/g, '');
-};
-
-export const NumberToDisplayFormat = (value: number, decimalsLimit: number, decimalsToShow: number) => {
-  const formattedNumber = formatNumberToString(value, decimalsLimit);
-  const roundNumber = formattedNumber.split('.')[0];
-  const decimalsAmount = formattedNumber.split('.')[1];
-
-  if (decimalsAmount && decimalsAmount.length > decimalsToShow) {
-    const newDecimals = decimalsAmount.substring(0, 3);
-
-    return `${Number(roundNumber).toLocaleString()}.${newDecimals}...`;
+export const handleNumberAsStringToDisplay = (numAsString: string, decimalsLimit: number, dots?: boolean) => {
+  const [full, decimals] = numAsString.split('.');
+  const showDots = dots && decimals && decimals.length > decimalsLimit;
+  if (decimals) {
+    const newDecimals = decimals.substring(0, decimalsLimit);
+    return showDots ? `${addCommasToString(full)}.${newDecimals}...` : `${addCommasToString(full)}.${newDecimals}`;
   }
-  return Number(formattedNumber).toLocaleString();
+  return addCommasToString(full);
+};
+
+export const numberToString = (num: number) => {
+  const res = num.toLocaleString(undefined, {
+    maximumFractionDigits: constants.numbersDecimalToInsertLimit,
+    minimumFractionDigits: 0,
+  });
+  return res.replace(/,/g, '');
 };

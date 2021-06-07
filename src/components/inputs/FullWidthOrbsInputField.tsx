@@ -4,13 +4,11 @@ import { TextField } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import { formatNumberToString } from '../../utils/numberUtils';
-import constants from '../../constants/constants';
 
 interface IProps {
   id: string;
   label?: string;
-  value: number;
+  value: string;
   onChange: (newValue: string) => void;
   disabled?: boolean;
   placeholder?: string;
@@ -33,7 +31,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>((props) => {
     <TextField
       id={id}
       label={label}
-      value={formatNumberToString(value, constants.numbersDecimalToInsertLimit)}
+      value={value}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
       InputProps={{

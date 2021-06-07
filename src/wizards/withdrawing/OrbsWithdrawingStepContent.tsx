@@ -4,15 +4,16 @@ import { useStateful } from 'react-hanger';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
-import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import { NumberToDisplayFormat } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
-
+import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
+import FullAmountTooltip from '../../wizards/approvableWizardStep/full-amount-tooltip';
+import { addCommasToString } from '../../utils/stringUtils';
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
@@ -25,6 +26,12 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
 
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
+  const fullOrbsReadyForWithdrawalString = fullOrbsFromWeiOrbsString(orbsAccountStore.orbsInCoolDown);
+  const orbsForWithdrawal = handleNumberAsStringToDisplay(
+    fullOrbsReadyForWithdrawalString,
+    constants.numbersDecimalToDisplayLimit,
+    true,
+  );
   const { message, subMessage, isBroadcastingMessage } = useWizardState(
     '',
     withdrawingWizardTranslations('withdrawingSubStep_subMessage_pressWithdrawAndApprove'),
@@ -75,7 +82,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       message={message.value}
       subMessage={subMessage.value}
       title={withdrawingWizardTranslations('withdrawingSubStep_stepTitle', {
-        orbsForWithdrawal: NumberToDisplayFormat(fullOrbsReadyForWithdrawal, constants.numbersDecimalToInsertLimit, 3),
+        orbsForWithdrawal: orbsForWithdrawal,
       })}
       infoTitle={withdrawingWizardTranslations('withdrawingSubStep_stepExplanation')}
       disableInputs={disableInputs}
