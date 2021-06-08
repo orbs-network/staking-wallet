@@ -1,7 +1,8 @@
 // import fetch from 'node-fetch';
 import { retry } from 'ts-retry-promise';
 import _ from 'lodash';
-
+import errorMonitoring from '../../../error-monitoring/index';
+import errorMessages from '../../../error-monitoring/errors';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function errorString(e: any) {
   return (e && e.stack) || '' + e;
@@ -36,6 +37,7 @@ export type JsonResponse = any;
 
 // TODO : FUTURE : O.L : Move this to http service
 export async function fetchJson(url: string) {
+  const retries = 3;
   return await retry(
     async () => {
       const response = await fetch(url);
@@ -46,9 +48,11 @@ export async function fetchJson(url: string) {
       try {
         return JSON.parse(body);
       } catch (e) {
+        const errorMsg = errorMessages.apiError(url, e.message, retries);
+        errorMonitoring.sendMessage(errorMsg);
         throw new Error(`Invalid response for url '${url}': ${body}`);
       }
     },
-    { retries: 3, delay: 300 },
+    { retries, delay: 300 },
   );
 }
