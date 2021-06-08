@@ -8,10 +8,8 @@ import useHover from '@react-hook/hover';
 import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import AnimatedNumber from 'animated-number-react';
-import { IReactComponent } from 'mobx-react/dist/types/IReactComponent';
-import { BaseLoader } from './loaders';
-import { BalanceCardLoader } from './loaders/balance-card-loader';
-
+import BaseLoader from './loaders/index';
+import customLoaders from './loaders/custom-loaders';
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
@@ -111,7 +109,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
 
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} ref={hoverTargetRef}>
-      <BaseLoader isLoading={isLoading} customLoader={<BalanceCardLoader />}>
+      <BaseLoader isLoading={isLoading} customLoader={customLoaders.balanceCard}>
         <>
           <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
             <Grid item>

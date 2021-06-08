@@ -28,11 +28,11 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
 import { CommonDialog } from '../components/modal/CommonDialog';
-import { CommonActionButton } from '../components/base/CommonActionButton';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useConnection from '../hooks/useConnection';
-import { BaseLoader } from '../components/loaders';
+import BaseLoader from '../components/loaders';
 import AddressLoader from '../components/loaders/address-loader';
+import customLoaders from '../components/loaders/custom-loaders';
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
@@ -138,7 +138,7 @@ export const WalletInfoSection = observer(() => {
           id={'addressItem'}
           style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset' : 'center' }}
         >
-          <BaseLoader isLoading={!mainAddress} customLoader={<AddressLoader />} hideContent>
+          <BaseLoader isLoading={!mainAddress} customLoader={customLoaders.address} hideContent>
             <Typography
               variant={smOrLarger ? 'h4' : 'body2'}
               data-testid={'text-active-address'}

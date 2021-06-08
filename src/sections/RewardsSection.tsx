@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 
 import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
@@ -10,13 +10,10 @@ import {
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
 import Grid, { GridProps } from '@material-ui/core/Grid';
-import { Theme, Typography } from '@material-ui/core';
 import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useOrbsNodeStore } from '../store/storeHooks';
 import useTheme from '@material-ui/core/styles/useTheme';
-import { renderToString } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { useOrbsPOSDataService } from '../services/ServicesHooks';
 import { useBoolean, useNumber } from 'react-hanger';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
@@ -25,8 +22,6 @@ import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimin
 import { BalanceCard } from '../components/BalanceCard';
 import useInterval from 'use-interval';
 import config from '../config';
-import { BaseLoader } from '../components/loaders';
-import { BalanceCardLoader } from '../components/loaders/balance-card-loader';
 
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const BalanceCardLoader = () => {
+const BalanceCardLoader = () => {
   const classes = useStyles();
 
   const theme = useTheme();
@@ -47,3 +47,5 @@ export const BalanceCardLoader = () => {
     </StyledGrid>
   );
 };
+
+export default BalanceCardLoader;

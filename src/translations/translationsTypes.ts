@@ -81,8 +81,6 @@ export interface IWizardsCommonsTranslations {
   txCreationError_userCanceled_subMessage: string;
   txCreationError_generalError_message: string;
   txCreationError_generalError_subMessage: string;
-  popup_max: string;
-  popup_input_placeholder: string;
 }
 
 export interface IGuardiansTableTranslations {

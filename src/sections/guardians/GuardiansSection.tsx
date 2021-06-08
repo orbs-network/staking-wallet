@@ -23,8 +23,8 @@ import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { useGuardiansDelegatorsCut, useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
-import { BaseLoader } from '../../components/loaders';
-import GuardiansSectionLoader from '../../components/loaders/guardians-section-loader';
+import BaseLoader from '../../components/loaders/index';
+import customLoaders from '../../components/loaders/custom-loaders';
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const alertsTranslations = useAlertsTranslations();
@@ -72,7 +72,7 @@ export const GuardiansSection = observer(() => {
   console.log(isLoadingData);
   return (
     <Section data-testid='guardians-section'>
-      <BaseLoader isLoading={isLoadingData} hideContent customLoader={<GuardiansSectionLoader />}>
+      <BaseLoader isLoading={isLoadingData} hideContent customLoader={customLoaders.guardiansSection}>
         <>
           <SectionHeader
             title={sectionTitlesTranslations('allGuardians')}

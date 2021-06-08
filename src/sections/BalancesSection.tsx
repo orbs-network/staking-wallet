@@ -17,8 +17,7 @@ import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
-import { BaseLoader } from '../components/loaders';
-import { BalanceCardLoader } from '../components/loaders/balance-card-loader';
+
 import {
   useAlertsTranslations,
   useBalancesSectionTranslations,
@@ -121,7 +120,6 @@ export const BalancesSection = observer(() => {
   }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
 
   const isLoading = !orbsAccountStore.doneLoading;
-  console.log({ isLoading });
 
   return (
     <Section>

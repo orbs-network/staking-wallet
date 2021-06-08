@@ -27,42 +27,33 @@ export const useLoaderStyles = makeStyles((theme) => ({
 
 interface IProps {
   style?: CSSProperties;
-  children?: any;
+  children: JSX.Element;
   isLoading?: boolean;
   hideContent?: boolean;
   customLoader?: JSX.Element;
 }
+interface ILoader {
+  style?: CSSProperties;
+  classes: any;
+}
 
-const hiddenContent = (children, isLoading, classes, style, customLoader) => {
-  if (isLoading) {
-    return customLoader ? (
-      customLoader
-    ) : (
-      <div className={`${classes.base}`} style={style}>
-        <section className={`${classes.absolute} ${classes.overlay}`}></section>
-      </div>
-    );
-  }
-  return children;
-};
-
-export const BaseLoader = ({ style, children, isLoading, hideContent, customLoader }: IProps) => {
-  const classes = useLoaderStyles();
-  if (hideContent) {
-    return hiddenContent(children, isLoading, classes, style, customLoader);
-  }
-
+const Loader = ({ classes, style }: ILoader) => {
   return (
-    <div className={classes.wrapper}>
-      {children && <div className={isLoading ? classes.children : ''}>{children}</div>}
-      {isLoading &&
-        (customLoader ? (
-          customLoader
-        ) : (
-          <div className={`${classes.base} ${classes.absolute}`} style={style}>
-            <section className={`${classes.absolute} ${classes.overlay}`}></section>
-          </div>
-        ))}
+    <div className={`${classes.base} ${classes.absolute}`} style={style}>
+      <section className={`${classes.absolute} ${classes.overlay}`}></section>
     </div>
   );
 };
+
+const BaseLoader = ({ style, children, isLoading, hideContent, customLoader }: IProps) => {
+  const classes = useLoaderStyles();
+
+  return (
+    <div className={classes.wrapper}>
+      {hideContent && isLoading ? null : <div className={isLoading ? classes.children : ''}>{children}</div>}
+      {isLoading && (customLoader ? customLoader : <Loader style={style} classes={classes} />)}
+    </div>
+  );
+};
+
+export default BaseLoader;
