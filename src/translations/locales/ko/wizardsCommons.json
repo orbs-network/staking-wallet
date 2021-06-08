@@ -15,6 +15,6 @@
   "txCreationError_generalError_subMessage": "다시 시도해주세요",
   "txCreationError_userCanceled_message": "트랜잭션이 취소되었습니다.",
   "txCreationError_userCanceled_subMessage": "계속하려면, 재시도 후 트랜잭션을 인증해주세요.",
-  "popup_max": "최대",
-  "popup_input_placeholder": "금액을 입력하세요"
+  "popup_input_placeholder": "Enter amount",
+  "popup_max": "Max"
 }
