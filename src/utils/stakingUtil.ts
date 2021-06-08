@@ -15,8 +15,7 @@ const isApproveEnabled = (orbsAllowance: string, liquidOrbs: string): boolean =>
   return second.lte(first);
 };
 
-const addNumbersAsStrings = (str1: string, str2: string) => {
-  console.log('test', str1, str2);
+const addNumbersAsStrings = (str1: string, str2: string): string => {
   if (str2 === '0') {
     return str1;
   }
@@ -29,7 +28,7 @@ const addNumbersAsStrings = (str1: string, str2: string) => {
   const first = new Big(str1);
   const second = new Big(str2);
   const result = first.plus(second);
-  return result.valueOf();
+  return result.toFixed(18);
 };
 
 export default {
