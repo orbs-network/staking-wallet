@@ -2,12 +2,14 @@ import React, { useCallback, useMemo } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
+import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
+import constants from '../../constants/constants';
 
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
@@ -26,7 +28,10 @@ export const OrbsStakingStepContent = observer(
 
     // Start and limit by allowance
     const orbsForStaking = orbsAccountStore.stakingContractAllowance;
+
     const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
+    const fullOrbsForStakingString = fullOrbsFromWeiOrbsString(orbsForStaking);
+
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
     // Handle error by displaying the proper error message
@@ -74,7 +79,11 @@ export const OrbsStakingStepContent = observer(
         message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-          orbsForStaking: fullOrbsForStaking.toLocaleString(),
+          orbsForStaking: handleNumberAsStringToDisplay(
+            fullOrbsForStakingString,
+            constants.numbersDecimalToDisplayLimit,
+            true,
+          ),
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
         disableInputs={disableInputs}
