@@ -22,12 +22,13 @@ import { I18nextProvider } from 'react-i18next';
 import { TEthereumProviderName } from './services/analytics/IAnalyticsService';
 import Web3 from 'web3';
 import { detectEthereumProviderName } from './services/analytics/analyticsUtils';
+import errorMonitoring from './services/error-monitoring/index';
 moment.locale('ja');
 moment.locale('ko');
 moment.locale('en');
 
 configureMobx();
-
+errorMonitoring.init();
 const urlParams = new URLSearchParams(window.location.search);
 const alertErrors = !!urlParams.get('alertErrors');
 
