@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/react';
-
+const dsn = process.env.SENTRY_URL;
 const init = () => {
+  if (!dsn) return;
   Sentry.init({
-    dsn: `https://59e154dbf5c94d8e8136bb1532ac152f@o813886.ingest.sentry.io/${process.env.SENTRY_USER_ID}`,
-
+    dsn,
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
@@ -12,10 +12,12 @@ const init = () => {
 };
 
 const sendMessage = (msg: string) => {
+  if (!dsn) return;
   Sentry.captureMessage(msg);
 };
 
 const captureExeption = (err: Error) => {
+  if (!dsn) return;
   Sentry.captureException(err);
 };
 
