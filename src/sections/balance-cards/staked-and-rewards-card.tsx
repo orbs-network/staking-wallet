@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { BalanceCard } from '../../components/BalanceCard';
 import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import stakingUtil from '../../utils/stakingUtil';
-import BalanceTooltip from './parts/balance-tooltip';
+import BalanceTooltip from './components/balance-tooltip';
 import { UseBoolean } from 'react-hanger';
 import { numberToString } from '../../utils/numberUtils';
 interface IProps {
