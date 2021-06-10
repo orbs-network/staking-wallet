@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
-import { Guardian } from '../../services/v2/orbsNodeService/systemState';
+import { Guardian } from '../../../services/v2/orbsNodeService/systemState';
 import { SvgIcon, Tooltip, Typography } from '@material-ui/core';
-import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
-import { ReactComponent as NotCommitteeGuardianShield } from './assets/guardian_no_committee.svg';
-import { ReactComponent as CertifiedNotCommitteeGuardianShield } from './assets/guardian_no_committee_certified.svg';
-import { ReactComponent as CommitteeGuardianShield } from './assets/guardian_committe.svg';
-import { ReactComponent as CertifiedCommitteeGuardianShield } from './assets/guardian_committee_certiied.svg';
+import { ICommitteeMemberData } from '../../../services/v2/orbsNodeService/OrbsNodeTypes';
+import { ReactComponent as NotCommitteeGuardianShield } from '../assets/guardian_no_committee.svg';
+import { ReactComponent as CertifiedNotCommitteeGuardianShield } from '../assets/guardian_no_committee_certified.svg';
+import { ReactComponent as CommitteeGuardianShield } from '../assets/guardian_committe.svg';
+import { ReactComponent as CertifiedCommitteeGuardianShield } from '../assets/guardian_committee_certiied.svg';
 import Moment from 'moment';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
-import { useGuardiansTableTranslations } from '../../translations/translationsHooks';
+import { useGuardiansTableTranslations } from '../../../translations/translationsHooks';
 
 interface IProps {
   guardian: Guardian;
