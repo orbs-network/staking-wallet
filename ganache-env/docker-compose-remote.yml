@@ -1,0 +1,8 @@
+version: '3'
+services:
+    management-service-mainnet:
+        image: 506367651493.dkr.ecr.us-east-2.amazonaws.com/management-service-ropsten:latest
+        ports:
+            - 7666:8080
+
+

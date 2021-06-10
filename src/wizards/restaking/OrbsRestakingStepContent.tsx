@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useBoolean, useStateful } from 'react-hanger';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { messageFromTxCreationSubStepError } from '../wizardMessages';
-import { fullOrbsFromWeiOrbs } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
+import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
+import constants from '../../constants/constants';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -22,7 +23,7 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
   const reReadStoresData = useReReadAllStoresData();
 
   // Start and limit by allowance
-  const fullOrbsForRestaking = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
+  const fullOrbsForRestaking = fullOrbsFromWeiOrbsString(orbsAccountStore.orbsInCoolDown);
   const { message, subMessage, isBroadcastingMessage } = useWizardState(
     '',
     restakingWizardTranslations('restakingSubStep_subMessage_pressRestakeAndApprove'),
@@ -72,7 +73,11 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       message={message.value}
       subMessage={subMessage.value}
       title={restakingWizardTranslations('restakingSubStep_stepTitle', {
-        orbsForRestaking: fullOrbsForRestaking.toLocaleString(),
+        orbsForRestaking: handleNumberAsStringToDisplay(
+          fullOrbsForRestaking,
+          constants.numbersDecimalToDisplayLimit,
+          true,
+        ),
       })}
       infoTitle={restakingWizardTranslations('restakingSubStep_stepExplanation')}
       disableInputs={disableInputs}

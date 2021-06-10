@@ -1,16 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
-import { useNumber } from 'react-hanger';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
-import { enforceNumberInRange } from '../../utils/numberUtils';
 import { MaxButton } from '../../components/base/maxButton';
-
+import stakingUtil from '../../utils/stakingUtil';
 export interface IOrbsAllowanceStepContentProps {
   goBackToChooseGuardianStep: () => void;
 }
@@ -26,8 +24,8 @@ export const OrbsAllowanceStepContent = observer(
     const reReadStoresData = useReReadAllStoresData();
 
     // Start and limit by liquid orbs
-    const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
-    const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
+    const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
+    const [orbsAllowance, setOrbsAllowance] = useState<string>(liquidOrbsAsString);
 
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'),
@@ -40,13 +38,13 @@ export const OrbsAllowanceStepContent = observer(
 
     const setTokenAllowanceForStakingContract = useCallback(() => {
       // TODO : FUTURE : O.L : Add written error message about out of range
-      if (orbsAllowance.value < 1 || orbsAllowance.value > liquidOrbsAsNumber) {
-        console.warn(`tried to set out of range allowance of ${orbsAllowance.value}`);
+      if (!stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance)) {
+        console.warn(`tried to set out of range allowance of ${orbsAllowance}`);
         return;
       }
       message.setValue('');
       subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-      const stakingAmount = weiOrbsFromFullOrbs(orbsAllowance.value);
+      const stakingAmount = weiOrbsFromFullOrbs(orbsAllowance);
       const promiEvent = orbsAccountStore.setAllowanceForStakingContract(stakingAmount);
 
       // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
@@ -59,8 +57,8 @@ export const OrbsAllowanceStepContent = observer(
         reReadStoresData();
       });
     }, [
-      orbsAllowance.value,
-      liquidOrbsAsNumber,
+      orbsAllowance,
+      liquidOrbsAsString,
       message,
       subMessage,
       wizardsCommonTranslations,
@@ -69,18 +67,19 @@ export const OrbsAllowanceStepContent = observer(
       isBroadcastingMessage,
       reReadStoresData,
     ]);
-    const showMaxBtn = liquidOrbsAsNumber !== orbsAllowance.value || liquidOrbsAsNumber === 0;
+
+    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString);
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
         onClick: setTokenAllowanceForStakingContract,
         title: stakingWizardTranslations('allowanceSubStep_action_approve'),
-        isDisabled: orbsAllowance.value > liquidOrbsAsNumber || !orbsAllowance.value,
+        isDisabled: !stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance),
       }),
-      [liquidOrbsAsNumber, orbsAllowance.value, setTokenAllowanceForStakingContract, stakingWizardTranslations],
+      [liquidOrbsAsString, orbsAllowance, setTokenAllowanceForStakingContract, stakingWizardTranslations],
     );
     const handleMax = useCallback(() => {
-      orbsAllowance.setValue(liquidOrbsAsNumber);
-    }, [liquidOrbsAsNumber, orbsAllowance]);
+      setOrbsAllowance(liquidOrbsAsString);
+    }, [liquidOrbsAsString]);
 
     const allowanceInput = useMemo(() => {
       const maxBtn = (
@@ -90,10 +89,10 @@ export const OrbsAllowanceStepContent = observer(
       );
       return (
         <FullWidthOrbsInputField
-          id={'orbsAllowance'}
+          id='orbsAllowance'
           placeholder={wizardsCommonTranslations('popup_input_placeholder')}
-          value={orbsAllowance.value}
-          onChange={(value) => orbsAllowance.setValue(value)}
+          value={orbsAllowance}
+          onChange={(value) => setOrbsAllowance(value)}
           disabled={disableInputs}
           buttonComponent={maxBtn}
         />

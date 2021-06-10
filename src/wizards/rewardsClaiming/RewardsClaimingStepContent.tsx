@@ -12,6 +12,8 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { Typography } from '@material-ui/core';
+import { handleNumberAsStringToDisplay, numberToString } from '../../utils/numberUtils';
+import constants from '../../constants/constants';
 
 export interface IRewardsClaimingStepContentProps {
   shouldAddSkip?: boolean;
@@ -87,7 +89,13 @@ export const RewardsClaimingStepContent = observer(
         <Typography variant={'h5'}>
           {rewardsClaimingWizardTranslations('rewardsClaimingSubStep_text_rewardsBalanceIs')}{' '}
           <Typography variant={'h5'} style={{ display: 'inline' }} color={'secondary'}>
-            {commonsTranslations('xOrbs', { amount: orbsAccountStore.rewardsBalance.toLocaleString() })}
+            {commonsTranslations('xOrbs', {
+              amount: handleNumberAsStringToDisplay(
+                numberToString(orbsAccountStore.rewardsBalance),
+                constants.numbersDecimalToDisplayLimit,
+                true,
+              ),
+            })}
           </Typography>
         </Typography>
       );

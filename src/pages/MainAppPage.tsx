@@ -24,14 +24,13 @@ export const MainAppPage = observer(() => {
     cryptoWalletConnectionStore.hasEthereumProvider,
     cryptoWalletConnectionStore.isConnectedToWallet,
   ]);
-
   return (
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
 
       <GuardiansSection />
 
-      <div style={{ fontSize: 8, textAlign: 'center' }}>v1.0.16</div>
+      <div style={{ fontSize: 8, textAlign: 'center' }}>{process.env.VERSION || ''}</div>
     </Grid>
   );
 });
