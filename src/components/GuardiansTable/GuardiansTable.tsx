@@ -242,28 +242,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         },
       },
       {
-        title: guardiansTableTranslations('columnHeader_address'),
-        field: 'EthAddress',
-        render: (guardian) => (
-          <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'} interactive>
-            <Typography style={{ fontFamily: 'monospace', textAlign: 'center', display: 'flex' }}>
-              <CopyIcon
-                style={{ width: '20px', height: '20px', cursor: 'pointer', marginRight: '8px' }}
-                onClick={() => copyAddress(guardian.EthAddress)}
-              />
-              <InTextLink
-                href={`https://etherscan.io/address/${guardian.EthAddress}`}
-                text={`${guardian.EthAddress.substring(0, 10)}...`}
-              />
-            </Typography>
-          </Tooltip>
-        ),
-        // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
-        cellStyle: {
-          fontFamily: 'monospace',
-        },
-      },
-      {
         title: guardiansTableTranslations('columnHeader_website'),
         field: 'Website',
         render: (guardian) => (
@@ -283,6 +261,29 @@ export const GuardiansTable = React.memo<IProps>((props) => {
         },
         sorting: false,
       },
+      {
+        title: guardiansTableTranslations('columnHeader_address'),
+        field: 'EthAddress',
+        render: (guardian) => (
+          <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'} interactive>
+            <Typography style={{ fontFamily: 'monospace', textAlign: 'center', display: 'flex' }}>
+              <InTextLink
+                href={`https://etherscan.io/address/${guardian.EthAddress}`}
+                text={`${guardian.EthAddress.substring(0, 10)}...`}
+              />
+              <CopyIcon
+                style={{ width: '20px', height: '20px', cursor: 'pointer', marginLeft: '8px' }}
+                onClick={() => copyAddress(guardian.EthAddress)}
+              />
+            </Typography>
+          </Tooltip>
+        ),
+        // TODO : FUTURE : O.L : Adding "fontFamily: 'monospace'" to the cell makes the Typography text larger and better, understand whats going on.
+        cellStyle: {
+          fontFamily: 'monospace',
+        },
+      },
+
       {
         title: (
           <ColumnHeaderWithTooltip
