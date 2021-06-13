@@ -68,7 +68,7 @@ export const OrbsAllowanceStepContent = observer(
       reReadStoresData,
     ]);
 
-    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString);
+    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString, disableInputs);
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
         onClick: setTokenAllowanceForStakingContract,
