@@ -13,6 +13,8 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
+import errorMessages from '../../services/error-monitoring/errors';
+import errorMonitoring from '../../services/error-monitoring';
 
 const inputStyle = {
   marginTop: '20px',
@@ -58,6 +60,11 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       isBroadcastingMessage.setTrue();
     });
 
+    promiEvent.on('error', (error: Error) => {
+      const errorMsg = errorMessages.stakingError('unstaking', error.message);
+      errorMonitoring.sendMessage(errorMsg);
+    });
+
     onPromiEventAction(promiEvent, () => {
       analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, stakedOrbsNumericalFormat);
       reReadStoresData();
@@ -74,6 +81,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     onPromiEventAction,
     isBroadcastingMessage,
     analyticsService,
+    reReadStoresData,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(

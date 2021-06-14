@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-
 import { ReactComponent as RewardsIcon } from '../../assets/reward.svg';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { Section } from '../components/structure/Section';
@@ -15,7 +14,7 @@ import { useOrbsAccountStore } from '../store/storeHooks';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { useBoolean } from 'react-hanger';
+import { useBoolean, useNumber } from 'react-hanger';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimingWizard';

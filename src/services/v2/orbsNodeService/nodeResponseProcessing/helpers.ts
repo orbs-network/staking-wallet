@@ -1,8 +1,7 @@
 // import fetch from 'node-fetch';
 import { retry } from 'ts-retry-promise';
 import _ from 'lodash';
-import errorMonitoring from '../../../error-monitoring/index';
-import errorMessages from '../../../error-monitoring/errors';
+import ErrorMonitoring from '../../../error-monitoring/index';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function errorString(e: any) {
   return (e && e.stack) || '' + e;
@@ -48,8 +47,9 @@ export async function fetchJson(url: string) {
       try {
         return JSON.parse(body);
       } catch (e) {
-        const errorMsg = errorMessages.apiError(url, e.message, retries);
-        errorMonitoring.sendMessage(errorMsg);
+        const errorMsg = ErrorMonitoring.errorMessages.apiError(url, e.message, retries);
+        const section = ErrorMonitoring.errorTypes.api;
+        ErrorMonitoring.captureException(e, section, errorMsg);
         throw new Error(`Invalid response for url '${url}': ${body}`);
       }
     },

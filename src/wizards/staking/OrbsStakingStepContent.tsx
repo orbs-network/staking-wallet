@@ -10,6 +10,8 @@ import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
+import errorMessages from '../../services/error-monitoring/errors';
+import errorMonitoring from '../../services/error-monitoring';
 
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
@@ -47,6 +49,11 @@ export const OrbsStakingStepContent = observer(
       promiEvent.on('transactionHash', (txHash) => {
         subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
         isBroadcastingMessage.setTrue();
+      });
+
+      promiEvent.on('error', (error: Error) => {
+        const errorMsg = errorMessages.stakingError('staking', error.message);
+        errorMonitoring.sendMessage(errorMsg);
       });
 
       onPromiEventAction(promiEvent, () => {

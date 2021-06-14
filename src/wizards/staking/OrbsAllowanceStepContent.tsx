@@ -9,6 +9,9 @@ import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsIn
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
+import errorMessages from '../../services/error-monitoring/errors';
+import errorMonitoring from '../../services/error-monitoring';
+
 export interface IOrbsAllowanceStepContentProps {
   goBackToChooseGuardianStep: () => void;
 }
@@ -51,6 +54,10 @@ export const OrbsAllowanceStepContent = observer(
       promiEvent.on('transactionHash', (txHash) => {
         subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
         isBroadcastingMessage.setTrue();
+      });
+      promiEvent.on('error', (error: Error) => {
+        const errorMsg = errorMessages.stakingError('staking allowance', error.message);
+        errorMonitoring.sendMessage(errorMsg);
       });
 
       onPromiEventAction(promiEvent, () => {

@@ -4,6 +4,7 @@ import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
 import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import errorMonitoring from '../../services/error-monitoring';
 
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
@@ -121,7 +122,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       });
       promiEvent.on('error', (error) => {
         txCreatingError.setValue(error);
-
+        errorMonitoring.captureException(error);
         (promiEvent as any).removeAllListeners();
         disableTxCreationInputs.setFalse();
       });

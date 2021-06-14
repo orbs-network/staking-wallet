@@ -11,6 +11,8 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
+import errorMessages from '../../services/error-monitoring/errors';
+import errorMonitoring from '../../services/error-monitoring';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
@@ -43,6 +45,11 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     promiEvent.on('transactionHash', (txHash) => {
       subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
       isBroadcastingMessage.setTrue();
+    });
+
+    promiEvent.on('error', (error: Error) => {
+      const errorMsg = errorMessages.stakingError('restaking', error.message);
+      errorMonitoring.sendMessage(errorMsg);
     });
 
     onPromiEventAction(promiEvent, () => {
