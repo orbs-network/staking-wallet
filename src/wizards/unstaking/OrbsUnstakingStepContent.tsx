@@ -6,14 +6,12 @@ import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } f
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
-import { Button, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
-import errorMessages from '../../services/error-monitoring/errors';
 import errorMonitoring from '../../services/error-monitoring';
 
 const inputStyle = {
@@ -61,8 +59,9 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     });
 
     promiEvent.on('error', (error: Error) => {
-      const errorMsg = errorMessages.stakingError('unstaking', error.message);
-      errorMonitoring.sendMessage(errorMsg);
+      const { captureException, errorMessages } = errorMonitoring;
+      const customMsg = errorMessages.stakingError('unstaking', error.message);
+      captureException(error, 'unstaking', customMsg);
     });
 
     onPromiEventAction(promiEvent, () => {
@@ -81,7 +80,6 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     onPromiEventAction,
     isBroadcastingMessage,
     analyticsService,
-    reReadStoresData,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(

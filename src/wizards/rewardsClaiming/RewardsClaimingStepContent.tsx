@@ -12,7 +12,6 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { Typography } from '@material-ui/core';
-import errorMessages from '../../services/error-monitoring/errors';
 import errorMonitoring from '../../services/error-monitoring';
 import { handleNumberAsStringToDisplay, numberToString } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
@@ -65,8 +64,9 @@ export const RewardsClaimingStepContent = observer(
       });
 
       promiEvent.on('error', (error: Error) => {
-        const errorMsg = errorMessages.stakingError('rewards claiming', error.message);
-        errorMonitoring.sendMessage(errorMsg);
+        const { errorMessages, captureException } = errorMonitoring;
+        const customMsg = errorMessages.stakingError('rewards claiming', error.message);
+        captureException(error, 'rewards claiming', customMsg);
       });
 
       onPromiEventAction(promiEvent, () => {

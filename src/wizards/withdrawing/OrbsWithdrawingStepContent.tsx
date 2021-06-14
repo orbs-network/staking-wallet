@@ -12,7 +12,6 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import constants from '../../constants/constants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
-import errorMessages from '../../services/error-monitoring/errors';
 import errorMonitoring from '../../services/error-monitoring';
 
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
@@ -54,8 +53,9 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       isBroadcastingMessage.setTrue();
     });
     promiEvent.on('error', (error: Error) => {
-      const errorMsg = errorMessages.stakingError('withdrawing', error.message);
-      errorMonitoring.sendMessage(errorMsg);
+      const { captureException, errorMessages } = errorMonitoring;
+      const customMsg = errorMessages.stakingError('withdrawing', error.message);
+      captureException(error, 'withdrawing', customMsg);
     });
     onPromiEventAction(promiEvent, () => {
       analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal);

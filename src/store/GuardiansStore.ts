@@ -5,6 +5,7 @@ import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
 import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
+import errorMonitoring from '../services/error-monitoring';
 
 export type TGuardianInfoExtended = IGuardianInfo & { address: string };
 
@@ -44,6 +45,7 @@ export class GuardiansStore implements TGuardiansStore {
           await this.reactToConnectedAddressChanged(address);
         } catch (e) {
           this.failLoadingProcess(e);
+          errorMonitoring.captureException(e, 'guardian store');
           console.error(e);
         }
       },
@@ -69,7 +71,7 @@ export class GuardiansStore implements TGuardiansStore {
       this.setDoneLoading(true);
     } catch (e) {
       this.failLoadingProcess(e);
-
+      errorMonitoring.captureException(e, 'guardian store');
       if (this.alertErrors) {
         alert(`Error on Guardians store : ${e}`);
       }

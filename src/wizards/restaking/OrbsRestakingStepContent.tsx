@@ -11,7 +11,6 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
-import errorMessages from '../../services/error-monitoring/errors';
 import errorMonitoring from '../../services/error-monitoring';
 
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
@@ -48,8 +47,9 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     });
 
     promiEvent.on('error', (error: Error) => {
-      const errorMsg = errorMessages.stakingError('restaking', error.message);
-      errorMonitoring.sendMessage(errorMsg);
+      const { errorMessages, captureException } = errorMonitoring;
+      const customMsg = errorMessages.stakingError('restaking', error.message);
+      captureException(error, 'restaking', customMsg);
     });
 
     onPromiEventAction(promiEvent, () => {

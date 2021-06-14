@@ -11,6 +11,7 @@ import {
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
+import errorMonitoring from '../../services/error-monitoring';
 
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
@@ -50,6 +51,11 @@ export const GuardianChangeStepContent = observer(
 
       const promiEvent = orbsAccountStore.delegate(newGuardianAddress);
 
+      promiEvent.on('error', (error: Error) => {
+        const { errorMessages, captureException } = errorMonitoring;
+        const customMsg = errorMessages.stakingError('guardian change', error.message);
+        captureException(error, 'guardian change', customMsg);
+      });
       // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
       promiEvent.on('transactionHash', (txHash) => {
         subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));

@@ -16,6 +16,7 @@ import { OrbsNodeStore } from './OrbsNodeStore';
 import { Guardian } from '../services/v2/orbsNodeService/systemState';
 import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
 import { IDelegationsService, IStakingService } from '@orbs-network/contracts-js';
+import errorMonitoring from '../services/error-monitoring';
 
 export class OrbsAccountStore {
   @observable public doneLoading = false;
@@ -214,7 +215,7 @@ export class OrbsAccountStore {
         await this.readDataForAccount(currentAddress);
       } catch (e) {
         this.failLoadingProcess(e);
-
+        errorMonitoring.captureException(e, 'account store');
         if (this.alertErrors) {
           alert(`Error on orbs account store : ${e}`);
         }
@@ -238,6 +239,7 @@ export class OrbsAccountStore {
       await this.readDataForAccount(this.cryptoWalletIntegrationStore.mainAddress);
     } catch (e) {
       this.failLoadingProcess(e);
+      errorMonitoring.captureException(e, 'account store');
       console.error('Error in manually reading address data in Orbs Account Store', e);
     }
   }

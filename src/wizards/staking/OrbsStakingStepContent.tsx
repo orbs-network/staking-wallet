@@ -10,7 +10,6 @@ import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
-import errorMessages from '../../services/error-monitoring/errors';
 import errorMonitoring from '../../services/error-monitoring';
 
 export interface IOrbsStakingStepContentProps {
@@ -52,8 +51,9 @@ export const OrbsStakingStepContent = observer(
       });
 
       promiEvent.on('error', (error: Error) => {
-        const errorMsg = errorMessages.stakingError('staking', error.message);
-        errorMonitoring.sendMessage(errorMsg);
+        const { captureException, errorMessages } = errorMonitoring;
+        const customMsg = errorMessages.stakingError('staking', error.message);
+        captureException(error, 'staking', customMsg);
       });
 
       onPromiEventAction(promiEvent, () => {

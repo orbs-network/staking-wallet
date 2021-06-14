@@ -9,7 +9,6 @@ import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsIn
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
-import errorMessages from '../../services/error-monitoring/errors';
 import errorMonitoring from '../../services/error-monitoring';
 
 export interface IOrbsAllowanceStepContentProps {
@@ -56,8 +55,9 @@ export const OrbsAllowanceStepContent = observer(
         isBroadcastingMessage.setTrue();
       });
       promiEvent.on('error', (error: Error) => {
-        const errorMsg = errorMessages.stakingError('staking allowance', error.message);
-        errorMonitoring.sendMessage(errorMsg);
+        const { errorMessages, captureException } = errorMonitoring;
+        const customMsg = errorMessages.stakingError('staking allowance', error.message);
+        captureException(error, 'staking allowance', customMsg);
       });
 
       onPromiEventAction(promiEvent, () => {
