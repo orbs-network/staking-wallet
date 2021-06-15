@@ -64,9 +64,9 @@ export const RewardsClaimingStepContent = observer(
       });
 
       promiEvent.on('error', (error: Error) => {
-        const { errorMessages, captureException } = errorMonitoring;
-        const customMsg = errorMessages.stakingError('rewards claiming', error.message);
-        captureException(error, 'rewards claiming', customMsg);
+        const { errorMessages, captureException, sections } = errorMonitoring;
+        const customMsg = errorMessages.stepError(sections.rewardsClaiming, error.message);
+        captureException(error, sections.rewardsClaiming, customMsg);
       });
 
       onPromiEventAction(promiEvent, () => {

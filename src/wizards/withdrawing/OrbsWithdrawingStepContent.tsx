@@ -53,9 +53,9 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       isBroadcastingMessage.setTrue();
     });
     promiEvent.on('error', (error: Error) => {
-      const { captureException, errorMessages } = errorMonitoring;
-      const customMsg = errorMessages.stakingError('withdrawing', error.message);
-      captureException(error, 'withdrawing', customMsg);
+      const { captureException, errorMessages, sections } = errorMonitoring;
+      const customMsg = errorMessages.stepError(sections.withdrawing, error.message);
+      captureException(error, sections.withdrawing, customMsg);
     });
     onPromiEventAction(promiEvent, () => {
       analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal);

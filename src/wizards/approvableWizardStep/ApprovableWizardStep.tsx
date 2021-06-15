@@ -121,8 +121,9 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
         disableTxCreationInputs.setFalse();
       });
       promiEvent.on('error', (error) => {
+        const { sections, captureException } = errorMonitoring;
         txCreatingError.setValue(error);
-        errorMonitoring.captureException(error);
+        captureException(error, sections.approvableWizardStep);
         (promiEvent as any).removeAllListeners();
         disableTxCreationInputs.setFalse();
       });

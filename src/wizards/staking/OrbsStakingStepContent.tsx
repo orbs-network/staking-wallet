@@ -51,9 +51,9 @@ export const OrbsStakingStepContent = observer(
       });
 
       promiEvent.on('error', (error: Error) => {
-        const { captureException, errorMessages } = errorMonitoring;
-        const customMsg = errorMessages.stakingError('staking', error.message);
-        captureException(error, 'staking', customMsg);
+        const { captureException, errorMessages, sections } = errorMonitoring;
+        const customMsg = errorMessages.stepError(sections.staking, error.message);
+        captureException(error, sections.staking, customMsg);
       });
 
       onPromiEventAction(promiEvent, () => {

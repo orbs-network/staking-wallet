@@ -1,49 +1,55 @@
-import { IErrorBoundaryProps, IErrorMessages } from './types';
+import { IErrorBoundaryProps, IErrorMessages, ISections } from './types';
 import * as Sentry from '@sentry/react';
-import { apiError, stakingError } from './errors';
+import { apiError, stepError } from './errors';
 import createErrorBoundary from './error-boundary';
 import { JSXElementConstructor } from 'react';
+import { sections } from './constants';
+import { Integrations } from '@sentry/tracing';
 
 const errorMessages = {
   apiError,
-  stakingError,
+  stepError,
 };
-
+const dsn = process.env.SENTRY_URL;
 class ErrorMonitoring {
   ErrorBoundary: JSXElementConstructor<IErrorBoundaryProps>;
   errorMessages: IErrorMessages;
   dsn: string | undefined;
+  sections: ISections;
   constructor() {
     this.ErrorBoundary = createErrorBoundary();
     this.errorMessages = errorMessages;
-    this.dsn = process.env.SENTRY_URL;
+    this.sections = sections;
   }
 
   init() {
-    if (!this.dsn) return;
+    if (!dsn) return;
     Sentry.init({
-      dsn: this.dsn,
+      dsn: dsn,
       autoSessionTracking: true,
       tracesSampleRate: 1.0,
+      integrations: [new Integrations.BrowserTracing()],
     });
   }
 
   sendMessage(msg: string) {
-    if (!this.dsn) return;
+    if (!dsn) return;
     Sentry.captureMessage(msg);
   }
 
   captureException(error: Error, section = null, customMessage = null) {
-    if (!this.dsn) return;
+    console.log(customMessage);
+    if (!dsn) return;
     const { message, stack, name } = error;
     Sentry.withScope(function (scope) {
       scope.setTag('section', section);
-      scope.setTag('customMessage', customMessage);
+
       const contexts = {
         error: {
           name,
           message,
           stack,
+          customMessage,
         },
       };
       Sentry.captureException(error, { contexts });
@@ -51,7 +57,7 @@ class ErrorMonitoring {
   }
 
   setUser({ mainAddress }: { mainAddress?: string }) {
-    if (!this.dsn || !mainAddress) return;
+    if (!dsn || !mainAddress) return;
     Sentry.configureScope(function (scope) {
       scope.setUser({
         id: mainAddress,

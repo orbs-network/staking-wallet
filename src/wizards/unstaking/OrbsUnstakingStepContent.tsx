@@ -59,9 +59,9 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     });
 
     promiEvent.on('error', (error: Error) => {
-      const { captureException, errorMessages } = errorMonitoring;
-      const customMsg = errorMessages.stakingError('unstaking', error.message);
-      captureException(error, 'unstaking', customMsg);
+      const { captureException, errorMessages, sections } = errorMonitoring;
+      const customMsg = errorMessages.stepError(sections.unstaking, error.message);
+      captureException(error, sections.unstaking, customMsg);
     });
 
     onPromiEventAction(promiEvent, () => {

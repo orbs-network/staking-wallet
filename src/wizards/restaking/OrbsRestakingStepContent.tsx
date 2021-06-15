@@ -47,9 +47,9 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     });
 
     promiEvent.on('error', (error: Error) => {
-      const { errorMessages, captureException } = errorMonitoring;
-      const customMsg = errorMessages.stakingError('restaking', error.message);
-      captureException(error, 'restaking', customMsg);
+      const { errorMessages, captureException, sections } = errorMonitoring;
+      const customMsg = errorMessages.stepError(sections.restaking, error.message);
+      captureException(error, sections.restaking, customMsg);
     });
 
     onPromiEventAction(promiEvent, () => {

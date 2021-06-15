@@ -73,9 +73,9 @@ export const GuardianSelectionStepContent = observer(
           });
 
           promiEvent.on('error', (error: Error) => {
-            const { errorMessages, captureException } = errorMonitoring;
-            const customMsg = errorMessages.stakingError('guardian selection', error.message);
-            captureException(error, 'guardian selection', customMsg);
+            const { errorMessages, captureException, sections } = errorMonitoring;
+            const customMsg = errorMessages.stepError(sections.guardianSelection, error.message);
+            captureException(error, sections.guardianSelection, customMsg);
           });
 
           onPromiEventAction(promiEvent, () => {

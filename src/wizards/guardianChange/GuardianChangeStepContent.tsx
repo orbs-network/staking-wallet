@@ -52,9 +52,9 @@ export const GuardianChangeStepContent = observer(
       const promiEvent = orbsAccountStore.delegate(newGuardianAddress);
 
       promiEvent.on('error', (error: Error) => {
-        const { errorMessages, captureException } = errorMonitoring;
-        const customMsg = errorMessages.stakingError('guardian change', error.message);
-        captureException(error, 'guardian change', customMsg);
+        const { errorMessages, captureException, sections } = errorMonitoring;
+        const customMsg = errorMessages.stepError(sections.guardianChange, error.message);
+        captureException(error, sections.guardianChange, customMsg);
       });
       // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
       promiEvent.on('transactionHash', (txHash) => {

@@ -45,7 +45,8 @@ export class GuardiansStore implements TGuardiansStore {
           await this.reactToConnectedAddressChanged(address);
         } catch (e) {
           this.failLoadingProcess(e);
-          errorMonitoring.captureException(e, 'guardian store');
+          const { sections, captureException } = errorMonitoring;
+          captureException(e, sections.guardiansStore);
           console.error(e);
         }
       },
@@ -71,7 +72,8 @@ export class GuardiansStore implements TGuardiansStore {
       this.setDoneLoading(true);
     } catch (e) {
       this.failLoadingProcess(e);
-      errorMonitoring.captureException(e, 'guardian store');
+      const { sections, captureException } = errorMonitoring;
+      captureException(e, sections.guardiansStore);
       if (this.alertErrors) {
         alert(`Error on Guardians store : ${e}`);
       }

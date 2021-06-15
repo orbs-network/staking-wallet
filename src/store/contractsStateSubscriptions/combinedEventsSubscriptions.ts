@@ -16,7 +16,8 @@ export function subscribeToOrbsInCooldownChange(
       await Promise.all([unstakeEventUnsubscribe(), restakeEventUnsubscribe(), withdrewEventUnsubscribe()]);
       return true;
     } catch (e) {
-      errorMonitoring.captureException(e, 'combined events and subscriptions');
+      const { sections, captureException } = errorMonitoring;
+      captureException(e, sections.combinedEventsAndSubscriptions);
       return false;
     }
   };
@@ -36,7 +37,8 @@ export function subscribeToStakeAmountChange(
       await Promise.all([stakeEventUnsubscribe(), unstakedEventUnsubscribe(), restakedEventUnsubscribe()]);
       return true;
     } catch (e) {
-      errorMonitoring.captureException(e, 'combined events and subscriptions');
+      const { sections, captureException } = errorMonitoring;
+      captureException(e, sections.combinedEventsAndSubscriptions);
       return false;
     }
   };

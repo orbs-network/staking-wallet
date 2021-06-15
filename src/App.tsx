@@ -8,7 +8,7 @@ import { GuardianDisplayPage } from './pages/GuardiansDisplayPage';
 import useMonitoring from './components/hooks/useMonitoring';
 import useLanguage from './components/hooks/useLanguage';
 import { observer } from 'mobx-react';
-
+import './services/error-monitoring/index';
 export const App = observer(() => {
   useMonitoring();
   useLanguage();

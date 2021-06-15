@@ -214,8 +214,9 @@ export class OrbsAccountStore {
       try {
         await this.readDataForAccount(currentAddress);
       } catch (e) {
+        const { sections, captureException } = errorMonitoring;
         this.failLoadingProcess(e);
-        errorMonitoring.captureException(e, 'account store');
+        captureException(e, sections.accountStore);
         if (this.alertErrors) {
           alert(`Error on orbs account store : ${e}`);
         }
@@ -238,8 +239,9 @@ export class OrbsAccountStore {
     try {
       await this.readDataForAccount(this.cryptoWalletIntegrationStore.mainAddress);
     } catch (e) {
+      const { sections, captureException } = errorMonitoring;
       this.failLoadingProcess(e);
-      errorMonitoring.captureException(e, 'account store');
+      captureException(e, sections.accountStore);
       console.error('Error in manually reading address data in Orbs Account Store', e);
     }
   }
