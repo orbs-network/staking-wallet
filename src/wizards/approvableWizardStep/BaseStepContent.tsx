@@ -5,6 +5,8 @@ import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
 import { InfoToolTipIcon } from '../../components/tooltips/InfoTooltipIcon';
 import { CommonClosePopupButton } from '../../components/base/commonClosePopupButton';
+import { makeStyles } from '@material-ui/core/styles';
+
 export interface IActionButtonProps {
   title: string;
   onClick: () => void;
@@ -39,6 +41,14 @@ const stylingForTwoActionButtons: React.CSSProperties = {
   width: '8em',
 };
 
+const useStyles = makeStyles({
+  longText: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '100%',
+  },
+});
+
 const stylingForSingleActionButton: React.CSSProperties = {};
 
 export const BaseStepContent = React.memo<IProps>((props) => {
@@ -58,7 +68,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     infoTitle,
     close,
   } = props;
-
+  const classes = useStyles();
   const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
   const actionButton = useMemo(() => {
     if (actionButtonProps) {
@@ -109,7 +119,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
         {infoTooltippedIcon}
       </Grid>
 
-      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
+      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }} className={classes.longText}>
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
 

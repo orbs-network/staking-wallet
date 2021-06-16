@@ -9,6 +9,8 @@ import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsIn
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
+import errorMonitoring from '../../services/error-monitoring';
+
 export interface IOrbsAllowanceStepContentProps {
   goBackToChooseGuardianStep: () => void;
 }
@@ -52,6 +54,11 @@ export const OrbsAllowanceStepContent = observer(
         subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
         isBroadcastingMessage.setTrue();
       });
+      promiEvent.on('error', (error: Error) => {
+        const { errorMessages, captureException, sections } = errorMonitoring;
+        const customMsg = errorMessages.stepError(sections.stakingAllowance, error.message);
+        captureException(error, sections.stakingAllowance, customMsg);
+      });
 
       onPromiEventAction(promiEvent, () => {
         reReadStoresData();
@@ -68,7 +75,7 @@ export const OrbsAllowanceStepContent = observer(
       reReadStoresData,
     ]);
 
-    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString);
+    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString, disableInputs);
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
         onClick: setTokenAllowanceForStakingContract,

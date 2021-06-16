@@ -12,8 +12,8 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import constants from '../../constants/constants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
-import FullAmountTooltip from '../../wizards/approvableWizardStep/full-amount-tooltip';
-import { addCommasToString } from '../../utils/stringUtils';
+import errorMonitoring from '../../services/error-monitoring';
+
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
@@ -52,7 +52,11 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
       isBroadcastingMessage.setTrue();
     });
-
+    promiEvent.on('error', (error: Error) => {
+      const { captureException, errorMessages, sections } = errorMonitoring;
+      const customMsg = errorMessages.stepError(sections.withdrawing, error.message);
+      captureException(error, sections.withdrawing, customMsg);
+    });
     onPromiEventAction(promiEvent, () => {
       analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal);
       reReadStoresData();

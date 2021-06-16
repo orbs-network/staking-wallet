@@ -6,13 +6,13 @@ import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } f
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
-import { Button, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
+import errorMonitoring from '../../services/error-monitoring';
 
 const inputStyle = {
   marginTop: '20px',
@@ -58,6 +58,12 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       isBroadcastingMessage.setTrue();
     });
 
+    promiEvent.on('error', (error: Error) => {
+      const { captureException, errorMessages, sections } = errorMonitoring;
+      const customMsg = errorMessages.stepError(sections.unstaking, error.message);
+      captureException(error, sections.unstaking, customMsg);
+    });
+
     onPromiEventAction(promiEvent, () => {
       analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, stakedOrbsNumericalFormat);
       reReadStoresData();
@@ -90,7 +96,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   }, [stakedOrbsStringFormat]);
 
   const unstakingInput = useMemo(() => {
-    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat);
+    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat, disableInputs);
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
         <Typography style={{ color: 'orange', textAlign: 'center' }}>

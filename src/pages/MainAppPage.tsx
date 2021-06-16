@@ -7,23 +7,16 @@ import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { useAnalyticsService } from '../services/ServicesHooks';
 
 export const MainAppPage = observer(() => {
-  const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
+  const { hasEthereumProvider, isConnectedToWallet } = useCryptoWalletIntegrationStore();
   const analyticsService = useAnalyticsService();
-
-  // DEV_NOTE : Currently not showing the guardians table to mobile
-  const canAndShouldDisplayGuardians =
-    cryptoWalletConnectionStore.hasEthereumProvider && cryptoWalletConnectionStore.isConnectedToWallet;
 
   // DEV_NOTE : id the user is connected than we consider this as a 'log in' for analytics purposes
   useEffect(() => {
-    if (cryptoWalletConnectionStore.hasEthereumProvider && cryptoWalletConnectionStore.isConnectedToWallet) {
+    if (hasEthereumProvider && isConnectedToWallet) {
       analyticsService.trackAppLogin();
     }
-  }, [
-    analyticsService,
-    cryptoWalletConnectionStore.hasEthereumProvider,
-    cryptoWalletConnectionStore.isConnectedToWallet,
-  ]);
+  }, [analyticsService, hasEthereumProvider, isConnectedToWallet]);
+
   return (
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />

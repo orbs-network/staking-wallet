@@ -1,11 +1,10 @@
 import React, { FC, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { BalanceCard } from '../../components/BalanceCard';
-import { TimeLeftCounter } from '../../components/timeCounter/TimeLeftCounter';
 import { useNumber } from 'react-hanger';
 import { useOrbsInCooldownState } from '../../store/storeStateHooks';
 import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
-
+import OrbsCooldownTitle from './components/orbs-in-cooldown-title';
 interface IProps {
   showWithdrawingModal: (value: boolean) => void;
   showRestakingModal: (value: boolean) => void;
@@ -19,99 +18,40 @@ interface IProps {
   isLoading?: boolean;
 }
 
-const OrbsInCooldownCard: FC<IProps> = observer(
-  ({
-    showWithdrawingModal,
-    showRestakingModal,
-    orbsInCoolDown,
-    cooldownReleaseTimestamp,
-    withdrawText,
-    restakeText,
-    noTokensInCooldownText,
-    tokensInCooldownText,
-    tokensReadyForWithdrawalText,
-    isLoading,
-  }) => {
-    const rerenderNumber = useNumber(0);
+const OrbsInCooldownCard: FC<IProps> = observer((props) => {
+  console.log({ props });
+  const { showWithdrawingModal, showRestakingModal, orbsInCoolDown, withdrawText, restakeText } = props;
+  const rerenderNumber = useNumber(0);
 
-    const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
-    const orbsInCoolDownAsString = fullOrbsFromWeiOrbsString(orbsInCoolDown);
+  const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
+  const orbsInCoolDownAsString = fullOrbsFromWeiOrbsString(orbsInCoolDown);
 
-    const { orbsInCooldownBoxButtonAction, orbsInCooldownBoxButtonText } = useMemo(() => {
-      let orbsInCooldownBoxButtonAction;
-      let orbsInCooldownBoxButtonText: string;
+  const orbsCooldownTitle = OrbsCooldownTitle({
+    hasOrbsInCooldown,
+    canWithdrawCooldownOrbs,
+    cooldownReleaseTimestamp: props.cooldownReleaseTimestamp,
+    rerenderNumber,
+    noTokensInCooldownText: props.noTokensInCooldownText,
+    tokensInCooldownText: props.tokensInCooldownText,
+    tokensReadyForWithdrawalText: props.tokensReadyForWithdrawalText,
+  });
 
-      if (hasOrbsInCooldown && canWithdrawCooldownOrbs) {
-        orbsInCooldownBoxButtonAction = showWithdrawingModal;
-        orbsInCooldownBoxButtonText = withdrawText;
-      } else {
-        orbsInCooldownBoxButtonAction = showRestakingModal;
-        orbsInCooldownBoxButtonText = restakeText;
-      }
+  const showWithdraw = hasOrbsInCooldown && canWithdrawCooldownOrbs;
 
-      return {
-        orbsInCooldownBoxButtonAction,
-        orbsInCooldownBoxButtonText,
-      };
-    }, [
-      canWithdrawCooldownOrbs,
-      hasOrbsInCooldown,
-      showRestakingModal,
-      showWithdrawingModal,
-      restakeText,
-      withdrawText,
-    ]);
-
-    const { orbsInCooldownBoxTitle, orbsInCooldownBoxEnabled } = useMemo(() => {
-      let orbsInCooldownBoxTitle;
-      let orbsInCooldownBoxEnabled = true;
-
-      // No Tokens in cooldown ? Disable the balance box
-      if (!hasOrbsInCooldown) {
-        orbsInCooldownBoxTitle = noTokensInCooldownText;
-        orbsInCooldownBoxEnabled = false;
-      } else if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
-        // We only want to show time left if there is some time left
-        orbsInCooldownBoxTitle = () => (
-          <>
-            {tokensInCooldownText}
-            {' ('}
-            <TimeLeftCounter onToMomentReached={rerenderNumber.increase} toTimestamp={cooldownReleaseTimestamp} />
-            {')'}
-          </>
-        );
-      } else {
-        // TODO : translate
-        orbsInCooldownBoxTitle = tokensReadyForWithdrawalText;
-      }
-
-      return {
-        orbsInCooldownBoxTitle,
-        orbsInCooldownBoxEnabled,
-      };
-    }, [
-      canWithdrawCooldownOrbs,
-      hasOrbsInCooldown,
-      cooldownReleaseTimestamp,
-      rerenderNumber.increase,
-      noTokensInCooldownText,
-      tokensInCooldownText,
-      tokensReadyForWithdrawalText,
-    ]);
-
-    return (
-      <BalanceCard
-        title={orbsInCooldownBoxTitle}
-        actionButtonTitle={orbsInCooldownBoxButtonText}
-        amount={orbsInCoolDownAsString}
-        actionButtonActive={orbsInCooldownBoxEnabled}
-        onActionButtonPressed={orbsInCooldownBoxButtonAction}
-        balanceCardTestId={'balance_card_cool_down_orbs'}
-        showFraction
-        isLoading={isLoading}
-      />
-    );
-  },
-);
+  return (
+    <BalanceCard
+      title={orbsCooldownTitle}
+      secondaryActionButtonActive={showWithdraw}
+      onSecondaryActionButtonPressed={showWithdraw ? () => showWithdrawingModal(true) : null}
+      actionButtonTitle={restakeText}
+      secondaryActionButtonTitle={showWithdraw ? withdrawText : ''}
+      amount={orbsInCoolDownAsString}
+      actionButtonActive={hasOrbsInCooldown}
+      onActionButtonPressed={() => showRestakingModal(true)}
+      balanceCardTestId={'balance_card_cool_down_orbs'}
+      showFraction
+    />
+  );
+});
 
 export default OrbsInCooldownCard;

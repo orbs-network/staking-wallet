@@ -1,42 +1,36 @@
 import React, { useMemo } from 'react';
-import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import { SvgIcon, Tooltip, Typography } from '@material-ui/core';
-import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
-import { ReactComponent as NotCommitteeGuardianShield } from './assets/guardian_no_committee.svg';
-import { ReactComponent as CertifiedNotCommitteeGuardianShield } from './assets/guardian_no_committee_certified.svg';
-import { ReactComponent as CommitteeGuardianShield } from './assets/guardian_committe.svg';
-import { ReactComponent as CertifiedCommitteeGuardianShield } from './assets/guardian_committee_certiied.svg';
+import { Guardian } from '../../../services/v2/orbsNodeService/systemState';
+import { Tooltip, Typography } from '@material-ui/core';
+import { ICommitteeMemberData } from '../../../services/v2/orbsNodeService/OrbsNodeTypes';
 import Moment from 'moment';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
-import { useGuardiansTableTranslations } from '../../translations/translationsHooks';
-
+import { useGuardiansTableTranslations } from '../../../translations/translationsHooks';
+import GuardianShieldIcon from './guardian-shield-icon';
 interface IProps {
   guardian: Guardian;
   committeeMembershipData?: ICommitteeMemberData;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   tooltip: {
     // width: 'max-content',
     width: 400,
     maxWidth: 'min(600px, 90%)',
   },
-}));
+  imgContainer: {
+    height: '4rem',
+    width: '4rem',
+    position: 'relative',
+    cursor: 'pointer',
+    color: 'rgba(0,0,0,0)',
+  },
+});
 
 export const GuardianQualifications = React.memo<IProps>((props) => {
   const { guardian, committeeMembershipData } = props;
+
   const classes = useStyles();
-
-  let shieldIcon = NotCommitteeGuardianShield;
-
-  // Is in committee ?
-  if (committeeMembershipData) {
-    shieldIcon = guardian.IsCertified ? CertifiedCommitteeGuardianShield : CommitteeGuardianShield;
-  } else {
-    // Certified ?
-    shieldIcon = guardian.IsCertified ? CertifiedNotCommitteeGuardianShield : NotCommitteeGuardianShield;
-  }
 
   return (
     <Tooltip
@@ -46,8 +40,8 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
       arrow
       placement={'right'}
     >
-      <div style={{ height: '4rem', width: '4rem', position: 'relative', cursor: 'pointer', color: 'rgba(0,0,0,0)' }}>
-        <SvgIcon component={shieldIcon} viewBox='0 0 40.371 47.178' style={{ height: '100%', width: '100%' }} />
+      <div className={classes.imgContainer}>
+        <GuardianShieldIcon IsCertified={guardian.IsCertified} committeeMembershipData={committeeMembershipData} />
       </div>
     </Tooltip>
   );

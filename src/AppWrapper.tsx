@@ -9,7 +9,6 @@ import { App } from './App';
 import { buildServices } from './services/Services';
 import { configureMobx, getStores } from './store/storesInitialization';
 import { LangRouter } from './multi-lang/LangRouter';
-
 // TODO : O.L : FUTURE : Consider moving this language initialization
 //                       + Change the locale when switching language
 // DEV_NOTE : This is where we define the used locales for moment.js
@@ -22,13 +21,12 @@ import { I18nextProvider } from 'react-i18next';
 import { TEthereumProviderName } from './services/analytics/IAnalyticsService';
 import Web3 from 'web3';
 import { detectEthereumProviderName } from './services/analytics/analyticsUtils';
-import errorMonitoring from './services/error-monitoring/index';
+import ErrorMonitoring from './services/error-monitoring/index';
 moment.locale('ja');
 moment.locale('ko');
 moment.locale('en');
 
 configureMobx();
-errorMonitoring.init();
 const urlParams = new URLSearchParams(window.location.search);
 const alertErrors = !!urlParams.get('alertErrors');
 
@@ -76,7 +74,9 @@ export const AppWrapper: React.FunctionComponent = () => (
             <SCThemeProvider theme={themeAndStyle}>
               {/*<GlobalStyleComponent />*/}
               <CssBaseline />
-              <App />
+              <ErrorMonitoring.ErrorBoundary>
+                <App />
+              </ErrorMonitoring.ErrorBoundary>
             </SCThemeProvider>
           </ThemeProvider>
         </StylesProvider>
