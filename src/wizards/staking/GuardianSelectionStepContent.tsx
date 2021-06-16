@@ -10,6 +10,7 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService, useGuardiansDelegatorsCut, useStakingRewardsService } from '../../services/ServicesHooks';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
+import errorMonitoring from '../../services/error-monitoring';
 
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
@@ -69,6 +70,12 @@ export const GuardianSelectionStepContent = observer(
               wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'),
             );
             isBroadcastingMessage.setTrue();
+          });
+
+          promiEvent.on('error', (error: Error) => {
+            const { errorMessages, captureException, sections } = errorMonitoring;
+            const customMsg = errorMessages.stepError(sections.guardianSelection, error.message);
+            captureException(error, sections.guardianSelection, customMsg);
           });
 
           onPromiEventAction(promiEvent, () => {

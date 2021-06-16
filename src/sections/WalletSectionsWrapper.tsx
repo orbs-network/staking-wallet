@@ -10,15 +10,15 @@ import { RewardsSection } from './RewardsSection';
 //  (have them looking for the sections instead)
 
 export const WalletSectionsWrapper = observer(() => {
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
+  const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
 
-  if (cryptoWalletIntegrationStore.isConnectedToWallet) {
+  if (isConnectedToWallet) {
     return (
-      <React.Fragment>
+      <>
         <WalletInfoSection />
         <BalancesSection />
         <RewardsSection />
-      </React.Fragment>
+      </>
     );
   } else {
     return <ConnectWalletSection />;
