@@ -11,6 +11,8 @@ import constants from '../constants/constants';
 import CountUp from 'react-countup';
 import { addCommasToString } from '../utils/stringUtils';
 import { numberToString } from '../utils/numberUtils';
+import BaseLoader from './loaders';
+import customLoaders from './loaders/custom-loaders';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',

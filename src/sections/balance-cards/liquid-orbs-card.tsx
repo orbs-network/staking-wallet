@@ -9,9 +9,10 @@ interface IProps {
   actionButtonTitle: string;
   liquidOrbs: bigint;
   showStakingModal: UseBoolean;
+  isLoading?: boolean;
 }
 
-const LiquidOrbsCard: FC<IProps> = observer(({ title, actionButtonTitle, liquidOrbs, showStakingModal }) => {
+const LiquidOrbsCard: FC<IProps> = observer(({ title, actionButtonTitle, liquidOrbs, showStakingModal, isLoading }) => {
   const liquidOrbsAsString = fullOrbsFromWeiOrbsString(liquidOrbs);
 
   return (
@@ -23,6 +24,7 @@ const LiquidOrbsCard: FC<IProps> = observer(({ title, actionButtonTitle, liquidO
       amount={liquidOrbsAsString}
       balanceCardTestId={'balance_card_liquid_orbs'}
       showFraction
+      isLoading={isLoading}
     />
   );
 });

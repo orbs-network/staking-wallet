@@ -43,10 +43,7 @@ export const BalancesSection = observer(() => {
   const showRestakingModal = useBoolean(false);
   const showWithdrawingModal = useBoolean(false);
 
-  if (!orbsAccountStore.doneLoading) {
-    return <Typography>{commonsTranslations('loading')}</Typography>;
-  }
-
+  const isLoading = !orbsAccountStore.doneLoading;
   return (
     <Section>
       {/* Balance */}
@@ -70,6 +67,7 @@ export const BalancesSection = observer(() => {
                 actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
                 liquidOrbs={orbsAccountStore.liquidOrbs}
                 showStakingModal={showStakingModal}
+                isLoading={isLoading}
               />
             </GridItem>
             {/* Staked&Rewards */}
@@ -84,6 +82,7 @@ export const BalancesSection = observer(() => {
                 pendingRewardsTitle={balancesSectionTranslations('tooltipTitle_pendingRewards')}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
                 stakeTitle={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
+                isLoading={isLoading}
               />
             </GridItem>
             {/* Cooldown & withdraw/restake */}
@@ -98,6 +97,7 @@ export const BalancesSection = observer(() => {
                 noTokensInCooldownText={balancesSectionTranslations('title_noTokensInCooldown')}
                 tokensInCooldownText={balancesSectionTranslations('title_tokensInCooldown')}
                 tokensReadyForWithdrawalText={balancesSectionTranslations('title_tokensReadyForWithdrawal')}
+                isLoading={isLoading}
               />
             </GridItem>
           </Grid>

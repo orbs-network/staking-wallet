@@ -16,6 +16,7 @@ interface IProps {
   stakeTitle: string;
   pendingRewardsTitle: string;
   actionButtonTitle: string;
+  isLoading?: boolean;
 }
 
 const StakedAndRewardsCard: FC<IProps> = observer(
@@ -29,6 +30,7 @@ const StakedAndRewardsCard: FC<IProps> = observer(
     stakeTitle,
     pendingRewardsTitle,
     actionButtonTitle,
+    isLoading,
   }) => {
     const onUnstakeTokensClicked = useMemo(() => {
       if (hasOrbsToWithdraw) {
@@ -61,6 +63,7 @@ const StakedAndRewardsCard: FC<IProps> = observer(
         onActionButtonPressed={onUnstakeTokensClicked}
         balanceCardTestId={'balance_card_staked_orbs'}
         showFraction
+        isLoading={isLoading}
       />
     );
   },

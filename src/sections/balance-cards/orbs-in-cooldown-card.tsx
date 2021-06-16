@@ -16,6 +16,7 @@ interface IProps {
   noTokensInCooldownText: string;
   tokensInCooldownText: string;
   tokensReadyForWithdrawalText: string;
+  isLoading?: boolean;
 }
 
 const OrbsInCooldownCard: FC<IProps> = observer(
@@ -29,6 +30,7 @@ const OrbsInCooldownCard: FC<IProps> = observer(
     noTokensInCooldownText,
     tokensInCooldownText,
     tokensReadyForWithdrawalText,
+    isLoading,
   }) => {
     const rerenderNumber = useNumber(0);
 
@@ -106,6 +108,7 @@ const OrbsInCooldownCard: FC<IProps> = observer(
         onActionButtonPressed={orbsInCooldownBoxButtonAction}
         balanceCardTestId={'balance_card_cool_down_orbs'}
         showFraction
+        isLoading={isLoading}
       />
     );
   },
