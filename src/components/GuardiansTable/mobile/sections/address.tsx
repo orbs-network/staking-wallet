@@ -1,22 +1,28 @@
 import React, { FC } from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import { InTextLink } from '../../../shared/texts/InTextLink';
-import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
+import { useCommonStyles } from './styles';
 import { IMobileSection } from '../../interfaces';
+import { makeStyles } from '@material-ui/core/styles';
 
-const getAddressColumn: FC<IMobileSection> = ({ guardian, guardiansTableTranslations }) => {
+export const useStyles = makeStyles({});
+
+const Address: FC<IMobileSection> = ({ guardian, guardiansTableTranslations }) => {
+  const { EthAddress } = guardian;
+  const commonClasses = useCommonStyles();
   return (
-    <div>
-      <Typography>{guardiansTableTranslations('columnHeader_address')}</Typography>
-      <Tooltip title={<Typography>{guardian.EthAddress}</Typography>} arrow placement={'right'} interactive>
-        <Typography style={{ fontFamily: 'monospace', textAlign: 'center' }}>
-          <InTextLink
-            href={`https://etherscan.io/address/${guardian.EthAddress}`}
-            text={`${guardian.EthAddress.substring(0, 10)}...`}
-          />
-        </Typography>
-      </Tooltip>
+    <div className={commonClasses.row}>
+      <div className={commonClasses.rowName}>
+        <Typography>{guardiansTableTranslations('columnHeader_address')}</Typography>
+      </div>
+      <Typography className={`${commonClasses.text} ${commonClasses.rowContent}`}>
+        <InTextLink
+          href={`https://etherscan.io/address/${EthAddress}`}
+          text={EthAddress}
+          className={`${commonClasses.textOverflow} ${commonClasses.text}`}
+        />
+      </Typography>
     </div>
   );
 };
-export default getAddressColumn;
+export default Address;

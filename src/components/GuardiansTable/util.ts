@@ -61,3 +61,17 @@ export const createDesktopTableProps = (props: IProps) => {
     theme: props.theme,
   };
 };
+
+export const getEffectiveStakeInUnits = (EffectiveStake: number): string => {
+  return EffectiveStake > 1_000_000
+    ? `${(EffectiveStake / 1_000_000).toFixed(2).replace(/[.,]00$/, '')} M`
+    : `${(EffectiveStake / 1_000).toFixed(2).replace(/[.,]00$/, '')} K`;
+};
+
+export const getCapacityText = (Capacity: any, toFixed: number) => {
+  return !isNaN(Capacity) ? `${Capacity.toFixed(toFixed)}%` : '--';
+};
+
+export const getCapacityColor = (Capacity: any) => {
+  return Capacity <= 30 ? 'green' : Capacity <= 80 ? 'yellow' : 'red';
+};

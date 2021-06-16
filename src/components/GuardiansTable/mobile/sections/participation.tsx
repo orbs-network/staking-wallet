@@ -1,42 +1,32 @@
 import React, { FC } from 'react';
-import ColumnHeaderWithTooltip from '../../components/common-tooltip';
-import { Typography, Tooltip } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { Line } from 'rc-progress';
 import { IMobileSection } from '../../interfaces';
+import { useCommonStyles } from './styles';
 
 const Participation: FC<IMobileSection> = ({ guardian, guardiansTableTranslations }) => {
   const { ParticipationPercentage } = guardian;
+  const commonClasses = useCommonStyles();
   // TODO : ORL : Make this color gradient
   const color = ParticipationPercentage <= 30 ? 'red' : ParticipationPercentage <= 80 ? 'yellow' : 'green';
-  const timePercentageText = ParticipationPercentage.toFixed(2);
+  const timePercentageText = ParticipationPercentage.toFixed(0);
   return (
-    <div>
-      <Typography>
-        <ColumnHeaderWithTooltip
-          headerText={guardiansTableTranslations('columnHeader_participation')}
-          tooltipText={guardiansTableTranslations('columnHeaderInfo_participation')}
+    <div className={commonClasses.row}>
+      <div className={commonClasses.rowName}>
+        <Typography>{guardiansTableTranslations('columnHeader_participation')}</Typography>
+      </div>
+
+      <div className={commonClasses.rowContent}>
+        <Line
+          percent={ParticipationPercentage}
+          strokeWidth={2}
+          strokeLinecap='square'
+          trailColor='transparent'
+          strokeColor={color}
+          className={commonClasses.line}
         />
-      </Typography>
-      <Tooltip
-        arrow
-        title={
-          <>
-            <Typography>
-              {guardiansTableTranslations('message_participationExplanation', {
-                daysPeriod: 30,
-                timePercentage: timePercentageText,
-              })}
-            </Typography>
-            <br />
-            <Typography>{guardiansTableTranslations('message_participationRewardsWarning')}</Typography>
-          </>
-        }
-      >
-        <div>
-          <Line percent={ParticipationPercentage} strokeWidth={5} strokeColor={color} />
-          <Typography>{timePercentageText}%</Typography>
-        </div>
-      </Tooltip>
+        <Typography className={commonClasses.lineText}>{timePercentageText}%</Typography>
+      </div>
     </div>
   );
 };

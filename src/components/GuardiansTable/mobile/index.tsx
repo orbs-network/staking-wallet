@@ -10,7 +10,7 @@ interface IProps extends IBaseTableProps {
 const GuardiansMobile: FC<IProps> = (props) => {
   const { sortedGuardians } = props;
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', marginTop: '40px' }}>
       {sortedGuardians.map((guardian: Guardian) => {
         return <GuardiansMobileSection key={guardian.EthAddress} {...props} guardian={guardian} />;
       })}

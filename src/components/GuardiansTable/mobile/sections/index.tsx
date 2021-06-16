@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useGuardiansTableTranslations } from '../../../../translations/translationsHooks';
 import Address from './address';
 import useTheme from '@material-ui/core/styles/useTheme';
@@ -6,21 +6,13 @@ import Name from './name';
 import Capacity from './capacity';
 import EffectiveStake from './effective-stake';
 import Participation from './participation';
-import Qualification from './qualifications';
-import Rewards from './reward-percentage';
+import Rewards from './rewards';
 import Selection from './selection';
 import Website from './website';
-import { makeStyles } from '@material-ui/core/styles';
 import { IBaseTableProps } from '../../interfaces';
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
-
-const useStyles = makeStyles({
-  container: {
-    border: '1px solid white',
-    padding: '10px',
-    marginBottom: '20px',
-  },
-});
+import GuardianMobileHeader from './header';
+import { useCommonStyles } from './styles';
 
 interface IProps extends IBaseTableProps {
   pageSize: number;
@@ -31,8 +23,8 @@ interface IProps extends IBaseTableProps {
 const GuardiansMobileSection: FC<IProps> = (props) => {
   const { guardian, committeeMembers, guardiansToDelegatorsCut } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
+  const [showDetails, setShowDetails] = useState<boolean>(false);
   const theme = useTheme();
-  const classes = useStyles();
 
   const sectionsProps = {
     guardian,
@@ -48,18 +40,26 @@ const GuardiansMobileSection: FC<IProps> = (props) => {
     disableSelection: props.disableSelection,
     guardian,
   };
-
+  const commonClasses = useCommonStyles();
   return (
-    <div className={classes.container}>
-      <Address {...sectionsProps} />
-      <Name {...sectionsProps} />
-      <Capacity {...sectionsProps} />
-      <EffectiveStake {...sectionsProps} />
-      <Participation {...sectionsProps} />
-      <Qualification guardian={guardian} committeeMembers={committeeMembers} />
-      <Rewards {...sectionsProps} guardiansToDelegatorsCut={guardiansToDelegatorsCut} />
-      <Selection {...selectionProps} />
-      <Website {...sectionsProps} />
+    <div className={commonClasses.container}>
+      <GuardianMobileHeader
+        {...sectionsProps}
+        committeeMembers={committeeMembers}
+        onClick={() => setShowDetails(!showDetails)}
+      />
+      {showDetails && (
+        <div style={{ paddingTop: '20px', paddingBottom: '20px', borderBottom: '1px solid rgba(255,255,255, 0.6)' }}>
+          <Name {...sectionsProps} committeeMembers={committeeMembers} onClick={() => setShowDetails(false)} />
+          <Website {...sectionsProps} />
+          <Address {...sectionsProps} />
+          <Rewards {...sectionsProps} guardiansToDelegatorsCut={guardiansToDelegatorsCut} />
+          <EffectiveStake {...sectionsProps} />
+          <Participation {...sectionsProps} />
+          <Capacity {...sectionsProps} />
+          <Selection {...selectionProps} />
+        </div>
+      )}
     </div>
   );
 };

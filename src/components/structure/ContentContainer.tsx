@@ -12,12 +12,13 @@ export const ContentContainer = styled<typeof Container>((props) => {
     width: '100rem',
     maxWidth: '90%',
 
-    [theme.breakpoints.down('sm')]: {},
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'calc(100% - 20px)',
+    },
     [theme.breakpoints.up('sm')]: {},
     [theme.breakpoints.down('md')]: {
       // paddingRight: '3em',
       // paddingLeft: '3em',
-      maxWidth: 'calc(100% - 50px)',
     },
     [theme.breakpoints.up('md')]: {
       // paddingRight: '3em',

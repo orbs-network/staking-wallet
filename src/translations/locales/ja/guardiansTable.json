@@ -23,6 +23,7 @@
   "columnHeader_name": "名前",
   "columnHeader_participation": "参加",
   "columnHeader_rewardsPercentageToDelegators": "デリゲータへのリワード％",
+  "rewards_percentage": "% Rewards",
   "columnHeader_selection": "選択",
   "columnHeader_stakingPercentageInLastElections": "前回投票時のステーキング％",
   "columnHeader_votedInLastElection": "投票済み",

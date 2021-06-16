@@ -1,6 +1,7 @@
 import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
+import { getEffectiveStakeInUnits } from '../../util';
 
 const getEffectiveStakeColumn = (guardiansTableTranslations: any) => {
   return {
@@ -33,11 +34,6 @@ const getEffectiveStakeColumn = (guardiansTableTranslations: any) => {
     render: (guardian) => {
       const { EffectiveStake, SelfStake, DelegatedStake } = guardian;
 
-      const effectiveStakeInUnits =
-        EffectiveStake > 1_000_000
-          ? `${(EffectiveStake / 1_000_000).toFixed(2).replace(/[.,]00$/, '')} M`
-          : `${(EffectiveStake / 1_000).toFixed(2).replace(/[.,]00$/, '')} K`;
-
       return (
         <Tooltip
           arrow
@@ -55,7 +51,7 @@ const getEffectiveStakeColumn = (guardiansTableTranslations: any) => {
             </>
           }
         >
-          <Typography>{effectiveStakeInUnits}</Typography>
+          <Typography>{getEffectiveStakeInUnits(EffectiveStake)}</Typography>
         </Tooltip>
       );
     },

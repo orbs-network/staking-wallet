@@ -1,22 +1,41 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
-import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
-import { Typography } from '@material-ui/core';
+
 import { IMobileSection } from '../../interfaces';
+import { ICommitteeMemberData } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
+import GuardianShieldIcon from '../../components/guardian-shield-icon';
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+import { useCommonStyles } from './styles';
+import { getCommitteeMemberData } from '../../util';
+import Arrow from '../../components/arrow';
+interface IProps extends IMobileSection {
+  committeeMembers: ICommitteeMemberData[];
+  onClick: () => void;
+}
 
-const NameBox = styled('div')(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyItems: 'center',
-}));
+const useStyles = makeStyles({
+  root: {
+    cursor: 'pointer',
+    paddingRight: '30px',
+  },
+});
 
-const NameSection: FC<IMobileSection> = ({ guardian, guardiansTableTranslations }) => {
+const NameSection: FC<IProps> = ({ guardian, committeeMembers, guardiansTableTranslations, onClick }) => {
+  const { Name, IsCertified, EthAddress } = guardian;
+  const classes = useStyles();
+  const commonClasses = useCommonStyles();
   return (
-    <div>
-      <Typography>{guardiansTableTranslations('columnHeader_name')}</Typography>
-      <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
-        <Typography>{guardian.Name}</Typography>
-      </NameBox>
+    <div className={`${commonClasses.row} ${classes.root}`} onClick={onClick}>
+      <Arrow extraStyle={{ transform: 'rotate(135deg)' }} />
+      <div className={commonClasses.rowName}>
+        <Typography>{`${guardiansTableTranslations('columnHeader_name')}: `}</Typography>
+        <GuardianShieldIcon
+          IsCertified={IsCertified}
+          committeeMembershipData={getCommitteeMemberData(EthAddress, committeeMembers)}
+          customStyle={{ width: '30px', marginLeft: '10px' }}
+        />
+      </div>
+      <Typography className={commonClasses.rowContent}>{Name}</Typography>
     </div>
   );
 };

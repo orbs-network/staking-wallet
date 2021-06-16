@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Line } from 'rc-progress';
+import { getCapacityColor, getCapacityText } from '../../util';
 
 const getCapacityTable = (guardiansTableTranslations: any) => {
   return {
@@ -22,15 +23,9 @@ const getCapacityTable = (guardiansTableTranslations: any) => {
     render: (guardian) => {
       const { Capacity, SelfStake, DelegatedStake } = guardian;
       // TODO : ORL : Make this color gradient
-      const color = Capacity <= 30 ? 'green' : Capacity <= 80 ? 'yellow' : 'red';
+
       // const
       const selfStakePercentage = +((SelfStake / DelegatedStake) * 100).toFixed(2);
-      // const selfStakePercentageText =
-
-      const capacityText = !isNaN(Capacity) ? `${Capacity.toFixed(2)}%` : '--';
-
-      // console.log(`${guardian.Name} capacity : ${Capacity}`);
-      // console.log(`${guardian.Name} capacity : ${SelfStake} - ${DelegatedStake}`);
 
       return (
         <Tooltip
@@ -50,8 +45,8 @@ const getCapacityTable = (guardiansTableTranslations: any) => {
           }
         >
           <div>
-            <Line percent={Capacity} strokeWidth={5} strokeColor={color} />
-            <Typography>{capacityText}</Typography>
+            <Line percent={Capacity} strokeWidth={5} strokeColor={getCapacityColor(Capacity)} />
+            <Typography>{getCapacityText(Capacity, 2)}</Typography>
           </div>
         </Tooltip>
       );
