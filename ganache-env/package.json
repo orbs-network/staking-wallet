@@ -4,6 +4,7 @@
   "description": "",
   "main": "truffle-config.js",
   "scripts": {
+    "up-ropsten-build": "./up-ropsten-build.sh",
     "deploy-driver": "ts-node deployContracts.ts",
     "print-committee": "ts-node getCommittee.ts",
     "up-dev": "docker-compose -p tetra-dev -f docker-compose.yml up",

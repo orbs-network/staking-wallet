@@ -1,10 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import { ReactComponent as BalanceIcon } from '../../assets/balance.svg';
 import { observer } from 'mobx-react';
-import React, { useMemo } from 'react';
-import { useBoolean, useNumber } from 'react-hanger';
+import React from 'react';
+import { useBoolean } from 'react-hanger';
 import styled from 'styled-components';
-import { BalanceCard } from '../components/BalanceCard';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useOrbsAccountStore } from '../store/storeHooks';
@@ -12,12 +11,11 @@ import { StakingWizard } from '../wizards/staking/StakingWizard';
 import { UnstakingWizard } from '../wizards/unstaking/UnstakingWizard';
 import { WithdrawingWizard } from '../wizards/withdrawing/WithdrawingWizard';
 import { RestakingWizard } from '../wizards/restaking/RestakingWizard';
-import { useOrbsInCooldownState } from '../store/storeStateHooks';
-import { fullOrbsFromWeiOrbs } from '../cryptoUtils/unitConverter';
 import Snackbar from '@material-ui/core/Snackbar';
 import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
-import { TimeLeftCounter } from '../components/timeCounter/TimeLeftCounter';
-
+import OrbsInCooldownCard from './balance-cards/orbs-in-cooldown-card';
+import StakedAndRewardsCard from './balance-cards/staked-and-rewards-card';
+import LiquidOrbsCard from './balance-cards/liquid-orbs-card';
 import {
   useAlertsTranslations,
   useBalancesSectionTranslations,
@@ -33,7 +31,6 @@ const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={
 });
 
 export const BalancesSection = observer(() => {
-  const rerenderNumber = useNumber(0);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const balancesSectionTranslations = useBalancesSectionTranslations();
   const commonsTranslations = useCommonsTranslations();
@@ -46,80 +43,9 @@ export const BalancesSection = observer(() => {
   const showRestakingModal = useBoolean(false);
   const showWithdrawingModal = useBoolean(false);
 
-  const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
-  const stakedOrbs = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
-  const liquidOrbs = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
-
-  const { orbsInCooldownBoxButtonAction, orbsInCooldownBoxButtonText } = useMemo(() => {
-    let orbsInCooldownBoxButtonAction;
-    let orbsInCooldownBoxButtonText: string;
-
-    if (hasOrbsInCooldown && canWithdrawCooldownOrbs) {
-      orbsInCooldownBoxButtonAction = showWithdrawingModal.setTrue;
-      orbsInCooldownBoxButtonText = balancesSectionTranslations('action_withdrawYourTokens');
-    } else {
-      orbsInCooldownBoxButtonAction = showRestakingModal.setTrue;
-      orbsInCooldownBoxButtonText = balancesSectionTranslations('action_restakeYourTokens');
-    }
-
-    return {
-      orbsInCooldownBoxButtonAction,
-      orbsInCooldownBoxButtonText,
-    };
-  }, [
-    balancesSectionTranslations,
-    canWithdrawCooldownOrbs,
-    hasOrbsInCooldown,
-    showRestakingModal,
-    showWithdrawingModal,
-  ]);
-
-  const { orbsInCooldownBoxTitle, orbsInCooldownBoxEnabled } = useMemo(() => {
-    let orbsInCooldownBoxTitle;
-    let orbsInCooldownBoxEnabled = true;
-
-    // No Tokens in cooldown ? Disable the balance box
-    if (!hasOrbsInCooldown) {
-      orbsInCooldownBoxTitle = balancesSectionTranslations('title_noTokensInCooldown');
-      orbsInCooldownBoxEnabled = false;
-    } else if (hasOrbsInCooldown && !canWithdrawCooldownOrbs) {
-      // We only want to show time left if there is some time left
-      orbsInCooldownBoxTitle = () => (
-        <>
-          {balancesSectionTranslations('title_tokensInCooldown')}
-          {' ('}
-          <TimeLeftCounter
-            onToMomentReached={rerenderNumber.increase}
-            toTimestamp={orbsAccountStore.cooldownReleaseTimestamp}
-          />
-          {')'}
-        </>
-      );
-    } else {
-      // TODO : translate
-      orbsInCooldownBoxTitle = balancesSectionTranslations('title_tokensReadyForWithdrawal');
-    }
-
-    return {
-      orbsInCooldownBoxTitle,
-      orbsInCooldownBoxEnabled,
-    };
-  }, [
-    balancesSectionTranslations,
-    canWithdrawCooldownOrbs,
-    hasOrbsInCooldown,
-    orbsAccountStore.cooldownReleaseTimestamp,
-    rerenderNumber.increase,
-  ]);
-  const onUnstakeTokensClicked = useMemo(() => {
-    if (orbsAccountStore.hasOrbsToWithdraw) {
-      return () => showCannotUnstakeNowSnackbar.setTrue();
-    } else {
-      return () => showUnStakingModal.setTrue();
-    }
-  }, [orbsAccountStore.hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
-
-  const isLoading = !orbsAccountStore.doneLoading;
+  if (!orbsAccountStore.doneLoading) {
+    return <Typography>{commonsTranslations('loading')}</Typography>;
+  }
 
   return (
     <Section>
@@ -139,46 +65,39 @@ export const BalancesSection = observer(() => {
           <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
             {/* Liquid ORBS */}
             <GridItem>
-              <BalanceCard
+              <LiquidOrbsCard
                 title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}
                 actionButtonTitle={balancesSectionTranslations('action_stakeYourTokens')}
-                actionButtonActive={!!liquidOrbs}
-                onActionButtonPressed={showStakingModal.setTrue}
-                amount={liquidOrbs}
-                balanceCardTestId={'balance_card_liquid_orbs'}
-                isLoading={isLoading}
+                liquidOrbs={orbsAccountStore.liquidOrbs}
+                showStakingModal={showStakingModal}
               />
             </GridItem>
             {/* Staked&Rewards */}
             <GridItem>
-              <BalanceCard
+              <StakedAndRewardsCard
+                stakedOrbs={orbsAccountStore.stakedOrbs}
+                rewardsBalance={orbsAccountStore.rewardsBalance}
+                hasOrbsToWithdraw={orbsAccountStore.hasOrbsToWithdraw}
+                showCannotUnstakeNowSnackbar={showCannotUnstakeNowSnackbar}
+                showUnStakingModal={showUnStakingModal}
                 title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
-                toolTipTitle={
-                  <BalanceCardTooltip
-                    stakedOrbs={stakedOrbs}
-                    balance={orbsAccountStore.rewardsBalance.toLocaleString()}
-                    stakedOrbsText={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
-                    pendingRewardsText={balancesSectionTranslations('tooltipTitle_pendingRewards')}
-                  />
-                }
-                amount={fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs) + orbsAccountStore.rewardsBalance}
+                pendingRewardsTitle={balancesSectionTranslations('tooltipTitle_pendingRewards')}
                 actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
-                actionButtonActive={!!stakedOrbs}
-                onActionButtonPressed={onUnstakeTokensClicked}
-                balanceCardTestId={'balance_card_staked_orbs'}
-                isLoading={isLoading}
+                stakeTitle={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
               />
             </GridItem>
             {/* Cooldown & withdraw/restake */}
             <GridItem>
-              <BalanceCard
-                title={orbsInCooldownBoxTitle}
-                actionButtonTitle={orbsInCooldownBoxButtonText}
-                amount={fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown)}
-                actionButtonActive={orbsInCooldownBoxEnabled}
-                onActionButtonPressed={orbsInCooldownBoxButtonAction}
-                balanceCardTestId={'balance_card_cool_down_orbs'}
-                isLoading={isLoading}
+              <OrbsInCooldownCard
+                showWithdrawingModal={showWithdrawingModal.setTrue}
+                showRestakingModal={showRestakingModal.setTrue}
+                orbsInCoolDown={orbsAccountStore.orbsInCoolDown}
+                cooldownReleaseTimestamp={orbsAccountStore.cooldownReleaseTimestamp}
+                withdrawText={balancesSectionTranslations('action_withdrawYourTokens')}
+                restakeText={balancesSectionTranslations('action_restakeYourTokens')}
+                noTokensInCooldownText={balancesSectionTranslations('title_noTokensInCooldown')}
+                tokensInCooldownText={balancesSectionTranslations('title_tokensInCooldown')}
+                tokensReadyForWithdrawalText={balancesSectionTranslations('title_tokensReadyForWithdrawal')}
               />
             </GridItem>
           </Grid>

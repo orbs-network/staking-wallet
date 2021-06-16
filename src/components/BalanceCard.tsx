@@ -7,9 +7,11 @@ import { useStringOrElement } from './hooks/commonHooks';
 import useHover from '@react-hook/hover';
 import { makeStyles } from '@material-ui/core/styles';
 import useTheme from '@material-ui/core/styles/useTheme';
-import AnimatedNumber from 'animated-number-react';
-import BaseLoader from './loaders/index';
-import customLoaders from './loaders/custom-loaders';
+import constants from '../constants/constants';
+import CountUp from 'react-countup';
+import { addCommasToString } from '../utils/stringUtils';
+import { numberToString } from '../utils/numberUtils';
+
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
@@ -28,6 +30,19 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
+const handleFullNumber = (value: number) => {
+  return addCommasToString(numberToString(value));
+};
+
+const handleDecimals = (num: number) => {
+  const value = numberToString(num);
+  const isOutOfLimit = value.length > constants.numbersDecimalToDisplayLimit;
+  const showDots = constants.numbersDecimalToDisplayLimit && isOutOfLimit;
+  const val = isOutOfLimit ? value.substring(0, constants.numbersDecimalToDisplayLimit) : value;
+  const result = showDots ? `${val}...` : `${val}`;
+  return `.${result}`;
+};
+
 const useStyles = makeStyles((theme) => ({
   mainActionButton: {},
   secondaryActionButton: {
@@ -43,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   title: string | React.ElementType | JSX.Element;
   toolTipTitle?: string | React.ElementType | JSX.Element;
-  amount: number;
+  amount: string;
 
   // Action buttons (main + secondary)
   actionButtonTitle?: string;
@@ -64,7 +79,6 @@ interface IProps {
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
-
   const {
     title,
     toolTipTitle,
@@ -84,25 +98,14 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
   const hoverTargetRef = useRef();
   const isHovering = useHover(hoverTargetRef);
   const titleElement = useStringOrElement(title);
-
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
-
-  const numberFormatOptions = useMemo<Intl.NumberFormatOptions>(() => {
-    const options: Intl.NumberFormatOptions = {};
-
-    options.maximumFractionDigits = showFraction ? 3 : 0;
-
-    return options;
-  }, [showFraction]);
-
-  const formatValue = (value: number) => value.toLocaleString(undefined, numberFormatOptions);
-
+  const [full, decimal] = amount.split('.');
   const balanceItem = (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
-        {/*{amount.toLocaleString(undefined, numberFormatOptions)}*/}
-        {isLoading ? 0 : <AnimatedNumber value={amount} delay={400} formatValue={formatValue} />}
+        <CountUp preserveValue end={full as any} formattingFn={handleFullNumber} />
+        {decimal && <CountUp end={decimal as any} preserveValue formattingFn={handleDecimals} />}
       </Typography>
     </Grid>
   );

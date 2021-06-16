@@ -68,8 +68,6 @@ export const ConnectWalletSection = observer(() => {
   const hoverTargetRef = useRef();
   const isHovering = useHover(hoverTargetRef);
 
-  console.log({ isHovering });
-
   const theme = useTheme();
 
   const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.hasEthereumProvider
