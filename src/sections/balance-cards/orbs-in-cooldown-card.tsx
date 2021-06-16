@@ -19,8 +19,7 @@ interface IProps {
 }
 
 const OrbsInCooldownCard: FC<IProps> = observer((props) => {
-  console.log({ props });
-  const { showWithdrawingModal, showRestakingModal, orbsInCoolDown, withdrawText, restakeText } = props;
+  const { showWithdrawingModal, showRestakingModal, orbsInCoolDown, withdrawText, restakeText, isLoading } = props;
   const rerenderNumber = useNumber(0);
 
   const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
@@ -50,6 +49,7 @@ const OrbsInCooldownCard: FC<IProps> = observer((props) => {
       onActionButtonPressed={() => showRestakingModal(true)}
       balanceCardTestId={'balance_card_cool_down_orbs'}
       showFraction
+      isLoading={isLoading}
     />
   );
 });

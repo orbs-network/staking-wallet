@@ -8,7 +8,7 @@ import { ReactComponent as QrIcon } from '../../assets/qr.svg';
 import QR from './components/qr';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { UseBoolean, useBoolean } from 'react-hanger';
 import styled from 'styled-components';
 import { CommonDivider } from '../components/base/CommonDivider';
@@ -30,6 +30,7 @@ import useConnection from '../hooks/useConnection';
 import BaseLoader from '../components/loaders';
 import AddressLoader from '../components/loaders/address-loader';
 import customLoaders from '../components/loaders/custom-loaders';
+import CustomSnackbar from '../components/snackbar/custom-snackbar';
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
@@ -52,24 +53,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const copyAddress = (mainAddress: string, showSnackbarMessage: UseBoolean) => {
-  copy(mainAddress);
-  showSnackbarMessage.setTrue();
-};
-
 export const WalletInfoSection = observer(() => {
   const classes = useStyles();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const walletInfoSectionTranslations = useWalletInfoSectionTranslations();
   const alertsTranslations = useAlertsTranslations();
   const { mainAddress } = useCryptoWalletIntegrationStore();
-  const showSnackbarMessage = useBoolean(false);
+  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const showQrModal = useBoolean(false);
 
   const copyAddress = useCallback(() => {
     copy(mainAddress);
-    showSnackbarMessage.setTrue();
-  }, [mainAddress, showSnackbarMessage]);
+    setShowSnackbar(true);
+  }, [mainAddress]);
 
   const theme = useTheme();
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
@@ -145,23 +141,11 @@ export const WalletInfoSection = observer(() => {
       <CommonDivider />
 
       <QR showQrModal={showQrModal} mainAddress={mainAddress} />
-
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={showSnackbarMessage.value}
-        autoHideDuration={2000}
-        onClose={showSnackbarMessage.setFalse}
-      >
-        <CustomSnackBarContent
-          variant={'success'}
-          message={alertsTranslations('walletAddressWasCopied')}
-          onClose={showSnackbarMessage.setFalse}
-          data-testid={'message-address-was-copied'}
-        />
-      </Snackbar>
+      <CustomSnackbar
+        message={alertsTranslations('walletAddressWasCopied')}
+        show={showSnackbar}
+        hide={() => setShowSnackbar(false)}
+      />
     </Section>
   );
 });
