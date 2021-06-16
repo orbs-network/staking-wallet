@@ -96,7 +96,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   }, [stakedOrbsStringFormat]);
 
   const unstakingInput = useMemo(() => {
-    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat);
+    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat, disableInputs);
     const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
       <>
         <Typography style={{ color: 'orange', textAlign: 'center' }}>
