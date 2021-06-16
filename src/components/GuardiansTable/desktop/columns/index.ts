@@ -1,5 +1,5 @@
 import { Column } from 'material-table';
-import { Guardian } from './../../../../services/v2/orbsNodeService/systemState';
+import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import getQualificationColumn from './qualifications';
 import getNameColumn from './name';
 import getAddressColumn from './address';
@@ -14,17 +14,18 @@ import { IBaseTableProps } from '../../interfaces';
 interface IProps extends IBaseTableProps {
   guardiansTableTranslations: any;
   theme: any;
+  copyAddress: (value: string) => void;
 }
 
 const createDesktopTableColumns = (props: IProps) => {
-  const { committeeMembers, guardiansToDelegatorsCut, guardiansTableTranslations, theme } = props;
+  const { committeeMembers, guardiansToDelegatorsCut, guardiansTableTranslations, theme, copyAddress } = props;
 
   const columns: Column<Guardian>[] = [
     getSelectionColumn({ ...props, guardiansTableTranslations, theme }),
     getQualificationColumn(committeeMembers),
     getNameColumn(guardiansTableTranslations),
-    getAddressColumn(guardiansTableTranslations),
     getWebsiteColumn(guardiansTableTranslations),
+    getAddressColumn(guardiansTableTranslations, copyAddress),
     getRewardPercentageColumn(guardiansToDelegatorsCut, guardiansTableTranslations),
     getEffectiveStakeColumn(guardiansTableTranslations),
     getParticipationColumn(guardiansTableTranslations),

@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useLoaderStyles = makeStyles((theme) => ({
   wrapper: {
     position: 'relative',
+    width: '100%',
   },
   base: {
     overflow: 'hidden',

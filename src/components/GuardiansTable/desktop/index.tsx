@@ -1,13 +1,16 @@
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import MaterialTable, { MTableToolbar } from 'material-table';
-import { useGuardiansTableTranslations } from '../../../translations/translationsHooks';
+import { useAlertsTranslations, useGuardiansTableTranslations } from '../../../translations/translationsHooks';
 import { TABLE_ICONS } from '../../tables/TableIcons';
 import { Guardian } from '../../../services/v2/orbsNodeService/systemState';
 import createDesktopTableColumns from './columns/index';
 import { IBaseTableProps } from '../interfaces';
 import { createDesktopTableProps } from '../util';
+import copy from 'copy-to-clipboard';
+import CustomSnackbar from '../../snackbar/custom-snackbar';
+
 interface IProps extends IBaseTableProps {
   pageSize: number;
   sortedGuardians: Guardian[];
@@ -35,13 +38,20 @@ const GuardiansDesktop: FC<IProps> = (props) => {
 
   const classes = useStyles();
   const guardiansTableTranslations = useGuardiansTableTranslations();
+  const alertsTranslations = useAlertsTranslations();
   const theme = useTheme();
+  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
 
-  const desktopTableProps = createDesktopTableProps({ ...props, guardiansTableTranslations, theme });
+  const copyAddress = useCallback((value: string) => {
+    copy(value);
+    setShowSnackbar(true);
+  }, []);
+
+  const desktopTableProps = createDesktopTableProps({ ...props, guardiansTableTranslations, theme, copyAddress });
   const columns = createDesktopTableColumns(desktopTableProps);
 
   return (
-    <div className={classes.breakAll}>
+    <div className={classes.breakAll} style={{ width: '100%' }}>
       <MaterialTable
         title={tableTitle || ''}
         columns={columns}
@@ -72,6 +82,12 @@ const GuardiansDesktop: FC<IProps> = (props) => {
             </div>
           ),
         }}
+      />
+
+      <CustomSnackbar
+        message={alertsTranslations('walletAddressWasCopied')}
+        show={showSnackbar}
+        hide={() => setShowSnackbar(false)}
       />
     </div>
   );

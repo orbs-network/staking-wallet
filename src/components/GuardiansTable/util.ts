@@ -48,6 +48,7 @@ export const createTableProps = (props) => {
 interface IProps extends IBaseTableProps {
   guardiansTableTranslations: any;
   theme: any;
+  copyAddress: (value: string) => void;
 }
 export const createDesktopTableProps = (props: IProps) => {
   return {
@@ -59,6 +60,7 @@ export const createDesktopTableProps = (props: IProps) => {
     disableSelection: props.disableSelection,
     guardiansTableTranslations: props.guardiansTableTranslations,
     theme: props.theme,
+    copyAddress: props.copyAddress,
   };
 };
 
