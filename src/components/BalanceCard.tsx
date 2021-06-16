@@ -11,6 +11,8 @@ import constants from '../constants/constants';
 import CountUp from 'react-countup';
 import { addCommasToString } from '../utils/stringUtils';
 import { numberToString } from '../utils/numberUtils';
+import BaseLoader from './loaders';
+import customLoaders from './loaders/custom-loaders';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   // backgroundColor: 'rgba(33,33, 33, 0.55)',
@@ -74,6 +76,7 @@ interface IProps {
 
   // Testing
   balanceCardTestId?: string;
+  isLoading?: boolean;
 }
 
 export const BalanceCard: React.FC<IProps> = (props: IProps) => {
@@ -90,6 +93,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     secondaryActionButtonActive,
     showFraction,
     balanceCardTestId,
+    isLoading,
   } = props;
 
   const theme = useTheme();
@@ -110,46 +114,50 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
 
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} ref={hoverTargetRef}>
-      <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
-        <Grid item>
-          <Typography variant={'body1'}>{titleElement}</Typography>
-        </Grid>
-        {hasSecondaryActionButton && (
-          <Grid item>
-            <Button
-              className={classes.secondaryActionButton}
-              variant={isHovering ? 'outlined' : 'text'}
-              style={isHovering ? { backgroundColor: 'rgba(33,33, 33, 1)' } : {}}
-              color={'secondary'}
-              onClick={onSecondaryActionButtonPressed}
-              disabled={!secondaryActionButtonActive}
-            >
-              {secondaryActionButtonTitle}
-            </Button>
+      <BaseLoader isLoading={isLoading} customLoader={customLoaders.balanceCard}>
+        <>
+          <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
+            <Grid item>
+              <Typography variant={'body1'}>{titleElement}</Typography>
+            </Grid>
+            {hasSecondaryActionButton && (
+              <Grid item>
+                <Button
+                  className={classes.secondaryActionButton}
+                  variant={isHovering ? 'outlined' : 'text'}
+                  style={isHovering ? { backgroundColor: 'rgba(33,33, 33, 1)' } : {}}
+                  color={'secondary'}
+                  onClick={onSecondaryActionButtonPressed}
+                  disabled={!secondaryActionButtonActive}
+                >
+                  {secondaryActionButtonTitle}
+                </Button>
+              </Grid>
+            )}
           </Grid>
-        )}
-      </Grid>
-      <CommonDivider />
+          <CommonDivider />
 
-      {toolTipTitle && (
-        <Tooltip placement={'right'} title={toolTipTitle} arrow>
-          {balanceItem}
-        </Tooltip>
-      )}
-      {!toolTipTitle && balanceItem}
+          {toolTipTitle && (
+            <Tooltip placement={'right'} title={toolTipTitle} arrow>
+              {balanceItem}
+            </Tooltip>
+          )}
+          {!toolTipTitle && balanceItem}
 
-      {hasMainButton && (
-        <Grid item>
-          <CommonActionButton
-            variant={isHovering ? 'outlined' : 'contained'}
-            fullWidth={true}
-            disabled={!actionButtonActive}
-            onClick={onActionButtonPressed}
-          >
-            {actionButtonTitle}
-          </CommonActionButton>
-        </Grid>
-      )}
+          {hasMainButton && (
+            <Grid item>
+              <CommonActionButton
+                variant={isHovering ? 'outlined' : 'contained'}
+                fullWidth={true}
+                disabled={!actionButtonActive}
+                onClick={onActionButtonPressed}
+              >
+                {actionButtonTitle}
+              </CommonActionButton>
+            </Grid>
+          )}
+        </>
+      </BaseLoader>
     </StyledGrid>
   );
 };

@@ -15,6 +15,7 @@ interface IProps {
   noTokensInCooldownText: string;
   tokensInCooldownText: string;
   tokensReadyForWithdrawalText: string;
+  isLoading?: boolean;
 }
 
 const OrbsInCooldownCard: FC<IProps> = observer((props) => {

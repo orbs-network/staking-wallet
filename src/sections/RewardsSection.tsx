@@ -45,9 +45,8 @@ export const RewardsSection = observer(() => {
     orbsAccountStore.refreshAllRewardsData();
   }, 1000 * config.rewardsRefreshRateInSeconds);
 
-  if (!orbsAccountStore.doneLoading) {
-    return <Typography>{commonsTranslations('loading')}</Typography>;
-  }
+  const isLoading = !orbsAccountStore.doneLoading;
+  // const isLoading = true;
 
   // DEV_NOTE : We put the 'width 98%' because a problem with the spacing that caused the block width to extend beyond its parent container (to the right mostly)
   return (
@@ -63,6 +62,7 @@ export const RewardsSection = observer(() => {
             )})`}
             amount={numberToString(orbsAccountStore.totalRewardedRewards)}
             showFraction
+            isLoading={isLoading}
           />
         </GridItem>
 
@@ -73,6 +73,7 @@ export const RewardsSection = observer(() => {
             )})`}
             amount={numberToString(orbsAccountStore.estimatedRewardsForNextWeek)}
             showFraction
+            isLoading={isLoading}
           />
         </GridItem>
 
@@ -86,6 +87,7 @@ export const RewardsSection = observer(() => {
             secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}
             onSecondaryActionButtonPressed={showClaimingModal.setTrue}
             showFraction
+            isLoading={isLoading}
           />
         </GridItem>
       </Grid>

@@ -24,8 +24,12 @@ import {
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
+import { CommonDialog } from '../components/modal/CommonDialog';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-
+import useConnection from '../hooks/useConnection';
+import BaseLoader from '../components/loaders';
+import AddressLoader from '../components/loaders/address-loader';
+import customLoaders from '../components/loaders/custom-loaders';
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
@@ -62,6 +66,11 @@ export const WalletInfoSection = observer(() => {
   const showSnackbarMessage = useBoolean(false);
   const showQrModal = useBoolean(false);
 
+  const copyAddress = useCallback(() => {
+    copy(mainAddress);
+    showSnackbarMessage.setTrue();
+  }, [mainAddress, showSnackbarMessage]);
+
   const theme = useTheme();
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const largerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
@@ -77,6 +86,7 @@ export const WalletInfoSection = observer(() => {
     return extraStyle;
   }, [smOrLarger]);
 
+  useConnection(!!mainAddress);
   return (
     <Section>
       {/* Balance */}
@@ -100,25 +110,22 @@ export const WalletInfoSection = observer(() => {
           id={'addressItem'}
           style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset' : 'center' }}
         >
-          <Typography
-            variant={smOrLarger ? 'h4' : 'body2'}
-            data-testid={'text-active-address'}
-            style={walletAddressExtraStyle}
-            noWrap
-          >
-            {mainAddress}
-          </Typography>
+          <BaseLoader isLoading={!mainAddress} customLoader={customLoaders.address} hideContent>
+            <Typography
+              variant={smOrLarger ? 'h4' : 'body2'}
+              data-testid={'text-active-address'}
+              style={walletAddressExtraStyle}
+              noWrap
+            >
+              {mainAddress}
+            </Typography>
+          </BaseLoader>
         </Grid>
 
         {/* Buttons */}
         <Grid container direction={'row'} item sm={12} lg={3} justify={'flex-end'}>
           <Grid item xs={6} lg={5}>
-            <LoweCaseButton
-              className={classes.button}
-              fullWidth
-              onClick={() => copyAddress(mainAddress, showSnackbarMessage)}
-              startIcon={<CopyIcon />}
-            >
+            <LoweCaseButton className={classes.button} fullWidth onClick={() => copyAddress()} startIcon={<CopyIcon />}>
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
           </Grid>
