@@ -5,12 +5,11 @@ import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
-import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
-import errorMonitoring from '../../services/error-monitoring';
-
+import StakingInput from '../components/staking-input';
+import handleApprove from '../helpers/handle-approve';
+import { hanleStakingAllowanceError } from '../helpers/error-handling';
 export interface IOrbsAllowanceStepContentProps {
   goBackToChooseGuardianStep: () => void;
 }
@@ -36,77 +35,59 @@ export const OrbsAllowanceStepContent = observer(
     );
 
     // Handle error by displaying the proper error message
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-    const setTokenAllowanceForStakingContract = useCallback(() => {
-      // TODO : FUTURE : O.L : Add written error message about out of range
-      if (!stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance)) {
-        console.warn(`tried to set out of range allowance of ${orbsAllowance}`);
-        return;
-      }
-      message.setValue('');
-      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-      const stakingAmount = weiOrbsFromFullOrbs(orbsAllowance);
-      const promiEvent = orbsAccountStore.setAllowanceForStakingContract(stakingAmount);
+    const isApproveEnabled = stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance);
+    const handleAllowance = useCallback(
+      () =>
+        handleApprove({
+          isApproveEnabled,
+          message,
+          subMessage,
+          promiEvent: orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance)),
+          isBroadcastingMessage,
+          onPromiEventAction,
+          reReadStoresData,
+          wizardsCommonTranslations,
+          errorHandler: hanleStakingAllowanceError,
+          warnMsg: `tried to set out of range allowance of ${orbsAllowance}`,
+        }),
+      [
+        isApproveEnabled,
+        isBroadcastingMessage,
+        message,
+        onPromiEventAction,
+        orbsAccountStore,
+        orbsAllowance,
+        reReadStoresData,
+        subMessage,
+        wizardsCommonTranslations,
+      ],
+    );
 
-      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-      promiEvent.on('transactionHash', (txHash) => {
-        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-        isBroadcastingMessage.setTrue();
-      });
-      promiEvent.on('error', (error: Error) => {
-        const { errorMessages, captureException, sections } = errorMonitoring;
-        const customMsg = errorMessages.stepError(sections.stakingAllowance, error.message);
-        captureException(error, sections.stakingAllowance, customMsg);
-      });
-
-      onPromiEventAction(promiEvent, () => {
-        reReadStoresData();
-      });
-    }, [
-      orbsAllowance,
-      liquidOrbsAsString,
-      message,
-      subMessage,
-      wizardsCommonTranslations,
-      orbsAccountStore,
-      onPromiEventAction,
-      isBroadcastingMessage,
-      reReadStoresData,
-    ]);
-
-    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString, disableInputs);
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
-        onClick: setTokenAllowanceForStakingContract,
+        onClick: handleAllowance,
         title: stakingWizardTranslations('allowanceSubStep_action_approve'),
-        isDisabled: !stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance),
+        isDisabled: !isApproveEnabled,
       }),
-      [liquidOrbsAsString, orbsAllowance, setTokenAllowanceForStakingContract, stakingWizardTranslations],
+      [isApproveEnabled, handleAllowance, stakingWizardTranslations],
     );
-    const handleMax = useCallback(() => {
-      setOrbsAllowance(liquidOrbsAsString);
-    }, [liquidOrbsAsString]);
 
-    const allowanceInput = useMemo(() => {
-      const maxBtn = (
-        <MaxButton disabled={!showMaxBtn} onClick={handleMax}>
-          {wizardsCommonTranslations('popup_max')}
-        </MaxButton>
-      );
-      return (
-        <FullWidthOrbsInputField
-          id='orbsAllowance'
-          placeholder={wizardsCommonTranslations('popup_input_placeholder')}
-          value={orbsAllowance}
-          onChange={(value) => setOrbsAllowance(value)}
-          disabled={disableInputs}
-          buttonComponent={maxBtn}
-        />
-      );
-    }, [showMaxBtn, handleMax, wizardsCommonTranslations, orbsAllowance, disableInputs]);
+    const allowanceInput = (
+      <StakingInput
+        id='orbsAllowance'
+        placeholder={wizardsCommonTranslations('popup_input_placeholder')}
+        value={orbsAllowance}
+        onChange={setOrbsAllowance}
+        disabled={disableInputs}
+        showMaxBtn={stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString, disableInputs)}
+        handleMax={() => setOrbsAllowance(liquidOrbsAsString)}
+        maxText={wizardsCommonTranslations('popup_max')}
+      />
+    );
 
-    // TODO : ORL : TRANSLATIONS
     return (
       <BaseStepContent
         message={message.value}
@@ -121,7 +102,6 @@ export const OrbsAllowanceStepContent = observer(
         addCancelButton
         close={closeWizard}
         onCancelButtonClicked={goBackToChooseGuardianStep}
-        // cancelButtonText={wizardsCommonTranslations('action_close')}
         cancelButtonText={stakingWizardTranslations('backToStep_changeGuardian')}
       />
     );

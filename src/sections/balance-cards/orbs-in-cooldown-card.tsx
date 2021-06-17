@@ -1,39 +1,39 @@
 import React, { FC, useMemo } from 'react';
 import { observer } from 'mobx-react';
-import { BalanceCard } from '../../components/BalanceCard';
+import BalanceCard from '../../components/balance-card/index';
 import { useNumber } from 'react-hanger';
 import { useOrbsInCooldownState } from '../../store/storeStateHooks';
 import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import OrbsCooldownTitle from './components/orbs-in-cooldown-title';
+import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useBalancesSectionTranslations } from '../../translations/translationsHooks';
 interface IProps {
   showWithdrawingModal: (value: boolean) => void;
   showRestakingModal: (value: boolean) => void;
-  orbsInCoolDown: bigint;
-  cooldownReleaseTimestamp: any;
-  withdrawText: string;
-  restakeText: string;
-  noTokensInCooldownText: string;
-  tokensInCooldownText: string;
-  tokensReadyForWithdrawalText: string;
-  isLoading?: boolean;
 }
 
 const OrbsInCooldownCard: FC<IProps> = observer((props) => {
-  const { showWithdrawingModal, showRestakingModal, orbsInCoolDown, withdrawText, restakeText, isLoading } = props;
+  const { orbsInCoolDown, cooldownReleaseTimestamp, doneLoading } = useOrbsAccountStore();
+  const balancesSectionTranslations = useBalancesSectionTranslations();
+  const { showWithdrawingModal, showRestakingModal } = props;
   const rerenderNumber = useNumber(0);
 
   const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
   const orbsInCoolDownAsString = fullOrbsFromWeiOrbsString(orbsInCoolDown);
-
-  const orbsCooldownTitle = OrbsCooldownTitle({
-    hasOrbsInCooldown,
-    canWithdrawCooldownOrbs,
-    cooldownReleaseTimestamp: props.cooldownReleaseTimestamp,
-    rerenderNumber,
-    noTokensInCooldownText: props.noTokensInCooldownText,
-    tokensInCooldownText: props.tokensInCooldownText,
-    tokensReadyForWithdrawalText: props.tokensReadyForWithdrawalText,
-  });
+  console.log({ canWithdrawCooldownOrbs });
+  const orbsCooldownTitle = useMemo(
+    () =>
+      OrbsCooldownTitle({
+        hasOrbsInCooldown,
+        canWithdrawCooldownOrbs,
+        cooldownReleaseTimestamp,
+        rerenderNumber,
+        noTokensInCooldownText: balancesSectionTranslations('title_noTokensInCooldown'),
+        tokensInCooldownText: balancesSectionTranslations('title_tokensInCooldown'),
+        tokensReadyForWithdrawalText: balancesSectionTranslations('title_tokensReadyForWithdrawal'),
+      }),
+    [balancesSectionTranslations, canWithdrawCooldownOrbs, cooldownReleaseTimestamp, hasOrbsInCooldown, rerenderNumber],
+  );
 
   const showWithdraw = hasOrbsInCooldown && canWithdrawCooldownOrbs;
 
@@ -42,14 +42,14 @@ const OrbsInCooldownCard: FC<IProps> = observer((props) => {
       title={orbsCooldownTitle}
       secondaryActionButtonActive={showWithdraw}
       onSecondaryActionButtonPressed={showWithdraw ? () => showWithdrawingModal(true) : null}
-      actionButtonTitle={restakeText}
-      secondaryActionButtonTitle={showWithdraw ? withdrawText : ''}
+      actionButtonTitle={balancesSectionTranslations('action_restakeYourTokens')}
+      secondaryActionButtonTitle={showWithdraw ? balancesSectionTranslations('action_withdrawYourTokens') : ''}
       amount={orbsInCoolDownAsString}
       actionButtonActive={hasOrbsInCooldown}
       onActionButtonPressed={() => showRestakingModal(true)}
       balanceCardTestId={'balance_card_cool_down_orbs'}
       showFraction
-      isLoading={isLoading}
+      isLoading={!doneLoading}
     />
   );
 });

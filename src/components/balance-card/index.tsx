@@ -1,61 +1,13 @@
-import React, { useMemo, useRef } from 'react';
-import { Button, Grid, Theme, Typography, Paper, Tooltip } from '@material-ui/core';
-import styled from 'styled-components';
-import { CommonDivider } from './base/CommonDivider';
-import { CommonActionButton } from './base/CommonActionButton';
-import { useStringOrElement } from './hooks/commonHooks';
+import React, { useRef } from 'react';
+import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
+import { CommonDivider } from '../base/CommonDivider';
+import { CommonActionButton } from '../base/CommonActionButton';
+import { useStringOrElement } from '../hooks/commonHooks';
 import useHover from '@react-hook/hover';
-import { makeStyles } from '@material-ui/core/styles';
-import useTheme from '@material-ui/core/styles/useTheme';
-import constants from '../constants/constants';
-import CountUp from 'react-countup';
-import { addCommasToString } from '../utils/stringUtils';
-import { numberToString } from '../utils/numberUtils';
-import BaseLoader from './loaders';
-import customLoaders from './loaders/custom-loaders';
-
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  // backgroundColor: 'rgba(33,33, 33, 0.55)',
-  backgroundColor: 'rgba(47, 47, 47, 0.6)',
-  paddingTop: '0.5em',
-  paddingRight: '1.25em',
-  paddingLeft: '1.25em',
-  paddingBottom: '1.5em',
-
-  transition: 'background-color 0.5s, color 0.5s',
-
-  '@media (hover: hover)': {
-    '&:hover': {
-      backgroundColor: 'rgba(33,33, 33, 0.2)',
-      color: theme.palette.secondary.main,
-    },
-  },
-}));
-
-const handleFullNumber = (value: number) => {
-  return addCommasToString(numberToString(value));
-};
-
-const handleDecimals = (num: number) => {
-  const value = numberToString(num);
-  const isOutOfLimit = value.length > constants.numbersDecimalToDisplayLimit;
-  const showDots = constants.numbersDecimalToDisplayLimit && isOutOfLimit;
-  const val = isOutOfLimit ? value.substring(0, constants.numbersDecimalToDisplayLimit) : value;
-  const result = showDots ? `${val}...` : `${val}`;
-  return `.${result}`;
-};
-
-const useStyles = makeStyles((theme) => ({
-  mainActionButton: {},
-  secondaryActionButton: {
-    padding: 0,
-    fontSize: '100%',
-    fontFamily: 'inherit',
-    textTransform: 'none',
-    boxSizing: 'border-box',
-    transition: 'border 0.5s',
-  },
-}));
+import BaseLoader from '../loaders';
+import customLoaders from '../loaders/custom-loaders';
+import BalanceCardCounters from './components/counters';
+import { StyledGrid, useStyles } from './styles';
 
 interface IProps {
   title: string | React.ElementType | JSX.Element;
@@ -79,7 +31,7 @@ interface IProps {
   isLoading?: boolean;
 }
 
-export const BalanceCard: React.FC<IProps> = (props: IProps) => {
+const BalanceCard = (props: IProps) => {
   const classes = useStyles();
   const {
     title,
@@ -96,21 +48,11 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     isLoading,
   } = props;
 
-  const theme = useTheme();
   const hoverTargetRef = useRef();
   const isHovering = useHover(hoverTargetRef);
   const titleElement = useStringOrElement(title);
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
-  const [full, decimal] = amount.split('.');
-  const balanceItem = (
-    <Grid item>
-      <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
-        <CountUp preserveValue end={full as any} formattingFn={handleFullNumber} />
-        {decimal && <CountUp end={decimal as any} preserveValue formattingFn={handleDecimals} />}
-      </Typography>
-    </Grid>
-  );
 
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} ref={hoverTargetRef}>
@@ -136,13 +78,15 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
             )}
           </Grid>
           <CommonDivider />
-
-          {toolTipTitle && (
+          {toolTipTitle ? (
             <Tooltip placement={'right'} title={toolTipTitle} arrow>
-              {balanceItem}
+              <div>
+                <BalanceCardCounters isLoading={isLoading} amount={amount} />
+              </div>
             </Tooltip>
+          ) : (
+            <BalanceCardCounters isLoading={isLoading} amount={amount} />
           )}
-          {!toolTipTitle && balanceItem}
 
           {hasMainButton && (
             <Grid item>
@@ -161,3 +105,5 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     </StyledGrid>
   );
 };
+
+export default BalanceCard;
