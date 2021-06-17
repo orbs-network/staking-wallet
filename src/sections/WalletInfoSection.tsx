@@ -1,6 +1,5 @@
 import { Button, Divider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import { ReactComponent as walletIcon } from '../../assets/wallet.svg';
 import { ReactComponent as CopyIcon } from '../../assets/copy.svg';
@@ -9,10 +8,9 @@ import QR from './components/qr';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
 import React, { useCallback, useMemo, useState } from 'react';
-import { UseBoolean, useBoolean } from 'react-hanger';
+import { useBoolean } from 'react-hanger';
 import styled from 'styled-components';
 import { CommonDivider } from '../components/base/CommonDivider';
-import { CustomSnackBarContent } from '../components/snackbar/CustomSnackBarContent';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
@@ -24,13 +22,12 @@ import {
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
-import { CommonDialog } from '../components/modal/CommonDialog';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useConnection from '../hooks/useConnection';
 import BaseLoader from '../components/loaders';
-import AddressLoader from '../components/loaders/address-loader';
 import customLoaders from '../components/loaders/custom-loaders';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
+import { getWalletAddressExtraStyle } from './utils/index';
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
@@ -71,17 +68,6 @@ export const WalletInfoSection = observer(() => {
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const largerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const walletAddressExtraStyle = useMemo<React.CSSProperties>(() => {
-    const extraStyle: React.CSSProperties = {};
-
-    // For smaller screens we want to emphasize the text
-    if (!smOrLarger) {
-      extraStyle.fontWeight = 'bold';
-    }
-
-    return extraStyle;
-  }, [smOrLarger]);
-
   useConnection(!!mainAddress);
   return (
     <Section>
@@ -110,7 +96,7 @@ export const WalletInfoSection = observer(() => {
             <Typography
               variant={smOrLarger ? 'h4' : 'body2'}
               data-testid={'text-active-address'}
-              style={walletAddressExtraStyle}
+              style={getWalletAddressExtraStyle(smOrLarger)}
               noWrap
             >
               {mainAddress}
@@ -145,6 +131,8 @@ export const WalletInfoSection = observer(() => {
         message={alertsTranslations('walletAddressWasCopied')}
         show={showSnackbar}
         hide={() => setShowSnackbar(false)}
+        testId='message-address-was-copied'
+        variant='success'
       />
     </Section>
   );

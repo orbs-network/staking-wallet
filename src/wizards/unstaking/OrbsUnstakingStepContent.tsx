@@ -1,23 +1,18 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useUnstakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { Typography } from '@material-ui/core';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
-import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import { MaxButton } from '../../components/base/maxButton';
 import stakingUtil from '../../utils/stakingUtil';
-import errorMonitoring from '../../services/error-monitoring';
-
-const inputStyle = {
-  marginTop: '20px',
-};
-
+import StakingInput from '../components/staking-input';
+import handleApprove from '../helpers/handle-approve';
+import { hanleUnstakingError } from '../helpers/error-handling';
+import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 export const OrbsUntakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
@@ -38,109 +33,74 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     false,
   );
   // Handle error by displaying the proper error message
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-  const unstakeTokens = useCallback(() => {
-    // TODO : FUTURE : O.L : Add written error message about out of range
-    if (!stakingUtil.isApproveEnabled(stakedOrbsStringFormat, orbsForUnstaking)) {
-      console.warn(`tried to un-stake out of range amount of ${orbsForUnstaking}`);
-      return;
-    }
+  const isApproveEnabled = stakingUtil.isApproveEnabled(stakedOrbsStringFormat, orbsForUnstaking);
 
-    message.setValue('');
-    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
-    const promiEvent = orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking));
-
-    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-    promiEvent.on('transactionHash', (txHash) => {
-      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-      isBroadcastingMessage.setTrue();
-    });
-
-    promiEvent.on('error', (error: Error) => {
-      const { captureException, errorMessages, sections } = errorMonitoring;
-      const customMsg = errorMessages.stepError(sections.unstaking, error.message);
-      captureException(error, sections.unstaking, customMsg);
-    });
-
-    onPromiEventAction(promiEvent, () => {
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.unstaking, stakedOrbsNumericalFormat);
-      reReadStoresData();
+  const unstake = useCallback(() => {
+    handleApprove({
+      isApproveEnabled,
+      message,
+      subMessage,
+      promiEvent: orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking)),
+      isBroadcastingMessage,
+      onPromiEventAction,
+      reReadStoresData,
+      wizardsCommonTranslations,
+      errorHandler: hanleUnstakingError,
+      warnMsg: `tried to un-stake out of range amount of ${orbsForUnstaking}`,
+      analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(
+        STAKING_ACTIONS.unstaking,
+        stakedOrbsNumericalFormat,
+      ),
     });
   }, [
-    orbsForUnstaking,
-    stakedOrbsStringFormat,
-    stakedOrbsNumericalFormat,
-    reReadStoresData,
+    analyticsService,
+    isApproveEnabled,
+    isBroadcastingMessage,
     message,
+    onPromiEventAction,
+    orbsAccountStore,
+    orbsForUnstaking,
+    reReadStoresData,
+    stakedOrbsNumericalFormat,
     subMessage,
     wizardsCommonTranslations,
-    orbsAccountStore,
-    onPromiEventAction,
-    isBroadcastingMessage,
-    analyticsService,
   ]);
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({
-      onClick: unstakeTokens,
+      onClick: () => unstake(),
       title: unstakingWizardTranslations('unstakingSubStep_action_unstake'),
-      isDisabled: !stakingUtil.isApproveEnabled(stakedOrbsStringFormat, orbsForUnstaking),
+      isDisabled: !isApproveEnabled,
     }),
-    [orbsForUnstaking, stakedOrbsStringFormat, unstakeTokens, unstakingWizardTranslations],
+    [isApproveEnabled, unstake, unstakingWizardTranslations],
   );
 
-  const handleMax = useCallback(() => {
-    setOrbsForUnstaking(stakedOrbsStringFormat);
-  }, [stakedOrbsStringFormat]);
-
-  const unstakingInput = useMemo(() => {
-    const showMaxBtn = stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat, disableInputs);
-    const orbsInCooldownWarning = orbsAccountStore.hasOrbsInCooldown ? (
-      <>
-        <Typography style={{ color: 'orange', textAlign: 'center' }}>
-          {unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownHeader')}{' '}
-        </Typography>
-        <Typography style={{ color: 'orange', textAlign: 'center' }}>
-          {unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownBody')}{' '}
-        </Typography>
-      </>
-    ) : null;
-
-    const maxBtn = (
-      <MaxButton disabled={!showMaxBtn} onClick={handleMax}>
-        {wizardsCommonTranslations('popup_max')}
-      </MaxButton>
-    );
-
-    return (
-      <>
-        {orbsInCooldownWarning}
-        <FullWidthOrbsInputField
-          id={'orbsUnstaking'}
-          value={orbsForUnstaking}
-          onChange={(value) => setOrbsForUnstaking(value)}
-          disabled={disableInputs}
-          placeholder={wizardsCommonTranslations('popup_input_placeholder')}
-          customStyle={inputStyle}
-          buttonComponent={maxBtn}
-        />
-      </>
-    );
-  }, [
-    handleMax,
-    orbsAccountStore.hasOrbsInCooldown,
-    unstakingWizardTranslations,
-    orbsForUnstaking,
-    disableInputs,
-    stakedOrbsStringFormat,
-    wizardsCommonTranslations,
-  ]);
-
-  // TODO : ORL : TRANSLATIONS
-  const infoTitleToTranslate =
-    "This will take your ORBS out of their staked state and start a 14-day cooldown period, after which you'll be able to withdraw them to your wallet. During those 14 days, you may choose to re-stake your tokens.";
+  const unstakingInput = (
+    <StakingInput
+      id='orbsUnstaking'
+      placeholder={wizardsCommonTranslations('popup_input_placeholder')}
+      value={orbsForUnstaking}
+      onChange={setOrbsForUnstaking}
+      disabled={disableInputs}
+      showMaxBtn={stakingUtil.isMaxBtnEnabled(orbsForUnstaking, stakedOrbsStringFormat, disableInputs)}
+      handleMax={() => setOrbsForUnstaking(stakedOrbsStringFormat)}
+      maxText={wizardsCommonTranslations('popup_max')}
+    >
+      {orbsAccountStore.hasOrbsInCooldown ? (
+        <>
+          <Typography style={{ color: 'orange', textAlign: 'center' }}>
+            {unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownHeader')}
+          </Typography>
+          <Typography style={{ color: 'orange', textAlign: 'center' }}>
+            {unstakingWizardTranslations('unstakingSubStep_warning_thereAreOrbsInCooldownBody')}
+          </Typography>
+        </>
+      ) : null}
+    </StakingInput>
+  );
 
   // TODO : O.L : Use proper grid system instead of the 'br's
   return (
@@ -148,8 +108,7 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       message={message.value}
       subMessage={subMessage.value}
       title={unstakingWizardTranslations('unstakingSubStep_stepTitle')}
-      // infoTitle={unstakingWizardTranslations('unstakingSubStep_stepExplanation')}
-      infoTitle={infoTitleToTranslate}
+      infoTitle={unstakingWizardTranslations('unstakingSubStep_stepExplanation')}
       disableInputs={disableInputs}
       isLoading={isBroadcastingMessage.value}
       contentTestId={'wizard_sub_step_initiate_unstaking_tx'}

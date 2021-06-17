@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
-import { ConnectWalletSection } from './ConnectWalletSection';
+import ConnectWalletSection from './connect-wallet/index';
 import { WalletInfoSection } from './WalletInfoSection';
 import { BalancesSection } from '../sections/BalancesSection';
 import { RewardsSection } from './RewardsSection';
@@ -12,15 +12,13 @@ import { RewardsSection } from './RewardsSection';
 export const WalletSectionsWrapper = observer(() => {
   const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
 
-  if (isConnectedToWallet) {
-    return (
-      <>
-        <WalletInfoSection />
-        <BalancesSection />
-        <RewardsSection />
-      </>
-    );
-  } else {
-    return <ConnectWalletSection />;
-  }
+  return isConnectedToWallet ? (
+    <>
+      <WalletInfoSection />
+      <BalancesSection />
+      <RewardsSection />
+    </>
+  ) : (
+    <ConnectWalletSection />
+  );
 });

@@ -13,7 +13,8 @@ import { useAnalyticsService } from '../../services/ServicesHooks';
 import constants from '../../constants/constants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import errorMonitoring from '../../services/error-monitoring';
-
+import { handleWithdrawingError } from '../helpers/error-handling';
+import handleApprove from '../helpers/handle-approve';
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
@@ -39,39 +40,37 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
   );
 
   // Handle error by displaying the proper error message
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-  const withdrawTokens = useCallback(() => {
-    message.setValue('');
-    subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
-    const promiEvent = orbsAccountStore.withdrawTokens();
-
-    // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-    promiEvent.on('transactionHash', (txHash) => {
-      subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-      isBroadcastingMessage.setTrue();
-    });
-    promiEvent.on('error', (error: Error) => {
-      const { captureException, errorMessages, sections } = errorMonitoring;
-      const customMsg = errorMessages.stepError(sections.withdrawing, error.message);
-      captureException(error, sections.withdrawing, customMsg);
-    });
-    onPromiEventAction(promiEvent, () => {
-      analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.withdrawing, fullOrbsReadyForWithdrawal);
-      reReadStoresData();
-    });
-  }, [
-    message,
-    subMessage,
-    wizardsCommonTranslations,
-    orbsAccountStore,
-    onPromiEventAction,
-    isBroadcastingMessage,
-    analyticsService,
-    fullOrbsReadyForWithdrawal,
-    reReadStoresData,
-  ]);
+  const withdrawTokens = useCallback(
+    () =>
+      handleApprove({
+        message,
+        subMessage,
+        promiEvent: orbsAccountStore.withdrawTokens(),
+        isBroadcastingMessage,
+        onPromiEventAction,
+        reReadStoresData,
+        wizardsCommonTranslations,
+        errorHandler: handleWithdrawingError,
+        analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(
+          STAKING_ACTIONS.withdrawing,
+          fullOrbsReadyForWithdrawal,
+        ),
+      }),
+    [
+      isBroadcastingMessage,
+      message,
+      onPromiEventAction,
+      orbsAccountStore,
+      reReadStoresData,
+      subMessage,
+      wizardsCommonTranslations,
+      analyticsService,
+      fullOrbsReadyForWithdrawal,
+    ],
+  );
 
   const actionButtonProps = useMemo<IActionButtonProps>(
     () => ({

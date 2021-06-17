@@ -1,9 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Button, Typography } from '@material-ui/core';
-import { WizardContent } from '../../components/wizards/WizardContent';
 import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 
 interface IProps {

@@ -4,7 +4,6 @@ import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 
 const useMonitoring = () => {
   const { mainAddress } = useCryptoWalletIntegrationStore();
-  console.log({ mainAddress });
   useEffect(() => {
     ErrorMonitoring.init();
   }, []);

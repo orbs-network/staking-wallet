@@ -36,7 +36,6 @@ export const GuardiansSection = observer(() => {
   const showSnackbarMessage = useBoolean(false);
 
   orbsNodeStore.guardians;
-  const guardiansService = useGuardiansService();
   const stakingRewardsService = useStakingRewardsService();
 
   const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
@@ -61,15 +60,6 @@ export const GuardiansSection = observer(() => {
 
   const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
-  // Before data was loaded
-  // if (isLoadingData) {
-  //   return <Typography>{commonsTranslations('loading')}</Typography>;
-  // }
-
-  // TODO : ORL : Fix display of total and effective stake.
-
-  // TODO : ORL : TRANSLATION
-  console.log(isLoadingData);
   return (
     <Section data-testid='guardians-section'>
       <BaseLoader isLoading={isLoadingData} hideContent customLoader={customLoaders.guardiansSection}>

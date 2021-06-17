@@ -6,9 +6,11 @@ interface IProps {
   message: string;
   show: boolean;
   hide: () => void;
+  variant: 'success' | 'warning' | 'error' | 'info';
+  testId: string;
 }
 
-const CustomSnackbar = ({ message, hide, show }: IProps) => {
+const CustomSnackbar = ({ message, hide, show, testId, variant }: IProps) => {
   return show ? (
     <Snackbar
       anchorOrigin={{
@@ -19,12 +21,7 @@ const CustomSnackbar = ({ message, hide, show }: IProps) => {
       autoHideDuration={1200}
       onClose={hide}
     >
-      <CustomSnackBarContent
-        variant={'success'}
-        message={message}
-        onClose={hide}
-        data-testid={'message-address-was-copied'}
-      />
+      <CustomSnackBarContent variant={variant} message={message} onClose={hide} data-testid={testId} />
     </Snackbar>
   ) : null;
 };

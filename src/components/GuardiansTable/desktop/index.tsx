@@ -88,6 +88,8 @@ const GuardiansDesktop: FC<IProps> = (props) => {
         message={alertsTranslations('walletAddressWasCopied')}
         show={showSnackbar}
         hide={() => setShowSnackbar(false)}
+        testId='message-address-was-copied'
+        variant='success'
       />
     </div>
   );
