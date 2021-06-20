@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 
-export default (isConnected?: boolean) => {
+const useConnection = () => {
   const history = useHistory();
+  const { mainAddress } = useCryptoWalletIntegrationStore();
 
   const [connected, setConnected] = useState<boolean>(false);
   useEffect(() => {
-    if (!isConnected && connected) {
+    if (mainAddress) {
+      setConnected(true);
+    }
+    if (!mainAddress && connected) {
       return window.location.reload();
     }
-    setConnected(isConnected);
-  }, [connected, history, isConnected]);
+  }, [connected, history, mainAddress]);
 };
+
+export default useConnection;

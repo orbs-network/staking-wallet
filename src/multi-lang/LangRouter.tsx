@@ -7,24 +7,8 @@
  */
 
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import i18n from 'i18next';
 import { PreLangBasenameProvider } from './PreLangBasenameContext';
-import { initReactI18next } from 'react-i18next';
-import { resources } from '../translations/translations';
-
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .init({
-    resources,
-    lng: 'en',
-    fallbackLng: 'en',
-    keySeparator: '.',
-    interpolation: {
-      escapeValue: false, // react already safes from xss
-    },
-  });
-
+import AppRouter from '../router/app-router';
 interface IProps {
   preLangBasename?: string;
 }
@@ -32,7 +16,7 @@ interface IProps {
 export const LangRouter: React.FC<IProps> = ({ children, preLangBasename = '' }) => {
   return (
     <PreLangBasenameProvider value={preLangBasename}>
-      <Router basename={`${preLangBasename}`}>{children}</Router>
+      <AppRouter preLangBasename={preLangBasename}>{children}</AppRouter>
     </PreLangBasenameProvider>
   );
 };

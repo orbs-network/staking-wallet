@@ -68,7 +68,6 @@ export const WalletInfoSection = observer(() => {
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const largerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
-  useConnection(!!mainAddress);
   return (
     <Section>
       {/* Balance */}

@@ -11,14 +11,17 @@ import { observer } from 'mobx-react';
 import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
+import useConnection from './hooks/useConnection';
+
 export const App = observer(() => {
   useMonitoring();
   useLanguage();
+  useConnection();
 
   return (
     <main>
       <Header />
-      <ContentContainer id={'appContainer'}>
+      <ContentContainer id='appContainer'>
         <Switch>
           <Route exact path={routes.guardiansPage} component={GuardianDisplayPage} />
           <Route exact path={routes.main} component={MainAppPage} />
