@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useBoolean } from 'react-hanger';
-import { Button, Grid } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
+import { Grid } from '@material-ui/core';
 import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
 import { observer } from 'mobx-react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
-import { useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
+import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
 import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
@@ -18,15 +17,41 @@ import {
 } from '../../translations/translationsHooks';
 import { CommonDivider } from '../../components/base/CommonDivider';
 import { CommonDialog } from '../../components/modal/CommonDialog';
-import { CommonActionButton } from '../../components/base/CommonActionButton';
 import { MyGuardianDisplay } from './MyGuardianDisplay';
 import { GuardianSelectingWizard } from '../../wizards/guardianSelection/GuardianSelectingWizard';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import { useGuardiansDelegatorsCut, useGuardiansService, useStakingRewardsService } from '../../services/ServicesHooks';
+import { useGuardiansDelegatorsCut, useStakingRewardsService } from '../../services/ServicesHooks';
 import BaseLoader from '../../components/loaders/index';
-import customLoaders from '../../components/loaders/custom-loaders';
+import ErrorFallback from '../../components/errors/index';
+import CustomLoaders from '../../components/loaders/loader-components/index';
+
+const handleIsLoading = (
+  isConnected: boolean | undefined,
+  orbsNodeStoreLoaded: boolean,
+  orbsAccountStoreLoaded: boolean,
+) => {
+  if (isConnected) {
+    return !orbsNodeStoreLoaded || !orbsAccountStoreLoaded;
+  }
+  return !orbsNodeStoreLoaded;
+};
+
+const handleIsError = (
+  isConnected: boolean | undefined,
+  orbsNodeStoreError: boolean,
+  orbsAccountStoreError: boolean,
+) => {
+  if (isConnected) {
+    return orbsNodeStoreError || orbsAccountStoreError;
+  }
+
+  return orbsNodeStoreError;
+};
+
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
+  const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
+
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
   const orbsNodeStore = useOrbsNodeStore();
@@ -35,8 +60,8 @@ export const GuardiansSection = observer(() => {
   const showGuardianSelectionModal = useBoolean(false);
   const showSnackbarMessage = useBoolean(false);
 
-  orbsNodeStore.guardians;
   const stakingRewardsService = useStakingRewardsService();
+  const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
   const [selectedGuardianAddress, setSelectedGuardianAddress] = useState<string>(null);
 
@@ -51,90 +76,84 @@ export const GuardiansSection = observer(() => {
     },
     [orbsAccountStore.selectedGuardianAddress, showGuardianChangingModal, showSnackbarMessage],
   );
-
-  const isLoadingData = !orbsNodeStore.doneLoading || !orbsAccountStore.doneLoading;
-  const isErrorOnLoading = orbsNodeStore.errorLoading || orbsAccountStore.errorLoading;
-
-  const totalStake = orbsNodeStore.totalStake;
+  const isLoading = handleIsLoading(isConnectedToWallet, orbsNodeStore.doneLoading, orbsAccountStore.doneLoading);
+  const isErrorOnLoading = handleIsError(
+    isConnectedToWallet,
+    orbsNodeStore.errorLoading,
+    orbsAccountStore.errorLoading,
+  );
   const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
-
-  const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
-
+  const sideTitle = isLoading
+    ? ''
+    : [
+        `${sectionTitlesTranslations(
+          'allGuardians_sideTitleTotalStake',
+        )}: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
+        `${sectionTitlesTranslations(
+          'allGuardians_sideTitleCommitteeStake',
+        )}: ${committeeEffectiveStake.toLocaleString()}`,
+      ];
   return (
     <Section data-testid='guardians-section'>
-      <BaseLoader isLoading={isLoadingData} hideContent customLoader={customLoaders.guardiansSection}>
-        <>
-          <SectionHeader
-            title={sectionTitlesTranslations('allGuardians')}
-            sideTitle={[
-              `${sectionTitlesTranslations(
-                'allGuardians_sideTitleTotalStake',
-              )}: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
-              `${sectionTitlesTranslations(
-                'allGuardians_sideTitleCommitteeStake',
-              )}: ${committeeEffectiveStake.toLocaleString()}`,
-            ]}
-            icon={ShielIcon}
-            bottomPadding
-          />
-          <CommonDivider />
+      <SectionHeader
+        title={sectionTitlesTranslations('allGuardians')}
+        sideTitle={sideTitle}
+        icon={ShielIcon}
+        bottomPadding
+      />
+      <CommonDivider />
+      <ErrorFallback isError={isErrorOnLoading} errorText={commonsTranslations('loadingFailed')}>
+        <BaseLoader isLoading={isLoading} hideContent LoaderComponent={CustomLoaders.GuardiansSection}>
+          <>
+            {orbsAccountStore.participatingInStaking && (
+              <MyGuardianDisplay openGuardianSelectionWizard={showGuardianSelectionModal.setTrue} />
+            )}
+            <Grid item xs={12}>
+              <GuardiansTable
+                guardianSelectionMode={'Change'}
+                selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
+                guardians={orbsNodeStore.guardians}
+                onGuardianSelect={onGuardianSelect}
+                tableTestId={'guardians-table'}
+                committeeMembers={orbsNodeStore.committeeMembers}
+                guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
+              />
+            </Grid>
 
-          {/* TODO : O.L : Find a better mechanism to display error vs content*/}
-          {isErrorOnLoading && <Typography>{commonsTranslations('loadingFailed')}</Typography>}
-          {!isErrorOnLoading && (
-            <>
-              {orbsAccountStore.participatingInStaking && (
-                <MyGuardianDisplay openGuardianSelectionWizard={showGuardianSelectionModal.setTrue} />
-              )}
-              <Grid item xs={12}>
-                <GuardiansTable
-                  guardianSelectionMode={'Change'}
-                  selectedGuardian={
-                    orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''
-                  }
-                  guardians={orbsNodeStore.guardians}
-                  onGuardianSelect={onGuardianSelect}
-                  tableTestId={'guardians-table'}
-                  committeeMembers={orbsNodeStore.committeeMembers}
-                  guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
-                />
-              </Grid>
+            {/* Restaking */}
+            <CommonDialog open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
+              <GuardianChangingWizard
+                closeWizard={showGuardianChangingModal.setFalse}
+                newGuardianAddress={selectedGuardianAddress}
+              />
+            </CommonDialog>
 
-              {/* Restaking */}
-              <CommonDialog open={showGuardianChangingModal.value} onClose={showGuardianChangingModal.setFalse}>
-                <GuardianChangingWizard
-                  closeWizard={showGuardianChangingModal.setFalse}
-                  newGuardianAddress={selectedGuardianAddress}
-                />
-              </CommonDialog>
+            <CommonDialog open={showGuardianSelectionModal.value} onClose={showGuardianSelectionModal.setFalse}>
+              <GuardianSelectingWizard
+                closeWizard={showGuardianSelectionModal.setFalse}
+                selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress}
+              />
+            </CommonDialog>
 
-              <CommonDialog open={showGuardianSelectionModal.value} onClose={showGuardianSelectionModal.setFalse}>
-                <GuardianSelectingWizard
-                  closeWizard={showGuardianSelectionModal.setFalse}
-                  selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress}
-                />
-              </CommonDialog>
-
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                open={showSnackbarMessage.value}
-                autoHideDuration={1500}
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={showSnackbarMessage.value}
+              autoHideDuration={1500}
+              onClose={showSnackbarMessage.setFalse}
+            >
+              <CustomSnackBarContent
+                variant={'info'}
+                message={alertsTranslations('guardianAlreadySelected')}
                 onClose={showSnackbarMessage.setFalse}
-              >
-                <CustomSnackBarContent
-                  variant={'info'}
-                  message={alertsTranslations('guardianAlreadySelected')}
-                  onClose={showSnackbarMessage.setFalse}
-                  data-testid={'message-guardian-already-selected'}
-                />
-              </Snackbar>
-            </>
-          )}
-        </>
-      </BaseLoader>
+                data-testid={'message-guardian-already-selected'}
+              />
+            </Snackbar>
+          </>
+        </BaseLoader>
+      </ErrorFallback>
     </Section>
   );
 });

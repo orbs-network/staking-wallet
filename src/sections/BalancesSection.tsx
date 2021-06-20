@@ -19,10 +19,10 @@ import {
   useCommonsTranslations,
   useSectionsTitlesTranslations,
 } from '../translations/translationsHooks';
-import Typography from '@material-ui/core/Typography';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
+import ErrorFallback from '../components/errors';
 
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};
@@ -32,7 +32,7 @@ export const BalancesSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const commonsTranslations = useCommonsTranslations();
   const alertsTranslations = useAlertsTranslations();
-  const orbsAccountStore = useOrbsAccountStore();
+  const { errorLoading } = useOrbsAccountStore();
 
   const showStakingModal = useBoolean(false);
   const showUnStakingModal = useBoolean(false);
@@ -44,13 +44,9 @@ export const BalancesSection = observer(() => {
     <Section>
       {/* Balance */}
       <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
-
       <CommonDivider />
 
-      {/* TODO : O.L : Find a better mechanism to display error vs content*/}
-      {orbsAccountStore.errorLoading ? (
-        <Typography>{commonsTranslations('loadingFailed')}</Typography>
-      ) : (
+      <ErrorFallback errorText={commonsTranslations('loadingFailed')} isError={errorLoading}>
         <>
           {/* TODO : FUTURE : O.L : Consider reducing the spacing when flex goes to column display */}
           <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
@@ -103,7 +99,7 @@ export const BalancesSection = observer(() => {
             testId='message-cannot-unstake-when-can-withdraw'
           />
         </>
-      )}
+      </ErrorFallback>
     </Section>
   );
 });

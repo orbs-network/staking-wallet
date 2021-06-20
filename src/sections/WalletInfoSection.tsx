@@ -25,7 +25,7 @@ import Hidden from '@material-ui/core/Hidden';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useConnection from '../hooks/useConnection';
 import BaseLoader from '../components/loaders';
-import customLoaders from '../components/loaders/custom-loaders';
+import Loaders from '../components/loaders/loader-components/index';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import { getWalletAddressExtraStyle } from './utils/index';
 const LoweCaseButton = styled(Button)({
@@ -92,7 +92,7 @@ export const WalletInfoSection = observer(() => {
           id={'addressItem'}
           style={{ maxWidth: '100%', textAlign: largerThanLarge ? 'unset' : 'center' }}
         >
-          <BaseLoader isLoading={!mainAddress} customLoader={customLoaders.address} hideContent>
+          <BaseLoader isLoading={!mainAddress} LoaderComponent={Loaders.Address} hideContent>
             <Typography
               variant={smOrLarger ? 'h4' : 'body2'}
               data-testid={'text-active-address'}
