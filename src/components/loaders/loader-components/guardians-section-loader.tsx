@@ -7,7 +7,7 @@ import { IBaseLoader } from '../types';
 const StyledGrid = styled(Grid)(({ theme }) => ({
   backgroundColor: 'rgba(47,47,47,0.6)',
   padding: '20px',
-  height: '300px',
+  height: '500px',
   width: '100%',
   transition: 'background-color 0.5s, color 0.5s',
   position: 'relative',
@@ -21,11 +21,12 @@ const GuardiansLoader = ({ style }: IBaseLoader) => {
   return (
     <StyledGrid container direction={'column'}>
       <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
-        <LoaderFigure className={classes.guardianTopFigure}></LoaderFigure>
+        <LoaderFigure className={classes.guardiansbigFigure}></LoaderFigure>
       </Grid>
       <CommonDivider />
-      <LoaderFigure className={classes.guardianBottomFigure}></LoaderFigure>
-      <LoaderFigure className={classes.guardianLastFigure}></LoaderFigure>
+      <LoaderFigure className={classes.guardiansMediumFigure}></LoaderFigure>
+      <LoaderFigure className={classes.guardianSmallFigure}></LoaderFigure>
+      <LoaderFigure className={classes.guardianSmallFigure}></LoaderFigure>
     </StyledGrid>
   );
 };

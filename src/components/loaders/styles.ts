@@ -49,15 +49,15 @@ export const useLoaderStyles = makeStyles((theme) => ({
     maxWidth: '80%',
     minHeight: '22px',
   },
-  guardianTopFigure: {
-    maxWidth: '350px',
+  guardiansbigFigure: {
+    maxWidth: '60%',
   },
-  guardianBottomFigure: {
-    maxWidth: '200px',
+  guardiansMediumFigure: {
+    maxWidth: '40%',
     marginTop: '0px',
   },
-  guardianLastFigure: {
-    maxWidth: '100px',
+  guardianSmallFigure: {
+    maxWidth: '20%',
     marginTop: '20px',
   },
 }));
