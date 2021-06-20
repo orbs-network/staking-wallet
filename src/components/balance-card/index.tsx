@@ -5,7 +5,7 @@ import { CommonActionButton } from '../base/CommonActionButton';
 import { useStringOrElement } from '../hooks/commonHooks';
 import useHover from '@react-hook/hover';
 import BaseLoader from '../loaders';
-import customLoaders from '../loaders/custom-loaders';
+import Loaders from '../loaders/loader-components/index';
 import BalanceCardCounters from './components/counters';
 import { StyledGrid, useStyles } from './styles';
 
@@ -56,7 +56,7 @@ const BalanceCard = (props: IProps) => {
 
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} ref={hoverTargetRef}>
-      <BaseLoader isLoading={isLoading} customLoader={customLoaders.balanceCard}>
+      <BaseLoader isLoading={isLoading} LoaderComponent={Loaders.BalanceCard}>
         <>
           <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
             <Grid item>

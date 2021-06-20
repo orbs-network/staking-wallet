@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react';
-import { useStateful } from 'react-hanger';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
-import { messageFromTxCreationSubStepError } from '../wizardMessages';
 import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
@@ -12,7 +10,6 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import constants from '../../constants/constants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
-import errorMonitoring from '../../services/error-monitoring';
 import { handleWithdrawingError } from '../helpers/error-handling';
 import handleApprove from '../helpers/handle-approve';
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
