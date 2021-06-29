@@ -34,13 +34,12 @@ const handleFullNumber = (value: number) => {
   return addCommasToString(numberToString(value));
 };
 
-const handleDecimals = (num: number) => {
-  const value = numberToString(num);
+const handleDecimals = (value: string) => {
   const isOutOfLimit = value.length > constants.numbersDecimalToDisplayLimit;
   const showDots = constants.numbersDecimalToDisplayLimit && isOutOfLimit;
   const val = isOutOfLimit ? value.substring(0, constants.numbersDecimalToDisplayLimit) : value;
   const result = showDots ? `${val}...` : `${val}`;
-  return `.${result}`;
+  return ()=> `.${result}`;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +102,7 @@ export const BalanceCard: React.FC<IProps> = (props: IProps) => {
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
         <CountUp preserveValue end={full as any} formattingFn={handleFullNumber} />
-        {decimal && <CountUp end={decimal as any} preserveValue formattingFn={handleDecimals} />}
+        {decimal && <CountUp end={decimal as any} preserveValue formattingFn={handleDecimals(decimal)} />}
       </Typography>
     </Grid>
   );
