@@ -119,6 +119,7 @@ const config: Configuration = {
   plugins,
   devServer: {
     historyApiFallback: true,
+    disableHostCheck: true, // disables checking of host server
     open: true,
   },
   externals: {
