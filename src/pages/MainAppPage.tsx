@@ -5,6 +5,7 @@ import { GuardiansSection } from '../sections/guardians/GuardiansSection';
 import { WalletSectionsWrapper } from '../sections/WalletSectionsWrapper';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { useAnalyticsService } from '../services/ServicesHooks';
+import {version} from '../../package.json';
 
 export const MainAppPage = observer(() => {
   const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
@@ -30,7 +31,7 @@ export const MainAppPage = observer(() => {
 
       <GuardiansSection />
 
-      <div style={{ fontSize: 8, textAlign: 'center' }}>{process.env.VERSION || ''}</div>
+      <div style={{ fontSize: 8, textAlign: 'center' }}>{version}</div>
     </Grid>
   );
 });
