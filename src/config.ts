@@ -81,6 +81,7 @@ if (ethereumNetwork === 'ropsten') {
   const ROPSTEN_GUARDIANS = '0x16F93f7929E4a294b7916544f10Ee94EB094B2eC';
   const ROPSTEN_COMMITTEE = '0xdbcf7666504f7975cA08FbCeef3e949c5dFE8906';
   const ROPSTEN_REGISTRY = '0x5D7779231a6344edE6178623f31007cF2D16DFd7';
+  const ROPSTEN_STAKING_REWARDS_WALLET = '0xc47E0BeCbC3D9BF91d6C8586b7147338CEAf015B';
 
   config.contractsAddressesOverride.stakingContract = ROPSTEN_STAKING;
   config.contractsAddressesOverride.erc20Contract = ROPSTEN_ERC20;

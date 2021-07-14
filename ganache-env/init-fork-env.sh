@@ -5,7 +5,7 @@ echo
 
 # download a new version of status.json
 rm -rf ./_status
-curl -s http://0xcore.orbs.com/services/management-service/status -o status
+curl -s http://0xcore-management-direct.global.ssl.fastly.net/status -o status
 mkdir ./_status
 mv status ./_status/.
 
