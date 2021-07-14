@@ -1,9 +1,8 @@
 import Big from 'big.js';
 
-const isMaxBtnEnabled = (orbsAllowance: string, liquidOrbs: string): boolean => {
-  if (!liquidOrbs) return false;
-  if (!orbsAllowance) return true;
-  const first = new Big(orbsAllowance);
+const isMaxBtnEnabled = (orbsAllowance: string, liquidOrbs: string, disableInputs: boolean): boolean => {
+  if (!liquidOrbs || disableInputs) return false;
+  const first = new Big(orbsAllowance || '0');
   const second = new Big(liquidOrbs);
   return !second.eq(first);
 };

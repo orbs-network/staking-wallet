@@ -4,6 +4,7 @@ import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeServic
 import { action, computed, observable } from 'mobx';
 import { Guardian, SystemState } from '../services/v2/orbsNodeService/systemState';
 import { ICommitteeMemberData, IReadAndProcessResults } from '../services/v2/orbsNodeService/OrbsNodeTypes';
+import errorMonitoring from '../services/error-monitoring';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
@@ -76,9 +77,10 @@ export class OrbsNodeStore {
     this.setErrorLoading(false);
     try {
       await this.findReadAndSetNodeData();
-
       this.setDoneLoading(true);
-    } catch (e) {
+    } catch (error) {
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.orbsNodeStore);
       this.setErrorLoading(true);
     }
   }
@@ -115,6 +117,8 @@ export class OrbsNodeStore {
 
         return readAndProcessResult;
       } catch (e) {
+        const { sections, captureException } = errorMonitoring;
+        captureException(e, sections.orbsNodeStore);
         console.log(`Error while reading and processing default node : ${e}`);
         return null;
       }

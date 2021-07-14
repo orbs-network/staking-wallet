@@ -95,6 +95,7 @@ export interface IGuardiansTableTranslations {
   columnHeader_address: string;
   columnHeader_website: string;
   columnHeader_rewardsPercentageToDelegators: string;
+  rewards_percentage: string;
   columnHeader_effectiveStake: string;
   columnHeader_participation: string;
   columnHeader_capacity: string;
