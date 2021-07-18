@@ -1,13 +1,12 @@
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import MaterialTable, { MTableToolbar } from 'material-table';
 import { useAlertsTranslations, useGuardiansTableTranslations } from '../../../translations/translationsHooks';
 import { TABLE_ICONS } from '../../tables/TableIcons';
 import { Guardian } from '../../../services/v2/orbsNodeService/systemState';
 import createDesktopTableColumns from './columns/index';
 import { IBaseTableProps } from '../interfaces';
-import { createDesktopTableProps } from '../util';
 import copy from 'copy-to-clipboard';
 import CustomSnackbar from '../../snackbar/custom-snackbar';
 
@@ -34,7 +33,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const GuardiansDesktop: FC<IProps> = (props) => {
-  const { sortedGuardians, pageSize, tableTitle, selectedGuardian } = props;
+  const {
+    sortedGuardians,
+    pageSize,
+    tableTitle,
+    selectedGuardian,
+    committeeMembers,
+    guardiansToDelegatorsCut,
+    onGuardianSelect,
+    guardianSelectionMode,
+    disableSelection,
+  } = props;
 
   const classes = useStyles();
   const guardiansTableTranslations = useGuardiansTableTranslations();
@@ -47,8 +56,19 @@ const GuardiansDesktop: FC<IProps> = (props) => {
     setShowSnackbar(true);
   }, []);
 
-  const desktopTableProps = createDesktopTableProps({ ...props, guardiansTableTranslations, theme, copyAddress });
-  const columns = createDesktopTableColumns(desktopTableProps);
+  const tableProps = {
+    committeeMembers,
+    guardiansToDelegatorsCut,
+    onGuardianSelect,
+    selectedGuardian,
+    guardianSelectionMode,
+    disableSelection,
+    guardiansTableTranslations,
+    theme,
+    copyAddress,
+  };
+
+  const columns = useMemo(() => createDesktopTableColumns(tableProps), [tableProps]);
 
   return (
     <div className={classes.breakAll} style={{ width: '100%' }}>

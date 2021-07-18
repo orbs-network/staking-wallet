@@ -29,40 +29,11 @@ export const getCommitteeMemberData = (guardianEthAddress: string, committeeMemb
 
 export const getWebsiteAddress = (url: string) => (url.toLowerCase().indexOf('http') === 0 ? url : `http://${url}`);
 
-export const createTableProps = (props) => {
-  const { guardians, selectedGuardian } = props;
-  return {
-    committeeMembers: props.committeeMembers,
-    guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
-    onGuardianSelect: props.onGuardianSelect,
-    selectedGuardian,
-    guardianSelectionMode: props.guardianSelectionMode,
-    disableSelection: props.disableSelection,
-    sortedGuardians: getSortedGuardians(guardians, selectedGuardian),
-    pageSize: Math.min(50, guardians.length),
-    tableTitle: props.tableTitle,
-    densePadding: props.densePadding,
-  };
-};
-
 interface IProps extends IBaseTableProps {
   guardiansTableTranslations: any;
   theme: any;
   copyAddress: (value: string) => void;
 }
-export const createDesktopTableProps = (props: IProps) => {
-  return {
-    committeeMembers: props.committeeMembers,
-    guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
-    onGuardianSelect: props.onGuardianSelect,
-    selectedGuardian: props.selectedGuardian,
-    guardianSelectionMode: props.guardianSelectionMode,
-    disableSelection: props.disableSelection,
-    guardiansTableTranslations: props.guardiansTableTranslations,
-    theme: props.theme,
-    copyAddress: props.copyAddress,
-  };
-};
 
 export const getEffectiveStakeInUnits = (EffectiveStake: number): string => {
   return EffectiveStake > 1_000_000
