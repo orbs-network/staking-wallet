@@ -1,11 +1,11 @@
 # Troubleshooting Guide
 
-### Select Ethereum Mainnet
+## Select Ethereum Mainnet
 ![](screenshots/select_mainnet.png)
 
 Make sure the selected network is Ethereum Mainnet
 
-### Give Metamask network access privileges
+## Give Metamask network access privileges
 On Chrome, right click on Metamask menu to open the browser extension configuration context menu
 
 ![](screenshots/network_permissions_1.png)
@@ -16,7 +16,7 @@ Check "This Can Read and Change Site Data".
 
 Verify "On All Sites" is selected
 
-### Reload the page and clear cache
+## Reload the page and clear cache
 
 More detailed instructions available [here](https://en.wikipedia.org/wiki/Wikipedia:Bypass_your_cache): 
 
@@ -24,7 +24,7 @@ More detailed instructions available [here](https://en.wikipedia.org/wiki/Wikipe
 - Apple Safari: Hold down ⇧ Shift and click the Reload toolbar button. 
 - Chrome and Firefox for Mac: Hold down both ⌘ Cmd+⇧ Shift and press R.
 
-### Reset Metamask Account
+## Reset Metamask Account
 
 This will *not* require you to enter your password, or your secret recovery phrase again. 
 
@@ -46,6 +46,6 @@ Scroll down to find your "Reset Account" button
 
 Select and confirm "Reset Account". This will clear your recent transactions list in the "Activity" area in the main Metamask panel. But it will reset and synchronize your local wallet to 
 
-### Restart your browser
+## Restart your browser
 
 If issues persist, close the browser and launch it again
