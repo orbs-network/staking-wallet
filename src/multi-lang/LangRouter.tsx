@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import i18n from 'i18next';
 import { PreLangBasenameProvider } from './PreLangBasenameContext';
 import { initReactI18next } from 'react-i18next';
@@ -32,7 +32,7 @@ interface IProps {
 export const LangRouter: React.FC<IProps> = ({ children, preLangBasename = '' }) => {
   return (
     <PreLangBasenameProvider value={preLangBasename}>
-      <Router basename={`${preLangBasename}`}>{children}</Router>
+      <Router basename={preLangBasename}>{children}</Router>
     </PreLangBasenameProvider>
   );
 };

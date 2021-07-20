@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
 import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
+import { Link } from 'react-router-dom';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -24,7 +25,9 @@ export const Header = () => {
           <StyledToolBar disableGutters>
             <Grid container direction={'row'} alignItems={'center'}>
               <Grid item xs={8}>
-                <TetraLogoAndIconSvg />
+                <Link to='/'>
+                  <TetraLogoAndIconSvg />
+                </Link>
               </Grid>
               <Grid item xs={4}>
                 <LanguagesSelector />
