@@ -8,6 +8,7 @@ import i18n from 'i18next';
 import moment from 'moment';
 import { Footer } from './components/nav/Footer';
 import { GuardianDisplayPage } from './pages/GuardiansDisplayPage';
+import NetworkIndicator from './components/NetworkIndicator';
 
 function getForcedLanguage(pathname: string) {
   const langMatch = pathname.match(/\/(en|ko|jp)\/?/);
@@ -45,6 +46,7 @@ export const App = observer(() => {
 
   return (
     <main>
+      <NetworkIndicator />
       <Header />
       <ContentContainer id={'appContainer'}>
         <Switch>
