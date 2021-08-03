@@ -67,7 +67,11 @@ const BalanceCard = (props: IProps) => {
                 <Button
                   className={classes.secondaryActionButton}
                   variant={isHovering ? 'outlined' : 'text'}
-                  style={isHovering ? { backgroundColor: 'rgba(33,33, 33, 1)' } : {}}
+                  style={{
+                    backgroundColor: isHovering ? 'rgba(33,33, 33, 1)' : '',
+                    paddingLeft: '10px',
+                    paddingRight: '10px',
+                  }}
                   color={'secondary'}
                   onClick={onSecondaryActionButtonPressed}
                   disabled={!secondaryActionButtonActive}
