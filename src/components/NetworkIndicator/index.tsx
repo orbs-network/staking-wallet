@@ -1,28 +1,26 @@
+import { Typography } from '@material-ui/core';
 import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import useNetwork from '../hooks/useNetwork';
-
-const useStyles = makeStyles({
-  container: {
-    padding: '10px 20px 10px 20px',
-    color: 'white',
-    background: '#388e3c',
-    borderRadius: '4px',
-    fontSize: '16px',
-    zIndex: 9999,
-    fontWeight: 600,
-    position: 'fixed',
-    top: '20px',
-    left: '50%',
-    transform: 'translate(-50%)',
-  },
-});
+import { useNetworkIndicatorStyles } from './styles';
 
 const NetworkIndicator = () => {
-  const [network] = useNetwork();
-  const classes = useStyles();
+  const [network, chainId] = useNetwork();
+  const classes = useNetworkIndicatorStyles();
+  if (process.env.NODE_ENV !== 'production') {
+    return <div className={classes.devContainer}>{network}</div>;
+  }
 
-  return network ? <div className={classes.container}>{network}</div> : null;
+  if (chainId && chainId !== process.env.CHAIN_ID) {
+    return (
+      <div className={classes.prodContainer}>
+        <section className={classes.overlay}></section>
+        <div className={classes.prodContainerContent}>
+          <Typography>Please connect to Mainnet</Typography>
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default NetworkIndicator;

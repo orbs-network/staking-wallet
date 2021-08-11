@@ -1,0 +1,53 @@
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+export const useNetworkIndicatorStyles = makeStyles({
+  devContainer: {
+    padding: '10px 20px 10px 20px',
+    color: 'white',
+    background: '#388e3c',
+    borderRadius: '4px',
+    fontSize: '16px',
+    zIndex: 9999,
+    fontWeight: 600,
+    position: 'fixed',
+    top: '20px',
+    left: '50%',
+    transform: 'translate(-50%)',
+  },
+  prodContainer: {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    zIndex: 9999,
+  },
+  prodContainerContent: {
+    position: 'absolute',
+    background: 'white',
+    borderRadius: '20px',
+    top: '30%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '300px',
+    maxWidth: 'calc(100% - 30px)',
+    height: 'auto',
+    minHeight: '200px',
+    padding: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& p': {
+      color: 'black',
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: '24px',
+    },
+  },
+  overlay: {
+    width: '100%',
+    height: '100%',
+    background: 'black',
+    opacity: '0.7',
+  },
+});

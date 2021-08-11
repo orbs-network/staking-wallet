@@ -17,17 +17,16 @@ const handleNetworkChange = (ethereum: IEthereumProvider) => {
   });
 };
 
-const useNetwork = (): [string | undefined] => {
+const useNetwork = (): [string | undefined, string | undefined] => {
   const [network, setNetwork] = useState<string | undefined>(undefined);
+  const [chain, setChain] = useState<string | undefined>(undefined);
 
   const getChainId = async (ethereum: any) => {
-    if (process.env.NODE_ENV === 'production') {
-      return null;
-    }
     try {
       const web3 = new Web3(ethereum);
       const chainId = await web3.eth.getChainId();
       if (!chainId) return;
+      setChain(chainId.toString());
       const networkName = chainDictionary[chainId];
       setNetwork(networkName);
     } catch (error) {
@@ -45,7 +44,7 @@ const useNetwork = (): [string | undefined] => {
       window.removeEventListener('load', handleNetworkChange.bind(null, ethereum));
     };
   }, []);
-  return [network];
+  return [network, chain];
 };
 
 export default useNetwork;
