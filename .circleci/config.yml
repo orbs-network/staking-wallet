@@ -3,11 +3,10 @@ orbs:
   node: circleci/node@4.7.0
 jobs:
   build:
-    machine: true
+    docker:
+      - image: circleci/node:10.17.0
     steps:
       - checkout
-      - node/install:
-          node-version: "16.4.0"
       - run: ./.circleci/build.sh
       - store_artifacts:
           path: /home/circleci/.npm/_logs
