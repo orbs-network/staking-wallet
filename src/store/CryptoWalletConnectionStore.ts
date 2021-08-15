@@ -2,6 +2,7 @@ import { action, computed, observable, reaction } from 'mobx';
 import { IReactionDisposer } from 'mobx/lib/core/reaction';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { ICryptoWalletConnectionService } from '@orbs-network/contracts-js';
+import errorMonitoring from '../services/error-monitoring';
 
 export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
@@ -61,17 +62,27 @@ export class CryptoWalletConnectionStore {
     if (this.isConnectedToWallet) {
       return true;
     } else {
-      const permissionGranted = await this.cryptoWalletConnectionService.requestConnectionPermission();
-      this.setWalletConnectionRequestApproved(permissionGranted);
-
-      return this.walletConnectionRequestApproved;
+      try {
+        const permissionGranted = await this.cryptoWalletConnectionService.requestConnectionPermission();
+        this.setWalletConnectionRequestApproved(permissionGranted);
+        return this.walletConnectionRequestApproved;
+      } catch (error) {
+        errorMonitoring.captureException(error, 'CryptoWalletConnectionStore', 'error in function: askToConnect');
+      }
     }
   }
 
   private async readInformationFromConnectedWallet() {
-    const walletAddress = await this.cryptoWalletConnectionService.readMainAddress();
-
-    this.setMainAddress(walletAddress);
+    try {
+      const walletAddress = await this.cryptoWalletConnectionService.readMainAddress();
+      this.setMainAddress(walletAddress);
+    } catch (error) {
+      errorMonitoring.captureException(
+        error,
+        'CryptoWalletConnectionStore',
+        'error in function: readInformationFromConnectedWallet',
+      );
+    }
   }
 
   @action('setWalletConnectionRequestApproved')

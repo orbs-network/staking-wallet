@@ -1,5 +1,6 @@
 import { IStakingService } from 'orbs-pos-data';
 import { StakingServiceEventCallback } from 'orbs-pos-data/dist/interfaces/IStakingService';
+import errorMonitoring from '../../services/error-monitoring';
 
 export function subscribeToOrbsInCooldownChange(
   stakingService: IStakingService,
@@ -15,6 +16,11 @@ export function subscribeToOrbsInCooldownChange(
       await Promise.all([unstakeEventUnsubscribe(), restakeEventUnsubscribe(), withdrewEventUnsubscribe()]);
       return true;
     } catch (e) {
+      errorMonitoring.captureException(
+        e,
+        'combinedEventsSubscriptions',
+        'error in function: subscribeToOrbsInCooldownChange',
+      );
       return false;
     }
   };
@@ -34,6 +40,11 @@ export function subscribeToStakeAmountChange(
       await Promise.all([stakeEventUnsubscribe(), unstakedEventUnsubscribe(), restakedEventUnsubscribe()]);
       return true;
     } catch (e) {
+      errorMonitoring.captureException(
+        e,
+        'combinedEventsSubscriptions',
+        'error in function: subscribeToStakeAmountChange',
+      );
       return false;
     }
   };
