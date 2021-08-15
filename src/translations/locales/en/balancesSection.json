@@ -2,7 +2,7 @@
   "action_restakeYourTokens": "Restake your tokens",
   "action_stakeYourTokens": "Stake your tokens",
   "action_unstakeYourTokens": "Unstake your tokens",
-  "action_withdrawYourTokens": "Withdraw your tokens",
+  "action_withdrawYourTokens": "Withdraw",
   "title_noTokensInCooldown": "No tokens in cooldown",
   "title_stakedOrbsAndRewardsBalance": "Staked ORBS & Rewards balance",
   "title_stakedOrbsInSmartContract": "Staked ORBS in smart contract",

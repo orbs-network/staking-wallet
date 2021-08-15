@@ -10,7 +10,8 @@ import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
-
+import handleApprove from '../helpers/handle-approve';
+import { hanleStakingError } from '../helpers/error-handling';
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
 }
@@ -35,43 +36,43 @@ export const OrbsStakingStepContent = observer(
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
     // Handle error by displaying the proper error message
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-    const stakeTokens = useCallback(() => {
-      message.setValue('');
-      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
-      const promiEvent = orbsAccountStore.stakeTokens(orbsForStaking);
-
-      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-      promiEvent.on('transactionHash', (txHash) => {
-        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-        isBroadcastingMessage.setTrue();
-      });
-
-      onPromiEventAction(promiEvent, () => {
-        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.staking, fullOrbsForStaking);
-        reReadStoresData();
+    const stake = useCallback(() => {
+      handleApprove({
+        message,
+        subMessage,
+        promiEvent: orbsAccountStore.stakeTokens(orbsForStaking),
+        isBroadcastingMessage,
+        onPromiEventAction,
+        reReadStoresData,
+        wizardsCommonTranslations,
+        errorHandler: hanleStakingError,
+        analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(
+          STAKING_ACTIONS.staking,
+          fullOrbsForStaking,
+        ),
       });
     }, [
+      analyticsService,
+      isBroadcastingMessage,
       message,
+      onPromiEventAction,
+      orbsAccountStore,
+      reReadStoresData,
       subMessage,
       wizardsCommonTranslations,
-      orbsAccountStore,
       orbsForStaking,
-      onPromiEventAction,
-      isBroadcastingMessage,
-      analyticsService,
       fullOrbsForStaking,
-      reReadStoresData,
     ]);
 
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
-        onClick: stakeTokens,
+        onClick: stake,
         title: stakingWizardTranslations('stakingSubStep_action_stake'),
       }),
-      [stakeTokens, stakingWizardTranslations],
+      [stake, stakingWizardTranslations],
     );
 
     return (
