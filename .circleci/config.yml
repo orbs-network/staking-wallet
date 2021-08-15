@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: "14.17.5"
+          node-version: "10.17.0"
       - run: ./.circleci/build.sh
       - store_artifacts:
           path: /home/circleci/.npm/_logs
