@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import i18n from 'i18next';
 import { PreLangBasenameProvider } from './PreLangBasenameContext';
 import AppRouter from '../router/app-router';
 interface IProps {
