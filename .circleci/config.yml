@@ -10,10 +10,10 @@ jobs:
           node-version: "14.17.5"
       - run: ./.circleci/build.sh
       - store_artifacts:
-          path: .npm/_logs
+          path: /.npm/_logs
           destination: npm_logs
       - store_artifacts:
-          path: _logs
+          path: /_logs
           destination: npm_logs2
 
 workflows:
