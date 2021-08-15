@@ -3,11 +3,11 @@ orbs:
   node: circleci/node@4.7.0
 jobs:
   build:
-    executor:
-          name: node/default
-          tag: "14.17.5"
+    machine: true
     steps:
       - checkout
+      - node/install:
+          node-version: "16.4.0"
       - run: ./.circleci/build.sh
       - store_artifacts:
           path: /home/circleci/.npm/_logs
