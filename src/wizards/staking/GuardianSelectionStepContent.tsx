@@ -10,7 +10,9 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService, useGuardiansDelegatorsCut, useStakingRewardsService } from '../../services/ServicesHooks';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-
+import errorMonitoring from '../../services/error-monitoring';
+import handleApprove from '../helpers/handle-approve';
+import { handleGuardianSelectionError } from '../helpers/error-handling';
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
   isRegisteredGuardian: boolean;
@@ -50,6 +52,7 @@ export const GuardianSelectionStepContent = observer(
     );
 
     // Handle error by displaying the proper error message
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
     const selectGuardian = useCallback(
@@ -61,19 +64,16 @@ export const GuardianSelectionStepContent = observer(
         if (guardian.EthAddress.toLowerCase() === selectedGuardianAddress.toLowerCase()) {
           skipToSuccess();
         } else {
-          const promiEvent = orbsAccountStore.delegate(guardian.EthAddress);
-
-          // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-          promiEvent.on('transactionHash', (txHash) => {
-            subMessage.setValue(
-              wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'),
-            );
-            isBroadcastingMessage.setTrue();
-          });
-
-          onPromiEventAction(promiEvent, () => {
-            analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange);
-            reReadStoresData();
+          handleApprove({
+            message,
+            subMessage,
+            promiEvent: orbsAccountStore.delegate(guardian.EthAddress),
+            isBroadcastingMessage,
+            onPromiEventAction,
+            reReadStoresData,
+            wizardsCommonTranslations,
+            errorHandler: handleGuardianSelectionError,
+            analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
           });
         }
       },

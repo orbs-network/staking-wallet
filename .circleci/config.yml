@@ -1,14 +1,15 @@
 version: 2.1
 orbs:
-  node: circleci/node@1.1.6
+  node: circleci/node@4.7.0
 jobs:
   build:
-    machine: true
+    docker:
+      - image: circleci/node:10.17.0
     steps:
       - checkout
-      - node/install:
-          node-version: "10.17.0"
       - run: ./.circleci/build.sh
+      - store_artifacts:
+          path: /home/circleci/.npm/_logs
 
 workflows:
   build:

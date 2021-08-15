@@ -1,69 +1,56 @@
 import React, { FC, useMemo } from 'react';
 import { observer } from 'mobx-react';
-import { BalanceCard } from '../../components/BalanceCard';
+import BalanceCard from '../../components/balance-card/index';
 import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import stakingUtil from '../../utils/stakingUtil';
-import BalanceTooltip from './parts/balance-tooltip';
+import BalanceTooltip from './components/balance-tooltip';
 import { UseBoolean } from 'react-hanger';
 import { numberToString } from '../../utils/numberUtils';
+import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useBalancesSectionTranslations } from '../../translations/translationsHooks';
 interface IProps {
-  stakedOrbs: bigint;
-  rewardsBalance: number;
-  hasOrbsToWithdraw: boolean;
   showCannotUnstakeNowSnackbar: UseBoolean;
   showUnStakingModal: UseBoolean;
-  title: string;
-  stakeTitle: string;
-  pendingRewardsTitle: string;
-  actionButtonTitle: string;
 }
 
-const StakedAndRewardsCard: FC<IProps> = observer(
-  ({
-    stakedOrbs,
-    rewardsBalance,
-    hasOrbsToWithdraw,
-    showCannotUnstakeNowSnackbar,
-    showUnStakingModal,
-    title,
-    stakeTitle,
-    pendingRewardsTitle,
-    actionButtonTitle,
-  }) => {
-    const onUnstakeTokensClicked = useMemo(() => {
-      if (hasOrbsToWithdraw) {
-        return () => showCannotUnstakeNowSnackbar.setTrue();
-      } else {
-        return () => showUnStakingModal.setTrue();
+const StakedAndRewardsCard: FC<IProps> = observer(({ showCannotUnstakeNowSnackbar, showUnStakingModal }) => {
+  const { stakedOrbs, rewardsBalance, hasOrbsToWithdraw, doneLoading } = useOrbsAccountStore();
+  const balancesSectionTranslations = useBalancesSectionTranslations();
+
+  const onUnstakeTokensClicked = useMemo(() => {
+    if (hasOrbsToWithdraw) {
+      return () => showCannotUnstakeNowSnackbar.setTrue();
+    } else {
+      return () => showUnStakingModal.setTrue();
+    }
+  }, [hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
+
+  const stakedOrbsAsString = fullOrbsFromWeiOrbsString(stakedOrbs);
+
+  const orbsToUnstakeAsString = stakingUtil.addNumbersAsStrings(
+    fullOrbsFromWeiOrbsString(stakedOrbs),
+    numberToString(rewardsBalance),
+  );
+  return (
+    <BalanceCard
+      title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
+      toolTipTitle={
+        <BalanceTooltip
+          stakeTitle={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
+          stakedOrbs={stakedOrbsAsString}
+          rewardsBalance={numberToString(rewardsBalance)}
+          pendingRewardsTitle={balancesSectionTranslations('tooltipTitle_pendingRewards')}
+        />
       }
-    }, [hasOrbsToWithdraw, showCannotUnstakeNowSnackbar, showUnStakingModal]);
-
-    const stakedOrbsAsString = fullOrbsFromWeiOrbsString(stakedOrbs);
-
-    const orbsToUnstakeAsString = stakingUtil.addNumbersAsStrings(
-      fullOrbsFromWeiOrbsString(stakedOrbs),
-      numberToString(rewardsBalance),
-    );
-    return (
-      <BalanceCard
-        title={title}
-        toolTipTitle={
-          <BalanceTooltip
-            stakeTitle={stakeTitle}
-            stakedOrbs={stakedOrbsAsString}
-            rewardsBalance={numberToString(rewardsBalance)}
-            pendingRewardsTitle={pendingRewardsTitle}
-          />
-        }
-        amount={orbsToUnstakeAsString}
-        actionButtonTitle={actionButtonTitle}
-        actionButtonActive={!!stakedOrbs}
-        onActionButtonPressed={onUnstakeTokensClicked}
-        balanceCardTestId={'balance_card_staked_orbs'}
-        showFraction
-      />
-    );
-  },
-);
+      amount={orbsToUnstakeAsString}
+      actionButtonTitle={balancesSectionTranslations('action_unstakeYourTokens')}
+      actionButtonActive={!!stakedOrbs}
+      onActionButtonPressed={onUnstakeTokensClicked}
+      balanceCardTestId={'balance_card_staked_orbs'}
+      showFraction
+      isLoading={!doneLoading}
+    />
+  );
+});
 
 export default StakedAndRewardsCard;
