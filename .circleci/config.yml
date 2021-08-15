@@ -1,20 +1,21 @@
 version: 2.1
-orbs:
-  node: circleci/node@4.7.0
+
 jobs:
   build:
-    filters:
-      branches:
-        only: master
     docker:
-      - image: circleci/node:10.17.0
+      - image: circleci/node:10.17.0    
     steps:
       - checkout
       - run: ./.circleci/build.sh
       - store_artifacts:
           path: /home/circleci/.npm/_logs
-    
+
 workflows:
   build:
-    jobs:
-      - build
+    jobs:      
+      - build:
+          filters:
+            branches:
+              only: master
+
+          
