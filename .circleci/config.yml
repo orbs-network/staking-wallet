@@ -9,6 +9,7 @@ jobs:
       - node/install:
           node-version: "14.17.5"
       - run: ./.circleci/build.sh
+      - run: mv /home/circleci/.npm/_logs/* $CIRCLE_ARTIFACTS
 
 workflows:
   build:
