@@ -5,6 +5,13 @@ git config --global user.name "Itamar Arjuan"
 
 pwd
 
+echo
+
+ls
+
+echo
+
+
 npm --version
 node --version
 
