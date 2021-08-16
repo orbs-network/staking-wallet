@@ -1,8 +1,7 @@
 version: 2.1
-orbs:
-  node: circleci/node@4.7.0
+
 jobs:
-  build:
+  build-and-deploy-gh-staging:
     docker:
       - image: circleci/node:10.17.0
     steps:
@@ -12,6 +11,9 @@ jobs:
           path: /home/circleci/.npm/_logs
 
 workflows:
-  build:
+  deploy-staging-for-master:
     jobs:
-      - build
+      - build-and-deploy-gh-staging:
+          filters:
+            branches:
+              only: master
