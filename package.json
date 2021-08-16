@@ -22,6 +22,7 @@
     "build-dev-fork-tunnel": "cross-env ENV_FILE=.env.mainnet-fork-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-staging-mainnet": "cross-env ENV_FILE=.env.staging-mainnet TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "dev": "cross-env ENV_FILE=.env.development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
+    "prod-staging": "cross-env ENV_FILE=.env.staging TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-tunnel": "cross-env ENV_FILE=.env.development-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-fork": "cross-env ENV_FILE=.env.mainnet-fork TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w --host 0.0.0.0",
     "dev-fork-tunnel": "cross-env ENV_FILE=.env.mainnet-fork-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
