@@ -67,7 +67,8 @@ export class CryptoWalletConnectionStore {
         this.setWalletConnectionRequestApproved(permissionGranted);
         return this.walletConnectionRequestApproved;
       } catch (error) {
-        errorMonitoring.captureException(error, 'CryptoWalletConnectionStore', 'error in function: askToConnect');
+        const { captureException, sections } = errorMonitoring;
+        captureException(error, sections.walletConnectionStore, 'error in function: askToConnect');
       }
     }
   }
@@ -77,11 +78,8 @@ export class CryptoWalletConnectionStore {
       const walletAddress = await this.cryptoWalletConnectionService.readMainAddress();
       this.setMainAddress(walletAddress);
     } catch (error) {
-      errorMonitoring.captureException(
-        error,
-        'CryptoWalletConnectionStore',
-        'error in function: readInformationFromConnectedWallet',
-      );
+      const { captureException, sections } = errorMonitoring;
+      captureException(error, sections.walletConnectionStore, 'error in function: readInformationFromConnectedWallet');
     }
   }
 

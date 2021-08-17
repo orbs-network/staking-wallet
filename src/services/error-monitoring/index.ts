@@ -38,6 +38,7 @@ class ErrorMonitoring {
   }
 
   captureException(error: Error, section = null, customMessage = null) {
+    console.log(error, section, customMessage);
     if (!dsn) return;
     const { message, stack, name } = error;
     Sentry.withScope(function (scope) {

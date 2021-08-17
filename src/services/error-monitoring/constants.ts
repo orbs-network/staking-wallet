@@ -1,4 +1,5 @@
 export const sections = {
+  walletConnectionStore: 'walletConnectionStore',
   api: 'api',
   orbsNodeStore: 'orbs node store',
   guardiansStore: 'guardians store',

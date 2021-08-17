@@ -22,4 +22,5 @@ export interface ISections {
   staking: string;
   unstaking: string;
   withdrawing: string;
+  walletConnectionStore: string;
 }
