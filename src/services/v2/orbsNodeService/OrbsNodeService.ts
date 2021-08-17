@@ -33,7 +33,8 @@ export class OrbsNodeService implements IOrbsNodeService {
 
       return isNodeInSync;
     } catch (e) {
-      errorMonitoring.captureException(e, 'OrbsNodeService', 'error in function: checkIfNodeIsInSync');
+      const { sections, captureException } = errorMonitoring;
+      captureException(e, sections.orbsNodeStore, 'error in function: checkIfNodeIsInSync');
       console.error(`Error while getting node ${this.defaultStatusUrl} status: ${e}`);
       return false;
     }
@@ -57,7 +58,8 @@ export class OrbsNodeService implements IOrbsNodeService {
     try {
       return fetchJson(statusUrl);
     } catch (error) {
-      errorMonitoring.captureException(error, 'OrbsNodeService', 'error in function: fetchNodeManagementStatus');
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.orbsNodeStore, 'error in function: fetchNodeManagementStatus');
     }
   }
 }
