@@ -77,10 +77,10 @@ export class OrbsNodeStore {
     this.setErrorLoading(false);
     try {
       await this.findReadAndSetNodeData();
-
       this.setDoneLoading(true);
     } catch (e) {
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readAllData');
+      const { captureException, sections } = errorMonitoring;
+      captureException(e, sections.accountStore, 'error in function: readAllData');
       this.setErrorLoading(true);
     }
   }
@@ -117,7 +117,8 @@ export class OrbsNodeStore {
 
         return readAndProcessResult;
       } catch (e) {
-        errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDefaultNodeData');
+        const { captureException, sections } = errorMonitoring;
+        captureException(e, sections.accountStore, 'error in function: readDefaultNodeData');
         console.log(`Error while reading and processing default node : ${e}`);
         return null;
       }

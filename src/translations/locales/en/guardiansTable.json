@@ -27,6 +27,7 @@
   "columnHeader_stakingPercentageInLastElections": "Staking % in previous elections",
   "columnHeader_votedInLastElection": "Voted in previous election",
   "columnHeader_website": "Website",
+  "rewards_percentage": "% Rewards",
   "didVote_no": "No",
   "didVote_yes": "Yes",
   "message_certified": "Certified",

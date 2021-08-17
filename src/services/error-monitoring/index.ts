@@ -1,11 +1,15 @@
 import { IErrorBoundaryProps, IErrorMessages, ISections } from './types';
 import * as Sentry from '@sentry/react';
-import errorMessages from './errors';
+import { apiError, stepError } from './errors';
 import createErrorBoundary from './error-boundary';
 import { JSXElementConstructor } from 'react';
 import { sections } from './constants';
 import { Integrations } from '@sentry/tracing';
 
+const errorMessages = {
+  apiError,
+  stepError,
+};
 const dsn = process.env.SENTRY_URL;
 class ErrorMonitoring {
   ErrorBoundary: JSXElementConstructor<IErrorBoundaryProps>;
@@ -34,7 +38,6 @@ class ErrorMonitoring {
   }
 
   captureException(error: Error, section = null, customMessage = null) {
-    console.log({ error: section, customMessage });
     if (!dsn) return;
     const { message, stack, name } = error;
     Sentry.withScope(function (scope) {

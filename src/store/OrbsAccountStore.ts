@@ -137,6 +137,7 @@ export class OrbsAccountStore {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
       async (address) => {
+        if (!address) return;
         this.setDoneLoading(false);
         await this.reactToConnectedAddressChanged(address);
         this.setDoneLoading(true);
@@ -214,12 +215,13 @@ export class OrbsAccountStore {
       try {
         await this.readDataForAccount(currentAddress);
       } catch (e) {
+        const { sections, captureException } = errorMonitoring;
         this.failLoadingProcess(e);
-
+        captureException(e, sections.accountStore);
         if (this.alertErrors) {
           alert(`Error on orbs account store : ${e}`);
         }
-        errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: reactToConnectedAddressChanged');
+        errorMonitoring.captureException(e, sections.accountStore, 'error in function: reactToConnectedAddressChanged');
         console.error('Error in reacting to address change in Orbs Account Store', e);
       }
     }
@@ -238,72 +240,74 @@ export class OrbsAccountStore {
     try {
       await this.readDataForAccount(this.cryptoWalletIntegrationStore.mainAddress);
     } catch (e) {
+      const { sections, captureException } = errorMonitoring;
       this.failLoadingProcess(e);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: manuallyReadAccountData');
+      captureException(e, sections.accountStore, 'error in function: manuallyReadAccountData');
       console.error('Error in manually reading address data in Orbs Account Store', e);
     }
   }
 
   private async readDataForAccount(accountAddress: string) {
+    const { sections, captureException } = errorMonitoring;
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
       console.error(`Error in read-n-set liquid orbs : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetStakedOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading staked orbs : ${e}`);
       console.error(`Error in read-n-set staked orbs : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetSelectedGuardianAddress(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading selected guardian : ${e}`);
       console.error(`Error in read-n-set selected guardian : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetStakingContractAllowance(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading contract allowance: ${e}`);
       console.error(`Error in read-n-set contract allowance: ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetCooldownStatus(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading cooldown status : ${e}`);
       console.error(`Error in read-n-set cooldown status : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetRewardsBalance(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading: ${e}`);
       console.error(`Error in read-n-set rewards balance : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetClaimedRewards(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading Claimed Rewards: ${e}`);
       console.error(`Error in read-n-set claimed rewards : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetEstimatedRewardsForNextWeek(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading EstimatedRewardsForNextWeek: ${e}`);
       console.error(`Error in read-n-set rewards estimation for the following week : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetTotalStakedOrbsInContract().catch((e) => {
       this.alertIfEnabled(`Error in reading TotalStakedOrbsInContract: ${e}`);
       console.error(`Error in read-n-set total staked orbs in contract : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
     await this.readAndSetTotalUncappedStakedOrbs().catch((e) => {
       this.alertIfEnabled(`Error in reading Total uncapped staked Orbs: ${e}`);
       console.error(`Error in read-n-set total uncapped staked orbs : ${e}`);
-      errorMonitoring.captureException(e, 'OrbsAccountStore', 'error in function: readDataForAccount');
+      captureException(e, sections.accountStore, 'error in function: readDataForAccount');
       throw e;
     });
   }
@@ -319,7 +323,8 @@ export class OrbsAccountStore {
       const liquidOrbs = await this.orbsPOSDataService.readOrbsBalance(accountAddress);
       this.setLiquidOrbs(liquidOrbs);
     } catch (error) {
-      errorMonitoring.captureException(error, 'OrbsAccountStore', 'error in function: readAndSetLiquidOrbs');
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetLiquidOrbs');
     }
   }
 
@@ -328,11 +333,8 @@ export class OrbsAccountStore {
       const selectedGuardianAddress = await this.delegationsService.readDelegation(accountAddress);
       this.setSelectedGuardianAddress(selectedGuardianAddress);
     } catch (error) {
-      errorMonitoring.captureException(
-        error,
-        'OrbsAccountStore',
-        'error in function: readAndSetSelectedGuardianAddress',
-      );
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetSelectedGuardianAddress');
     }
   }
 
@@ -341,7 +343,8 @@ export class OrbsAccountStore {
       const stakedOrbs = await this.stakingService.readStakeBalanceOf(accountAddress);
       this.setStakedOrbs(stakedOrbs);
     } catch (error) {
-      errorMonitoring.captureException(error, 'OrbsAccountStore', 'error in function: readAndSetStakedOrbs');
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetStakedOrbs');
     }
   }
 
@@ -354,11 +357,8 @@ export class OrbsAccountStore {
 
       this.setStakingContractAllowance(stakingContractAllowance);
     } catch (error) {
-      errorMonitoring.captureException(
-        error,
-        'OrbsAccountStore',
-        'error in function: readAndSetStakingContractAllowance',
-      );
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetStakingContractAllowance');
     }
   }
 
@@ -372,7 +372,8 @@ export class OrbsAccountStore {
       this.setOrbsInCooldown(amount);
       this.setCooldownReleaseTimestamp(releaseTimestamp);
     } catch (error) {
-      errorMonitoring.captureException(error, 'OrbsAccountStore', 'error in function: readAndSetCooldownStatus');
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetCooldownStatus');
     }
   }
 
@@ -381,7 +382,8 @@ export class OrbsAccountStore {
       const claimedRewardsInFullOrbs = await this.stakingRewardsService.readClaimedRewardsFullOrbs(accountAddress);
       this.setClaimedRewards(claimedRewardsInFullOrbs);
     } catch (error) {
-      errorMonitoring.captureException(error, 'OrbsAccountStore', 'error in function: readAndSetClaimedRewards');
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetClaimedRewards');
     }
   }
 
@@ -395,11 +397,8 @@ export class OrbsAccountStore {
 
       this.setEstimatedRewardsForNextWeek(estimateRewardsFullOrbs);
     } catch (error) {
-      errorMonitoring.captureException(
-        error,
-        'OrbsAccountStore',
-        'error in function: readAndSetEstimatedRewardsForNextWeek',
-      );
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetEstimatedRewardsForNextWeek');
     }
   }
 
@@ -408,7 +407,8 @@ export class OrbsAccountStore {
       const rewardsBalance = await this.stakingRewardsService.readRewardsBalanceFullOrbs(accountAddress);
       this.setRewardsBalance(rewardsBalance);
     } catch (error) {
-      errorMonitoring.captureException(error, 'OrbsAccountStore', 'error in function: readAndSetRewardsBalance');
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetRewardsBalance');
     }
   }
 
@@ -417,17 +417,19 @@ export class OrbsAccountStore {
       const totalStakedOrbsInContract = await this.stakingService.readTotalStakedInFullOrbs();
       this.setTotalStakedOrbsInContract(totalStakedOrbsInContract);
     } catch (error) {
-      errorMonitoring.captureException(
-        error,
-        'OrbsAccountStore',
-        'error in function: readAndSetTotalStakedOrbsInContract',
-      );
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetTotalStakedOrbsInContract');
     }
   }
 
   private async readAndSetTotalUncappedStakedOrbs() {
-    const totalUncappedStakedOrbs = await this.delegationsService.readUncappedDelegatedStakeInFullOrbs();
-    this.setTotalUncappedStakedOrbs(totalUncappedStakedOrbs);
+    try {
+      const totalUncappedStakedOrbs = await this.delegationsService.readUncappedDelegatedStakeInFullOrbs();
+      this.setTotalUncappedStakedOrbs(totalUncappedStakedOrbs);
+    } catch (error) {
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.accountStore, 'error in function: readAndSetTotalUncappedStakedOrbs');
+    }
   }
 
   // ****  Subscriptions ****
@@ -452,6 +454,10 @@ export class OrbsAccountStore {
     const onStakedAmountChanged = (error: Error, stakedAmountInEvent: bigint, totalStakedAmount: bigint) => {
       // TODO : O.L : Handle error
       this.setStakedOrbs(totalStakedAmount);
+      if (error) {
+        const { sections, captureException } = errorMonitoring;
+        captureException(error, sections.accountStore, 'error in function: onStakedAmountChanged');
+      }
     };
     this.stakedAmountChangeUnsubscribeFunction = subscribeToStakeAmountChange(
       this.stakingService,
