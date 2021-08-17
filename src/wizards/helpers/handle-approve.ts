@@ -38,6 +38,7 @@ export const handleApprove = ({
 
   // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
   promiEvent.on('transactionHash', (txHash) => {
+    localStorage.setItem('hash', txHash);
     subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
     isBroadcastingMessage.setTrue();
   });

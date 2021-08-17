@@ -12,6 +12,7 @@ import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
 import useConnection from './hooks/useConnection';
+import TransactionHandler from './components/TransactionHandler';
 
 export const App = observer(() => {
   useMonitoring();
@@ -20,6 +21,7 @@ export const App = observer(() => {
 
   return (
     <main>
+      <TransactionHandler />
       <Header />
       <ContentContainer id='appContainer'>
         <Switch>

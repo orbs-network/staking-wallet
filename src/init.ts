@@ -17,6 +17,7 @@ const initApp = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
   const ethereumProvider = (window as any).ethereum;
+
   const services = buildServices(ethereumProvider, axios);
   const stores = getStores(
     services.orbsPOSDataService,
