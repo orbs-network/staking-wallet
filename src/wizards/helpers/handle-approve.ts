@@ -35,7 +35,7 @@ export const handleApprove = ({
 
   message.setValue('');
   subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
+  console.log({ promiEvent });
   // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
   promiEvent.on('transactionHash', (txHash) => {
     localStorage.setItem('hash', txHash);
@@ -44,6 +44,7 @@ export const handleApprove = ({
   });
 
   promiEvent.on('error', (error: Error) => {
+    localStorage.setItem('hash', '');
     errorHandler(error);
     console.error(error);
   });
