@@ -17,7 +17,11 @@ export function subscribeToOrbsInCooldownChange(
       return true;
     } catch (e) {
       const { sections, captureException } = errorMonitoring;
-      captureException(e, sections.combinedEventsAndSubscriptions);
+      captureException(
+        e,
+        sections.combinedEventsAndSubscriptions,
+        'error in function: subscribeToOrbsInCooldownChange',
+      );
       return false;
     }
   };
@@ -38,7 +42,7 @@ export function subscribeToStakeAmountChange(
       return true;
     } catch (e) {
       const { sections, captureException } = errorMonitoring;
-      captureException(e, sections.combinedEventsAndSubscriptions);
+      captureException(e, sections.combinedEventsAndSubscriptions, 'error in function: subscribeToStakeAmountChange');
       return false;
     }
   };

@@ -44,9 +44,9 @@ export class GuardiansStore implements TGuardiansStore {
         try {
           await this.reactToConnectedAddressChanged(address);
         } catch (e) {
+          const { captureException, sections } = errorMonitoring;
           this.failLoadingProcess(e);
-          const { sections, captureException } = errorMonitoring;
-          captureException(e, sections.guardiansStore);
+          captureException(e, sections.guardiansStore, 'error in Constructor');
           console.error(e);
         }
       },
@@ -72,12 +72,11 @@ export class GuardiansStore implements TGuardiansStore {
       this.setDoneLoading(true);
     } catch (e) {
       this.failLoadingProcess(e);
-      const { sections, captureException } = errorMonitoring;
-      captureException(e, sections.guardiansStore);
       if (this.alertErrors) {
         alert(`Error on Guardians store : ${e}`);
       }
-
+      const { captureException, sections } = errorMonitoring;
+      captureException(e, sections.guardiansStore, 'error in function: init');
       console.error('Error while initialising Guardians store', e);
     }
   }

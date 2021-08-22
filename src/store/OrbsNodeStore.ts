@@ -78,9 +78,9 @@ export class OrbsNodeStore {
     try {
       await this.findReadAndSetNodeData();
       this.setDoneLoading(true);
-    } catch (error) {
-      const { sections, captureException } = errorMonitoring;
-      captureException(error, sections.orbsNodeStore);
+    } catch (e) {
+      const { captureException, sections } = errorMonitoring;
+      captureException(e, sections.accountStore, 'error in function: readAllData');
       this.setErrorLoading(true);
     }
   }
@@ -117,8 +117,8 @@ export class OrbsNodeStore {
 
         return readAndProcessResult;
       } catch (e) {
-        const { sections, captureException } = errorMonitoring;
-        captureException(e, sections.orbsNodeStore);
+        const { captureException, sections } = errorMonitoring;
+        captureException(e, sections.accountStore, 'error in function: readDefaultNodeData');
         console.log(`Error while reading and processing default node : ${e}`);
         return null;
       }

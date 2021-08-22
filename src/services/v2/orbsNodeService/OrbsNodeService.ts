@@ -6,6 +6,8 @@ import { updateSystemState } from './nodeResponseProcessing/processor-public';
 import { IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
+import errorMonitoring from '../../error-monitoring';
+import errorMessages from '../../error-monitoring/errors';
 
 const ManagementServiceStatusPageUrl = process.env.URL_MGMT_SERV || 'http://localhost:7666/status';
 // TODO : O.L : Consider using httpService
@@ -31,6 +33,8 @@ export class OrbsNodeService implements IOrbsNodeService {
 
       return isNodeInSync;
     } catch (e) {
+      const { sections, captureException } = errorMonitoring;
+      captureException(e, sections.orbsNodeStore, 'error in function: checkIfNodeIsInSync');
       console.error(`Error while getting node ${this.defaultStatusUrl} status: ${e}`);
       return false;
     }
@@ -51,6 +55,11 @@ export class OrbsNodeService implements IOrbsNodeService {
   async fetchNodeManagementStatus(): Promise<IManagementStatusResponse> {
     const statusUrl = this.defaultStatusUrl;
 
-    return fetchJson(statusUrl);
+    try {
+      return fetchJson(statusUrl);
+    } catch (error) {
+      const { sections, captureException } = errorMonitoring;
+      captureException(error, sections.orbsNodeStore, 'error in function: fetchNodeManagementStatus');
+    }
   }
 }
