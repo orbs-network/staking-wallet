@@ -9,7 +9,13 @@ export const CommonActionButton = styled(({ variant, color, ...rest }: ButtonPro
     fontWeight: 'bold',
     height: '4em',
     // boxShadow: '0.15em 0.2em #469daf',
+    border: '1px solid transparent',
+    transitionDuration: '0.3s all',
 
-    transitionDuration: '0.5s',
+    '&:hover': {
+      border: '1px solid white',
+      background: 'transparent',
+      color: 'white',
+    },
   };
 });
