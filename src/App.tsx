@@ -12,7 +12,7 @@ import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
 import useConnection from './hooks/useConnection';
-
+import NetworkIndicator from './components/NetworkIndicator/index';
 export const App = observer(() => {
   useMonitoring();
   useLanguage();
@@ -20,6 +20,7 @@ export const App = observer(() => {
 
   return (
     <main>
+      <NetworkIndicator />
       <Header />
       <ContentContainer id='appContainer'>
         <Switch>
