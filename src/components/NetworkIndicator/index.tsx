@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const NetworkIndicator = () => {
   const [network, chainId] = useNetwork();
   const classes = useNetworkIndicatorStyles();
-  if (process.env.NODE_ENV !== 'production') {
+  if (!process.env.TARGET_NETWORK) {
     return <div className={classes.devContainer}>{network}</div>;
   }
 
