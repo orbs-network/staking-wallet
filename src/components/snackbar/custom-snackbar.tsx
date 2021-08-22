@@ -8,9 +8,10 @@ interface IProps {
   hide: () => void;
   variant: 'success' | 'warning' | 'error' | 'info';
   testId: string;
+  autoHideDuration?: number;
 }
 
-const CustomSnackbar = ({ message, hide, show, testId, variant }: IProps) => {
+const CustomSnackbar = ({ message, hide, show, testId, variant, autoHideDuration = 2000 }: IProps) => {
   return show ? (
     <Snackbar
       anchorOrigin={{
@@ -18,7 +19,7 @@ const CustomSnackbar = ({ message, hide, show, testId, variant }: IProps) => {
         horizontal: 'left',
       }}
       open={true}
-      autoHideDuration={1200}
+      autoHideDuration={autoHideDuration}
       onClose={hide}
     >
       <CustomSnackBarContent variant={variant} message={message} onClose={hide} data-testid={testId} />
