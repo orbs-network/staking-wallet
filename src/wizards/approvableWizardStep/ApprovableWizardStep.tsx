@@ -116,13 +116,12 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
           disableTxCreationInputs.setFalse();
         }
       });
-      promiEvent.once('transactionHash', () => {
+      promiEvent.once('transactionHash', (hash) => {
+        txHash.setValue(hash);
         goToApprovalSubStep();
         disableTxCreationInputs.setFalse();
       });
-      promiEvent.once('receipt', (receipt) => {
-        txHash.setValue(receipt.transactionHash);
-      });
+      promiEvent.once('receipt', (receipt) => {});
       promiEvent.on('error', (error) => {
         const { sections, captureException } = errorMonitoring;
         txCreatingError.setValue(error);
