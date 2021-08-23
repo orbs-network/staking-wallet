@@ -4,6 +4,7 @@ import { useTheme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 import constants from '../../constants/constants';
+import { getNumberSeparators } from '../../utils/numberUtils';
 interface INumberFormatCustomProps {
   // Usage props
   allowNegative?: boolean;
@@ -48,7 +49,7 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
   };
 
   const btnWidth = (btnRef.current && btnRef.current.clientWidth) || 0;
-
+  const { thousand, decimal } = getNumberSeparators();
   return (
     <>
       <NumberFormat
@@ -76,10 +77,11 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
             (ref.current as any).onBlur();
           }
         }}
-        thousandSeparator
+        thousandSeparator={thousand}
+        decimalSeparator={decimal}
         decimalScale={constants.numbersDecimalToInsertLimit}
         allowNegative={false}
-        isNumericString={false}
+        isNumericString={true}
         allowLeadingZeros={false}
         suffix={suffix}
         ref={ref}

@@ -12,11 +12,9 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { Typography } from '@material-ui/core';
-import errorMonitoring from '../../services/error-monitoring';
-import { handleNumberAsStringToDisplay, numberToString } from '../../utils/numberUtils';
-import constants from '../../constants/constants';
 import handleApprove from '../helpers/handle-approve';
 import { handleRewardClaimingError } from '../helpers/error-handling';
+import { formatStringAsNumber } from '../../utils/stringUtils';
 export interface IRewardsClaimingStepContentProps {
   shouldAddSkip?: boolean;
   skipToNextStep?: () => void;
@@ -91,11 +89,7 @@ export const RewardsClaimingStepContent = observer(
           {rewardsClaimingWizardTranslations('rewardsClaimingSubStep_text_rewardsBalanceIs')}{' '}
           <Typography variant={'h5'} style={{ display: 'inline' }} color={'secondary'}>
             {commonsTranslations('xOrbs', {
-              amount: handleNumberAsStringToDisplay(
-                numberToString(orbsAccountStore.rewardsBalance),
-                constants.numbersDecimalToDisplayLimit,
-                true,
-              ),
+              amount: formatStringAsNumber(orbsAccountStore.rewardsBalance.toString(), true),
             })}
           </Typography>
         </Typography>

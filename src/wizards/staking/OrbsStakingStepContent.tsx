@@ -8,10 +8,10 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
-import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import constants from '../../constants/constants';
 import handleApprove from '../helpers/handle-approve';
 import { hanleStakingError } from '../helpers/error-handling';
+import { formatStringAsNumber } from '../../utils/stringUtils';
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
 }
@@ -80,11 +80,7 @@ export const OrbsStakingStepContent = observer(
         message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-          orbsForStaking: handleNumberAsStringToDisplay(
-            fullOrbsForStakingString,
-            constants.numbersDecimalToDisplayLimit,
-            true,
-          ),
+          orbsForStaking: formatStringAsNumber(fullOrbsForStakingString, true),
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
         disableInputs={disableInputs}
