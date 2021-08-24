@@ -1,4 +1,5 @@
 import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
+import { getNumberSeparators } from './utils/numberUtils';
 
 /**
  * Copyright 2019 the prism authors
@@ -32,6 +33,7 @@ interface IConfig {
   gaTrackerId: string;
   analyticsActive: boolean;
   rewardsRefreshRateInSeconds: number;
+  numberSeparator: { decimal: string; thousand: string };
 }
 
 const config: IConfig = {
@@ -42,6 +44,7 @@ const config: IConfig = {
   gaTrackerId: process.env.GA_TRACKER_ID || '',
   analyticsActive: process.env.GA_TRACKER_ID !== undefined,
   rewardsRefreshRateInSeconds: 10,
+  numberSeparator: getNumberSeparators(),
 };
 
 // Webpack will remove this section on production build //

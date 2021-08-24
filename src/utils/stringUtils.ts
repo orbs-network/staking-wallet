@@ -1,5 +1,5 @@
+import config from '../config';
 import constants from '../constants/constants';
-import { getNumberSeparators } from './numberUtils';
 
 export function ensurePrefix(text: string, prefix: string): string {
   if (text.startsWith(prefix)) {
@@ -16,7 +16,7 @@ export const checkIfCharactersIncludes = (characters: string, fullString: string
 export const formatStringAsNumber = (str: string, limitDecimals?: boolean): string => {
   if (!str) return;
   const [full, decimals] = str.split('.');
-  const { decimal } = getNumberSeparators();
+  const { decimal } = config.numberSeparator;
   const num = parseInt(full).toLocaleString();
   if (limitDecimals && decimal && decimals.length > constants.numbersDecimalToDisplayLimit) {
     return `${num}${decimal}${decimals.substring(0, constants.numbersDecimalToDisplayLimit)}...`;

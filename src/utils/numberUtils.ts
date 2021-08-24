@@ -9,7 +9,6 @@ export function enforceNumberInRange(value: number, minValue: number, maxValue: 
 }
 
 export const getNumberSeparators = () => {
-  // default
   const res = {
     decimal: '.',
     thousand: '',

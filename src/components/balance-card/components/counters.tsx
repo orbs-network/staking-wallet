@@ -2,8 +2,8 @@ import React from 'react';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
 import constants from '../../../constants/constants';
-import { getNumberSeparators } from '../../../utils/numberUtils';
-import { formatStringAsNumber } from '../../../utils/stringUtils';
+import config from '../../../config';
+
 const counterProps = {
   preserveValue: true,
   delay: 0.4,
@@ -19,8 +19,7 @@ const handleDecimals = (value: number) => {
   const isOutOfLimit = stringValue.length > calibratedDecimalLimit;
   const val = stringValue.substring(1, calibratedDecimalLimit);
   const result = isOutOfLimit ? `${val}...` : `${val}`;
-  const { decimal } = getNumberSeparators();
-  return `${decimal}${result}`;
+  return `${config.numberSeparator.decimal}${result}`;
 };
 interface IProps {
   amount: string;
