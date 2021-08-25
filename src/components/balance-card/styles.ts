@@ -8,9 +8,10 @@ export const StyledGrid = styled(Grid)(({ theme }) => ({
   paddingRight: '1.25em',
   paddingLeft: '1.25em',
   paddingBottom: '1.5em',
+  position: 'relative',
 }));
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles({
   mainActionButton: {},
   secondaryActionButton: {
     padding: 0,
@@ -29,9 +30,21 @@ export const useStyles = makeStyles((theme) => ({
       border: '1px solid white',
     },
   },
+  container: {
+    ['@media (max-width:700px)']: {
+      marginBottom: (props: any) => (props.warning ? 35 : 0),
+    },
+  },
   title: {
     ['@media (max-width:1300px)']: {
       fontSize: 14,
     },
   },
-}));
+  warning: {
+    fontSize: 14,
+    color: 'red',
+    position: 'absolute',
+    top: 'calc(100% + 5px)',
+    left: '0px',
+  },
+});
