@@ -1,9 +1,9 @@
-import { SystemState } from './systemState';
+import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import { IReadAndProcessResults } from './OrbsNodeTypes';
 
 export interface IOrbsNodeService {
-  defaultNodeAddress: string;
-  readAndProcessSystemState(nodeAddress?: string): Promise<IReadAndProcessResults>;
-  checkIfDefaultNodeIsInSync(): Promise<boolean>;
-  checkIfNodeIsInSync(nodeAddress: string): Promise<boolean>;
+  readAndProcessSystemState(managementStatusResponse: IManagementStatusResponse): IReadAndProcessResults;
+  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean;
+  checkIfNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean;
+  fetchNodeManagementStatus(): Promise<IManagementStatusResponse>;
 }

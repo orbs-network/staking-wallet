@@ -1,0 +1,12 @@
+version: '3'
+services:
+    management-service-ropsten:
+        build:
+            context: ""
+            dockerfile: Dockerfile-management-service
+            args:
+                - EthereumGenesisContract=0x5D7779231a6344edE6178623f31007cF2D16DFd7
+                - EthereumEndpoint=https://ropsten.infura.io/v3/3fe9b03bd8374639809addf2164f7287
+                - EthereumFirstBlock=9644509
+        ports:
+            - 7666:8080

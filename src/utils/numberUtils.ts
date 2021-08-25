@@ -7,3 +7,19 @@ export function enforceNumberInRange(value: number, minValue: number, maxValue: 
   const bottomAndTopEnforced = Math.min(bottomEnforced, maxValue);
   return bottomAndTopEnforced;
 }
+
+export const getNumberSeparators = () => {
+  const res = {
+    decimal: '.',
+    thousand: '',
+  };
+
+  const str = parseFloat('1234.56').toLocaleString();
+
+  if (!str.match('1')) return res;
+
+  res.decimal = str.replace(/.*4(.*)5.*/, '$1');
+  res.thousand = str.replace(/.*1(.*)2.*/, '$1');
+
+  return res;
+};

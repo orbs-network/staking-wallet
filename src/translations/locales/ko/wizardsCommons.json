@@ -5,6 +5,8 @@
   "message_errorOccurred": "스테이킹을 위한 트래잭션 진행 중 에러가 발생했습니다.",
   "message_userCanceledTransactions": "트랜잭션이 취소되었습니다.",
   "moveToStep_finish": "완료",
+  "popup_input_placeholder": "수량 입력",
+  "popup_max": "최대",
   "stepDoneExclamation": "훌륭해요!",
   "stepLabel_finish": "완료",
   "subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab": "트랜잭션 처리중입니다. 새로고침이나 이 창을 닫지마세요.",

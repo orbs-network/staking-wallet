@@ -17,7 +17,7 @@ import unstakingWizardTextsJson from './locales/ja/unstakingWizard.json';
 import walletInfoSectionTextsJson from './locales/ja/walletInfoSection.json';
 import withdrawingWizardTextsJson from './locales/ja/withdrawingWizard.json';
 import wizardsCommonsTextsJson from './locales/ja/wizardsCommons.json';
-import rewardsClaimingWizardTextsJson from './locales/en/rewardsClaimingWizard.json';
+import rewardsClaimingWizardTextsJson from './locales/ja/rewardsClaimingWizard.json';
 
 export const JAPANESE_TEXTS: IAppTranslations = {
   fontFamily: 'Montserrat',

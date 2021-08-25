@@ -4,9 +4,12 @@
   "description": "",
   "main": "truffle-config.js",
   "scripts": {
-    "clean": "rimraf build",
-    "start-ganache": "ganache-cli -p 7545 -i 5777 -b 1 -a 100 --gasLimit 0x7FFFFFFF --gasPrice 1 -m  \"vanish junk genuine web seminar cook absurd royal ability series taste method identify elevator liquid\"",
-    "deploy-driver": "ts-node delpoyDriverScripts.ts"
+    "up-ropsten-build": "./up-ropsten-build.sh",
+    "deploy-driver": "ts-node deployContracts.ts",
+    "print-committee": "ts-node getCommittee.ts",
+    "up-dev": "docker-compose -p tetra-dev -f docker-compose.yml up",
+    "up-mainnet-fork": "docker-compose -p tetra-fork -f docker-compose-fork.yml up",
+    "up-ropsten": "docker-compose -p tetra-rops -f docker-compose-ropsten.yml up"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +20,8 @@
     "ganache-cli": "^6.9.1",
     "openzeppelin-solidity": "2.0.1",
     "rimraf": "^3.0.2",
-    "truffle": "5.1.24"
+    "truffle": "5.1.24",
+    "typescript": "^4.1.4"
   },
   "devDependencies": {
     "ts-node": "^8.10.2"

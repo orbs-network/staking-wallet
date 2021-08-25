@@ -5,6 +5,8 @@
   "message_errorOccurred": "An error occurred while trying to send transaction to the staking wallet.",
   "message_userCanceledTransactions": "You have canceled the transaction.",
   "moveToStep_finish": "Finish",
+  "popup_input_placeholder": "Enter amount",
+  "popup_max": "Max",
   "stepDoneExclamation": "Awesome!",
   "stepLabel_finish": "Finish",
   "subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab": "Broadcasting your transaction, do not refresh or close this tab",

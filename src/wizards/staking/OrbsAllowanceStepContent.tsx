@@ -1,15 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
-import { useNumber } from 'react-hanger';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { fullOrbsFromWeiOrbs, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
-import { FullWidthOrbsInputField } from '../../components/inputs/FullWidthOrbsInputField';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
-import { enforceNumberInRange } from '../../utils/numberUtils';
-
+import stakingUtil from '../../utils/stakingUtil';
+import StakingInput from '../components/staking-input';
+import handleApprove from '../helpers/handle-approve';
+import { hanleStakingAllowanceError } from '../helpers/error-handling';
 export interface IOrbsAllowanceStepContentProps {
   goBackToChooseGuardianStep: () => void;
 }
@@ -25,8 +25,8 @@ export const OrbsAllowanceStepContent = observer(
     const reReadStoresData = useReReadAllStoresData();
 
     // Start and limit by liquid orbs
-    const liquidOrbsAsNumber = fullOrbsFromWeiOrbs(orbsAccountStore.liquidOrbs);
-    const orbsAllowance = useNumber(liquidOrbsAsNumber, { lowerLimit: 0, upperLimit: liquidOrbsAsNumber });
+    const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
+    const [orbsAllowance, setOrbsAllowance] = useState<string>(liquidOrbsAsString);
 
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       stakingWizardTranslations('allowanceSubStep_message_selectAmountOfOrbs'),
@@ -35,61 +35,58 @@ export const OrbsAllowanceStepContent = observer(
     );
 
     // Handle error by displaying the proper error message
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-    const setTokenAllowanceForStakingContract = useCallback(() => {
-      // TODO : FUTURE : O.L : Add written error message about out of range
-      if (orbsAllowance.value < 1 || orbsAllowance.value > liquidOrbsAsNumber) {
-        console.warn(`tried to set out of range allowance of ${orbsAllowance.value}`);
-        return;
-      }
-      message.setValue('');
-      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
-      const promiEvent = orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance.value));
-
-      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-      promiEvent.on('transactionHash', (txHash) => {
-        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-        isBroadcastingMessage.setTrue();
-      });
-
-      onPromiEventAction(promiEvent, () => {
-        reReadStoresData();
-      });
-    }, [
-      orbsAllowance.value,
-      liquidOrbsAsNumber,
-      message,
-      subMessage,
-      wizardsCommonTranslations,
-      orbsAccountStore,
-      onPromiEventAction,
-      isBroadcastingMessage,
-      reReadStoresData,
-    ]);
+    const isApproveEnabled = stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance);
+    const handleAllowance = useCallback(
+      () =>
+        handleApprove({
+          isApproveEnabled,
+          message,
+          subMessage,
+          promiEvent: orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance)),
+          isBroadcastingMessage,
+          onPromiEventAction,
+          reReadStoresData,
+          wizardsCommonTranslations,
+          errorHandler: hanleStakingAllowanceError,
+          warnMsg: `tried to set out of range allowance of ${orbsAllowance}`,
+        }),
+      [
+        isApproveEnabled,
+        isBroadcastingMessage,
+        message,
+        onPromiEventAction,
+        orbsAccountStore,
+        orbsAllowance,
+        reReadStoresData,
+        subMessage,
+        wizardsCommonTranslations,
+      ],
+    );
 
     const actionButtonProps = useMemo<IActionButtonProps>(
       () => ({
-        onClick: setTokenAllowanceForStakingContract,
+        onClick: handleAllowance,
         title: stakingWizardTranslations('allowanceSubStep_action_approve'),
+        isDisabled: !isApproveEnabled,
       }),
-      [setTokenAllowanceForStakingContract, stakingWizardTranslations],
+      [isApproveEnabled, handleAllowance, stakingWizardTranslations],
     );
 
-    const allowanceInput = useMemo(() => {
-      return (
-        <FullWidthOrbsInputField
-          id={'orbsAllowance'}
-          label={stakingWizardTranslations('allowanceSubStep_label_allowance')}
-          value={orbsAllowance.value}
-          onChange={(value) => orbsAllowance.setValue(enforceNumberInRange(value, 0, liquidOrbsAsNumber))}
-          disabled={disableInputs}
-        />
-      );
-    }, [stakingWizardTranslations, orbsAllowance, disableInputs, liquidOrbsAsNumber]);
-
-    // TODO : ORL : TRANSLATIONS
+    const allowanceInput = (
+      <StakingInput
+        id='orbsAllowance'
+        placeholder={wizardsCommonTranslations('popup_input_placeholder')}
+        value={orbsAllowance}
+        onChange={setOrbsAllowance}
+        disabled={disableInputs}
+        showMaxBtn={stakingUtil.isMaxBtnEnabled(orbsAllowance, liquidOrbsAsString, disableInputs)}
+        handleMax={() => setOrbsAllowance(liquidOrbsAsString)}
+        maxText={wizardsCommonTranslations('popup_max')}
+      />
+    );
 
     return (
       <BaseStepContent
@@ -103,8 +100,8 @@ export const OrbsAllowanceStepContent = observer(
         actionButtonProps={actionButtonProps}
         innerContent={allowanceInput}
         addCancelButton
+        close={closeWizard}
         onCancelButtonClicked={goBackToChooseGuardianStep}
-        // cancelButtonText={wizardsCommonTranslations('action_close')}
         cancelButtonText={stakingWizardTranslations('backToStep_changeGuardian')}
       />
     );

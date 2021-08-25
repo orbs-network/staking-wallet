@@ -1,4 +1,5 @@
 import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
+import { getNumberSeparators } from './utils/numberUtils';
 
 /**
  * Copyright 2019 the prism authors
@@ -8,12 +9,12 @@ import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-type TSupportedNets = 'local' | 'ropsten' | 'mainnet';
+type TSupportedNets = 'local' | 'ropsten' | 'mainnet' | 'mainnet-fork';
 // @ts-ignore
 const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
 
-export const IS_DEV = process.env.NODE_ENV !== 'production';
-const SHOULD_OVERRIDE_ADDRESS = IS_DEV || ethereumNetwork === 'ropsten';
+export const IS_DEV = process.env.IS_DEV; // TODO - fix NODE_ENV is always development
+const SHOULD_OVERRIDE_ADDRESS = ethereumNetwork === 'local' || ethereumNetwork === 'ropsten';
 
 ////////////// CONFIG VARIABLES ///////////////
 interface IConfig {
@@ -32,6 +33,7 @@ interface IConfig {
   gaTrackerId: string;
   analyticsActive: boolean;
   rewardsRefreshRateInSeconds: number;
+  numberSeparator: { decimal: string; thousand: string };
 }
 
 const config: IConfig = {
@@ -39,25 +41,33 @@ const config: IConfig = {
   contractsAddressesOverride: SHOULD_OVERRIDE_ADDRESS ? {} : null,
   ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,
-  gaTrackerId: 'UA-163134097-1',
-  analyticsActive: !IS_DEV,
+  gaTrackerId: process.env.GA_TRACKER_ID || '',
+  analyticsActive: process.env.GA_TRACKER_ID !== undefined,
   rewardsRefreshRateInSeconds: 10,
+  numberSeparator: getNumberSeparators(),
 };
 
 // Webpack will remove this section on production build //
-if (process.env.NODE_ENV !== 'production') {
+if (IS_DEV) {
+  if (ethereumNetwork === 'local' || ethereumNetwork === 'mainnet-fork') {
+    config.ETHEREUM_PROVIDER_WS = 'ws://localhost:7545';
+  }
+
   if (ethereumNetwork === 'local') {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const addresses = require('./local/addresses.json');
+    const LOCAL_ERC20 = '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE';
+    const LOCAL_DELEGATIONS = '0x74aD147017eAa8C1d5977A48b21F4d712EE617a0';
+    const LOCAL_STAKING = '0xE6f4C12A49B557b2Ad46e03E729662ac5425fbeD';
+    const LOCAL_STAKING_REWARDS = '0xa05cb494562F0e395D3EfADdF9496a18b3a67db9';
+    const LOCAL_GUARDIANS = '0xd4e61B2029422349aCCf6DC26246DbA8FFDd8abD';
+    const LOCAL_COMMITTEE = '0xAb6311Cb1bf0823D2d04f871351F2aCf39EBe282';
+    const LOCAL_REGISTRY = '0x5cd0D270C30EDa5ADa6b45a5289AFF1D425759b3';
 
-    config.ETHEREUM_PROVIDER_WS = 'ws://localhost:8545';
-
-    config.contractsAddressesOverride.stakingContract = addresses.staking;
-    config.contractsAddressesOverride.erc20Contract = addresses.erc20;
-    config.contractsAddressesOverride.guardiansContract = addresses.guardians;
-    config.contractsAddressesOverride.stakingRewardsContract = addresses.stakingRewards;
-    config.contractsAddressesOverride.delegationsContract = addresses.delegations;
-    config.contractsAddressesOverride.committeeContract = addresses.commitee;
+    config.contractsAddressesOverride.erc20Contract = LOCAL_ERC20;
+    config.contractsAddressesOverride.delegationsContract = LOCAL_DELEGATIONS;
+    config.contractsAddressesOverride.stakingContract = LOCAL_STAKING;
+    config.contractsAddressesOverride.stakingRewardsContract = LOCAL_STAKING_REWARDS;
+    config.contractsAddressesOverride.guardiansContract = LOCAL_GUARDIANS;
+    config.contractsAddressesOverride.committeeContract = LOCAL_COMMITTEE;
 
     config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
   }
@@ -65,12 +75,16 @@ if (process.env.NODE_ENV !== 'production') {
 
 // TODO : ORL : Adjusts these addresses for v2.
 if (ethereumNetwork === 'ropsten') {
-  const ROPSTEN_ERC20 = '0xaFcb0E4560dCD904dF059AF37D5E832A086b59a9';
-  const ROPSTEN_DELEGATIONS = '0x46A8d3F3757F5534E403E616c228812b43a43aAe';
-  const ROPSTEN_STAKING = '0xD950DaB449dD0e6FE85783F16A3Bc8755D414D1E';
-  const ROPSTEN_STAKING_REWARDS = '0xFb96EA0b31035737F50EC373A50C0ac1f67e7443';
-  const ROPSTEN_GUARDIANS = '0x5f62dBeBa742f1aeb6FCd56a71987cbB3c82abb6';
-  const ROPSTEN_COMMITTEE = '0x81e6D2512adA5e36897F182F54C135F8f2832E29';
+  config.ETHEREUM_PROVIDER_WS = 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287';
+
+  const ROPSTEN_ERC20 = '0x0e2CE2e9C8A23F02162d2226352452CCbD9dfFcE';
+  const ROPSTEN_DELEGATIONS = '0x4c743ED737359c3e502ed77E85392e037Af19F69';
+  const ROPSTEN_STAKING = '0xb4395d2d2a70DC791F5f65303ffF38c6C0dfa27e';
+  const ROPSTEN_STAKING_REWARDS = '0xA8E5EFD0e2cC5dCB38f8a2AE566E14C66dB4C36f';
+  const ROPSTEN_GUARDIANS = '0x16F93f7929E4a294b7916544f10Ee94EB094B2eC';
+  const ROPSTEN_COMMITTEE = '0xdbcf7666504f7975cA08FbCeef3e949c5dFE8906';
+  const ROPSTEN_REGISTRY = '0x5D7779231a6344edE6178623f31007cF2D16DFd7';
+  const ROPSTEN_STAKING_REWARDS_WALLET = '0xc47E0BeCbC3D9BF91d6C8586b7147338CEAf015B';
 
   config.contractsAddressesOverride.stakingContract = ROPSTEN_STAKING;
   config.contractsAddressesOverride.erc20Contract = ROPSTEN_ERC20;
@@ -79,7 +93,7 @@ if (ethereumNetwork === 'ropsten') {
   config.contractsAddressesOverride.delegationsContract = ROPSTEN_DELEGATIONS;
   config.contractsAddressesOverride.committeeContract = ROPSTEN_COMMITTEE;
 
-  config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
+  config.earliestBlockForDelegationOverride = 9644509; // Local env starts from 0.
 }
 
 export default config;

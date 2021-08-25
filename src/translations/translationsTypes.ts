@@ -81,6 +81,8 @@ export interface IWizardsCommonsTranslations {
   txCreationError_userCanceled_subMessage: string;
   txCreationError_generalError_message: string;
   txCreationError_generalError_subMessage: string;
+  popup_max: string;
+  popup_input_placeholder: string;
 }
 
 export interface IGuardiansTableTranslations {
@@ -93,6 +95,7 @@ export interface IGuardiansTableTranslations {
   columnHeader_address: string;
   columnHeader_website: string;
   columnHeader_rewardsPercentageToDelegators: string;
+  rewards_percentage: string;
   columnHeader_effectiveStake: string;
   columnHeader_participation: string;
   columnHeader_capacity: string;
@@ -282,6 +285,7 @@ export interface IBalancesSectionTranslations {
   action_withdrawYourTokens: string;
   tooltipTitle_stakedOrbs: string;
   tooltipTitle_pendingRewards: string;
+  warning_unstakedTokensNotEarningRewards: string;
 }
 
 export interface IRewardsSectionTranslations {

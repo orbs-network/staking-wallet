@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const StyledGrid = styled(Grid)({
   marginTop: '1em',
-  marginBottom: '1em',
+  marginBottom: '2em',
 
   // DEV_NOTE : These are to negate the 'spacing' sideways margin
   marginRight: 0,

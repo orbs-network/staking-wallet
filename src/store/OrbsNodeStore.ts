@@ -4,6 +4,7 @@ import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeServic
 import { action, computed, observable } from 'mobx';
 import { Guardian, SystemState } from '../services/v2/orbsNodeService/systemState';
 import { ICommitteeMemberData, IReadAndProcessResults } from '../services/v2/orbsNodeService/OrbsNodeTypes';
+import errorMonitoring from '../services/error-monitoring';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
@@ -76,9 +77,10 @@ export class OrbsNodeStore {
     this.setErrorLoading(false);
     try {
       await this.findReadAndSetNodeData();
-
       this.setDoneLoading(true);
     } catch (e) {
+      const { captureException, sections } = errorMonitoring;
+      captureException(e, sections.accountStore, 'error in function: readAllData');
       this.setErrorLoading(true);
     }
   }
@@ -102,20 +104,21 @@ export class OrbsNodeStore {
 
   private async readDefaultNodeData(): Promise<IReadAndProcessResults | null> {
     // Check if default node is in sync
-    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync();
-
+    const managementStatusResponse = await this.orbsNodeService.fetchNodeManagementStatus();
+    if (!managementStatusResponse) return;
+    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync(managementStatusResponse);
     if (!isDefaultNodeAtSync) {
       // TODO : ORL : Add analytic
       console.log('Default node is not in sync');
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(
-          this.orbsNodeService.defaultNodeAddress,
-        );
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(managementStatusResponse);
 
         return readAndProcessResult;
       } catch (e) {
+        const { captureException, sections } = errorMonitoring;
+        captureException(e, sections.accountStore, 'error in function: readDefaultNodeData');
         console.log(`Error while reading and processing default node : ${e}`);
         return null;
       }

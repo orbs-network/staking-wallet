@@ -1,17 +1,16 @@
 import React, { ReactNode, useMemo } from 'react';
-import { Typography, Backdrop, CircularProgress, Box } from '@material-ui/core';
+import { Typography, CircularProgress, Box } from '@material-ui/core';
 import { WizardContent } from '../../components/wizards/WizardContent';
 import { CommonActionButton } from '../../components/base/CommonActionButton';
 import Grid from '@material-ui/core/Grid';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { HtmlTooltip } from '../../components/base/HtmlTooltip';
-import Button from '@material-ui/core/Button';
-import { useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { InfoToolTipIcon } from '../../components/tooltips/InfoTooltipIcon';
+import { CommonClosePopupButton } from '../../components/base/commonClosePopupButton';
+import { makeStyles } from '@material-ui/core/styles';
 
 export interface IActionButtonProps {
   title: string;
   onClick: () => void;
+  isDisabled?: boolean;
 }
 
 interface IProps {
@@ -35,11 +34,20 @@ interface IProps {
 
   // Tests props
   contentTestId?: string;
+  close?: () => void;
 }
 
 const stylingForTwoActionButtons: React.CSSProperties = {
   width: '8em',
 };
+
+const useStyles = makeStyles({
+  longText: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '100%',
+  },
+});
 
 const stylingForSingleActionButton: React.CSSProperties = {};
 
@@ -58,20 +66,21 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     cancelButtonText,
     onCancelButtonClicked,
     infoTitle,
+    close,
   } = props;
-
-  const wizardsCommonTranslations = useWizardsCommonTranslations();
-
+  const classes = useStyles();
   const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
   const actionButton = useMemo(() => {
     if (actionButtonProps) {
+      const { onClick, title, isDisabled } = actionButtonProps;
+
       return (
         <CommonActionButton
           style={relevantStylingForActionButtons}
-          disabled={disableInputs || disableActionButton}
-          onClick={actionButtonProps.onClick}
+          disabled={disableInputs || disableActionButton || isDisabled}
+          onClick={onClick}
         >
-          {actionButtonProps.title}
+          {title}
         </CommonActionButton>
       );
     } else {
@@ -110,7 +119,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
         {infoTooltippedIcon}
       </Grid>
 
-      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }}>
+      <Grid item hidden={!hasMessage} style={{ textAlign: 'center' }} className={classes.longText}>
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
 
@@ -130,7 +139,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
 
       {/* Inner Content */}
       {/* DEV_NOTE : 'container' handles taking the full width*/}
-      <Grid item container justify={'center'}>
+      <Grid item container justify={'center'} style={{ position: 'relative' }}>
         {innerContent}
       </Grid>
 
@@ -144,6 +153,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
           spacing={0}
           style={{ margin: 0, width: '100%' }}
         >
+          {close && <CommonClosePopupButton onClick={close} />}
           {addCancelButton && (
             <Grid item>
               <CommonActionButton

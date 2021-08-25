@@ -11,7 +11,8 @@ import {
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-
+import handleApprove from '../helpers/handle-approve';
+import { handleGuardianChangeError } from '../helpers/error-handling';
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
 }
@@ -42,35 +43,34 @@ export const GuardianChangeStepContent = observer(
     );
 
     // Handle error by displaying the proper error message
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
 
-    const changeSelectedGuardian = useCallback(() => {
-      message.setValue('');
-      subMessage.setValue(wizardsCommonTranslations('subMessage_pleaseApproveTransactionWithExplanation'));
-
-      const promiEvent = orbsAccountStore.delegate(newGuardianAddress);
-
-      // DEV_NOTE : If we have txHash, it means the user click on 'confirm' and generated one.
-      promiEvent.on('transactionHash', (txHash) => {
-        subMessage.setValue(wizardsCommonTranslations('subMessage_broadcastingYourTransactionDoNotRefreshOrCloseTab'));
-        isBroadcastingMessage.setTrue();
-      });
-
-      onPromiEventAction(promiEvent, () => {
-        analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange);
-        reReadStoresData();
-      });
-    }, [
-      message,
-      subMessage,
-      wizardsCommonTranslations,
-      orbsAccountStore,
-      newGuardianAddress,
-      onPromiEventAction,
-      isBroadcastingMessage,
-      analyticsService,
-      reReadStoresData,
-    ]);
+    const changeSelectedGuardian = useCallback(
+      () =>
+        handleApprove({
+          message,
+          subMessage,
+          promiEvent: orbsAccountStore.delegate(newGuardianAddress),
+          isBroadcastingMessage,
+          onPromiEventAction,
+          reReadStoresData,
+          wizardsCommonTranslations,
+          errorHandler: handleGuardianChangeError,
+          analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
+        }),
+      [
+        isBroadcastingMessage,
+        message,
+        onPromiEventAction,
+        orbsAccountStore,
+        reReadStoresData,
+        subMessage,
+        wizardsCommonTranslations,
+        analyticsService,
+        newGuardianAddress,
+      ],
+    );
 
     const changeGuardianActionButtonProps = useMemo<IActionButtonProps>(() => {
       return {
@@ -92,6 +92,7 @@ export const GuardianChangeStepContent = observer(
         addCancelButton
         disableActionButton={orbsAccountStore.isGuardian}
         onCancelButtonClicked={closeWizard}
+        close={closeWizard}
         cancelButtonText={wizardsCommonTranslations('action_close')}
       />
     );

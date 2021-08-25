@@ -4,10 +4,10 @@
 export interface IManagementStatusResponse {
   Status: string;
   Timestamp: string;
+  Error?: string;
   Payload: {
     Guardians: IGuardianData[];
-    CommitteeEvents: ICommitteeEvent[];
-
+    Participation30Days: { [ethAddress: string]: number };
     // Current refs
     CurrentRefBlock: number;
     CurrentRefTime: number;
@@ -15,18 +15,6 @@ export interface IManagementStatusResponse {
     // DEV_NOTE : O.L : We can add the fields that we need to process
     [key: string]: any;
   };
-}
-
-export interface ICommitteeEvent {
-  RefTime: number;
-  Committee: ICommitteeEventCommitteeMember[];
-}
-
-export interface ICommitteeEventCommitteeMember {
-  EthAddress: string;
-  OrbsAddress: string;
-  Weight: number;
-  IdentityType: number;
 }
 
 export interface IGuardianData {

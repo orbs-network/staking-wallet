@@ -1,7 +1,7 @@
 // import fetch from 'node-fetch';
 import { retry } from 'ts-retry-promise';
 import _ from 'lodash';
-
+import errorMonitoring from '../../../error-monitoring/index';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function errorString(e: any) {
   return (e && e.stack) || '' + e;
@@ -36,19 +36,26 @@ export type JsonResponse = any;
 
 // TODO : FUTURE : O.L : Move this to http service
 export async function fetchJson(url: string) {
-  return await retry(
-    async () => {
-      const response = await fetch(url);
+  const retries = 3;
+  try {
+    return await retry(
+      async () => {
+        const response = await fetch(url);
 
-      // console.log({ response });
-      const body = await response.text();
-      // console.log('body', body);
-      try {
-        return JSON.parse(body);
-      } catch (e) {
-        throw new Error(`Invalid response for url '${url}': ${body}`);
-      }
-    },
-    { retries: 3, delay: 300 },
-  );
+        // console.log({ response });
+        const body = await response.text();
+        // console.log('body', body);
+        try {
+          return JSON.parse(body);
+        } catch (error) {
+          throw new Error(`Invalid response for url '${url}': ${body}`);
+        }
+      },
+      { retries, delay: 300 },
+    );
+  } catch (error) {
+    const { errorMessages, captureException, sections } = errorMonitoring;
+    const customMsg = errorMessages.apiError(url, error.message, retries);
+    captureException(error, sections.api, customMsg);
+  }
 }
