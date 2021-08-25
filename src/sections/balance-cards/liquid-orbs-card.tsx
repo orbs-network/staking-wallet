@@ -12,7 +12,7 @@ interface IProps {
 
 const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
   const balancesSectionTranslations = useBalancesSectionTranslations();
-  const { liquidOrbs, doneLoading } = useOrbsAccountStore();
+  const { liquidOrbs, doneLoading, hasSelectedGuardian } = useOrbsAccountStore();
   const liquidOrbsAsString = fullOrbsFromWeiOrbsString(liquidOrbs);
   return (
     <BalanceCard
@@ -24,6 +24,7 @@ const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
       balanceCardTestId={'balance_card_liquid_orbs'}
       showFraction
       isLoading={!doneLoading}
+      warning={hasSelectedGuardian && balancesSectionTranslations('warning_unstakedTokensNotEarningRewards')}
     />
   );
 });

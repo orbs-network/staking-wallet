@@ -12,7 +12,7 @@ interface IProps {
   title: string | React.ElementType | JSX.Element;
   toolTipTitle?: string | React.ElementType | JSX.Element;
   amount: string;
-
+  warning?: string;
   // Action buttons (main + secondary)
   actionButtonTitle?: string;
   onActionButtonPressed?: () => void;
@@ -31,7 +31,6 @@ interface IProps {
 }
 
 const BalanceCard = (props: IProps) => {
-  const classes = useStyles();
   const {
     title,
     toolTipTitle,
@@ -45,14 +44,15 @@ const BalanceCard = (props: IProps) => {
     showFraction,
     balanceCardTestId,
     isLoading,
+    warning,
   } = props;
-
+  const classes = useStyles({ warning });
   const titleElement = useStringOrElement(title);
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
 
   return (
-    <StyledGrid container direction={'column'} data-testid={balanceCardTestId}>
+    <StyledGrid container direction={'column'} data-testid={balanceCardTestId} className={classes.container}>
       <BaseLoader isLoading={isLoading} LoaderComponent={Loaders.BalanceCard}>
         <>
           <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
@@ -92,6 +92,7 @@ const BalanceCard = (props: IProps) => {
               </CommonActionButton>
             </Grid>
           )}
+          {warning && <Typography className={classes.warning}>{warning}</Typography>}
         </>
       </BaseLoader>
     </StyledGrid>

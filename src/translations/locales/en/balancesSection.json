@@ -10,5 +10,6 @@
   "title_tokensReadyForWithdrawal": "Tokens ready for withdrawal",
   "title_unstakedOrbsInYourWallet": "Unstaked ORBS in your wallet",
   "tooltipTitle_pendingRewards": "Pending rewards",
-  "tooltipTitle_stakedOrbs": "Staked Orbs"
+  "tooltipTitle_stakedOrbs": "Staked Orbs",
+  "warning_unstakedTokensNotEarningRewards": "These tokens are unstaked and not earning rewards."
 }

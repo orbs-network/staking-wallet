@@ -285,6 +285,7 @@ export interface IBalancesSectionTranslations {
   action_withdrawYourTokens: string;
   tooltipTitle_stakedOrbs: string;
   tooltipTitle_pendingRewards: string;
+  warning_unstakedTokensNotEarningRewards: string;
 }
 
 export interface IRewardsSectionTranslations {
