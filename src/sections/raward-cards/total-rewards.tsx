@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import BalanceCard from '../../components/balance-card/index';
 
 import { useRewardsSectionTranslations } from '../../translations/translationsHooks';
-import { numberToString } from '../../utils/numberUtils';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 
 const RewardsRate: FC = observer(() => {
@@ -15,7 +14,7 @@ const RewardsRate: FC = observer(() => {
       title={`${rewardsSectionTranslations('title_totalRewardsAwarded')} (${rewardsSectionTranslations(
         'title_quantity_orbs',
       )})`}
-      amount={numberToString(totalRewardedRewards)}
+      amount={totalRewardedRewards.toString()}
       showFraction
       isLoading={!doneLoading}
     />

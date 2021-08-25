@@ -14,7 +14,6 @@ const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
   const balancesSectionTranslations = useBalancesSectionTranslations();
   const { liquidOrbs, doneLoading } = useOrbsAccountStore();
   const liquidOrbsAsString = fullOrbsFromWeiOrbsString(liquidOrbs);
-
   return (
     <BalanceCard
       title={balancesSectionTranslations('title_unstakedOrbsInYourWallet')}

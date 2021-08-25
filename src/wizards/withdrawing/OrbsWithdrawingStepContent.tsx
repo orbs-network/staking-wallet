@@ -8,10 +8,9 @@ import { useWithdrawingWizardTranslations, useWizardsCommonTranslations } from '
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import constants from '../../constants/constants';
-import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
 import { handleWithdrawingError } from '../helpers/error-handling';
 import handleApprove from '../helpers/handle-approve';
+import { formatStringAsNumber } from '../../utils/stringUtils';
 export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
@@ -25,11 +24,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
   const fullOrbsReadyForWithdrawalString = fullOrbsFromWeiOrbsString(orbsAccountStore.orbsInCoolDown);
-  const orbsForWithdrawal = handleNumberAsStringToDisplay(
-    fullOrbsReadyForWithdrawalString,
-    constants.numbersDecimalToDisplayLimit,
-    true,
-  );
+
   const { message, subMessage, isBroadcastingMessage } = useWizardState(
     '',
     withdrawingWizardTranslations('withdrawingSubStep_subMessage_pressWithdrawAndApprove'),
@@ -82,7 +77,7 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       message={message.value}
       subMessage={subMessage.value}
       title={withdrawingWizardTranslations('withdrawingSubStep_stepTitle', {
-        orbsForWithdrawal: orbsForWithdrawal,
+        orbsForWithdrawal: formatStringAsNumber(fullOrbsReadyForWithdrawalString, true),
       })}
       infoTitle={withdrawingWizardTranslations('withdrawingSubStep_stepExplanation')}
       disableInputs={disableInputs}

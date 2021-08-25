@@ -8,10 +8,9 @@ import { useRestakingWizardTranslations, useWizardsCommonTranslations } from '..
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
-import { handleNumberAsStringToDisplay } from '../../utils/numberUtils';
-import constants from '../../constants/constants';
 import handleApprove from '../helpers/handle-approve';
 import { handleRestakingError } from '../helpers/error-handling';
+import { formatStringAsNumber } from '../../utils/stringUtils';
 export const OrbsRestakingStepContent = observer((props: ITransactionCreationStepProps) => {
   const { disableInputs, onPromiEventAction, txError, closeWizard } = props;
 
@@ -67,16 +66,13 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     [restakeTokens, restakingWizardTranslations],
   );
 
+  console.log({ fullOrbsForRestaking });
   return (
     <BaseStepContent
       message={message.value}
       subMessage={subMessage.value}
       title={restakingWizardTranslations('restakingSubStep_stepTitle', {
-        orbsForRestaking: handleNumberAsStringToDisplay(
-          fullOrbsForRestaking,
-          constants.numbersDecimalToDisplayLimit,
-          true,
-        ),
+        orbsForRestaking: formatStringAsNumber(fullOrbsForRestaking, true),
       })}
       infoTitle={restakingWizardTranslations('restakingSubStep_stepExplanation')}
       disableInputs={disableInputs}

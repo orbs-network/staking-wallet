@@ -2,26 +2,25 @@ import React from 'react';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
 import constants from '../../../constants/constants';
-import { numberToString } from '../../../utils/numberUtils';
-import { addCommasToString } from '../../../utils/stringUtils';
+import config from '../../../config';
+
 const counterProps = {
   preserveValue: true,
   delay: 0.4,
 };
 
 const handleFullNumber = (value: number) => {
-  return addCommasToString(numberToString(value));
+  return value.toLocaleString();
 };
 
-const handleDecimals = (num: number) => {
-  const value = numberToString(num);
-  const isOutOfLimit = value.length > constants.numbersDecimalToDisplayLimit;
-  const showDots = constants.numbersDecimalToDisplayLimit && isOutOfLimit;
-  const val = isOutOfLimit ? value.substring(0, constants.numbersDecimalToDisplayLimit) : value;
-  const result = showDots ? `${val}...` : `${val}`;
-  return `.${result}`;
+const handleDecimals = (value: number) => {
+  const stringValue = value.toString();
+  const calibratedDecimalLimit = constants.numbersDecimalToDisplayLimit + 1;
+  const isOutOfLimit = stringValue.length > calibratedDecimalLimit;
+  const val = stringValue.substring(1, calibratedDecimalLimit);
+  const result = isOutOfLimit ? `${val}...` : `${val}`;
+  return `${config.numberSeparator.decimal}${result}`;
 };
-
 interface IProps {
   amount: string;
   isLoading: boolean;
@@ -35,7 +34,7 @@ const BalanceCardCounters = ({ amount, isLoading }: IProps) => {
         {!isLoading ? (
           <>
             <CountUp end={full as any} formattingFn={handleFullNumber} {...counterProps} />
-            {decimal && <CountUp end={decimal as any} formattingFn={handleDecimals} {...counterProps} />}
+            {decimal && <CountUp end={parseInt('1' + decimal) as any} preserveValue formattingFn={handleDecimals} />}
           </>
         ) : (
           '---'

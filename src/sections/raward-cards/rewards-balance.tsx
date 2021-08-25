@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import BalanceCard from '../../components/balance-card/index';
 
 import { useRewardsSectionTranslations } from '../../translations/translationsHooks';
-import { numberToString } from '../../utils/numberUtils';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 
 interface IProps {
@@ -13,13 +12,12 @@ interface IProps {
 const RewardsBalance = observer(({ onSecondaryActionButtonPressed }: IProps) => {
   const rewardsSectionTranslations = useRewardsSectionTranslations();
   const { rewardsBalance, doneLoading } = useOrbsAccountStore();
-
   return (
     <BalanceCard
       title={`${rewardsSectionTranslations('title_rewardsBalance')} (${rewardsSectionTranslations(
         'title_quantity_orbs',
       )})`}
-      amount={numberToString(rewardsBalance)}
+      amount={rewardsBalance.toString()}
       secondaryActionButtonActive={rewardsBalance > 0}
       secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}
       onSecondaryActionButtonPressed={onSecondaryActionButtonPressed}

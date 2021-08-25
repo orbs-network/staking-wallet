@@ -5,9 +5,9 @@ import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import stakingUtil from '../../utils/stakingUtil';
 import BalanceTooltip from './components/balance-tooltip';
 import { UseBoolean } from 'react-hanger';
-import { numberToString } from '../../utils/numberUtils';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { useBalancesSectionTranslations } from '../../translations/translationsHooks';
+import { formatStringAsNumber } from '../../utils/stringUtils';
 interface IProps {
   showCannotUnstakeNowSnackbar: UseBoolean;
   showUnStakingModal: UseBoolean;
@@ -29,16 +29,17 @@ const StakedAndRewardsCard: FC<IProps> = observer(({ showCannotUnstakeNowSnackba
 
   const orbsToUnstakeAsString = stakingUtil.addNumbersAsStrings(
     fullOrbsFromWeiOrbsString(stakedOrbs),
-    numberToString(rewardsBalance),
+    rewardsBalance.toString(),
   );
+
   return (
     <BalanceCard
       title={balancesSectionTranslations('title_stakedOrbsAndRewardsBalance')}
       toolTipTitle={
         <BalanceTooltip
           stakeTitle={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
-          stakedOrbs={stakedOrbsAsString}
-          rewardsBalance={numberToString(rewardsBalance)}
+          stakedOrbs={formatStringAsNumber(stakedOrbsAsString)}
+          rewardsBalance={formatStringAsNumber(rewardsBalance.toString())}
           pendingRewardsTitle={balancesSectionTranslations('tooltipTitle_pendingRewards')}
         />
       }
