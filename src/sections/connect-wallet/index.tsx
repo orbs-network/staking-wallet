@@ -15,29 +15,30 @@ import InstallOrConnectBtn from './components/install-or-connect-btn';
 import LegalAgreement from './components/legal-agreement';
 import Message from './components/message';
 import { WalletConnectionInnerGrid } from './components/style';
+import { createWeb3ModalInstance } from '../../utils/web3';
+import initApp from '../../init';
 
 type TWalletConnectionPhase = 'install' | 'connect';
 
-const ConnectWalletSection = observer(() => {
+const ConnectWalletSection = observer(({ setProvider }: any) => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
   const legalDocsAgreedTo = useBoolean(false);
 
   const hoverTargetRef = useRef();
 
-  const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.hasEthereumProvider
-    ? 'connect'
-    : 'install';
+  const walletConnectionState: TWalletConnectionPhase = 'connect';
 
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
-    const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
-    rejectedConnection.setValue(!approvedConnection);
-  }, [rejectedConnection, cryptoWalletIntegrationStore]);
+    // const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
+    // rejectedConnection.setValue(!approvedConnection);
+    const provider = await createWeb3ModalInstance().connect();
+    setProvider(provider);
+  }, []);
 
   const handleInstallClicked = useCallback(async () => {
     window.open('https://metamask.io/', '_blank');
@@ -105,7 +106,7 @@ const ConnectWalletSection = observer(() => {
           />
           <Message
             pressedOnInstallMetamask={pressedOnInstallMetamask.value}
-            hasEthereumProvider={cryptoWalletIntegrationStore.hasEthereumProvider}
+            hasEthereumProvider={true}
             rejectedConnection={rejectedConnection.value}
           />
         </Grid>

@@ -32,7 +32,7 @@ const HideOnScroll = React.memo((props) => {
 });
 
 export const Footer = observer(() => {
-  const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
+  // const cryptoWalletConnectionStore = useCryptoWalletIntegrationStore();
   const commonsTranslations = useCommonsTranslations();
 
   return (
@@ -77,14 +77,14 @@ export const Footer = observer(() => {
                 </Grid>
 
                 <Grid item>
-                  <a
+                  {/* <a
                     href={`https://orbs-network.github.io/v1-snapshot/reward?address=${cryptoWalletConnectionStore.mainAddress}`}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
                   >
                     <Typography variant={'subtitle2'}>{commonsTranslations('v1HistoricRewards')}</Typography>
-                  </a>
+                  </a> */}
                 </Grid>
               </Grid>
             </StyledToolBar>

@@ -1,5 +1,5 @@
+import { createWeb3Instance } from './../utils/web3';
 import { IOrbsPOSDataService, OrbsClientService, orbsPOSDataServiceFactory, IOrbsClientService } from 'orbs-pos-data';
-import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
 import config from '../config';
 import { BuildOrbsClient } from './OrbsClientFactory';
@@ -42,13 +42,8 @@ export interface IServices {
 }
 
 export function buildServices(ethereumProvider: IEthereumProvider, axios: AxiosInstance): IServices {
-  let web3: Web3;
-
-  if (ethereumProvider) {
-    web3 = new Web3(ethereumProvider as any);
-  } else {
-    web3 = new Web3(new Web3.providers.WebsocketProvider(config.ETHEREUM_PROVIDER_WS));
-  }
+  const web3 = createWeb3Instance(ethereumProvider);
+  console.log({ web3 });
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
   const httpService: IHttpService = new HttpService(axios);

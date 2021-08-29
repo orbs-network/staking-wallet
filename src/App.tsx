@@ -14,9 +14,8 @@ import routes from './router/routes';
 import useConnection from './hooks/useConnection';
 import NetworkIndicator from './components/NetworkIndicator/index';
 export const App = observer(() => {
-  useMonitoring();
+  // useMonitoring();
   useLanguage();
-  useConnection();
 
   return (
     <main>

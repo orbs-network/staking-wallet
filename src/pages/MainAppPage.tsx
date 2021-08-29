@@ -8,12 +8,12 @@ import { version } from '../../package.json';
 
 export const MainAppPage = () => {
   // DEV_NOTE : id the user is connected than we consider this as a 'log in' for analytics purposes
-  useAnalytics(events.trackAppLogin);
+  // useAnalytics(events.trackAppLogin);
 
   return (
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
-      <GuardiansSection />
+      {/* <GuardiansSection /> */}
 
       <div style={{ fontSize: 8, textAlign: 'center' }}>{version}</div>
     </Grid>

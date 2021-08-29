@@ -52,10 +52,7 @@ export class CryptoWalletConnectionStore {
 
   @computed
   public get isConnectedToWallet(): boolean {
-    return (
-      this.hasEthereumProvider &&
-      (this.cryptoWalletConnectionService.didUserApproveDappInThePast || this.walletConnectionRequestApproved)
-    );
+    return this.hasEthereumProvider;
   }
 
   public async askToConnect(): Promise<boolean> {
@@ -91,7 +88,6 @@ export class CryptoWalletConnectionStore {
   @action('setMainAddress')
   private setMainAddress(mainAddress: string) {
     this.mainAddress = mainAddress;
-
     this.analyticsService.setUserAddress(mainAddress);
   }
 }
