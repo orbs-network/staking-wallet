@@ -63,7 +63,7 @@ export class OrbsAccountStore {
     } else if (
       !isNil(this.selectedGuardianAddress) &&
       this.selectedGuardianAddress !== EMPTY_ADDRESS &&
-      this.selectedGuardianAddress !== this.cryptoWalletIntegrationStore.mainAddress
+      this.selectedGuardianAddress.toLowerCase() !== this.cryptoWalletIntegrationStore.mainAddress.toLowerCase()
     ) {
       // DEV_NOTE : O.L : We want to make sure that the selected guardian address is not empty, directed to null (zero address) or the default one (default in V2 is auto self-delegation)
       return true;
@@ -137,7 +137,6 @@ export class OrbsAccountStore {
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
       async (address) => {
-        if (!address) return;
         this.setDoneLoading(false);
         await this.reactToConnectedAddressChanged(address);
         this.setDoneLoading(true);
