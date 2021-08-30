@@ -18,9 +18,11 @@ export const formatStringAsNumber = (str: string, limitDecimals?: boolean): stri
   const [full, decimals] = str.split('.');
   const { decimal } = config.numberSeparator;
   const num = parseInt(full).toLocaleString();
-  if (limitDecimals && decimal && decimals.length > constants.numbersDecimalToDisplayLimit) {
-    return `${num}${decimal}${decimals.substring(0, constants.numbersDecimalToDisplayLimit)}...`;
-  } else {
-    return `${num}${decimal}${decimals}`;
+  if (!decimals) {
+    return `${num}`;
   }
+  if (limitDecimals && decimals.length > constants.numbersDecimalToDisplayLimit) {
+    return `${num}${decimal}${decimals.substring(0, constants.numbersDecimalToDisplayLimit)}...`;
+  }
+  return `${num}${decimal}${decimals}`;
 };
