@@ -57,6 +57,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   ```
    cd ./ganach-env
    npm install
+   export ETHEREUM_FORK_URL=[url to infura or other mainnet node]
    npm run up-mainnet-fork
   ```
 
@@ -73,6 +74,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
   ```
    cd ./ganach-env
    npm install
+   export ETHEREUM_FORK_URL=[url to infura or other mainnet node]
    npm run up-mainnet-fork
   ```
 
