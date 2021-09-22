@@ -21,12 +21,12 @@ Run a dockerized Ganache instance forking ethereum
  
 ```bash
 npm install
+export ETHEREUM_FORK_URL=[url to infura or other mainnet node]
 npm run up-mainnet-fork
 ```
 
 ### Ropsten backend 
 Runs a dockerized instance of Orbs management service against Ropsten contracts
-
 
 ### Deploying ropsten contracts:
 ```bash
