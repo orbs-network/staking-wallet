@@ -42,9 +42,8 @@ export const GuardianSelectingWizard = observer(
     const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
       return {
         selectedGuardianAddress: selectedGuardianAddress,
-        isRegisteredGuardian: orbsAccountStore.isGuardian,
       };
-    }, [orbsAccountStore.isGuardian, selectedGuardianAddress]);
+    }, [selectedGuardianAddress]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {

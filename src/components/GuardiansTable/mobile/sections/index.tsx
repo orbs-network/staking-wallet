@@ -39,6 +39,8 @@ const GuardiansMobileSection: FC<IProps> = (props) => {
     theme,
     disableSelection: props.disableSelection,
     guardian,
+    isGuardian: props.isGuardian,
+    mainAddress: props.mainAddress,
   };
   const commonClasses = useCommonStyles();
   return (

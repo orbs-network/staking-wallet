@@ -12,29 +12,19 @@ interface IProps extends IBaseTableProps {
 export const GuardiansTable = React.memo<IProps>((props) => {
   const [isMobile] = useMobile();
 
-  const {
-    guardians,
-    selectedGuardian,
-    guardianSelectionMode,
-    onGuardianSelect,
-    tableTitle,
-    densePadding,
-    disableSelection,
-    guardiansToDelegatorsCut,
-    committeeMembers,
-  } = props;
-
   const tableProps = {
-    committeeMembers,
-    guardiansToDelegatorsCut,
-    onGuardianSelect,
-    selectedGuardian,
-    guardianSelectionMode,
-    disableSelection,
-    sortedGuardians: getSortedGuardians(guardians, selectedGuardian),
-    pageSize: Math.min(50, guardians.length),
-    tableTitle,
-    densePadding,
+    committeeMembers: props.committeeMembers,
+    guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
+    onGuardianSelect: props.onGuardianSelect,
+    selectedGuardian: props.selectedGuardian,
+    guardianSelectionMode: props.guardianSelectionMode,
+    disableSelection: props.disableSelection,
+    sortedGuardians: getSortedGuardians(props.guardians, props.selectedGuardian),
+    pageSize: Math.min(50, props.guardians.length),
+    tableTitle: props.tableTitle,
+    densePadding: props.densePadding,
+    isGuardian: props.isGuardian,
+    mainAddress: props.mainAddress,
   };
 
   return isMobile ? <GuardiansMobile {...tableProps} /> : <GuardiansDesktop {...tableProps} />;

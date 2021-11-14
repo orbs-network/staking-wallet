@@ -43,6 +43,8 @@ const GuardiansDesktop: FC<IProps> = (props) => {
     onGuardianSelect,
     guardianSelectionMode,
     disableSelection,
+    isGuardian,
+    mainAddress,
   } = props;
 
   const classes = useStyles();
@@ -66,6 +68,8 @@ const GuardiansDesktop: FC<IProps> = (props) => {
     guardiansTableTranslations,
     theme,
     copyAddress,
+    mainAddress,
+    isGuardian,
   };
 
   const columns = useMemo(() => createDesktopTableColumns(tableProps), [tableProps]);
