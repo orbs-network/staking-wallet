@@ -47,6 +47,7 @@ const disableGuardianSelectionInTable = (
   if (!isGuardian && allowClickOnSelectedGuardian) {
     return false;
   }
+
   const isAlreadyDelegatedTo = isSameAddress(newGuardian, selectedGuardian);
   if (!isGuardian && !isAlreadyDelegatedTo) {
     return false;
