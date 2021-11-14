@@ -1,5 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useOrbsAccountStore, useOrbsNodeStore, useReReadAllStoresData } from '../../store/storeHooks';
+import React, { useCallback, useMemo } from 'react';
+import {
+  useCryptoWalletIntegrationStore,
+  useOrbsAccountStore,
+  useOrbsNodeStore,
+  useReReadAllStoresData,
+} from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
@@ -10,31 +15,22 @@ import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService, useGuardiansDelegatorsCut, useStakingRewardsService } from '../../services/ServicesHooks';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import errorMonitoring from '../../services/error-monitoring';
 import handleApprove from '../helpers/handle-approve';
 import { handleGuardianSelectionError } from '../helpers/error-handling';
 export interface IGuardianSelectionStepContentProps {
   selectedGuardianAddress: string;
-  isRegisteredGuardian: boolean;
 }
 
 export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
-    const {
-      onPromiEventAction,
-      skipToSuccess,
-      txError,
-      disableInputs,
-      selectedGuardianAddress,
-      isRegisteredGuardian,
-    } = props;
+    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
     const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
-
+    const { mainAddress } = useCryptoWalletIntegrationStore();
     const reReadStoresData = useReReadAllStoresData();
 
     const stakingRewardsService = useStakingRewardsService();
@@ -42,10 +38,10 @@ export const GuardianSelectionStepContent = observer(
 
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
-      isRegisteredGuardian
+      orbsAccountStore.isGuardian
         ? stakingWizardTranslations('guardianSelectionSubStep_message_youAreAGuardian')
         : stakingWizardTranslations('guardianSelectionSubStep_message_selectGuardian'),
-      isRegisteredGuardian
+      orbsAccountStore.isGuardian
         ? stakingWizardTranslations('guardianSelectionSubStep_subMessage_mustUnregisterBeforeDelegation')
         : stakingWizardTranslations('guardianSelectionSubStep_subMessage_pressSelectAndApprove'),
       false,
@@ -95,6 +91,8 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
+            mainAddress={mainAddress}
+            isGuardian={orbsAccountStore.isGuardian}
             guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
             onGuardianSelect={selectGuardian}
@@ -103,18 +101,19 @@ export const GuardianSelectionStepContent = observer(
             committeeMembers={orbsNodeStore.committeeMembers}
             guardiansToDelegatorsCut={guardianAddressToDelegatorsCut}
             densePadding
-            disableSelection={isRegisteredGuardian || disableInputs}
+            disableSelection={disableInputs}
           />
         </Grid>
       );
     }, [
       disableInputs,
       guardianAddressToDelegatorsCut,
-      isRegisteredGuardian,
       orbsNodeStore.committeeMembers,
       orbsNodeStore.guardians,
       selectGuardian,
       selectedGuardianAddress,
+      orbsAccountStore.isGuardian,
+      mainAddress,
     ]);
 
     return (

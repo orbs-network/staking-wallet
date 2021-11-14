@@ -5,9 +5,12 @@ import { ISelectionProps } from '../../interfaces';
 import { Typography } from '@material-ui/core';
 import getGuardianSelectionCellContent from '../../components/guardian-selection-cell-content-mobile';
 import { useCommonStyles } from './styles';
+import stakingUtil from '../../../../utils/stakingUtil';
 
 interface IProps extends ISelectionProps {
   guardian: Guardian;
+  isGuardian: boolean;
+  mainAddress: string;
 }
 
 const Selection = (props: IProps) => {
@@ -20,6 +23,8 @@ const Selection = (props: IProps) => {
     theme,
     disableSelection,
     guardian,
+    isGuardian,
+    mainAddress,
   } = props;
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
@@ -37,7 +42,15 @@ const Selection = (props: IProps) => {
         guardiansTableTranslations,
         guardianSelectionMode,
         theme,
-        disableSelection,
+        disableSelection:
+          disableSelection ||
+          stakingUtil.disableGuardianSelectionInTable(
+            mainAddress,
+            guardian.EthAddress,
+            selectedGuardian,
+            isGuardian,
+            guardianSelectionMode === 'Select',
+          ),
       })}
     </div>
   );

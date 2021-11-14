@@ -6,7 +6,7 @@ import { CommonActionButton } from '../../base/CommonActionButton';
 import IconButton from '@material-ui/core/IconButton';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 
 const GuardianSelectionCellContent = (props: IGetGuardianSelectionCellContent) => {
   const {
@@ -17,6 +17,7 @@ const GuardianSelectionCellContent = (props: IGetGuardianSelectionCellContent) =
     guardianSelectionMode,
     theme,
     disableSelection,
+    isGuardian,
   } = props;
   let selectedGuardianCell = null;
 
@@ -40,19 +41,36 @@ const GuardianSelectionCellContent = (props: IGetGuardianSelectionCellContent) =
       );
 
       const iconColor = isSelectedGuardian ? theme.palette.secondary.main : theme.palette.grey['500'];
+      if (isGuardian && disableSelection) {
+        selectedGuardianCell = (
+          <Typography data-testid={`guardian-${g.EthAddress}-selected-status`}>
+            <Tooltip
+              arrow
+              title={
+                <Typography style={{ textAlign: 'center' }}>
+                  You are a registered Guardian <br /> You must unregister before delegating to another Guardian
+                </Typography>
+              }
+            >
+              {actionButtonIcon}
+            </Tooltip>
+          </Typography>
+        );
+      } else {
+        selectedGuardianCell = (
+          <Typography data-testid={`guardian-${g.EthAddress}-selected-status`}>
+            <IconButton
+              data-testid={actionButtonTestId}
+              onClick={actionButtonOnClick}
+              disabled={!enabled || disableSelection}
+              style={{ color: iconColor }}
+            >
+              {actionButtonIcon}
+            </IconButton>
+          </Typography>
+        );
+      }
 
-      selectedGuardianCell = (
-        <Typography data-testid={`guardian-${g.EthAddress}-selected-status`}>
-          <IconButton
-            data-testid={actionButtonTestId}
-            onClick={actionButtonOnClick}
-            disabled={!enabled || disableSelection}
-            style={{ color: iconColor }}
-          >
-            {actionButtonIcon}
-          </IconButton>
-        </Typography>
-      );
       break;
     case 'None':
       selectedGuardianCell = null;

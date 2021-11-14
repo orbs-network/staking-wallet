@@ -50,7 +50,7 @@ const handleIsError = (
 
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
-  const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
+  const { isConnectedToWallet, mainAddress } = useCryptoWalletIntegrationStore();
 
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
@@ -110,6 +110,8 @@ export const GuardiansSection = observer(() => {
             )}
             <Grid item xs={12}>
               <GuardiansTable
+                mainAddress={mainAddress}
+                isGuardian={orbsAccountStore.isGuardian}
                 guardianSelectionMode={'Change'}
                 selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
                 guardians={orbsNodeStore.guardians}

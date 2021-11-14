@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
+import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
@@ -13,17 +13,20 @@ import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import handleApprove from '../helpers/handle-approve';
 import { handleGuardianChangeError } from '../helpers/error-handling';
+import stakingUtil from '../../utils/stakingUtil';
 export interface IGuardianChangeStepContentProps {
   newGuardianAddress: string;
 }
 
 export const GuardianChangeStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianChangeStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, newGuardianAddress, closeWizard } = props;
+    const { onPromiEventAction, txError, disableInputs, newGuardianAddress, closeWizard } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const guardianChangingWizardTranslations = useGuardianChangingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();
+    const { mainAddress } = useCryptoWalletIntegrationStore();
+
     const [t] = useTranslation();
     const analyticsService = useAnalyticsService();
 
@@ -90,7 +93,12 @@ export const GuardianChangeStepContent = observer(
         innerContent={null}
         actionButtonProps={changeGuardianActionButtonProps}
         addCancelButton
-        disableActionButton={orbsAccountStore.isGuardian}
+        disableActionButton={stakingUtil.disableGuardianSelection(
+          mainAddress,
+          newGuardianAddress,
+          orbsAccountStore.selectedGuardianAddress,
+          orbsAccountStore.isGuardian,
+        )}
         onCancelButtonClicked={closeWizard}
         close={closeWizard}
         cancelButtonText={wizardsCommonTranslations('action_close')}

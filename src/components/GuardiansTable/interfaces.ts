@@ -14,12 +14,15 @@ export interface IBaseTableProps {
   disableSelection?: boolean;
   // Styling
   densePadding?: boolean;
+  isGuardian: boolean;
+  mainAddress: string;
 }
 
 export interface IGetGuardianSelectionCellContent extends ISelectionProps {
   g: Guardian;
   guardiansTableTranslations: any;
   theme: any;
+  isGuardian: boolean;
 }
 
 export interface ISelectionProps {
