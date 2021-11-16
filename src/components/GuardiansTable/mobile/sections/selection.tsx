@@ -41,6 +41,7 @@ const Selection = (props: IProps) => {
         selectedGuardian,
         guardiansTableTranslations,
         guardianSelectionMode,
+        isGuardian,
         theme,
         disableSelection:
           disableSelection ||
