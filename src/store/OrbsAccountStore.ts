@@ -51,12 +51,10 @@ export class OrbsAccountStore {
   }
 
   @computed get selectedGuardianAddress(): string {
-    if (this.isGuardian) {
-      return this.cryptoWalletIntegrationStore.mainAddress;
-    } else {
-      return this._selectedGuardianAddress;
-    }
+    return this._selectedGuardianAddress;
   }
+
+
   @computed get hasSelectedGuardian(): boolean {
     if (this.isGuardian) {
       return true;
