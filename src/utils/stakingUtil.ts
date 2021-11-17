@@ -44,6 +44,7 @@ const disableGuardianSelectionInTable = (
   isGuardian: boolean,
   allowClickOnSelectedGuardian?: boolean,
 ): boolean => {
+
   if (!isGuardian && allowClickOnSelectedGuardian) {
     return false;
   }
@@ -58,7 +59,7 @@ const disableGuardianSelectionInTable = (
   const theNewGuardianIsMyslef = isSameAddress(mainAddress, newGuardian);
   const alreadyDelegatedToMyself = isSameAddress(mainAddress, selectedGuardian);
 
-  if (theNewGuardianIsMyslef && alreadyDelegatedToMyself) {
+  if (theNewGuardianIsMyslef) {
     return false;
   }
   return true;
