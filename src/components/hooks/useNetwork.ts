@@ -1,5 +1,3 @@
-import React from 'react';
-import { IEthereumProvider } from '@orbs-network/contracts-js';
 import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 
@@ -9,15 +7,10 @@ const chainDictionary = {
   3: 'Ropsten Test Network',
   4: 'Rinkeby Test Network',
   5: 'Goerli Test Network',
-};
-const handleNetworkChange = (ethereum: IEthereumProvider) => {
-  ethereum.on('chainChanged', (chainId: string) => {
-    //reload was suggested by the metamask documentation
-    window.location.reload();
-  });
+  137: 'Polygon',
 };
 
-const useNetwork = (): [string | undefined, string | undefined] => {
+const useNetwork = (): { network: string | undefined; chain: string | undefined } => {
   const [network, setNetwork] = useState<string | undefined>(undefined);
   const [chain, setChain] = useState<string | undefined>(undefined);
 
@@ -38,13 +31,9 @@ const useNetwork = (): [string | undefined, string | undefined] => {
     const ethereum = (window as any).ethereum;
     if (!ethereum) return;
 
-    window.addEventListener('load', handleNetworkChange.bind(null, ethereum));
     getChainId(ethereum).then();
-    return () => {
-      window.removeEventListener('load', handleNetworkChange.bind(null, ethereum));
-    };
   }, []);
-  return [network, chain];
+  return { network, chain };
 };
 
 export default useNetwork;

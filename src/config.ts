@@ -1,4 +1,3 @@
-import { IOrbsPosContractsAddresses } from 'orbs-pos-data';
 import { getNumberSeparators } from './utils/numberUtils';
 
 /**
@@ -9,91 +8,93 @@ import { getNumberSeparators } from './utils/numberUtils';
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-type TSupportedNets = 'local' | 'ropsten' | 'mainnet' | 'mainnet-fork';
-// @ts-ignore
-const ethereumNetwork: TSupportedNets = process.env.ETHEREUM_NETWORK;
-
 export const IS_DEV = process.env.IS_DEV; // TODO - fix NODE_ENV is always development
-const SHOULD_OVERRIDE_ADDRESS = ethereumNetwork === 'local' || ethereumNetwork === 'ropsten';
 
 ////////////// CONFIG VARIABLES ///////////////
+
+interface IContaractAdresses {
+  stakingContract: string;
+  erc20Contract: string;
+  guardiansContract: string;
+  orbsRewardsDistributionContract: string;
+  stakingRewardsContract: string;
+  delegationsContract: string;
+  committeeContract: string;
+}
+
+export interface INetwork {
+  addresses?: IContaractAdresses;
+  managementServiceStatusPageUrl: string;
+  ETHEREUM_PROVIDER_WS?: string;
+  earliestBlockForDelegationOverride?: number;
+}
+
+const networks: { [key: string]: INetwork } = {
+  '1': {
+    ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
+  },
+  '3': {
+    earliestBlockForDelegationOverride: 9644509,
+    ETHEREUM_PROVIDER_WS: 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    managementServiceStatusPageUrl: 'https://tetra-staging-management.global.ssl.fastly.net/status',
+    addresses: {
+      erc20Contract: '0x0e2CE2e9C8A23F02162d2226352452CCbD9dfFcE',
+      delegationsContract: '0x4c743ED737359c3e502ed77E85392e037Af19F69',
+      stakingContract: '0xb4395d2d2a70DC791F5f65303ffF38c6C0dfa27e',
+      stakingRewardsContract: '0xA8E5EFD0e2cC5dCB38f8a2AE566E14C66dB4C36f',
+      guardiansContract: '0x16F93f7929E4a294b7916544f10Ee94EB094B2eC',
+      committeeContract: '0xdbcf7666504f7975cA08FbCeef3e949c5dFE8906',
+      orbsRewardsDistributionContract: '',
+    },
+  },
+  '137': {
+    earliestBlockForDelegationOverride: 0,
+    managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',
+    addresses: {
+      erc20Contract: '0x614389EaAE0A6821DC49062D56BDA3d9d45Fa2ff',
+      delegationsContract: '0x19611B0Bda728Bf02821B2fcC81a5fd1d2D8ae45',
+      stakingContract: '0x412c6677F0B69ca07dA52B864BcE9e472bbe77EE',
+      stakingRewardsContract: '0x4450bd4e1489cf7629CBFEd837e879Fb71bc4dF0',
+      guardiansContract: '0x9C9ff40EC1C90bB4F72FF123c204ADC55782946d',
+      committeeContract: '0xc7e9CfeCfE49d0f6794Da92ACcF513ece3759a4B',
+      orbsRewardsDistributionContract: '',
+    },
+  },
+  local: {
+    earliestBlockForDelegationOverride: 0,
+    ETHEREUM_PROVIDER_WS: 'ws://localhost:7545',
+    managementServiceStatusPageUrl: 'http://localhost:7666/status',
+    addresses: {
+      erc20Contract: '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE',
+      delegationsContract: '0x74aD147017eAa8C1d5977A48b21F4d712EE617a0',
+      stakingContract: '0xE6f4C12A49B557b2Ad46e03E729662ac5425fbeD',
+      stakingRewardsContract: '0xa05cb494562F0e395D3EfADdF9496a18b3a67db9',
+      guardiansContract: '0xd4e61B2029422349aCCf6DC26246DbA8FFDd8abD',
+      committeeContract: '0xAb6311Cb1bf0823D2d04f871351F2aCf39EBe282',
+      orbsRewardsDistributionContract: '',
+    },
+  },
+};
+
 interface IConfig {
   urlBase: string;
-  contractsAddressesOverride: Partial<{
-    stakingContract: string;
-    erc20Contract: string;
-    guardiansContract: string;
-    orbsRewardsDistributionContract: string;
-    stakingRewardsContract: string;
-    delegationsContract: string;
-    committeeContract: string;
-  }>;
-  ETHEREUM_PROVIDER_WS: string;
   earliestBlockForDelegationOverride: number;
   gaTrackerId: string;
   analyticsActive: boolean;
   rewardsRefreshRateInSeconds: number;
   numberSeparator: { decimal: string; thousand: string };
+  networks: { [key: string]: INetwork };
 }
 
 const config: IConfig = {
   urlBase: process.env.PUBLIC_BASE_PATH,
-  contractsAddressesOverride: SHOULD_OVERRIDE_ADDRESS ? {} : null,
-  ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
   earliestBlockForDelegationOverride: null,
   gaTrackerId: process.env.GA_TRACKER_ID || '',
   analyticsActive: process.env.GA_TRACKER_ID !== undefined,
   rewardsRefreshRateInSeconds: 10,
   numberSeparator: getNumberSeparators(),
+  networks,
 };
-
-// Webpack will remove this section on production build //
-if (IS_DEV) {
-  if (ethereumNetwork === 'local' || ethereumNetwork === 'mainnet-fork') {
-    config.ETHEREUM_PROVIDER_WS = 'ws://localhost:7545';
-  }
-
-  if (ethereumNetwork === 'local') {
-    const LOCAL_ERC20 = '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE';
-    const LOCAL_DELEGATIONS = '0x74aD147017eAa8C1d5977A48b21F4d712EE617a0';
-    const LOCAL_STAKING = '0xE6f4C12A49B557b2Ad46e03E729662ac5425fbeD';
-    const LOCAL_STAKING_REWARDS = '0xa05cb494562F0e395D3EfADdF9496a18b3a67db9';
-    const LOCAL_GUARDIANS = '0xd4e61B2029422349aCCf6DC26246DbA8FFDd8abD';
-    const LOCAL_COMMITTEE = '0xAb6311Cb1bf0823D2d04f871351F2aCf39EBe282';
-    const LOCAL_REGISTRY = '0x5cd0D270C30EDa5ADa6b45a5289AFF1D425759b3';
-
-    config.contractsAddressesOverride.erc20Contract = LOCAL_ERC20;
-    config.contractsAddressesOverride.delegationsContract = LOCAL_DELEGATIONS;
-    config.contractsAddressesOverride.stakingContract = LOCAL_STAKING;
-    config.contractsAddressesOverride.stakingRewardsContract = LOCAL_STAKING_REWARDS;
-    config.contractsAddressesOverride.guardiansContract = LOCAL_GUARDIANS;
-    config.contractsAddressesOverride.committeeContract = LOCAL_COMMITTEE;
-
-    config.earliestBlockForDelegationOverride = 0; // Local env starts from 0.
-  }
-}
-
-// TODO : ORL : Adjusts these addresses for v2.
-if (ethereumNetwork === 'ropsten') {
-  config.ETHEREUM_PROVIDER_WS = 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287';
-
-  const ROPSTEN_ERC20 = '0x0e2CE2e9C8A23F02162d2226352452CCbD9dfFcE';
-  const ROPSTEN_DELEGATIONS = '0x4c743ED737359c3e502ed77E85392e037Af19F69';
-  const ROPSTEN_STAKING = '0xb4395d2d2a70DC791F5f65303ffF38c6C0dfa27e';
-  const ROPSTEN_STAKING_REWARDS = '0xA8E5EFD0e2cC5dCB38f8a2AE566E14C66dB4C36f';
-  const ROPSTEN_GUARDIANS = '0x16F93f7929E4a294b7916544f10Ee94EB094B2eC';
-  const ROPSTEN_COMMITTEE = '0xdbcf7666504f7975cA08FbCeef3e949c5dFE8906';
-  const ROPSTEN_REGISTRY = '0x5D7779231a6344edE6178623f31007cF2D16DFd7';
-  const ROPSTEN_STAKING_REWARDS_WALLET = '0xc47E0BeCbC3D9BF91d6C8586b7147338CEAf015B';
-
-  config.contractsAddressesOverride.stakingContract = ROPSTEN_STAKING;
-  config.contractsAddressesOverride.erc20Contract = ROPSTEN_ERC20;
-  config.contractsAddressesOverride.guardiansContract = ROPSTEN_GUARDIANS;
-  config.contractsAddressesOverride.stakingRewardsContract = ROPSTEN_STAKING_REWARDS;
-  config.contractsAddressesOverride.delegationsContract = ROPSTEN_DELEGATIONS;
-  config.contractsAddressesOverride.committeeContract = ROPSTEN_COMMITTEE;
-
-  config.earliestBlockForDelegationOverride = 9644509; // Local env starts from 0.
-}
 
 export default config;

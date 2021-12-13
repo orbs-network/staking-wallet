@@ -7,12 +7,10 @@ import { IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
 import errorMonitoring from '../../error-monitoring';
-import errorMessages from '../../error-monitoring/errors';
 
-const ManagementServiceStatusPageUrl = process.env.URL_MGMT_SERV || 'http://localhost:7666/status';
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
-  constructor(private defaultStatusUrl: string = ManagementServiceStatusPageUrl) {}
+  constructor(private defaultStatusUrl: string = process.env.URL_MGMT_SERV) {}
   checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean {
     return this.checkIfNodeIsInSync(managementStatusResponse);
   }

@@ -7,8 +7,12 @@ import { AppStyles, baseTheme } from './theme/Theme';
 import moment from 'moment';
 import 'moment/locale/ja';
 import 'moment/locale/ko';
+import config from './config';
 
-const initApp = () => {
+const initApp = (chain?: string) => {
+  if (!chain) {
+    return;
+  }
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -17,7 +21,15 @@ const initApp = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
   const ethereumProvider = (window as any).ethereum;
-  const services = buildServices(ethereumProvider, axios);
+  if (ethereumProvider) {
+    ethereumProvider.on('networkChanged', function () {
+      window.location.reload();
+    });
+    ethereumProvider.on('accountsChanged', function () {
+      window.location.reload();
+    });
+  }
+  const services = buildServices(ethereumProvider, axios, config.networks[chain]);
   const stores = getStores(
     services.orbsPOSDataService,
     services.stakingService,

@@ -28,6 +28,7 @@
     "dev-rops": "cross-env ENV_FILE=.env.ropsten TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-rops-tunnel": "cross-env ENV_FILE=.env.ropsten-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "staging-ropsten": "cross-env ENV_FILE=.env.staging-ropsten TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
+    "staging-prod": "cross-env ENV_FILE=.env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "build-server": "tsc -p ./src/server",
     "deployOld": "rm -rf ./dist && npm run build && cross-env DEPLOY_REPO=staking DEPLOY_USER=orbs-network ./scripts/deploy.sh",
     "predeploy": "rm -rf ./dist && npm run build && echo 'staking.orbs.network' > dist/CNAME",
