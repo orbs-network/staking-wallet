@@ -1,20 +1,7 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-export const useNetworkIndicatorStyles = makeStyles({
-  devContainer: {
-    padding: '10px 20px 10px 20px',
-    color: 'white',
-    background: '#388e3c',
-    borderRadius: '4px',
-    fontSize: '16px',
-    zIndex: 9999,
-    fontWeight: 600,
-    position: 'fixed',
-    top: '20px',
-    left: '50%',
-    transform: 'translate(-50%)',
-  },
-  prodContainer: {
+const useStyles = makeStyles({
+  container: {
     position: 'fixed',
     top: '0',
     left: '0',
@@ -22,7 +9,7 @@ export const useNetworkIndicatorStyles = makeStyles({
     height: '100%',
     zIndex: 9999,
   },
-  prodContainerContent: {
+  containerContent: {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -56,3 +43,5 @@ export const useNetworkIndicatorStyles = makeStyles({
     opacity: '0.9',
   },
 });
+
+export default useStyles;

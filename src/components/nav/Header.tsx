@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
 import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
+import ChainIndicator from '../ChainIndicator';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -22,11 +23,15 @@ export const Header = () => {
       <StyledAppBar position='fixed'>
         <ContentContainer>
           <StyledToolBar disableGutters>
-            <Grid container direction={'row'} alignItems={'center'}>
-              <Grid item xs={8}>
+            <Grid container direction={'row'} alignItems={'center'} justify={'space-between'}>
+              <Grid item>
                 <TetraLogoAndIconSvg />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item style={{ marginLeft: 'auto', marginRight: 40 }}>
+                <ChainIndicator />
+              </Grid>
+
+              <Grid item>
                 <LanguagesSelector />
               </Grid>
             </Grid>

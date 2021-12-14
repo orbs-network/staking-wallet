@@ -1,4 +1,6 @@
 import { getNumberSeparators } from './utils/numberUtils';
+import ethImg from '../assets/logos/eth.png';
+import polygonImg from '../assets/logos/polygon.png';
 
 /**
  * Copyright 2019 the prism authors
@@ -8,7 +10,7 @@ import { getNumberSeparators } from './utils/numberUtils';
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-export const IS_DEV = process.env.IS_DEV; // TODO - fix NODE_ENV is always development
+export const IS_DEV = process.env.IS_DEV;
 
 ////////////// CONFIG VARIABLES ///////////////
 
@@ -24,17 +26,31 @@ interface IContaractAdresses {
 
 export interface INetwork {
   addresses?: IContaractAdresses;
-  managementServiceStatusPageUrl: string;
+  managementServiceStatusPageUrl?: string;
   ETHEREUM_PROVIDER_WS?: string;
   earliestBlockForDelegationOverride?: number;
+  name: string;
+  logo?: string;
 }
 
 const networks: { [key: string]: INetwork } = {
   '1': {
+    name: 'Ethereum',
     ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
+    logo: ethImg,
+  },
+  '42': {
+    name: 'Kovan',
+  },
+  '4': {
+    name: 'Rinkeby Test Network',
+  },
+  '5': {
+    name: 'Goerli Test Network',
   },
   '3': {
+    name: 'Ropsten',
     earliestBlockForDelegationOverride: 9644509,
     ETHEREUM_PROVIDER_WS: 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://tetra-staging-management.global.ssl.fastly.net/status',
@@ -49,12 +65,14 @@ const networks: { [key: string]: INetwork } = {
     },
   },
   '137': {
+    name: 'Polygon',
+    logo: polygonImg,
     earliestBlockForDelegationOverride: 0,
     managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',
     addresses: {
       erc20Contract: '0x614389EaAE0A6821DC49062D56BDA3d9d45Fa2ff',
       delegationsContract: '0x19611B0Bda728Bf02821B2fcC81a5fd1d2D8ae45',
-      stakingContract: '0x412c6677F0B69ca07dA52B864BcE9e472bbe77EE',
+      stakingContract: '0xBdBee0688f2119e1C61dd2Edd9d475c2009b9768',
       stakingRewardsContract: '0x4450bd4e1489cf7629CBFEd837e879Fb71bc4dF0',
       guardiansContract: '0x9C9ff40EC1C90bB4F72FF123c204ADC55782946d',
       committeeContract: '0xc7e9CfeCfE49d0f6794Da92ACcF513ece3759a4B',
@@ -62,6 +80,7 @@ const networks: { [key: string]: INetwork } = {
     },
   },
   local: {
+    name: 'local',
     earliestBlockForDelegationOverride: 0,
     ETHEREUM_PROVIDER_WS: 'ws://localhost:7545',
     managementServiceStatusPageUrl: 'http://localhost:7666/status',

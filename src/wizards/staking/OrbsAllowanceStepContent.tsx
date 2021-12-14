@@ -37,7 +37,6 @@ export const OrbsAllowanceStepContent = observer(
     // Handle error by displaying the proper error message
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
-
     const isApproveEnabled = stakingUtil.isApproveEnabled(liquidOrbsAsString, orbsAllowance);
     const handleAllowance = useCallback(
       () =>
@@ -48,7 +47,7 @@ export const OrbsAllowanceStepContent = observer(
           promiEvent: orbsAccountStore.setAllowanceForStakingContract(weiOrbsFromFullOrbs(orbsAllowance)),
           isBroadcastingMessage,
           onPromiEventAction,
-          reReadStoresData,
+          reReadStoresData: () => {},
           wizardsCommonTranslations,
           errorHandler: hanleStakingAllowanceError,
           warnMsg: `tried to set out of range allowance of ${orbsAllowance}`,
@@ -60,7 +59,6 @@ export const OrbsAllowanceStepContent = observer(
         onPromiEventAction,
         orbsAccountStore,
         orbsAllowance,
-        reReadStoresData,
         subMessage,
         wizardsCommonTranslations,
       ],

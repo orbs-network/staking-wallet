@@ -59,7 +59,7 @@ const initApp = (chain?: string) => {
     styles: AppStyles,
   };
 
-  return { services, stores, themeAndStyle };
+  return { services, stores, themeAndStyle, chainId: chain };
 };
 
 export default initApp;

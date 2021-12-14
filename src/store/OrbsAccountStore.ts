@@ -54,13 +54,13 @@ export class OrbsAccountStore {
     return this._selectedGuardianAddress;
   }
 
-
   @computed get hasSelectedGuardian(): boolean {
     if (this.isGuardian) {
       return true;
     } else if (
       !isNil(this.selectedGuardianAddress) &&
       this.selectedGuardianAddress !== EMPTY_ADDRESS &&
+      this.cryptoWalletIntegrationStore.mainAddress &&
       this.selectedGuardianAddress.toLowerCase() !== this.cryptoWalletIntegrationStore.mainAddress.toLowerCase()
     ) {
       // DEV_NOTE : O.L : We want to make sure that the selected guardian address is not empty, directed to null (zero address) or the default one (default in V2 is auto self-delegation)
@@ -348,10 +348,9 @@ export class OrbsAccountStore {
   private async readAndSetStakingContractAllowance(accountAddress: string) {
     try {
       const stakingContractAllowance = await this.orbsTokenService.readAllowance(
-        this.cryptoWalletIntegrationStore.mainAddress,
+        accountAddress,
         this.stakingService.getStakingContractAddress(),
       );
-
       this.setStakingContractAllowance(stakingContractAllowance);
     } catch (error) {
       const { sections, captureException } = errorMonitoring;
@@ -433,7 +432,6 @@ export class OrbsAccountStore {
 
   private async refreshAccountListeners(accountAddress: string) {
     this.cancelAllCurrentSubscriptions();
-
     // Orbs balance
     this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
       accountAddress,
@@ -549,7 +547,6 @@ export class OrbsAccountStore {
 
   @action('setRewardsBalance')
   private setRewardsBalance(rewardsBalance: number) {
-    console.log({ rewardsBalance });
     this.rewardsBalance = rewardsBalance;
   }
 
@@ -560,7 +557,6 @@ export class OrbsAccountStore {
 
   @action('setEstimatedRewardsForNextWeek')
   private setEstimatedRewardsForNextWeek(estimatedRewardsForNextWeek: number) {
-    console.log({ estimatedRewardsForNextWeek });
     this.estimatedRewardsForNextWeek = estimatedRewardsForNextWeek;
   }
 

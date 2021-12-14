@@ -13,26 +13,28 @@ import { I18nextProvider } from 'react-i18next';
 import ErrorMonitoring from './services/error-monitoring/index';
 import './services/i18n/index';
 import useNetwork from './components/hooks/useNetwork';
-
+import ChainProvider from './providers/ChainProvider';
 export const AppWrapper = () => {
-  const { chain } = useNetwork();
+  const chain = useNetwork();
   const res = useMemo(() => initApp(chain), [chain]);
   if (!res) {
     return null;
   }
-  const { services, stores, themeAndStyle } = res;
+  const { services, stores, themeAndStyle, chainId } = res;
 
   return (
     <LangRouter preLangBasename={IS_DEV ? '' : config.urlBase}>
       <I18nextProvider i18n={i18n}>
-        <Provider {...services} {...stores}>
+        <Provider {...services} {...stores} chainId={chainId}>
           <StylesProvider injectFirst>
             <ThemeProvider theme={baseTheme}>
               <SCThemeProvider theme={themeAndStyle}>
                 <CssBaseline />
-                <ErrorMonitoring.ErrorBoundary>
-                  <App />
-                </ErrorMonitoring.ErrorBoundary>
+                <ChainProvider chainId={chainId}>
+                  <ErrorMonitoring.ErrorBoundary>
+                    <App />
+                  </ErrorMonitoring.ErrorBoundary>
+                </ChainProvider>
               </SCThemeProvider>
             </ThemeProvider>
           </StylesProvider>

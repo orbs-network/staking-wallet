@@ -32,13 +32,11 @@ export const OrbsStakingStepContent = observer(
 
     const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
     const fullOrbsForStakingString = fullOrbsFromWeiOrbsString(orbsForStaking);
-
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
 
     // Handle error by displaying the proper error message
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
-
     const stake = useCallback(() => {
       handleApprove({
         message,

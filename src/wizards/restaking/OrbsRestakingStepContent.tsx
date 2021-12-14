@@ -66,7 +66,6 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
     [restakeTokens, restakingWizardTranslations],
   );
 
-  console.log({ fullOrbsForRestaking });
   return (
     <BaseStepContent
       message={message.value}
