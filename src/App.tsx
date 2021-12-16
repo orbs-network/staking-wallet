@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Switch, useLocation } from 'react-router-dom';
 import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
 import { ContentContainer } from './components/structure/ContentContainer';
@@ -15,6 +15,7 @@ import routes from './router/routes';
 export const App = observer(() => {
   useMonitoring();
   useLanguage();
+
 
   return (
     <main>

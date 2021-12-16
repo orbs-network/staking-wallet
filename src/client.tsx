@@ -1,14 +1,32 @@
+import { StylesProvider, ThemeProvider } from '@material-ui/styles';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { I18nextProvider } from 'react-i18next';
 import { AppWrapper } from './AppWrapper';
-import { UnsopportedBrowserDisplay } from './UnsopportedBrowserDisplay';
+import config, { IS_DEV } from './config';
+import { LangRouter } from './multi-lang/LangRouter';
+import { AppStyles, baseTheme } from './theme/Theme';
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
+import { CssBaseline } from '@material-ui/core';
+import i18n from 'i18next';
 
-// DEV_NOTE : For now, we wont have a filter
-// TODO : ORL : Add a filter to find unsupported browsers (if needed).
-const isSupported = true;
+const themeAndStyle = {
+  ...baseTheme,
+  styles: AppStyles,
+};
 
-if (isSupported) {
-  ReactDOM.render(<AppWrapper />, document.getElementById('app'));
-} else {
-  ReactDOM.render(<UnsopportedBrowserDisplay />, document.getElementById('app'));
-}
+ReactDOM.render(
+  <LangRouter preLangBasename={IS_DEV ? '' : config.urlBase}>
+    <I18nextProvider i18n={i18n}>
+      <StylesProvider injectFirst>
+        <ThemeProvider theme={baseTheme}>
+          <SCThemeProvider theme={themeAndStyle}>
+            <CssBaseline />
+            <AppWrapper />
+          </SCThemeProvider>
+        </ThemeProvider>
+      </StylesProvider>
+    </I18nextProvider>
+  </LangRouter>,
+  document.getElementById('app'),
+);

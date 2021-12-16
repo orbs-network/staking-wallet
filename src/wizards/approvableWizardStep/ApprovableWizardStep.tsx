@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { MobXProviderContext } from 'mobx-react';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
 import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import errorMonitoring from '../../services/error-monitoring';
-
+import config from '../../config';
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
-const REQUIRED_CONFIRMATIONS = 7;
+// const REQUIRED_CONFIRMATIONS = 7;
 
 export interface ITransactionCreationStepProps {
   onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>, afterTxConfirmedCb?: () => void): void;
@@ -45,7 +46,8 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     propsForTransactionCreationSubStepContent,
     closeWizard,
   } = props;
-
+  const { chainId } = useContext(MobXProviderContext);
+  const requiredConfirmations = config.networks[chainId].requiredConfirmations;
   const { needsManualUpdatingOfState, manuallyReadAccountData } = useOrbsAccountStore();
   const stepState = useStateful<TStepState>('Action');
 
@@ -157,7 +159,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       case 'Confirmation':
         return (
           <TransactionApprovingSubStepContent
-            requiredConfirmations={REQUIRED_CONFIRMATIONS}
+            requiredConfirmations={requiredConfirmations}
             confirmationsCount={txConfirmationsCount.value}
             txHash={txHash.value}
             onStepFinished={onTransactionApprovingSubStepFinished}

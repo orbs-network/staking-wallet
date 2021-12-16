@@ -14,7 +14,7 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "type-check": "tsc -p ./src/tsconfig.json",
     "write:cname": "echo 'staking.orbs.network' > CNAME",
-    "build": " cross-env ENV_FILE=.env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
+    "build": " cross-env ENV_FILE=.env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d && cp dist/index.html dist/404.html",
     "build-dev": "cross-env ENV_FILE=.env.development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-staging-ropsten": "cross-env ENV_FILE=.env.staging-ropsten TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-dev-tunnel": "cross-env ENV_FILE=.env.development-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",

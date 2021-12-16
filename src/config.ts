@@ -31,6 +31,10 @@ export interface INetwork {
   earliestBlockForDelegationOverride?: number;
   name: string;
   logo?: string;
+  requiredConfirmations?: number;
+  nativeCurrency?: { name: string; symbol: string; decimals: number };
+  rpcUrls?: string[];
+  blockExplorerUrls?: string[];
 }
 
 const networks: { [key: string]: INetwork } = {
@@ -39,6 +43,7 @@ const networks: { [key: string]: INetwork } = {
     ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
     logo: ethImg,
+    requiredConfirmations: 7,
   },
   '42': {
     name: 'Kovan',
@@ -54,6 +59,7 @@ const networks: { [key: string]: INetwork } = {
     earliestBlockForDelegationOverride: 9644509,
     ETHEREUM_PROVIDER_WS: 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://tetra-staging-management.global.ssl.fastly.net/status',
+    requiredConfirmations: 7,
     addresses: {
       erc20Contract: '0x0e2CE2e9C8A23F02162d2226352452CCbD9dfFcE',
       delegationsContract: '0x4c743ED737359c3e502ed77E85392e037Af19F69',
@@ -65,10 +71,14 @@ const networks: { [key: string]: INetwork } = {
     },
   },
   '137': {
-    name: 'Polygon',
     logo: polygonImg,
     earliestBlockForDelegationOverride: 0,
     managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',
+    requiredConfirmations: 20,
+    name: 'Polygon Mainnet',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://polygon-rpc.com'],
+    blockExplorerUrls: ['https://www.polygonscan.com'],
     addresses: {
       erc20Contract: '0x614389EaAE0A6821DC49062D56BDA3d9d45Fa2ff',
       delegationsContract: '0x19611B0Bda728Bf02821B2fcC81a5fd1d2D8ae45',

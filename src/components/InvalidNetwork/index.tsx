@@ -1,4 +1,7 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Typography } from '@material-ui/core';
+import React, { ReactNode } from 'react';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
+import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles({
   container: {
@@ -44,4 +47,18 @@ const useStyles = makeStyles({
   },
 });
 
-export default useStyles;
+function InvalidNetwork() {
+  const classes = useStyles();
+  return (
+    <div className={classes.container}>
+      <section className={classes.overlay}></section>
+      <div className={classes.containerContent}>
+        <Typography className={classes.title}>Oops, wrong network!</Typography>
+        <LinkOffIcon className={classes.icon} />
+        <Typography className={classes.text}>Please change the network to Ethereum Mainnet or Polygon </Typography>
+      </div>
+    </div>
+  );
+}
+
+export default InvalidNetwork;
