@@ -44,6 +44,14 @@ const networks: { [key: string]: INetwork } = {
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
     logo: ethImg,
     requiredConfirmations: 7,
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+    blockExplorerUrls: ['https://etherscan.io'],
+  },
+  default: {
+    ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
+    name: '',
   },
   '42': {
     name: 'Kovan',
@@ -71,6 +79,7 @@ const networks: { [key: string]: INetwork } = {
     },
   },
   '137': {
+    ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     logo: polygonImg,
     earliestBlockForDelegationOverride: 0,
     managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',

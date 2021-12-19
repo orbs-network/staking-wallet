@@ -2,21 +2,28 @@ import { useLocation } from 'react-router-dom';
 import React, { ReactNode, useEffect, useState } from 'react';
 import useNetwork from '../components/hooks/useNetwork';
 import ProviderWrapper from './ProviderWrapper';
-import { addChangeEvents, isValidNetwork } from '../utils/web3';
-import ForceChangeNetwork from '../components/ForceChangeNetwork';
-import InvalidNetwork from '../components/InvalidNetwork';
+import { addChangeEvents, forceChainChange, isWrongNetwork } from '../utils/web3';
+import WrongNetwork from '../components/WrongNetwork';
+import { NETWORK_QUERY_PARAM } from '../constants';
 interface IProps {
   children: ReactNode;
 }
 
+const hideLoader = () => {
+  const loader: any = document.querySelector('#centerDiv');
+  loader.style.display = 'none';
+};
+
+const availableChains = JSON.parse(process.env.TARGET_NETWORKS);
+
 const NetworkWrapper = ({ children }: IProps) => {
-  const chain = useNetwork();
+  const { chain, noProvider } = useNetwork();
   const location = useLocation();
   const [forcedChain, setForcedChain] = useState<string | undefined>(undefined);
   const [selectedChain, setSelectedChain] = useState<string | undefined>(undefined);
-  const [forceChangeNetwork, setForceChangeNetwork] = useState(false);
+
   const detectForcedNetwork = () => {
-    const res = new URLSearchParams(location.search).get('network');
+    const res = new URLSearchParams(location.search).get(NETWORK_QUERY_PARAM);
     setForcedChain(res);
   };
 
@@ -27,24 +34,21 @@ const NetworkWrapper = ({ children }: IProps) => {
   }, []);
 
   useEffect(() => {
-    if (!chain) {
-      return;
-    } else if (!forcedChain) {
+    if (chain) {
       setSelectedChain(chain);
-    } else if (chain === forcedChain) {
-      setSelectedChain(chain);
-    } else {
-      setForceChangeNetwork(true);
+      hideLoader();
     }
-  }, [chain, forcedChain]);
+    if (noProvider) {
+      hideLoader();
+    }
+  }, [chain, forcedChain, noProvider]);
 
-  if (forceChangeNetwork && forcedChain) {
-    return <ForceChangeNetwork chain={forcedChain} />;
+  if (!noProvider && !selectedChain) {
+    return null;
   }
 
-
-  if (selectedChain && !isValidNetwork(selectedChain)) {
-    return <InvalidNetwork />;
+  if (isWrongNetwork(selectedChain, availableChains) || forceChainChange(forcedChain, selectedChain)) {
+    return <WrongNetwork availableChains={availableChains} selectedChain={Number(selectedChain)} />;
   }
 
   return <ProviderWrapper chain={selectedChain}>{children}</ProviderWrapper>;

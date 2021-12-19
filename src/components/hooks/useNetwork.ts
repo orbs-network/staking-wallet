@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import config from '../../config';
 
-const useNetwork = (): string | undefined => {
+const useNetwork = (): { chain: string | undefined; noProvider: boolean } => {
   const [chain, setChain] = useState<string | undefined>(undefined);
-
+  const [noProvider, setNoProvider] = useState<boolean>(false);
   const getChainId = async (ethereum: any) => {
     try {
       const web3 = new Web3(ethereum);
@@ -18,11 +17,13 @@ const useNetwork = (): string | undefined => {
 
   useEffect(() => {
     const ethereum = (window as any).ethereum;
-    if (!ethereum) return;
-
-    getChainId(ethereum).then();
+    if (!ethereum) {
+      setNoProvider(true);
+    } else {
+      getChainId(ethereum).then();
+    }
   }, []);
-  return chain;
+  return { chain, noProvider };
 };
 
 export default useNetwork;

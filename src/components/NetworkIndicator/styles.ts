@@ -1,7 +1,7 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles({
-  container: {
+  item: {
     paddingLeft: 20,
     paddingRight: 20,
     display: 'flex',
@@ -14,8 +14,13 @@ const useStyles = makeStyles({
     objectFit: 'contain',
   },
   name: {
-    fontSize: 18,
-    fontWeight: 600,
+    textTransform: 'none',
+  },
+  root: {
+    display: 'flex',
+  },
+  paper: {
+    marginRight: 20,
   },
 });
 

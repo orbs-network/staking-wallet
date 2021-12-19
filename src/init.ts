@@ -9,10 +9,7 @@ import 'moment/locale/ko';
 import config from './config';
 
 const initApp = (chain?: string) => {
-  console.log('init')
-  if (!chain) {
-    return;
-  }
+  console.log('test')
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -21,7 +18,7 @@ const initApp = (chain?: string) => {
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
   const ethereumProvider = (window as any).ethereum;
-  const services = buildServices(ethereumProvider, axios, config.networks[chain]);
+  const services = buildServices(ethereumProvider, axios, chain ? config.networks[chain] : config.networks['default']);
   const stores = getStores(
     services.orbsPOSDataService,
     services.stakingService,
@@ -35,7 +32,6 @@ const initApp = (chain?: string) => {
   );
   services.analyticsService.init();
 
-  // TODO : FUTURE : O.L : Move this with the analytics 'init'
   let ethereumProviderName: TEthereumProviderName;
   if (ethereumProvider) {
     ethereumProviderName = detectEthereumProviderName(ethereumProvider);
@@ -45,7 +41,6 @@ const initApp = (chain?: string) => {
 
   services.analyticsService.setEthereumProvider(ethereumProviderName);
   (window as any).services = services;
-
 
   return { services, stores };
 };

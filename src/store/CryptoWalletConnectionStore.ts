@@ -85,7 +85,7 @@ export class CryptoWalletConnectionStore {
 
   @action('setWalletConnectionRequestApproved')
   private setWalletConnectionRequestApproved(requestApproved: boolean) {
-    this.walletConnectionRequestApproved = requestApproved;
+     this.walletConnectionRequestApproved = requestApproved;
   }
 
   @action('setMainAddress')

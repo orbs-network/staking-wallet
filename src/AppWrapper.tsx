@@ -5,12 +5,11 @@ import './services/i18n/index';
 import NetworkWrapper from './wrappers/NetworkWrapper';
 
 export const AppWrapper = () => {
-
   return (
-    <NetworkWrapper>
-      <ErrorMonitoring.ErrorBoundary>
+    <ErrorMonitoring.ErrorBoundary>
+      <NetworkWrapper>
         <App />
-      </ErrorMonitoring.ErrorBoundary>
-    </NetworkWrapper>
+      </NetworkWrapper>
+    </ErrorMonitoring.ErrorBoundary>
   );
 };

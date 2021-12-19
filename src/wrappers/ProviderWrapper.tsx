@@ -1,6 +1,5 @@
 import { Provider } from 'mobx-react';
 import React, { ReactNode, useMemo } from 'react';
-import InvalidNetwork from '../components/InvalidNetwork';
 import initApp from '../init';
 
 interface IProps {

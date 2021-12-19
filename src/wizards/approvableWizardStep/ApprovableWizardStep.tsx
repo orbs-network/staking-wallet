@@ -186,6 +186,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     moveToNextStepAction,
     closeWizard,
     propsForTransactionCreationSubStepContent,
+    requiredConfirmations,
     txConfirmationsCount.value,
     txHash.value,
     onTransactionApprovingSubStepFinished,

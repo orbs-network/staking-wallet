@@ -1,13 +1,14 @@
 import { AppBarProps, Grid, ToolbarProps, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import React from 'react';
+import React, { useContext } from 'react';
 import { LanguagesSelector } from './LanguagesSelector';
 import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
 import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
-import ChainIndicator from '../ChainIndicator';
+import NetworkIndicator from '../NetworkIndicator';
+import { MobXProviderContext } from 'mobx-react';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -18,6 +19,8 @@ const StyledAppBar = styled(AppBar)<AppBarProps>({
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 export const Header = () => {
+  const { chainId } = useContext(MobXProviderContext);
+
   return (
     <>
       <StyledAppBar position='fixed'>
@@ -28,7 +31,7 @@ export const Header = () => {
                 <TetraLogoAndIconSvg />
               </Grid>
               <Grid item style={{ marginLeft: 'auto', marginRight: 40 }}>
-                <ChainIndicator />
+                <NetworkIndicator chainId={chainId} />
               </Grid>
 
               <Grid item>
