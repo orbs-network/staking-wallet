@@ -27,7 +27,7 @@ interface IContaractAdresses {
 export interface INetwork {
   addresses?: IContaractAdresses;
   managementServiceStatusPageUrl?: string;
-  ETHEREUM_PROVIDER_WS?: string;
+  PROVIDER_WS?: string;
   earliestBlockForDelegationOverride?: number;
   name: string;
   logo?: string;
@@ -40,7 +40,7 @@ export interface INetwork {
 const networks: { [key: string]: INetwork } = {
   '1': {
     name: 'Ethereum',
-    ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
     logo: ethImg,
     requiredConfirmations: 7,
@@ -49,7 +49,7 @@ const networks: { [key: string]: INetwork } = {
     blockExplorerUrls: ['https://etherscan.io'],
   },
   default: {
-    ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
     name: '',
   },
@@ -65,7 +65,7 @@ const networks: { [key: string]: INetwork } = {
   '3': {
     name: 'Ropsten',
     earliestBlockForDelegationOverride: 9644509,
-    ETHEREUM_PROVIDER_WS: 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    PROVIDER_WS: 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://tetra-staging-management.global.ssl.fastly.net/status',
     requiredConfirmations: 7,
     addresses: {
@@ -79,7 +79,7 @@ const networks: { [key: string]: INetwork } = {
     },
   },
   '137': {
-    ETHEREUM_PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+    PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     logo: polygonImg,
     earliestBlockForDelegationOverride: 0,
     managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',
@@ -101,7 +101,7 @@ const networks: { [key: string]: INetwork } = {
   local: {
     name: 'local',
     earliestBlockForDelegationOverride: 0,
-    ETHEREUM_PROVIDER_WS: 'ws://localhost:7545',
+    PROVIDER_WS: 'ws://localhost:7545',
     managementServiceStatusPageUrl: 'http://localhost:7666/status',
     addresses: {
       erc20Contract: '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE',

@@ -18,6 +18,7 @@ const useStyles = makeStyles({
   },
   root: {
     display: 'flex',
+ 
   },
   paper: {
     marginRight: 20,

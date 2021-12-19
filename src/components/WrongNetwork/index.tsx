@@ -68,7 +68,7 @@ interface IProps {
   selectedChain: number;
 }
 
-function WrongNetwork({ availableChains, selectedChain }: IProps) {
+function WrongNetwork({ availableChains =[], selectedChain }: IProps) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();

@@ -47,12 +47,12 @@ export function buildServices(
   networkConfig: INetwork,
 ): IServices {
   let web3: Web3;
-  const { addresses, managementServiceStatusPageUrl, ETHEREUM_PROVIDER_WS } = networkConfig;
+  const { addresses, managementServiceStatusPageUrl, PROVIDER_WS } = networkConfig;
 
   if (ethereumProvider) {
     web3 = new Web3(ethereumProvider as any);
   } else {
-    web3 = new Web3(new Web3.providers.WebsocketProvider(ETHEREUM_PROVIDER_WS));
+    web3 = new Web3(new Web3.providers.WebsocketProvider(PROVIDER_WS));
   }
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
