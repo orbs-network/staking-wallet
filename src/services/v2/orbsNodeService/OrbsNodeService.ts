@@ -9,6 +9,7 @@ import Moment from 'moment';
 import errorMonitoring from '../../error-monitoring';
 import _ from 'lodash';
 import { IGroupedGuardian } from '../../../components/GuardiansTable/interfaces';
+import { getSupportedChains } from '../../../utils/web3';
 
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
@@ -43,6 +44,61 @@ export class OrbsNodeService implements IOrbsNodeService {
     }
   }
 
+  createEmptyGuardianObject = () => {
+    const chains: number[] = getSupportedChains();
+    const networks: any = {};
+    chains.forEach((chain) => {
+      networks[chain] = {
+        Name: '',
+        Website: '',
+        EffectiveStake: 0,
+        IsCertified: undefined,
+        DelegatedStake: 0,
+        Capacity: 0,
+        ParticipationPercentage: 0,
+        SelfStake: 0,
+      };
+    });
+    return {
+      EthAddress: '',
+      networks,
+    };
+  };
+
+  update = (obj, g: Guardian, network: number) => {
+    const networks = obj[g.EthAddress].networks;
+    obj[g.EthAddress] = {
+      EthAddress: g.EthAddress,
+      networks: {
+        ...networks,
+        [network]: {
+          Name: g.Name,
+          Website: g.Website,
+          EffectiveStake: g.EffectiveStake,
+          IsCertified: g.IsCertified,
+          DelegatedStake: g.DelegatedStake,
+          Capacity: g.Capacity,
+          ParticipationPercentage: g.ParticipationPercentage,
+          SelfStake: g.SelfStake,
+        },
+      },
+    };
+  };
+
+  fillGuardianDictionary = (obj, guardians: { [key: string]: Guardian }, network: number) => {
+    Object.values(guardians).forEach((g: Guardian) => {
+      if (!obj[g.EthAddress]) {
+        const elem = this.createEmptyGuardianObject();
+        console.log(elem);
+        obj[g.EthAddress] = elem;
+        this.update(obj, g, network);
+      } else {
+        this.update(obj, g, network);
+      }
+    });
+    console.log(obj);
+  };
+
   readAndProcessSystemState(
     selectedNetworkManagementStatus: IManagementStatus,
     allManagementStatuses: IManagementStatus[],
@@ -60,54 +116,35 @@ export class OrbsNodeService implements IOrbsNodeService {
         const timeStamp = Math.floor(Date.now() / 1000);
         updateSystemState(state, result, timeStamp);
         states.push({ chain, state, selected });
-        console.log(states);
       });
 
-      let committeeNodes: Guardian[] = [];
-      let nonCommitteeGuardians: Guardian[] = [];
+      const guardiansDictionary: { [key: string]: Guardian } = {};
       states.forEach(({ state, chain, selected }) => {
-        const nodes = Object.values(state.CommitteeNodes).map((g: Guardian) => {
-          return {
-            ...g,
-            chain,
-            selectedChain: selected,
-          };
-        });
-        committeeNodes = [...committeeNodes, ...nodes];
-        const standByNodes = Object.values(state.StandByNodes).map((g: Guardian) => {
-          return {
-            ...g,
-            chain,
-            selectedChain: selected,
-          };
-        });
-        nonCommitteeGuardians = [...nonCommitteeGuardians, ...standByNodes];
+        this.fillGuardianDictionary(guardiansDictionary, state.CommitteeNodes, chain);
+        this.fillGuardianDictionary(guardiansDictionary, state.StandByNodes, chain);
       });
-
-      const allGuardians = [...committeeNodes, ...nonCommitteeGuardians];
-      return { allGuardians, committeeNodes, nonCommitteeGuardians };
+      return guardiansDictionary;
     };
+    console.log(getAllGuardians());
 
-    const { allGuardians } = getAllGuardians();
-
-    const groupGuardians = (): IGroupedGuardian[] => {
-      const grouped = Object.values(_.groupBy(allGuardians, 'EthAddress'));
-      const result = grouped.map((guardians: Guardian[]) => {
-        return {
-          EthAddress: guardians[0].EthAddress,
-          guardians,
-          EffectiveStake: guardians.reduce(function (acc, obj) {
-            return acc + obj.EffectiveStake;
-          }, 0),
-        };
-      });
-      return result;
-    };
+    // const groupGuardians = (): IGroupedGuardian[] => {
+    //   const grouped = Object.values(_.groupBy(allGuardians, 'EthAddress'));
+    //   const result = grouped.map((guardians: Guardian[]) => {
+    //     return {
+    //       EthAddress: guardians[0].EthAddress,
+    //       guardians,
+    //       EffectiveStake: guardians.reduce(function (acc, obj) {
+    //         return acc + obj.EffectiveStake;
+    //       }, 0),
+    //     };
+    //   });
+    //   return result;
+    // };
 
     return {
       systemState,
       committeeMembers: result.Payload.CurrentCommittee,
-      allChainGroupedGuardians: groupGuardians(),
+      allChainGroupedGuardians: [],
       // committeeNodes,
       // nonCommitteeGuardians
     };
@@ -155,8 +192,6 @@ export class OrbsNodeService implements IOrbsNodeService {
         Name: 'AngelSong-of-Orbs',
         Weight: 37977368,
       };
-
-
 
       return res;
     } catch (error) {
