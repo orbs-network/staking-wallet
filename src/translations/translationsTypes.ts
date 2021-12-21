@@ -49,6 +49,7 @@ export interface IWalletInfoSectionTranslations {
   address: string;
   copy: string;
   qr: string;
+  notifications: string;
 }
 
 export interface IConnectWalletSectionTranslations {

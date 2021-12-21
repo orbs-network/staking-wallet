@@ -7,13 +7,14 @@ import { ReactComponent as QrIcon } from '../../assets/qr.svg';
 import QR from './components/qr';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useBoolean } from 'react-hanger';
 import styled from 'styled-components';
 import { CommonDivider } from '../components/base/CommonDivider';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore } from '../store/storeHooks';
+import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined';
 import {
   useAlertsTranslations,
   useSectionsTitlesTranslations,
@@ -28,11 +29,18 @@ import BaseLoader from '../components/loaders';
 import Loaders from '../components/loaders/loader-components/index';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import { getWalletAddressExtraStyle } from './utils/index';
+import ODNP from '@open-defi-notification-protocol/widget';
+
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
 });
 
 const useStyles = makeStyles((theme) => ({
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    height: 'fit-content',
+  },
   button: {
     transition: '0.7s',
 
@@ -49,6 +57,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+const odnp = new ODNP();
+
+odnp.init();
+odnp.hide();
+odnp.mainDiv.style.color = 'black';
 
 export const WalletInfoSection = observer(() => {
   const classes = useStyles();
@@ -68,10 +82,27 @@ export const WalletInfoSection = observer(() => {
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const largerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
+  const onClick = (address: string) => {
+    odnp.show(address, 'orbs');
+  };
+
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('walletInfo')} icon={walletIcon} />
+      <Grid container>
+        <Grid item xs={6}>
+          <SectionHeader title={sectionTitlesTranslations('walletInfo')} icon={walletIcon} />
+        </Grid>
+        <Grid item xs={6} justify='flex-end' alignItems='center' style={{ display: 'flex' }}>
+          <LoweCaseButton
+            className={classes.button}
+            onClick={() => onClick(mainAddress)}
+            startIcon={<NotificationsNoneOutlinedIcon style={{ fontSize: 32 }} />}
+          >
+            {walletInfoSectionTranslations('notifications')}
+          </LoweCaseButton>
+        </Grid>
+      </Grid>
 
       <CommonDivider />
 
