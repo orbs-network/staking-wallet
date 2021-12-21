@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { CommonDialog } from '../../components/modal/CommonDialog';
 import { UseBoolean } from 'react-hanger';
 import styled from 'styled-components';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles';
 import { QRCode } from 'react-qrcode-logo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
