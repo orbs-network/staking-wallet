@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
 import Color from 'color';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles';
 
 const CenteredContainerGrid = styled<typeof Grid>(Grid)(({ theme }) => {
   theme = theme as Theme;
