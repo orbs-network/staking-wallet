@@ -53,6 +53,7 @@ export function updateSystemState(
   ];
 
   const guardians = extractGuardians(rootNodeData, currentTimestamp);
+  console.log(guardians)
   const committeeMembersAddresses = _.map(rootNodeData.Payload.CurrentCommittee, 'EthAddress');
 
   const committeeMembers = _.pick(guardians, committeeMembersAddresses);

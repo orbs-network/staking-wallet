@@ -5,7 +5,7 @@ import GuardiansDesktop from './desktop/index';
 import { IBaseTableProps } from './interfaces';
 import GuardiansMobile from './mobile/index';
 import { getSortedGuardians } from './util';
-import NewTable from './desktop/NewTable';
+import NewTable from './desktop/NewTable/index';
 interface IProps extends IBaseTableProps {
   guardians: Guardian[];
 }

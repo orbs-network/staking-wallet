@@ -60,6 +60,7 @@ export class OrbsNodeService implements IOrbsNodeService {
         const timeStamp = Math.floor(Date.now() / 1000);
         updateSystemState(state, result, timeStamp);
         states.push({ chain, state, selected });
+        console.log(states);
       });
 
       let committeeNodes: Guardian[] = [];
@@ -125,6 +126,39 @@ export class OrbsNodeService implements IOrbsNodeService {
           };
         }),
       );
+
+      const mockGuardian = {
+        DelegatedStake: 37649757,
+        EffectiveStake: 37649757,
+        ElectionsStatus: {
+          LastUpdateTime: 1604985908,
+          ReadyToSync: true,
+          ReadyForCommittee: true,
+          TimeToStale: 604800,
+        },
+        EthAddress: '0c56b39184e22249e35efcb9394872f0d025256b',
+        IdentityType: 1,
+        Ip: '13.124.229.86',
+        Metadata: { ID_FORM_URL: 'https://blog.naver.com/jinan0119/222142641393' },
+        Name: 'AngelSong-of-Orbs',
+        OrbsAddress: '255c1f6c4da768dfd31f27057d38b84de41bcd4d',
+        RegistrationTime: 1596894705,
+        SelfStake: 4453457,
+        Website: 'https://blog.naver.com/jinan0119',
+      };
+
+      const comittee = {
+        EffectiveStake: 37649757,
+        EnterTime: 1604985908,
+        EthAddress: '0c56b39184e22249e35efcb9394872f0d025256b',
+        IdentityType: 1,
+        Name: 'AngelSong-of-Orbs',
+        Weight: 37977368,
+      };
+      res[1].result.Payload.CurrentCommittee.push(comittee)
+      res[1].result.Payload.Guardians = { [mockGuardian.EthAddress]: mockGuardian };
+
+      console.log(res);
 
       return res;
     } catch (error) {

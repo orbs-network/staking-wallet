@@ -24,7 +24,7 @@ const hideLoader = () => {
 const availableChains = getSupportedChains();
 
 const getTheme = (chain: number) => {
-  const theme = themes[chain];
+  const theme = themes[chain] || themes[DEFAULT_CHAIN];
   return theme;
 };
 
@@ -67,7 +67,7 @@ const NetworkWrapper = ({ children }: IProps) => {
     return null;
   }
   const wrongChain = isWrongNetwork(selectedChain, availableChains) || forceChainChange(forcedChain, selectedChain);
-  const theme = getTheme(selectedChain || DEFAULT_CHAIN);
+  const theme = getTheme(selectedChain);
   return (
     <ThemeProvider theme={theme}>
       <SCThemeProvider theme={getThemeAndStyles(theme)}>
