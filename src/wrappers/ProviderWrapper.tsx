@@ -4,7 +4,7 @@ import initApp from '../init';
 
 interface IProps {
   children: ReactNode;
-  chain?: string;
+  chain?: number;
 }
 
 function ProviderWrapper({ children, chain }: IProps) {

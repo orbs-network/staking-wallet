@@ -6,10 +6,8 @@ import NetworkWrapper from './wrappers/NetworkWrapper';
 
 export const AppWrapper = () => {
   return (
-    <ErrorMonitoring.ErrorBoundary>
-      <NetworkWrapper>
-        <App />
-      </NetworkWrapper>
-    </ErrorMonitoring.ErrorBoundary>
+    <NetworkWrapper>
+      <App />
+    </NetworkWrapper>
   );
 };

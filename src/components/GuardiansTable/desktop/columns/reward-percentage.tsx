@@ -1,6 +1,7 @@
 import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
+import { IGroupedGuardian } from '../../interfaces';
 
 const getRewardPercentageColumn = (
   guardiansToDelegatorsCut: { [guardianAddress: string]: number },
@@ -17,9 +18,8 @@ const getRewardPercentageColumn = (
       />
     ),
     field: '',
-    render: (guardian) => {
-      const { EthAddress } = guardian;
-
+    render: (rowData) => {
+      const { EthAddress } = rowData.guardian;
       const hasData = guardiansToDelegatorsCut[EthAddress] != undefined;
 
       const percentageText = hasData ? `${guardiansToDelegatorsCut[EthAddress]}%` : '--';

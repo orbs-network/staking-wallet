@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import { Typography } from '@material-ui/core';
+import { IGroupedGuardian } from '../../interfaces';
 
 const NameBox = styled('div')(() => ({
   display: 'flex',
@@ -13,11 +13,13 @@ const getNameColumn = (guardiansTableTranslations: any) => {
   return {
     title: guardiansTableTranslations('columnHeader_name'),
     field: 'Name',
-    render: (guardian: Guardian) => (
-      <NameBox data-testid={`guardian-${guardian.EthAddress}`}>
-        <Typography>{guardian.Name}</Typography>
-      </NameBox>
-    ),
+    render: (rowData) => {
+      return (
+        <NameBox data-testid={`guardian-${rowData.guardian.EthAddress}`}>
+          <Typography>{rowData.guardian.Name}</Typography>
+        </NameBox>
+      );
+    },
     headerStyle: {
       textAlign: 'left' as const,
     },

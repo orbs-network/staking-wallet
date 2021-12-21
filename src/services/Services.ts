@@ -26,6 +26,7 @@ import {
   IGuardiansService,
   GuardiansService,
 } from '@orbs-network/contracts-js';
+import { getPropertyFromNetworks, getSupportedChains } from '../utils/web3';
 
 export interface IServices {
   httpService: IHttpService;
@@ -44,20 +45,36 @@ export interface IServices {
 export function buildServices(
   ethereumProvider: IEthereumProvider,
   axios: AxiosInstance,
-  networkConfig: INetwork,
+  selectedChain: number,
 ): IServices {
-  let web3: Web3;
-  const { addresses, managementServiceStatusPageUrl, PROVIDER_WS } = networkConfig;
+  const networkConfig = config.networks[selectedChain];
+  const { addresses } = networkConfig;
 
-  if (ethereumProvider) {
-    web3 = new Web3(ethereumProvider as any);
-  } else {
-    web3 = new Web3(new Web3.providers.WebsocketProvider(PROVIDER_WS));
-  }
+  const web3: Web3 = new Web3(ethereumProvider as any);
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
   const httpService: IHttpService = new HttpService(axios);
   const analyticsService = new AnalyticsService(config.gaTrackerId, config.analyticsActive);
+  const getPropertyFromNetworks = () => {
+    const arr: { chain: number; managementServiceStatusPageUrl: string, selected: boolean }[] = [];
+    try {
+      const supportedChains = getSupportedChains();
+
+      for (const chain of supportedChains) {
+        const network = config.networks[chain];
+        if (network) {
+          const { managementServiceStatusPageUrl } = network;
+          const obj = { chain, managementServiceStatusPageUrl, selected: chain === selectedChain };
+          arr.push(obj);
+        }
+      }
+      return arr;
+    } catch (error) {
+      return [];
+    }
+  };
+  const managementServiceStatusPageUrls = getPropertyFromNetworks();
+
   return {
     httpService,
     cryptoWalletConnectionService: new CryptoWalletConnectionService(ethereumProvider),
@@ -67,7 +84,7 @@ export function buildServices(
     stakingRewardsService: new StakingRewardsService(web3, addresses?.stakingRewardsContract),
     guardiansService: new GuardiansService(web3, addresses?.guardiansContract),
     analyticsService: analyticsService,
-    orbsNodeService: new OrbsNodeService(managementServiceStatusPageUrl),
+    orbsNodeService: new OrbsNodeService(managementServiceStatusPageUrls),
     delegationsService: new DelegationsService(web3, addresses?.delegationsContract),
     committeeService: new CommitteeService(web3, addresses?.committeeContract),
   };

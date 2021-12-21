@@ -1,12 +1,13 @@
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import { EMPTY_ADDRESS } from '../../../../constants';
-import { ISelectionProps } from '../../interfaces';
+import { IGroupedGuardian, ISelectionProps } from '../../interfaces';
 import getGuardianSelectionCellContent from '../../components/guardian-selection-cell-content';
 import stakingUtil from '../../../../utils/stakingUtil';
 
 interface IProps extends ISelectionProps {
   isGuardian: boolean;
   mainAddress: string;
+  guardian: Guardian;
 }
 
 const getSelectionColumn = (props: IProps) => {
@@ -27,9 +28,10 @@ const getSelectionColumn = (props: IProps) => {
   return {
     title: guardiansTableTranslations('columnHeader_selection'),
     field: '',
-    render: (g: Guardian) => {
+    render: (rowData) => {
+      const { guardian } = rowData;
       return getGuardianSelectionCellContent({
-        g,
+        g: guardian,
         onGuardianSelect,
         selectedGuardian,
         guardiansTableTranslations,
@@ -40,7 +42,7 @@ const getSelectionColumn = (props: IProps) => {
           disableSelection ||
           stakingUtil.disableGuardianSelectionInTable(
             mainAddress,
-            g.EthAddress,
+            guardian.EthAddress,
             selectedGuardian,
             isGuardian,
             guardianSelectionMode === 'Select',

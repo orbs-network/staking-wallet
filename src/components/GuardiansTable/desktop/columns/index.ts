@@ -1,3 +1,4 @@
+import { IGroupedGuardian } from './../../interfaces';
 import { Column } from 'material-table';
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import getQualificationColumn from './qualifications';
@@ -19,8 +20,8 @@ interface IProps extends IBaseTableProps {
 
 const createDesktopTableColumns = (props: IProps) => {
   const { committeeMembers, guardiansToDelegatorsCut, guardiansTableTranslations, theme, copyAddress } = props;
-
-  const columns: Column<Guardian>[] = [
+  console.log('render')
+  const columns: Column<IGroupedGuardian>[] = [
     getSelectionColumn({ ...props, guardiansTableTranslations, theme }),
     getQualificationColumn(committeeMembers),
     getNameColumn(guardiansTableTranslations),

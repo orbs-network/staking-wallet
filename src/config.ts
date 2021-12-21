@@ -1,6 +1,7 @@
 import { getNumberSeparators } from './utils/numberUtils';
 import ethImg from '../assets/logos/eth.png';
 import polygonImg from '../assets/logos/polygon.png';
+import { CHAINS } from './constants';
 
 /**
  * Copyright 2019 the prism authors
@@ -27,7 +28,6 @@ interface IContaractAdresses {
 export interface INetwork {
   addresses?: IContaractAdresses;
   managementServiceStatusPageUrl?: string;
-  PROVIDER_WS?: string;
   earliestBlockForDelegationOverride?: number;
   name: string;
   logo?: string;
@@ -38,9 +38,8 @@ export interface INetwork {
 }
 
 const networks: { [key: string]: INetwork } = {
-  '1': {
+  [CHAINS.ethereum]: {
     name: 'Ethereum',
-    PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
     logo: ethImg,
     requiredConfirmations: 7,
@@ -48,24 +47,9 @@ const networks: { [key: string]: INetwork } = {
     rpcUrls: ['https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://etherscan.io'],
   },
-  default: {
-    PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
-    managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
-    name: '',
-  },
-  '42': {
-    name: 'Kovan',
-  },
-  '4': {
-    name: 'Rinkeby Test Network',
-  },
-  '5': {
-    name: 'Goerli Test Network',
-  },
-  '3': {
+  [CHAINS.ropsten]: {
     name: 'Ropsten',
     earliestBlockForDelegationOverride: 9644509,
-    PROVIDER_WS: 'wss://ropsten.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
     managementServiceStatusPageUrl: 'https://tetra-staging-management.global.ssl.fastly.net/status',
     requiredConfirmations: 7,
     addresses: {
@@ -78,13 +62,12 @@ const networks: { [key: string]: INetwork } = {
       orbsRewardsDistributionContract: '',
     },
   },
-  '137': {
-    PROVIDER_WS: 'wss://mainnet.infura.io/ws/v3/3fe9b03bd8374639809addf2164f7287',
+  [CHAINS.polygon]: {
     logo: polygonImg,
     earliestBlockForDelegationOverride: 0,
     managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',
     requiredConfirmations: 20,
-    name: 'Polygon Mainnet',
+    name: 'Polygon',
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://polygon-rpc.com'],
     blockExplorerUrls: ['https://www.polygonscan.com'],
@@ -101,7 +84,6 @@ const networks: { [key: string]: INetwork } = {
   local: {
     name: 'local',
     earliestBlockForDelegationOverride: 0,
-    PROVIDER_WS: 'ws://localhost:7545',
     managementServiceStatusPageUrl: 'http://localhost:7666/status',
     addresses: {
       erc20Contract: '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE',
@@ -112,6 +94,15 @@ const networks: { [key: string]: INetwork } = {
       committeeContract: '0xAb6311Cb1bf0823D2d04f871351F2aCf39EBe282',
       orbsRewardsDistributionContract: '',
     },
+  },
+  [CHAINS.kovanTest]: {
+    name: 'Kovan Test',
+  },
+  [CHAINS.rinkebyTest]: {
+    name: 'Rinkeby Test Network',
+  },
+  [CHAINS.goerliTest]: {
+    name: 'Goerli Test Network',
   },
 };
 

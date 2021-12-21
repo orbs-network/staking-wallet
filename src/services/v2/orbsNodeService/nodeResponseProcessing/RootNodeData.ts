@@ -17,6 +17,15 @@ export interface IManagementStatusResponse {
   };
 }
 
+
+export interface IManagementStatus {
+  chain: number;
+  result: IManagementStatusResponse;
+  selected: boolean;
+}
+
+
+
 export interface IGuardianData {
   EthAddress: string;
   OrbsAddress: string;

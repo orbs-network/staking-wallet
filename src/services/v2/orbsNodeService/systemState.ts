@@ -66,6 +66,8 @@ export interface Guardian {
   NodeServices: NodeServices;
   NodeReputation: NodeReputation;
   RegistrationTime: number;
+  selectedChain?: boolean;
+  chain?: number;
   /**
    * In Seconds
    */

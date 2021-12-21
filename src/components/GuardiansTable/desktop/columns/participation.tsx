@@ -2,6 +2,7 @@ import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
 import { Line } from 'rc-progress';
+import { IGroupedGuardian } from '../../interfaces';
 
 const getParticipationColumn = (guardiansTableTranslations: any) => {
   return {
@@ -12,8 +13,8 @@ const getParticipationColumn = (guardiansTableTranslations: any) => {
       />
     ),
     field: 'ParticipationPercentage',
-    render: (guardian) => {
-      const { ParticipationPercentage } = guardian;
+    render: (rowData) => {
+      const { ParticipationPercentage } = rowData.guardian;
       // TODO : ORL : Make this color gradient
       const color = ParticipationPercentage <= 30 ? 'red' : ParticipationPercentage <= 80 ? 'yellow' : 'green';
       const timePercentageText = ParticipationPercentage.toFixed(2);

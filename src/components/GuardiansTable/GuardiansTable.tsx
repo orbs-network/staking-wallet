@@ -5,6 +5,7 @@ import GuardiansDesktop from './desktop/index';
 import { IBaseTableProps } from './interfaces';
 import GuardiansMobile from './mobile/index';
 import { getSortedGuardians } from './util';
+import NewTable from './desktop/NewTable';
 interface IProps extends IBaseTableProps {
   guardians: Guardian[];
 }
@@ -13,6 +14,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   const [isMobile] = useMobile();
 
   const tableProps = {
+    groupedGuardians: props.groupedGuardians,
     committeeMembers: props.committeeMembers,
     guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
     onGuardianSelect: props.onGuardianSelect,
@@ -27,5 +29,6 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     mainAddress: props.mainAddress,
   };
 
-  return isMobile ? <GuardiansMobile {...tableProps} /> : <GuardiansDesktop {...tableProps} />;
+  // return isMobile ? <GuardiansMobile {...tableProps} /> : <GuardiansDesktop {...tableProps} />;
+  return <NewTable {...tableProps} />;
 });

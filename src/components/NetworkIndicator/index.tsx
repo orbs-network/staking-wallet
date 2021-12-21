@@ -8,7 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import useStyles from './styles';
 import config from '../../config';
-import { getSupportedNetworks, triggerNetworkChange } from '../../utils/web3';
+import { getSupportedChains, triggerNetworkChange } from '../../utils/web3';
 import NetworkItem from './NetworkItem';
 import { useHistory } from 'react-router';
 import { removeQueryParam } from '../../utils/url';
@@ -19,7 +19,7 @@ interface IProps {
 
 const ChainIndicator = ({ chainId }: IProps) => {
   const history = useHistory();
-  const supportedNetworks = getSupportedNetworks() || [];
+  const supportedNetworks = getSupportedChains();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);

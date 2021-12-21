@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import { blue } from '@material-ui/core/colors';
 import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { CHAINS, DEFAULT_CHAIN } from '../constants';
 
 const COLOR1 = '#0D0D0D'; // dark gray
 const COLOR2 = '#6ec6d8'; // bluish
@@ -10,47 +11,58 @@ const COLOR3 = '#03FCF5'; // bright bluish- Tetra
 const PRIMARY_TEXT = '#dbdbdb';
 const SECONDARY_TEXT = '#7B7B7B';
 
-export const baseTheme = responsiveFontSizes(
-  createMuiTheme({
+ const base = {
+  palette: {
+    type: 'dark',
+    primary: {
+      main: COLOR1,
+    },
+    secondary: {
+      main: COLOR3,
+    },
+    background: {
+      // DEV_NOTE : This sets the app background color
+      default: '#000000',
+    },
+  },
+  typography: {
+    fontFamily: 'Montserrat',
+  },
+  overrides: {
+    MuiPaper: {
+      root: {
+        backgroundColor: COLOR1,
+      },
+    },
+    MuiTypography: {
+      colorPrimary: {
+        color: PRIMARY_TEXT,
+      },
+    },
+    MuiLink: {
+      root: {
+        color: blue[500],
+      },
+    },
+  },
+};
+
+const createTheme = (props: {}) => {
+  return responsiveFontSizes(createMuiTheme(props));
+};
+
+export const themes = {
+  [DEFAULT_CHAIN]: createTheme(base),
+  [CHAINS.polygon]: createTheme({
+    ...base,
     palette: {
-      type: 'dark',
-      primary: {
-        main: COLOR1,
-      },
+      ...base.palette,
       secondary: {
-        main: COLOR3,
-      },
-      text: {
-        // primary: PRIMARY_TEXT,
-        // secondary: SECONDARY_TEXT,
-      },
-      background: {
-        // DEV_NOTE : This sets the app background color
-        default: '#000000',
-      },
-    },
-    typography: {
-      fontFamily: 'Montserrat',
-    },
-    overrides: {
-      MuiPaper: {
-        root: {
-          backgroundColor: COLOR1,
-        },
-      },
-      MuiTypography: {
-        colorPrimary: {
-          color: PRIMARY_TEXT,
-        },
-      },
-      MuiLink: {
-        root: {
-          color: blue[500],
-        },
+        main: '#7E46DE',
       },
     },
   }),
-);
+};
 
 export const AppStyles = {};
 

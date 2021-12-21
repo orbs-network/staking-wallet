@@ -95,6 +95,7 @@ export const GuardianSelectionStepContent = observer(
             isGuardian={orbsAccountStore.isGuardian}
             guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
+            groupedGuardians={orbsNodeStore.allChainGroupedGuardians}
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
@@ -106,14 +107,15 @@ export const GuardianSelectionStepContent = observer(
         </Grid>
       );
     }, [
-      disableInputs,
-      guardianAddressToDelegatorsCut,
-      orbsNodeStore.committeeMembers,
+      mainAddress,
+      orbsAccountStore.isGuardian,
       orbsNodeStore.guardians,
+      orbsNodeStore.committeeMembers,
       selectGuardian,
       selectedGuardianAddress,
-      orbsAccountStore.isGuardian,
-      mainAddress,
+      guardianAddressToDelegatorsCut,
+      disableInputs,
+      orbsNodeStore.allChainGroupedGuardians,
     ]);
 
     return (

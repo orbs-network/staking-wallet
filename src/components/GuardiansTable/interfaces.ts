@@ -2,6 +2,12 @@ import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNode
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 export type TGuardianSelectionMode = 'Select' | 'Change' | 'None';
 
+export interface IGroupedGuardian {
+  EthAddress: string;
+  guardians: Guardian[];
+  EffectiveStake: number;
+}
+
 export interface IBaseTableProps {
   guardianSelectionMode: TGuardianSelectionMode;
   committeeMembers: ICommitteeMemberData[];
@@ -16,6 +22,7 @@ export interface IBaseTableProps {
   densePadding?: boolean;
   isGuardian: boolean;
   mainAddress: string;
+  groupedGuardians: IGroupedGuardian[];
 }
 
 export interface IGetGuardianSelectionCellContent extends ISelectionProps {

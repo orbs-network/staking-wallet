@@ -3,6 +3,7 @@ import { Typography, Tooltip } from '@material-ui/core';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Line } from 'rc-progress';
 import { getCapacityColor, getCapacityText } from '../../util';
+import { IGroupedGuardian } from '../../interfaces';
 
 const getCapacityTable = (guardiansTableTranslations: any) => {
   return {
@@ -20,8 +21,8 @@ const getCapacityTable = (guardiansTableTranslations: any) => {
       />
     ),
     field: 'SelfStake',
-    render: (guardian) => {
-      const { Capacity, SelfStake, DelegatedStake } = guardian;
+    render: (rowData) => {
+      const { Capacity, SelfStake, DelegatedStake } = rowData.guardian;
       // TODO : ORL : Make this color gradient
 
       // const

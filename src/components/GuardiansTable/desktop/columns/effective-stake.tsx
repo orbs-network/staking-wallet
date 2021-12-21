@@ -2,6 +2,7 @@ import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
 import { getEffectiveStakeInUnits } from '../../util';
+import { IGroupedGuardian } from '../../interfaces';
 
 const getEffectiveStakeColumn = (guardiansTableTranslations: any) => {
   return {
@@ -31,8 +32,8 @@ const getEffectiveStakeColumn = (guardiansTableTranslations: any) => {
       />
     ),
     field: 'EffectiveStake',
-    render: (guardian) => {
-      const { EffectiveStake, SelfStake, DelegatedStake } = guardian;
+    render: (rowData) => {
+      const { EffectiveStake, SelfStake, DelegatedStake } = rowData.guardian;
 
       return (
         <Tooltip

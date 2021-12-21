@@ -1,9 +1,12 @@
-import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
+import { IManagementStatusResponse, IManagementStatus } from './nodeResponseProcessing/RootNodeData';
 import { IReadAndProcessResults } from './OrbsNodeTypes';
 
 export interface IOrbsNodeService {
-  readAndProcessSystemState(managementStatusResponse: IManagementStatusResponse): IReadAndProcessResults;
-  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean;
-  checkIfNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean;
-  fetchNodeManagementStatus(): Promise<IManagementStatusResponse>;
+  readAndProcessSystemState(
+    managementStatusResponse: IManagementStatus,
+    allManagementStatuses: IManagementStatus[],
+  ): IReadAndProcessResults;
+  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatus): boolean;
+  checkIfNodeIsInSync(managementStatusResponse: IManagementStatus): boolean;
+  fetchNodeManagementStatus(): Promise<IManagementStatus[]>;
 }

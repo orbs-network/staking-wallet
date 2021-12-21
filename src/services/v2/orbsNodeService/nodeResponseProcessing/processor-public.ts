@@ -54,6 +54,7 @@ export function updateSystemState(
 
   const guardians = extractGuardians(rootNodeData, currentTimestamp);
   const committeeMembersAddresses = _.map(rootNodeData.Payload.CurrentCommittee, 'EthAddress');
+
   const committeeMembers = _.pick(guardians, committeeMembersAddresses);
   if (_.size(committeeMembers) === 0) {
     console.error(`Could not read a valid Committee, current network seems empty.`);
@@ -108,7 +109,6 @@ function formatParticipationPercentage(raw: number): number {
 
 function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimestamp: number): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
-
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
 
     const guardian: Guardian = {

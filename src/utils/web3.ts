@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import config from '../config';
 const triggerNetworkChange = async (id: number | string, params: any, callback?: () => void) => {
   const ethereumProvider = (window as any).ethereum;
   const web3 = new Web3(Web3.givenProvider);
@@ -65,24 +66,43 @@ const addAccountChangedEvent = () => {
   }
 };
 
-const isWrongNetwork = (chain: string, availableChains: number[]) => {
+const isWrongNetwork = (chain: number, availableChains: number[]) => {
   if (!chain) {
     return false;
   }
-  return !availableChains.includes(Number(chain));
+  return !availableChains.includes(chain);
 };
 
-const forceChainChange = (forcedChain?: string, selectedChain?: string) => {
+const forceChainChange = (forcedChain?: number, selectedChain?: number) => {
   if (!forcedChain || !selectedChain) {
     return false;
   }
   return forcedChain !== selectedChain;
 };
 
-const getSupportedNetworks = () => {
+const getSupportedChains = () => {
   try {
     return JSON.parse(process.env.TARGET_NETWORKS) || [];
-  } catch (error) {}
+  } catch (error) {
+    return [];
+  }
+};
+
+const getPropertyFromNetworks = (property: string) => {
+  const arr: string[] = [];
+  try {
+    const supportedChains = getSupportedChains();
+
+    for (const chain of supportedChains) {
+      const network = config.networks[chain];
+      if (network) {
+        arr.push(network[property]);
+      }
+    }
+    return arr;
+  } catch (error) {
+    return []
+  }
 };
 
 export {
@@ -91,6 +111,7 @@ export {
   isWrongNetwork,
   addNetworkChangedEvent,
   addAccountChangedEvent,
-  getSupportedNetworks,
-  forceChainChange
+  getSupportedChains,
+  forceChainChange,
+  getPropertyFromNetworks,
 };

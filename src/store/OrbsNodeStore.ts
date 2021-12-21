@@ -1,16 +1,24 @@
+import { IGroupedGuardian } from './../components/GuardiansTable/interfaces';
 // DEV_NOTE : This store will keep all data that is read from an orbs node.
 
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, toJS } from 'mobx';
 import { Guardian, SystemState } from '../services/v2/orbsNodeService/systemState';
-import { ICommitteeMemberData, IReadAndProcessResults } from '../services/v2/orbsNodeService/OrbsNodeTypes';
+import {
+  ICommitteeMemberData,
+  IProcessedSystemState,
+  IReadAndProcessResults,
+} from '../services/v2/orbsNodeService/OrbsNodeTypes';
 import errorMonitoring from '../services/error-monitoring';
+import _ from 'lodash';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
   @observable public systemState: SystemState = new SystemState();
+  @observable public allSystemStates: IProcessedSystemState[] = [];
   @observable public committeeMembers: ICommitteeMemberData[] = [];
+  public allChainGroupedGuardians: IGroupedGuardian[] = [];
 
   @computed public get committeeGuardians(): Guardian[] {
     return Object.values(this.systemState.CommitteeNodes);
@@ -86,8 +94,8 @@ export class OrbsNodeStore {
   }
 
   private async findReadAndSetNodeData() {
-    const { systemState, committeeMembers } = await this.readDataFromFirstSyncedNode();
-
+    const { systemState, committeeMembers, allChainGroupedGuardians } = await this.readDataFromFirstSyncedNode();
+    this.setAllChainsGroupedGuardians(allChainGroupedGuardians);
     this.setSystemState(systemState);
     this.setCommitteeMemberData(committeeMembers);
   }
@@ -104,16 +112,20 @@ export class OrbsNodeStore {
 
   private async readDefaultNodeData(): Promise<IReadAndProcessResults | null> {
     // Check if default node is in sync
-    const managementStatusResponse = await this.orbsNodeService.fetchNodeManagementStatus();
-    if (!managementStatusResponse) return;
-    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync(managementStatusResponse);
+    const allManagementStatuses = await this.orbsNodeService.fetchNodeManagementStatus();
+    if (!allManagementStatuses) return;
+    const selectedChainManagementStatus = allManagementStatuses.find((m) => m.selected);
+    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync(selectedChainManagementStatus);
     if (!isDefaultNodeAtSync) {
       // TODO : ORL : Add analytic
       console.log('Default node is not in sync');
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(managementStatusResponse);
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(
+          selectedChainManagementStatus,
+          allManagementStatuses,
+        );
 
         return readAndProcessResult;
       } catch (e) {
@@ -143,6 +155,11 @@ export class OrbsNodeStore {
   @action('setSystemState')
   private setSystemState(systemState: SystemState) {
     this.systemState = systemState;
+  }
+
+  @action('setAllChainGroupedGuardians')
+  private setAllChainsGroupedGuardians(value: IGroupedGuardian[]) {
+    this.allChainGroupedGuardians = value;
   }
 
   @action('setCommitteeMemberData')

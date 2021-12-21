@@ -7,9 +7,10 @@ import moment from 'moment';
 import 'moment/locale/ja';
 import 'moment/locale/ko';
 import config from './config';
+import { DEFAULT_CHAIN } from './constants';
 
-const initApp = (chain?: string) => {
-  console.log('test')
+const initApp = (chain?: number) => {
+  console.log('test');
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -18,7 +19,7 @@ const initApp = (chain?: string) => {
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
   const ethereumProvider = (window as any).ethereum;
-  const services = buildServices(ethereumProvider, axios, chain ? config.networks[chain] : config.networks['default']);
+  const services = buildServices(ethereumProvider, axios, chain || DEFAULT_CHAIN);
   const stores = getStores(
     services.orbsPOSDataService,
     services.stakingService,

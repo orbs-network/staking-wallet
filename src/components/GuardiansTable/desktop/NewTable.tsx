@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GuardiansDesktop = (props: IProps) => {
+const NewTable = (props: IProps) => {
   const {
     sortedGuardians,
     pageSize,
@@ -138,4 +138,4 @@ const GuardiansDesktop = (props: IProps) => {
   );
 };
 
-export default GuardiansDesktop;
+export default NewTable;
