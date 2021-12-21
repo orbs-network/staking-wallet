@@ -155,10 +155,8 @@ export class OrbsNodeService implements IOrbsNodeService {
         Name: 'AngelSong-of-Orbs',
         Weight: 37977368,
       };
-      res[1].result.Payload.CurrentCommittee.push(comittee)
-      res[1].result.Payload.Guardians = { [mockGuardian.EthAddress]: mockGuardian };
 
-      console.log(res);
+
 
       return res;
     } catch (error) {

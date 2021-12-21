@@ -62,6 +62,7 @@ export const themes = {
       },
     },
   }),
+  [CHAINS.ropsten]: createTheme(base),
 };
 
 export const AppStyles = {};
