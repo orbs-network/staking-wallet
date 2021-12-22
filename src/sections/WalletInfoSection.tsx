@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
     height: 'fit-content',
   },
   button: {
+    paddingLeft: 20,
+    paddingRight: 20,
     transition: '0.7s',
 
     '& svg path': {
@@ -55,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
         fill: theme.palette.secondary.light,
       },
     },
+  },
+  bellIcon: {
+    fontSize: '30px',
+    '& path': {},
   },
 }));
 
@@ -96,8 +102,9 @@ export const WalletInfoSection = observer(() => {
         <Grid item xs={6} justify='flex-end' alignItems='center' style={{ display: 'flex' }}>
           <LoweCaseButton
             className={classes.button}
+            style={{ paddingLeft: '10px' }}
             onClick={() => onClick(mainAddress)}
-            startIcon={<NotificationsNoneOutlinedIcon style={{ fontSize: 32 }} />}
+            startIcon={<NotificationsNoneOutlinedIcon style={{ fontSize: '36px', transform: 'translate(6px)' }} />}
           >
             {walletInfoSectionTranslations('notifications')}
           </LoweCaseButton>
@@ -135,19 +142,23 @@ export const WalletInfoSection = observer(() => {
         </Grid>
 
         {/* Buttons */}
-        <Grid container direction={'row'} item sm={12} lg={3} justify={'flex-end'}>
-          <Grid item xs={6} lg={5}>
-            <LoweCaseButton className={classes.button} fullWidth onClick={() => copyAddress()} startIcon={<CopyIcon />}>
+        <Grid
+          container
+          direction={'row'}
+          item
+          sm={12}
+          lg={3}
+          justify={'flex-end'}
+          style={{ marginLeft: smOrLarger ? 'auto' : '' }}
+        >
+          <Grid item xs={6} lg={4} style={{ display: 'flex', justifyContent: largerThanLarge ? 'flex-end' : 'center' }}>
+            <LoweCaseButton className={classes.button} onClick={() => copyAddress()} startIcon={<CopyIcon />}>
               {walletInfoSectionTranslations('copy')}
             </LoweCaseButton>
           </Grid>
-          {/* TODO : FUTURE : O.L : Make the divider work in smaller screens as well*/}
-          {/* DEV_NOTE : we hide the divider in smaller viewports because of the flex (we want the buttons to have the width equals to half the viewport) */}
-          <Hidden mdDown>
-            <Divider variant='fullWidth' orientation={'vertical'} style={{ color: '#656565' }} />
-          </Hidden>
-          <Grid item xs={6} lg={5}>
-            <LoweCaseButton className={classes.button} fullWidth onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
+
+          <Grid item xs={6} lg={4} style={{ display: 'flex', justifyContent: largerThanLarge ? 'flex-end' : 'center' }}>
+            <LoweCaseButton className={classes.button} onClick={showQrModal.setTrue} startIcon={<QrIcon />}>
               {walletInfoSectionTranslations('qr')}
             </LoweCaseButton>
           </Grid>
