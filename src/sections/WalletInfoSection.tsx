@@ -56,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  bellIcon: {
+    fontSize: '30px',
+    '& path': {},
+  },
 }));
 
 const odnp = new ODNP();
@@ -97,7 +101,7 @@ export const WalletInfoSection = observer(() => {
           <LoweCaseButton
             className={classes.button}
             onClick={() => onClick(mainAddress)}
-            startIcon={<NotificationsNoneOutlinedIcon style={{ fontSize: 32 }} />}
+            startIcon={<NotificationsNoneOutlinedIcon style={{ fontSize: '36px', transform: 'translate(6px)' }} />}
           >
             {walletInfoSectionTranslations('notifications')}
           </LoweCaseButton>
