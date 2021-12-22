@@ -18,5 +18,4 @@ export interface ICommitteeMemberData {
 export interface IProcessedSystemState {
   state: SystemState;
   chain: number;
-  selected: boolean;
 }
