@@ -55,17 +55,16 @@ export function buildServices(
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
   const httpService: IHttpService = new HttpService(axios);
   const analyticsService = new AnalyticsService(config.gaTrackerId, config.analyticsActive);
+
   const getPropertyFromNetworks = () => {
-    const arr: { chain: number; managementServiceStatusPageUrl: string, selected: boolean }[] = [];
+    const arr: { chain: number; managementServiceStatusPageUrl: string }[] = [];
     try {
       const supportedChains = getSupportedChains();
-
       for (const chain of supportedChains) {
         const network = config.networks[chain];
         if (network) {
           const { managementServiceStatusPageUrl } = network;
-          const obj = { chain, managementServiceStatusPageUrl, selected: chain === selectedChain };
-          arr.push(obj);
+          arr.push({ chain, managementServiceStatusPageUrl });
         }
       }
       return arr;
@@ -84,7 +83,7 @@ export function buildServices(
     stakingRewardsService: new StakingRewardsService(web3, addresses?.stakingRewardsContract),
     guardiansService: new GuardiansService(web3, addresses?.guardiansContract),
     analyticsService: analyticsService,
-    orbsNodeService: new OrbsNodeService(managementServiceStatusPageUrls),
+    orbsNodeService: new OrbsNodeService(managementServiceStatusPageUrls, selectedChain),
     delegationsService: new DelegationsService(web3, addresses?.delegationsContract),
     committeeService: new CommitteeService(web3, addresses?.committeeContract),
   };

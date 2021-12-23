@@ -3,7 +3,6 @@ import { Typography, Tooltip } from '@material-ui/core';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Line } from 'rc-progress';
 import { getCapacityColor, getCapacityText } from '../../util';
-import { IGroupedGuardian } from '../../interfaces';
 
 interface IProps {
   translation: any;
@@ -31,7 +30,7 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
       }
     >
       <div>
-        <Line percent={capacity} strokeWidth={5} strokeColor={getCapacityColor(Capacity)} />
+        <Line percent={capacity} strokeWidth={5} strokeColor={getCapacityColor(capacity)} />
         <Typography>{getCapacityText(capacity, 2)}</Typography>
       </div>
     </Tooltip>

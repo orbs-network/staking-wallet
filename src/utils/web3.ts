@@ -88,6 +88,14 @@ const getSupportedChains = () => {
   }
 };
 
+const getSortedChains = (selectedChain: number) => {
+  const chains = getSupportedChains();
+  const index = chains.findIndex((c: number) => c === selectedChain);
+  chains.splice(index, 1);
+  chains.unshift(selectedChain);
+  return chains;
+};
+
 const getPropertyFromNetworks = (property: string) => {
   const arr: string[] = [];
   try {
@@ -101,7 +109,7 @@ const getPropertyFromNetworks = (property: string) => {
     }
     return arr;
   } catch (error) {
-    return []
+    return [];
   }
 };
 
@@ -114,4 +122,5 @@ export {
   getSupportedChains,
   forceChainChange,
   getPropertyFromNetworks,
+  getSortedChains,
 };

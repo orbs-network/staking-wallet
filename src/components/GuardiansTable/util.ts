@@ -42,7 +42,11 @@ export const getEffectiveStakeInUnits = (EffectiveStake: number): string => {
 };
 
 export const getCapacityText = (Capacity: any, toFixed: number) => {
+ try {
   return !isNaN(Capacity) ? `${Capacity.toFixed(toFixed)}%` : '--';
+ } catch (error) {
+    return '-'
+ }
 };
 
 export const getCapacityColor = (Capacity: any) => {

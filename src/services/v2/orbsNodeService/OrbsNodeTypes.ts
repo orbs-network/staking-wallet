@@ -1,10 +1,25 @@
-import { IGroupedGuardian } from '../../../components/GuardiansTable/interfaces';
-import { SystemState } from './systemState';
+import { Guardian, SystemState } from './systemState';
+
+export interface IGroupedGuardiansByNetwork {
+  chain: number;
+  guardian: Guardian | null;
+}
+export interface IGuardiansDictionary {
+  EthAddress: string;
+  Name: string;
+  Rewards?: any;
+  EffectiveStake: number;
+  Website: string;
+  networks: IGroupedGuardiansByNetwork[];
+  ParticipationPercentage: number;
+  Capacity: number;
+}
 
 export interface IReadAndProcessResults {
-  systemState: SystemState;
+  allNetworksGuardians: Guardian[];
+  committeeGuardians: Guardian[];
   committeeMembers: ICommitteeMemberData[];
-  allChainGroupedGuardians: IGroupedGuardian[];
+  groupedGuardiansByNetwork: { [key: string]: IGuardiansDictionary };
 }
 
 export interface ICommitteeMemberData {
@@ -13,7 +28,6 @@ export interface ICommitteeMemberData {
   Name: string;
   EnterTime: number;
 }
-
 
 export interface IProcessedSystemState {
   state: SystemState;

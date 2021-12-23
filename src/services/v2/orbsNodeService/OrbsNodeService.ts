@@ -1,24 +1,23 @@
 import { IOrbsNodeService } from './IOrbsNodeService';
-import Web3 from 'web3';
 import { fetchJson } from './nodeResponseProcessing/helpers';
-import { Guardian, SystemState } from './systemState';
+import { SystemState } from './systemState';
 import { updateSystemState } from './nodeResponseProcessing/processor-public';
-import { IProcessedSystemState, IReadAndProcessResults } from './OrbsNodeTypes';
+import { IReadAndProcessResults } from './OrbsNodeTypes';
 import { IManagementStatus } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
 import errorMonitoring from '../../error-monitoring';
 import _ from 'lodash';
-import { createGuardiansDictionary, fillGuardiansDictionary } from './util';
-import { IGroupedGuardian } from '../../../components/GuardiansTable/interfaces';
-import { getSupportedChains } from '../../../utils/web3';
+import { groupGuardiansByNetworks, createSystemStates } from './util';
 
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
   constructor(
-    private defaultStatusUrls: { chain: number; managementServiceStatusPageUrl: string; selected: boolean }[],
+    private defaultStatusUrls: { chain: number; managementServiceStatusPageUrl: string }[],
+    private selectedChain: number,
   ) {}
-  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatus): boolean {
-    return this.checkIfNodeIsInSync(managementStatusResponse);
+  checkIfDefaultNodeIsInSync(managementStatusResponses: IManagementStatus[]): boolean {
+    const selectedChainManagementStatus = managementStatusResponses.find((m) => this.selectedChain);
+    return this.checkIfNodeIsInSync(selectedChainManagementStatus);
   }
 
   checkIfNodeIsInSync(managementStatusResponse: IManagementStatus): boolean {
@@ -45,41 +44,23 @@ export class OrbsNodeService implements IOrbsNodeService {
     }
   }
 
-  readAndProcessSystemState(
-    selectedNetworkManagementStatus: IManagementStatus,
-    allManagementStatuses: IManagementStatus[],
-  ): IReadAndProcessResults {
-    const result = selectedNetworkManagementStatus.result;
-    const systemState = new SystemState();
-    const currentTimeStamp = Math.floor(Date.now() / 1000);
-    updateSystemState(systemState, result, currentTimeStamp);
+  readAndProcessSystemState(allManagementStatuses: IManagementStatus[]): IReadAndProcessResults {
+    //return states = all chains system state, selectedChainState = state of the current chain,
+    // committeeMembers = the commitee members of the selected chain
+    const { states, selectedChainState, committeeMembers } = createSystemStates(
+      allManagementStatuses,
+      this.selectedChain,
+    );
 
-    const getAllGuardians = () => {
-      const states: IProcessedSystemState[] = [];
-      allManagementStatuses.forEach((status) => {
-        const { chain, result } = status;
-        const state = new SystemState();
-        const timeStamp = Math.floor(Date.now() / 1000);
-        updateSystemState(state, result, timeStamp);
-        states.push({ chain, state });
-      });
-
-      const values: { [key: number]: Guardian[] } = {}
-      states.forEach(({ state, chain }) => {
-        const arr = [...Object.values(state.CommitteeNodes), ...Object.values(state.StandByNodes)];
-        values[chain] = arr;
-      });
-      const guardians: any = createGuardiansDictionary(values)
-
-    };
-    getAllGuardians();
+    //groupedGuardiansByNetwork = all the guardians sorted by network,
+    // allGuardians = all the guardians of all chains in one array
+    const { groupedGuardiansByNetwork, allGuardians } = groupGuardiansByNetworks(states, this.selectedChain);
 
     return {
-      systemState,
-      committeeMembers: result.Payload.CurrentCommittee,
-      allChainGroupedGuardians: [],
-      // committeeNodes,
-      // nonCommitteeGuardians
+      allNetworksGuardians: allGuardians,
+      committeeMembers,
+      committeeGuardians: Object.values(selectedChainState.CommitteeNodes),
+      groupedGuardiansByNetwork,
     };
   }
 
@@ -88,46 +69,13 @@ export class OrbsNodeService implements IOrbsNodeService {
     try {
       const res = await Promise.all(
         statusUrls.map(async (u) => {
-          const { chain, selected } = u;
+          const { chain } = u;
           return {
             chain,
-            selected,
             result: await fetchJson(u.managementServiceStatusPageUrl),
           };
         }),
       );
-
-      const mockGuardian = {
-        DelegatedStake: 37649757,
-        EffectiveStake: 37649757,
-        ElectionsStatus: {
-          LastUpdateTime: 1604985908,
-          ReadyToSync: true,
-          ReadyForCommittee: true,
-          TimeToStale: 604800,
-        },
-        EthAddress: '0c56b39184e22249e35efcb9394872f0d025256b',
-        IdentityType: 1,
-        Ip: '13.124.229.86',
-        Metadata: { ID_FORM_URL: 'https://blog.naver.com/jinan0119/222142641393' },
-        Name: 'AngelSong-of-Orbs',
-        OrbsAddress: '255c1f6c4da768dfd31f27057d38b84de41bcd4d',
-        RegistrationTime: 1596894705,
-        SelfStake: 4453457,
-        Website: 'https://blog.naver.com/jinan0119',
-      };
-
-      const comittee = {
-        EffectiveStake: 37649757,
-        EnterTime: 1604985908,
-        EthAddress: '0c56b39184e22249e35efcb9394872f0d025256b',
-        IdentityType: 1,
-        Name: 'AngelSong-of-Orbs',
-        Weight: 37977368,
-      };
-      res[1].result.Payload.CurrentCommittee.push(comittee);
-      res[1].result.Payload.Guardians = { [mockGuardian.EthAddress]: mockGuardian };
-      console.log(res);
 
       return res;
     } catch (error) {

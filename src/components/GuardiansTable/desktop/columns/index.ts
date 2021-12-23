@@ -20,7 +20,6 @@ interface IProps extends IBaseTableProps {
 
 const createDesktopTableColumns = (props: IProps) => {
   const { committeeMembers, guardiansToDelegatorsCut, guardiansTableTranslations, theme, copyAddress } = props;
-  console.log('render')
   const columns: Column<IGroupedGuardian>[] = [
     getSelectionColumn({ ...props, guardiansTableTranslations, theme }),
     getQualificationColumn(committeeMembers),

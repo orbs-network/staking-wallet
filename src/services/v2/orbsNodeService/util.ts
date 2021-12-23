@@ -1,62 +1,112 @@
-import { Guardian } from './systemState';
-import { getSupportedChains } from '../../../utils/web3';
+import { IManagementStatus } from './nodeResponseProcessing/RootNodeData';
+import { Guardian, SystemState } from './systemState';
+import { getSortedChains } from '../../../utils/web3';
+import { IGuardiansDictionary, IGroupedGuardiansByNetwork, IProcessedSystemState } from './OrbsNodeTypes';
+import { updateSystemState } from './nodeResponseProcessing/processor-public';
 
-interface INetworks {
-  [key: number]: Guardian;
+interface IGuardiansByChains {
+  [key: number]: Guardian[];
 }
 
-const createGuardianObject = (guardian: Guardian) => {
-  const chains: number[] = getSupportedChains();
-  const networks: INetworks = {};
-  chains.forEach((chain) => {
-    networks[chain] = guardian;
+const createSystemStates = (allManagementStatuses: IManagementStatus[], selectedChain: number) => {
+  const states: IProcessedSystemState[] = [];
+  const { result } = allManagementStatuses.find((m) => m.chain === selectedChain);
+  allManagementStatuses.forEach((status) => {
+    const { chain, result } = status;
+    const state = new SystemState();
+    const timeStamp = Math.floor(Date.now() / 1000);
+    updateSystemState(state, result, timeStamp);
+    states.push({ chain, state });
   });
-  return {
-    EthAddress: '',
-    networks,
-  };
+  const selectedChainState = states.find((s: IProcessedSystemState) => s.chain === selectedChain).state;
+  return { states, selectedChainState, committeeMembers: result.Payload.CurrentCommittee };
 };
 
-const updateGuardiansDictionary = (obj, g: Guardian, network: number) => {
-  const networks = obj[g.EthAddress].networks;
-  obj[g.EthAddress] = {
-    EthAddress: g.EthAddress,
-    networks: {
-      ...networks,
-      [network]: {
-        Name: g.Name,
-        Website: g.Website,
-        EffectiveStake: g.EffectiveStake,
-        IsCertified: g.IsCertified,
-        DelegatedStake: g.DelegatedStake,
-        Capacity: g.Capacity,
-        ParticipationPercentage: g.ParticipationPercentage,
-        SelfStake: g.SelfStake,
-      },
-    },
-  };
+const sortStates = (states: IProcessedSystemState[], selectedChain: number) => {
+  const selectedState = states.find((c: IProcessedSystemState) => c.chain === selectedChain);
+  const index = states.findIndex((c: IProcessedSystemState) => c.chain === selectedChain);
+  states.splice(index, 1);
+  states.unshift(selectedState);
+  return states;
 };
 
-const fillGuardiansDictionary = (obj, guardians: { [key: string]: Guardian }, network: number) => {
-  Object.values(guardians).forEach((guardian: Guardian) => {
-    const guardianObject = obj[guardian.EthAddress];
-    if (!guardianObject) {
-      const elem = createGuardianObject(guardian);
-      obj[guardian.EthAddress] = elem;
-      updateGuardiansDictionary(obj, guardian, network);
-    } else {
-      updateGuardiansDictionary(obj, guardian, network);
+const createGuardiansByChains = (
+  states: IProcessedSystemState[],
+): { guardiansByChains: IGuardiansByChains; allGuardians: Guardian[] } => {
+  const guardiansByChains: IGuardiansByChains = {};
+  let allGuardians: Guardian[] = [];
+
+  states.forEach(({ state, chain }) => {
+    const guardians = [...Object.values(state.CommitteeNodes), ...Object.values(state.StandByNodes)];
+    allGuardians = [...allGuardians, ...guardians];
+    guardiansByChains[chain] = guardians;
+  });
+
+  return { guardiansByChains, allGuardians };
+};
+
+const handleNetworks = (networks: IGroupedGuardiansByNetwork[], guardian: Guardian, chain: string) => {
+  return networks.map((network) => {
+    if (network.chain === Number(chain)) {
+      return {
+        ...network,
+        guardian,
+      };
     }
+    return network;
   });
 };
 
-const createGuardiansDictionary = (guardiansByChains: { [key: number]: Guardian[] }) => {
-  const dictionary: any = {};
-  const chains: number[] = getSupportedChains();
-  for (const property in guardiansByChains) {
-      
-    
+const createNetworks = (selectedChain: number) => {
+  const networks: IGroupedGuardiansByNetwork[] = [];
+  const chains: number[] = getSortedChains(selectedChain);
+
+  for (const chain of chains) {
+    networks.push({ chain, guardian: null });
   }
+  return networks;
 };
 
-export { fillGuardiansDictionary, createGuardiansDictionary };
+const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain: number) => {
+  const sortedStates = sortStates(states, selectedChain);
+
+  const { guardiansByChains, allGuardians } = createGuardiansByChains(sortedStates);
+
+  const groupedGuardiansByNetwork: { [key: string]: IGuardiansDictionary } = {};
+  const networks = createNetworks(selectedChain);
+
+  for (const guardian of allGuardians) {
+    groupedGuardiansByNetwork[guardian.EthAddress] = {
+      networks,
+      Name: '',
+      EthAddress: '',
+      Website: '',
+      EffectiveStake: 0,
+      ParticipationPercentage: 0,
+      Capacity: 0,
+    };
+  }
+
+  for (const chain in guardiansByChains) {
+    const guardians = guardiansByChains[chain];
+
+    for (const guardian of guardians) {
+      const { EthAddress, EffectiveStake, ParticipationPercentage, Capacity } = guardian;
+      const { networks, Name, Website } = groupedGuardiansByNetwork[EthAddress];
+
+      groupedGuardiansByNetwork[EthAddress] = {
+        EthAddress,
+        EffectiveStake: Number(chain) === selectedChain ? EffectiveStake : 0,
+        ParticipationPercentage: Number(chain) === selectedChain ? ParticipationPercentage : 0,
+        Capacity: Number(chain) === selectedChain ? Capacity : 0,
+        Name: Name || guardian.Name,
+        Website: Website || guardian.Website,
+        networks: handleNetworks(networks, guardian, chain),
+      };
+    }
+  }
+
+  return { groupedGuardiansByNetwork, allGuardians };
+};
+
+export { groupGuardiansByNetworks, createSystemStates };

@@ -2,7 +2,6 @@ import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
 import { Line } from 'rc-progress';
-import { IGroupedGuardian } from '../../interfaces';
 
 const getParticipationColumn = (guardiansTableTranslations: any) => {
   return {

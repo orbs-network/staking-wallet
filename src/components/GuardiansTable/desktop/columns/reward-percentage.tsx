@@ -1,7 +1,6 @@
 import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
-import { IGroupedGuardian } from '../../interfaces';
 
 const getRewardPercentageColumn = (
   guardiansToDelegatorsCut: { [guardianAddress: string]: number },

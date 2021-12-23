@@ -1,9 +1,7 @@
 import React from 'react';
 import useMobile from '../../hooks/useMobile';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import GuardiansDesktop from './desktop/index';
 import { IBaseTableProps } from './interfaces';
-import GuardiansMobile from './mobile/index';
 import { getSortedGuardians } from './util';
 import NewTable from './desktop/NewTable/index';
 interface IProps extends IBaseTableProps {
@@ -14,7 +12,7 @@ export const GuardiansTable = React.memo<IProps>((props) => {
   const [isMobile] = useMobile();
 
   const tableProps = {
-    groupedGuardians: props.groupedGuardians,
+    allChainsGuardians: props.allChainsGuardians,
     committeeMembers: props.committeeMembers,
     guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
     onGuardianSelect: props.onGuardianSelect,

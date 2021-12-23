@@ -52,6 +52,7 @@ const networks: { [key: string]: INetwork } = {
     earliestBlockForDelegationOverride: 9644509,
     managementServiceStatusPageUrl: 'https://tetra-staging-management.global.ssl.fastly.net/status',
     requiredConfirmations: 7,
+    logo: ethImg,
     addresses: {
       erc20Contract: '0x0e2CE2e9C8A23F02162d2226352452CCbD9dfFcE',
       delegationsContract: '0x4c743ED737359c3e502ed77E85392e037Af19F69',

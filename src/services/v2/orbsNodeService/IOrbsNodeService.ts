@@ -2,11 +2,8 @@ import { IManagementStatusResponse, IManagementStatus } from './nodeResponseProc
 import { IReadAndProcessResults } from './OrbsNodeTypes';
 
 export interface IOrbsNodeService {
-  readAndProcessSystemState(
-    managementStatusResponse: IManagementStatus,
-    allManagementStatuses: IManagementStatus[],
-  ): IReadAndProcessResults;
-  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatus): boolean;
+  readAndProcessSystemState(allManagementStatuses: IManagementStatus[]): IReadAndProcessResults;
+  checkIfDefaultNodeIsInSync(managementStatusResponses: IManagementStatus[]): boolean;
   checkIfNodeIsInSync(managementStatusResponse: IManagementStatus): boolean;
   fetchNodeManagementStatus(): Promise<IManagementStatus[]>;
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography } from '@material-ui/core';
-import { IGroupedGuardian } from '../../interfaces';
 
 const NameBox = styled('div')(() => ({
   display: 'flex',

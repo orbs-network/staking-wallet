@@ -10,7 +10,6 @@ import config from './config';
 import { DEFAULT_CHAIN } from './constants';
 
 const initApp = (chain?: number) => {
-  console.log('test');
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');

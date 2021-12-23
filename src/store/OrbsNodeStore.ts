@@ -1,12 +1,11 @@
-import { IGroupedGuardian } from './../components/GuardiansTable/interfaces';
 // DEV_NOTE : This store will keep all data that is read from an orbs node.
 
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
 import { action, computed, observable, toJS } from 'mobx';
-import { Guardian, SystemState } from '../services/v2/orbsNodeService/systemState';
+import { Guardian } from '../services/v2/orbsNodeService/systemState';
 import {
   ICommitteeMemberData,
-  IProcessedSystemState,
+  IGuardiansDictionary,
   IReadAndProcessResults,
 } from '../services/v2/orbsNodeService/OrbsNodeTypes';
 import errorMonitoring from '../services/error-monitoring';
@@ -15,22 +14,10 @@ import _ from 'lodash';
 export class OrbsNodeStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
-  @observable public systemState: SystemState = new SystemState();
-  @observable public allSystemStates: IProcessedSystemState[] = [];
+  @observable public guardians: Guardian[] = [];
   @observable public committeeMembers: ICommitteeMemberData[] = [];
-  public allChainGroupedGuardians: IGroupedGuardian[] = [];
-
-  @computed public get committeeGuardians(): Guardian[] {
-    return Object.values(this.systemState.CommitteeNodes);
-  }
-
-  @computed public get nonCommitteeGuardians(): Guardian[] {
-    return Object.values(this.systemState.StandByNodes);
-  }
-
-  @computed public get guardians(): Guardian[] {
-    return [...this.committeeGuardians, ...this.nonCommitteeGuardians];
-  }
+  @observable public committeeGuardians: Guardian[] = [];
+  public allChainsGuardians: { [key: string]: IGuardiansDictionary };
 
   /**
    * Returns all addresses in lower case.
@@ -39,20 +26,14 @@ export class OrbsNodeStore {
     return this.guardians.map((guardian) => guardian.EthAddress.toLowerCase());
   }
 
+ 
+
   @computed public get committeeEffectiveStake(): number {
     const committeeEffectiveStake = this.committeeGuardians.reduce((sum, committeeGuardian) => {
       return sum + committeeGuardian.EffectiveStake;
     }, 0);
 
     return committeeEffectiveStake;
-  }
-
-  @computed public get totalStake(): number {
-    const totalStake = this.guardians.reduce((sum, committeeGuardian) => {
-      return sum + committeeGuardian.EffectiveStake;
-    }, 0);
-
-    return totalStake;
   }
 
   @computed public get currentGuardiansAnnualRewardsInterest(): number {
@@ -94,10 +75,16 @@ export class OrbsNodeStore {
   }
 
   private async findReadAndSetNodeData() {
-    const { systemState, committeeMembers, allChainGroupedGuardians } = await this.readDataFromFirstSyncedNode();
-    this.setAllChainsGroupedGuardians(allChainGroupedGuardians);
-    this.setSystemState(systemState);
+    const {
+      allNetworksGuardians,
+      committeeMembers,
+      committeeGuardians,
+      groupedGuardiansByNetwork,
+    } = await this.readDataFromFirstSyncedNode();
+    this.setAllChainsGuardians(groupedGuardiansByNetwork);
     this.setCommitteeMemberData(committeeMembers);
+    this.setCommitteeGuardians(committeeGuardians);
+    this.setGuardians(allNetworksGuardians);
   }
 
   private async readDataFromFirstSyncedNode(): Promise<IReadAndProcessResults> {
@@ -114,18 +101,14 @@ export class OrbsNodeStore {
     // Check if default node is in sync
     const allManagementStatuses = await this.orbsNodeService.fetchNodeManagementStatus();
     if (!allManagementStatuses) return;
-    const selectedChainManagementStatus = allManagementStatuses.find((m) => m.selected);
-    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync(selectedChainManagementStatus);
+    const isDefaultNodeAtSync = await this.orbsNodeService.checkIfDefaultNodeIsInSync(allManagementStatuses);
     if (!isDefaultNodeAtSync) {
       // TODO : ORL : Add analytic
       console.log('Default node is not in sync');
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(
-          selectedChainManagementStatus,
-          allManagementStatuses,
-        );
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(allManagementStatuses);
 
         return readAndProcessResult;
       } catch (e) {
@@ -152,18 +135,22 @@ export class OrbsNodeStore {
     this.errorLoading = errorLoading;
   }
 
-  @action('setSystemState')
-  private setSystemState(systemState: SystemState) {
-    this.systemState = systemState;
-  }
-
   @action('setAllChainGroupedGuardians')
-  private setAllChainsGroupedGuardians(value: IGroupedGuardian[]) {
-    this.allChainGroupedGuardians = value;
+  private setAllChainsGuardians(value: { [key: string]: IGuardiansDictionary }) {
+    this.allChainsGuardians = value;
   }
 
   @action('setCommitteeMemberData')
   private setCommitteeMemberData(committeeMembers: ICommitteeMemberData[]) {
     this.committeeMembers = committeeMembers;
+  }
+  @action('setGuardians')
+  private setGuardians(value: Guardian[]) {
+    this.guardians = value;
+  }
+
+  @action('setCommitteeGuardians')
+  private setCommitteeGuardians(value: Guardian[]) {
+    this.committeeGuardians = value;
   }
 }

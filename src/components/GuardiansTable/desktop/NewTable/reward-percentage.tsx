@@ -1,7 +1,6 @@
 import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
-import { IGroupedGuardian } from '../../interfaces';
 
 interface IProps {
   guardianDelegatorCut: number;
@@ -11,7 +10,7 @@ interface IProps {
 function RewardPercentage({ translation, guardianDelegatorCut }: IProps) {
   const hasData = guardianDelegatorCut != undefined;
 
-  const percentageText = hasData ? `${guardianDelegatorCut}%` : '--';
+  const percentageText = hasData ? `${guardianDelegatorCut}%` : '-';
   return (
     <Tooltip
       arrow

@@ -21,7 +21,6 @@ export interface IManagementStatusResponse {
 export interface IManagementStatus {
   chain: number;
   result: IManagementStatusResponse;
-  selected: boolean;
 }
 
 

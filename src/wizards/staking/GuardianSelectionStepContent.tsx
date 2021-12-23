@@ -34,6 +34,7 @@ export const GuardianSelectionStepContent = observer(
     const reReadStoresData = useReReadAllStoresData();
 
     const stakingRewardsService = useStakingRewardsService();
+      
     const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
     // Start and limit by allowance
@@ -95,7 +96,7 @@ export const GuardianSelectionStepContent = observer(
             isGuardian={orbsAccountStore.isGuardian}
             guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
-            groupedGuardians={orbsNodeStore.allChainGroupedGuardians}
+            allChainsGuardians={orbsNodeStore.allChainsGuardians}
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
@@ -115,7 +116,7 @@ export const GuardianSelectionStepContent = observer(
       selectedGuardianAddress,
       guardianAddressToDelegatorsCut,
       disableInputs,
-      orbsNodeStore.allChainGroupedGuardians,
+      orbsNodeStore.allChainsGuardians,
     ]);
 
     return (

@@ -46,7 +46,7 @@ const GuardiansDesktop = (props: IProps) => {
     disableSelection,
     isGuardian,
     mainAddress,
-    groupedGuardians,
+    allChainsGuardians,
   } = props;
 
   const classes = useStyles();
@@ -72,7 +72,7 @@ const GuardiansDesktop = (props: IProps) => {
     copyAddress,
     mainAddress,
     isGuardian,
-    groupedGuardians,
+    allChainsGuardians,
   };
 
   const columns = useMemo(() => createDesktopTableColumns(tableProps), [tableProps]);
@@ -82,7 +82,7 @@ const GuardiansDesktop = (props: IProps) => {
       <MaterialTable
         title={tableTitle || ''}
         columns={columns}
-        data={groupedGuardians}
+        data={allChainsGuardians}
         icons={TABLE_ICONS}
         style={{ maxWidth: '100%' }}
         options={{

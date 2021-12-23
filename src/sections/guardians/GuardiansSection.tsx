@@ -108,11 +108,10 @@ export const GuardiansSection = observer(() => {
             {orbsAccountStore.participatingInStaking && (
               <MyGuardianDisplay openGuardianSelectionWizard={showGuardianSelectionModal.setTrue} />
             )}
-            {console.log({ allGuardians: orbsNodeStore.allChainGroupedGuardians })}
             <Grid item xs={12}>
               <GuardiansTable
                 mainAddress={mainAddress}
-                groupedGuardians = {orbsNodeStore.allChainGroupedGuardians}
+                allChainsGuardians={orbsNodeStore.allChainsGuardians}
                 isGuardian={orbsAccountStore.isGuardian}
                 guardianSelectionMode={'Change'}
                 selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
