@@ -1,22 +1,23 @@
 import React, { FC } from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
-import { IMobileSection } from '../../interfaces';
 import { useCommonStyles } from './styles';
+import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 
-interface IProps extends IMobileSection {
+interface IProps {
   guardiansToDelegatorsCut: { [guardianAddress: string]: number };
+  guardian: Guardian | null;
+  translation: any;
 }
 
-const Rewards: FC<IProps> = ({ guardian, guardiansToDelegatorsCut, guardiansTableTranslations }) => {
-  const { EthAddress } = guardian;
+const Rewards = ({ guardian, guardiansToDelegatorsCut, translation }: IProps) => {
   const commonClasses = useCommonStyles();
-  const hasData = guardiansToDelegatorsCut[EthAddress] != undefined;
+  const hasData = guardian && guardiansToDelegatorsCut[guardian.EthAddress] != undefined;
 
-  const percentageText = hasData ? `${guardiansToDelegatorsCut[EthAddress]}%` : '--';
+  const percentageText = hasData ? `${guardiansToDelegatorsCut[guardian.EthAddress]}%` : '-';
   return (
     <div className={commonClasses.row}>
       <div className={commonClasses.rowName}>
-        <Typography>{guardiansTableTranslations('rewards_percentage')}</Typography>
+        <Typography>{translation('rewards_percentage')}</Typography>
       </div>
 
       <Typography className={commonClasses.rowContent}>{percentageText}</Typography>

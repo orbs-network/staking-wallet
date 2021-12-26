@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import {
   useCryptoWalletIntegrationStore,
   useOrbsAccountStore,
@@ -6,8 +6,8 @@ import {
   useReReadAllStoresData,
 } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
-import { observer } from 'mobx-react';
-import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
+import { MobXProviderContext, observer } from 'mobx-react';
+import GuardiansTable from '../../components/GuardiansTable/GuardiansTable';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
@@ -24,6 +24,7 @@ export interface IGuardianSelectionStepContentProps {
 export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
+    const { chainId } = useContext(MobXProviderContext);
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
@@ -92,9 +93,9 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
+            selectedChain={chainId}
             mainAddress={mainAddress}
             isGuardian={orbsAccountStore.isGuardian}
-            guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
             allChainsGuardians={orbsNodeStore.allChainsGuardians}
             onGuardianSelect={selectGuardian}
@@ -110,7 +111,6 @@ export const GuardianSelectionStepContent = observer(
     }, [
       mainAddress,
       orbsAccountStore.isGuardian,
-      orbsNodeStore.guardians,
       orbsNodeStore.committeeMembers,
       selectGuardian,
       selectedGuardianAddress,

@@ -1,13 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useBoolean } from 'react-hanger';
 import { Grid } from '@material-ui/core';
 import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
-import { observer } from 'mobx-react';
+import { MobXProviderContext, observer } from 'mobx-react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
-import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
+import GuardiansTable from '../../components/GuardiansTable/GuardiansTable';
 import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
 import {
@@ -51,6 +51,7 @@ const handleIsError = (
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const { isConnectedToWallet, mainAddress } = useCryptoWalletIntegrationStore();
+  const { chainId } = useContext(MobXProviderContext);
 
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
@@ -110,12 +111,12 @@ export const GuardiansSection = observer(() => {
             )}
             <Grid item xs={12}>
               <GuardiansTable
+                selectedChain={chainId}
                 mainAddress={mainAddress}
                 allChainsGuardians={orbsNodeStore.allChainsGuardians}
                 isGuardian={orbsAccountStore.isGuardian}
                 guardianSelectionMode={'Change'}
                 selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
-                guardians={orbsNodeStore.guardians}
                 onGuardianSelect={onGuardianSelect}
                 tableTestId={'guardians-table'}
                 committeeMembers={orbsNodeStore.committeeMembers}

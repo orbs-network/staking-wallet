@@ -4,7 +4,6 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import Paper from '@material-ui/core/Paper';
 import { IBaseTableProps } from '../../interfaces';
-import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import { useAlertsTranslations, useGuardiansTableTranslations } from '../../../../translations/translationsHooks';
 import copy from 'copy-to-clipboard';
 import CustomSnackbar from '../../../snackbar/custom-snackbar';
@@ -22,17 +21,19 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 700,
+
+    '& td': {
+      paddingBottom: '20px',
+    },
   },
 }));
 
 interface IProps extends IBaseTableProps {
-  pageSize: number;
-  sortedGuardians: Guardian[];
+  sortedGuardians: IGuardiansDictionary[];
 }
 
-const SpanningTable = (props: IProps) => {
+const DesktopTable = (props: IProps) => {
   const {
-    allChainsGuardians,
     guardiansToDelegatorsCut,
     committeeMembers,
     selectedGuardian,
@@ -41,6 +42,8 @@ const SpanningTable = (props: IProps) => {
     mainAddress,
     disableSelection,
     isGuardian,
+    sortedGuardians,
+    selectedChain
   } = props;
 
   const classes = useStyles();
@@ -49,7 +52,6 @@ const SpanningTable = (props: IProps) => {
   const alertsTranslations = useAlertsTranslations();
   const [order, setOrder] = React.useState<any>('asc');
   const [sortBy, setSortBy] = React.useState<string>('');
-  const { chainId } = useContext(MobXProviderContext);
   const [sortedData, setSortedData] = useState([]);
   const copyAddress = useCallback((value: string) => {
     copy(value);
@@ -67,15 +69,15 @@ const SpanningTable = (props: IProps) => {
         sortOrder = 'asc';
       }
 
-      const sortedItems = sortData(newSortBy, sortOrder, Object.values(allChainsGuardians), guardiansToDelegatorsCut);
+      const sortedItems = sortData(newSortBy, sortOrder, sortedGuardians, guardiansToDelegatorsCut);
       setSortBy(newSortBy);
       setOrder(sortOrder);
       setSortedData(sortedItems);
     },
-    [allChainsGuardians, guardiansToDelegatorsCut, order, sortBy],
+    [sortedGuardians, guardiansToDelegatorsCut, order, sortBy],
   );
 
-  const data = (sortedData.length && sortedData) || (allChainsGuardians && Object.values(allChainsGuardians)) || [];
+  const data = (sortedData.length && sortedData) || sortedGuardians || [];
 
   return (
     <Paper className={classes.root}>
@@ -87,7 +89,7 @@ const SpanningTable = (props: IProps) => {
               <TableRows
                 key={uuidv4()}
                 group={group}
-                selectedChain={chainId}
+                selectedChain={selectedChain}
                 guardiansToDelegatorsCut={guardiansToDelegatorsCut}
                 committeeMembers={committeeMembers}
                 selectedGuardian={selectedGuardian}
@@ -114,4 +116,4 @@ const SpanningTable = (props: IProps) => {
   );
 };
 
-export default SpanningTable;
+export default DesktopTable;

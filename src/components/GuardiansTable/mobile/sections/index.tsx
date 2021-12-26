@@ -2,64 +2,78 @@ import React, { FC, useState } from 'react';
 import { useGuardiansTableTranslations } from '../../../../translations/translationsHooks';
 import Address from './address';
 import useTheme from '@material-ui/core/styles/useTheme';
-import Name from './name';
 import Capacity from './capacity';
 import EffectiveStake from './effective-stake';
 import Participation from './participation';
 import Rewards from './rewards';
 import Selection from './selection';
+import { v4 as uuidv4 } from 'uuid';
+import Network from './Network';
 import Website from './website';
 import { IBaseTableProps } from '../../interfaces';
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import GuardianMobileHeader from './header';
 import { useCommonStyles } from './styles';
+import { IGuardiansDictionary } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
 
 interface IProps extends IBaseTableProps {
-  pageSize: number;
-  sortedGuardians: Guardian[];
-  guardian: Guardian;
+  group: IGuardiansDictionary;
+  selectedChain: number;
 }
 
-const GuardiansMobileSection: FC<IProps> = (props) => {
-  const { guardian, committeeMembers, guardiansToDelegatorsCut } = props;
+const GuardiansMobileSection = (props: IProps) => {
+  const { committeeMembers, guardiansToDelegatorsCut, group } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const theme = useTheme();
 
-  const sectionsProps = {
-    guardian,
-    guardiansTableTranslations,
-  };
-
-  const selectionProps = {
-    guardiansTableTranslations,
-    onGuardianSelect: props.onGuardianSelect,
-    selectedGuardian: props.selectedGuardian,
-    guardianSelectionMode: props.guardianSelectionMode,
-    theme,
-    disableSelection: props.disableSelection,
-    guardian,
-    isGuardian: props.isGuardian,
-    mainAddress: props.mainAddress,
-  };
   const commonClasses = useCommonStyles();
+  const { networks } = group;
+  const { guardian } = networks.find((network) => network.chain === props.selectedChain);
+
   return (
     <div className={commonClasses.container}>
       <GuardianMobileHeader
-        {...sectionsProps}
-        committeeMembers={committeeMembers}
         onClick={() => setShowDetails(!showDetails)}
+        name={group.Name}
+        committeeMembers={committeeMembers}
+        guardian={guardian}
       />
       {showDetails && (
         <div style={{ paddingTop: '20px', paddingBottom: '20px', borderBottom: '1px solid rgba(255,255,255, 0.6)' }}>
-          <Name {...sectionsProps} committeeMembers={committeeMembers} onClick={() => setShowDetails(false)} />
-          <Website {...sectionsProps} />
-          <Address {...sectionsProps} />
-          <Rewards {...sectionsProps} guardiansToDelegatorsCut={guardiansToDelegatorsCut} />
-          <EffectiveStake {...sectionsProps} />
-          <Participation {...sectionsProps} />
-          <Capacity {...sectionsProps} />
-          <Selection {...selectionProps} />
+          <Website translation={guardiansTableTranslations} website={group.Website} address={group.EthAddress} />
+          <Address EthAddress={group.EthAddress} translation={guardiansTableTranslations} />
+          <div className=''>
+            {networks.map((network) => {
+              const { chain, guardian } = network;
+
+              const sectionProps = {
+                translation: guardiansTableTranslations,
+                guardian,
+              };
+
+              return (
+                <div key={uuidv4()} className={commonClasses.networkSection}>
+                  <Network chain={chain} translation={guardiansTableTranslations} />
+                  <Rewards {...sectionProps} guardiansToDelegatorsCut={guardiansToDelegatorsCut} />
+                  <EffectiveStake {...sectionProps} />
+                  <Participation {...sectionProps} />
+                  <Capacity {...sectionProps} />
+                  <Selection
+                    {...sectionProps}
+                    onGuardianSelect={props.onGuardianSelect}
+                    selectedGuardian={props.selectedGuardian}
+                    guardianSelectionMode={props.guardianSelectionMode}
+                    theme={theme}
+                    disableSelection={props.disableSelection}
+                    isGuardian={props.isGuardian}
+                    mainAddress={props.mainAddress}
+                    isSelectedChain={chain === props.selectedChain}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

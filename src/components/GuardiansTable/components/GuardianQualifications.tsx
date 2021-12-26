@@ -7,12 +7,14 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { useGuardiansTableTranslations } from '../../../translations/translationsHooks';
 import GuardianShieldIcon from './guardian-shield-icon';
+import { IExtenedTheme } from '../../../theme/Theme';
 interface IProps {
   guardian: Guardian;
   committeeMembershipData?: ICommitteeMemberData;
 }
 
-const useStyles = makeStyles({
+const useStyes = makeStyles((theme: IExtenedTheme) => ({
+  
   tooltip: {
     // width: 'max-content',
     width: 400,
@@ -24,13 +26,14 @@ const useStyles = makeStyles({
     position: 'relative',
     cursor: 'pointer',
     color: 'rgba(0,0,0,0)',
+    filter: theme.custom?.filter,
   },
-});
+}));
 
 export const GuardianQualifications = React.memo<IProps>((props) => {
   const { guardian, committeeMembershipData } = props;
 
-  const classes = useStyles();
+  const classes = useStyes();
 
   return (
     <Tooltip
@@ -47,7 +50,10 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
   );
 });
 
-const useStylesTooltip = makeStyles((theme) => ({
+const useStylesTooltip = makeStyles((theme: IExtenedTheme) => ({
+  shield: {
+    filter: theme.custom?.filter,
+  },
   textField: {
     fontWeight: 'bold',
     display: 'inline',

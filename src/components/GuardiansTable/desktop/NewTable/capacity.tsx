@@ -31,7 +31,7 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
     >
       <div>
         <Line percent={capacity} strokeWidth={5} strokeColor={getCapacityColor(capacity)} />
-        <Typography>{getCapacityText(capacity, 2)}</Typography>
+        <Typography>{capacity > 100 ? `100%` : getCapacityText(capacity, 2)}</Typography>
       </div>
     </Tooltip>
   );

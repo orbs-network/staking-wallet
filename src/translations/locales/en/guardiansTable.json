@@ -21,6 +21,8 @@
   "columnHeader_capacity": "Capacity",
   "columnHeader_effectiveStake": "Effective Stake",
   "columnHeader_name": "Name",
+  "columnHeader_network": "Network",
+
   "columnHeader_participation": "Participation",
   "columnHeader_rewardsPercentageToDelegators": "Rewards % to Delegators",
   "columnHeader_selection": "Selection",

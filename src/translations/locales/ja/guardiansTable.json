@@ -21,6 +21,7 @@
   "columnHeader_capacity": "容量",
   "columnHeader_effectiveStake": "効果的なステーキング",
   "columnHeader_name": "名前",
+  "columnHeader_network": "Network",
   "columnHeader_participation": "参加",
   "columnHeader_rewardsPercentageToDelegators": "デリゲータへのリワード％",
   "rewards_percentage": "% Rewards",

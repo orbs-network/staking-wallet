@@ -1,6 +1,9 @@
 import { getNumberSeparators } from './utils/numberUtils';
 import ethImg from '../assets/logos/eth.png';
 import polygonImg from '../assets/logos/polygon.png';
+import smallPolygonIcon from '../assets/logos/polygon-small.svg'
+import smallEthereumIcon from '../assets/logos/ethereum-small.svg'
+
 import { CHAINS } from './constants';
 
 /**
@@ -31,6 +34,7 @@ export interface INetwork {
   earliestBlockForDelegationOverride?: number;
   name: string;
   logo?: string;
+  smallLogo?: string;
   requiredConfirmations?: number;
   nativeCurrency?: { name: string; symbol: string; decimals: number };
   rpcUrls?: string[];
@@ -42,6 +46,7 @@ const networks: { [key: string]: INetwork } = {
     name: 'Ethereum',
     managementServiceStatusPageUrl: 'https://0xcore-management-direct.global.ssl.fastly.net/status',
     logo: ethImg,
+    smallLogo: smallEthereumIcon,
     requiredConfirmations: 7,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
@@ -69,6 +74,7 @@ const networks: { [key: string]: INetwork } = {
     managementServiceStatusPageUrl: 'https://0xcore-matic-reader-direct.global.ssl.fastly.net/status',
     requiredConfirmations: 20,
     name: 'Polygon',
+    smallLogo: smallPolygonIcon,
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://polygon-rpc.com'],
     blockExplorerUrls: ['https://www.polygonscan.com'],

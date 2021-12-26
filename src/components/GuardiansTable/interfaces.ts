@@ -16,7 +16,7 @@ export interface IBaseTableProps {
   densePadding?: boolean;
   isGuardian: boolean;
   mainAddress: string;
-  allChainsGuardians: { [key: string]: IGuardiansDictionary };
+  selectedChain: number;
 }
 
 export interface IGetGuardianSelectionCellContent extends ISelectionProps {

@@ -3,6 +3,7 @@ import { blue } from '@material-ui/core/colors';
 import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { CHAINS, DEFAULT_CHAIN } from '../constants';
+import { Theme } from '@material-ui/core/styles';
 
 const COLOR1 = '#0D0D0D'; // dark gray
 const COLOR2 = '#6ec6d8'; // bluish
@@ -11,7 +12,7 @@ const COLOR3 = '#03FCF5'; // bright bluish- Tetra
 const PRIMARY_TEXT = '#dbdbdb';
 const SECONDARY_TEXT = '#7B7B7B';
 
- const base = {
+const base = {
   palette: {
     type: 'dark',
     primary: {
@@ -55,6 +56,10 @@ export const themes = {
   [DEFAULT_CHAIN]: createTheme(base),
   [CHAINS.polygon]: createTheme({
     ...base,
+    custom: {
+      filter: 'hue-rotate(100deg)',
+    },
+
     palette: {
       ...base.palette,
       secondary: {
@@ -64,6 +69,12 @@ export const themes = {
   }),
   [CHAINS.ropsten]: createTheme(base),
 };
+
+export interface IExtenedTheme extends Theme {
+  custom: {
+    filter: string;
+  };
+}
 
 export const AppStyles = {};
 

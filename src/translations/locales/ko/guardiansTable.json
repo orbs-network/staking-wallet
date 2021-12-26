@@ -21,6 +21,8 @@
   "columnHeader_capacity": "수용율",
   "columnHeader_effectiveStake": "유효\n스테이킹",
   "columnHeader_name": "이름",
+    "columnHeader_network": "Network",
+
   "columnHeader_participation": "참여율",
   "columnHeader_rewardsPercentageToDelegators": "델리게이터 배포 비율 %",
   "rewards_percentage": "% Rewards",

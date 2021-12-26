@@ -9,6 +9,8 @@ import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
 import NetworkIndicator from '../NetworkIndicator';
 import { MobXProviderContext } from 'mobx-react';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import { IExtenedTheme } from '../../theme/Theme';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -18,19 +20,30 @@ const StyledAppBar = styled(AppBar)<AppBarProps>({
 
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
+const useStyes = makeStyles((theme: IExtenedTheme) => ({
+  logoContainer: {
+    filter: theme.custom?.filter,
+  },
+  logo: {
+    [theme.breakpoints.down('sm')]: {
+      zoom: 0.5,
+    },
+  },
+}));
+
 export const Header = () => {
   const { chainId } = useContext(MobXProviderContext);
-
+  const classes = useStyes();
   return (
     <>
       <StyledAppBar position='fixed'>
         <ContentContainer>
           <StyledToolBar disableGutters>
             <Grid container direction={'row'} alignItems={'center'} justify={'space-between'}>
-              <Grid item>
-                <TetraLogoAndIconSvg />
+              <Grid item className={classes.logoContainer}>
+                <TetraLogoAndIconSvg className={classes.logo} />
               </Grid>
-              <Grid item style={{ marginLeft: 'auto', marginRight: 40 }}>
+              <Grid item style={{ marginLeft: 'auto', marginRight: 30 }}>
                 <NetworkIndicator chainId={chainId} />
               </Grid>
 

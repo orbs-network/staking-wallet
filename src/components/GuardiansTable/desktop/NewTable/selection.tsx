@@ -1,7 +1,6 @@
 import React from 'react';
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
-import { EMPTY_ADDRESS } from '../../../../constants';
-import {  ISelectionProps } from '../../interfaces';
+import { ISelectionProps } from '../../interfaces';
 import getGuardianSelectionCellContent from '../../components/guardian-selection-cell-content';
 import stakingUtil from '../../../../utils/stakingUtil';
 

@@ -1,9 +1,13 @@
-import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
+import { ICommitteeMemberData, IGuardiansDictionary } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { ensurePrefix } from '../../utils/stringUtils';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { IBaseTableProps } from './interfaces';
 
-export const compareGuardiansBySelectedAndThenStake = (a: Guardian, b: Guardian, selectedGuardianAddress = '') => {
+export const compareGuardiansBySelectedAndThenStake = (
+  a: IGuardiansDictionary,
+  b: IGuardiansDictionary,
+  selectedGuardianAddress = '',
+) => {
   const selectedGuardianAddressLowerCase = selectedGuardianAddress.toLowerCase();
   if (a.EthAddress.toLowerCase() === selectedGuardianAddressLowerCase) {
     return -1;
@@ -14,7 +18,7 @@ export const compareGuardiansBySelectedAndThenStake = (a: Guardian, b: Guardian,
   }
 };
 
-export const getSortedGuardians = (guardians: Guardian[], selectedGuardian?: string) => {
+export const getSortedGuardians = (guardians: IGuardiansDictionary[], selectedGuardian?: string) => {
   return guardians.slice().sort((a, b) => compareGuardiansBySelectedAndThenStake(a, b, selectedGuardian));
 };
 
@@ -42,11 +46,12 @@ export const getEffectiveStakeInUnits = (EffectiveStake: number): string => {
 };
 
 export const getCapacityText = (Capacity: any, toFixed: number) => {
- try {
-  return !isNaN(Capacity) ? `${Capacity.toFixed(toFixed)}%` : '--';
- } catch (error) {
-    return '-'
- }
+
+  try {
+    return !isNaN(Capacity) ? `${Capacity.toFixed(toFixed)}%` : '-';
+  } catch (error) {
+    return '-';
+  }
 };
 
 export const getCapacityColor = (Capacity: any) => {

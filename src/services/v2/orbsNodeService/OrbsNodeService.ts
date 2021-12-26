@@ -52,10 +52,12 @@ export class OrbsNodeService implements IOrbsNodeService {
       this.selectedChain,
     );
 
+    
+
     //groupedGuardiansByNetwork = all the guardians sorted by network,
     // allGuardians = all the guardians of all chains in one array
     const { groupedGuardiansByNetwork, allGuardians } = groupGuardiansByNetworks(states, this.selectedChain);
-
+      
     return {
       allNetworksGuardians: allGuardians,
       committeeMembers,
@@ -76,7 +78,7 @@ export class OrbsNodeService implements IOrbsNodeService {
           };
         }),
       );
-
+      
       return res;
     } catch (error) {
       const { sections, captureException } = errorMonitoring;

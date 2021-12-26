@@ -12,13 +12,13 @@ interface IProps {
 }
 
 const Qualification: FC<IProps> = ({ guardian, committeeMembers }) => {
-  const committeeMembershipData = getCommitteeMemberData(guardian.EthAddress, committeeMembers);
-  return (
+  const committeeMembershipData = guardian && getCommitteeMemberData(guardian.EthAddress, committeeMembers);
+  return committeeMembershipData ? (
     <GuardianShieldIcon
       IsCertified={guardian.IsCertified}
       committeeMembershipData={committeeMembershipData}
       customStyle={{ width: '30px', marginRight: '10px' }}
     />
-  );
+  ) : null;
 };
 export default Qualification;

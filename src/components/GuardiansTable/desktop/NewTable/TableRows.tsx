@@ -24,7 +24,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import config from '../../../../config';
 
 const useStyles = makeStyles((theme) => ({
-  nameRow: { maxWidth: '14vw', paddingRight: 30 },
   multipleGuardiansCell: {
     verticalAlign: 'top',
   },
@@ -34,12 +33,33 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   logo: {
-    width: 30,
+    width: 20,
     height: 'auto',
     objectFit: 'contain',
   },
   notSelectedChain: {
     opacity: 0.5,
+    border: 'none',
+    '& td': {
+      paddingTop: '20px',
+    },
+  },
+  selectedChain: {
+    '& td': {
+      borderBottom: '1px solid transparent',
+      paddingTop: '30px',
+    },
+  },
+  commonDetails: {
+    '& td': {
+      verticalAlign: 'top',
+      paddingTop: '10px',
+    },
+  },
+  commonDetailsCell: {
+    minHeight: '70px',
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
@@ -86,25 +106,27 @@ function TableRows(props: IProps) {
 
   return (
     <>
-      <TableRow>
+      <TableRow className={classes.commonDetails}>
         <TableCell rowSpan={rowSpan}>
           {addSelectionColumn && selectedChainGuardian && (
-            <Selection
-              guardiansTableTranslations={guardiansTableTranslations}
-              onGuardianSelect={onGuardianSelect}
-              selectedGuardian={selectedGuardian}
-              guardianSelectionMode={guardianSelectionMode}
-              theme={theme}
-              disableSelection={disableSelection}
-              isGuardian={isGuardian}
-              mainAddress={mainAddress}
-              guardian={selectedChainGuardian}
-            />
+            <div className={classes.commonDetailsCell}>
+              <Selection
+                guardiansTableTranslations={guardiansTableTranslations}
+                onGuardianSelect={onGuardianSelect}
+                selectedGuardian={selectedGuardian}
+                guardianSelectionMode={guardianSelectionMode}
+                theme={theme}
+                disableSelection={disableSelection}
+                isGuardian={isGuardian}
+                mainAddress={mainAddress}
+                guardian={selectedChainGuardian}
+              />
+            </div>
           )}
         </TableCell>
-        <TableCell rowSpan={rowSpan}>
+        <TableCell rowSpan={rowSpan} style={{ height: '70px' }}>
           {selectedChainGuardian && (
-            <div>
+            <div className={classes.commonDetailsCell}>
               <Qualifications
                 address={EthAddress}
                 guardian={selectedChainGuardian}
@@ -114,16 +136,18 @@ function TableRows(props: IProps) {
           )}
         </TableCell>
 
-        <TableCell rowSpan={rowSpan} className={`${classes.nameRow}`}>
-          <div>{Name}</div>
+        <TableCell rowSpan={rowSpan}>
+          <div className={classes.commonDetailsCell} style={{ width: '14vw', paddingRight: 20 }}>
+            {Name}
+          </div>
         </TableCell>
         <TableCell align='center' rowSpan={rowSpan}>
-          <div>
+          <div className={classes.commonDetailsCell}>
             <Website address={EthAddress} website={website} />
           </div>
         </TableCell>
         <TableCell align='center' rowSpan={rowSpan}>
-          <div>
+          <div className={classes.commonDetailsCell} style={{ paddingRight: '30px' }}>
             <Address address={EthAddress} copyAddress={copyAddress} />
           </div>
         </TableCell>
@@ -133,9 +157,9 @@ function TableRows(props: IProps) {
         const guardianDelegatorCut = guardian ? guardiansToDelegatorsCut[guardian.EthAddress] : 0;
         const isActive = chain === selectedChain;
         return (
-          <TableRow key={uuidv4()} className={!isActive ? classes.notSelectedChain : ''}>
+          <TableRow key={uuidv4()} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
             <TableCell>
-              <img className={classes.logo} src={config.networks[chain].logo} />
+              <img className={classes.logo} src={config.networks[chain].smallLogo} />
             </TableCell>
             <TableCell align='center'>
               {guardianDelegatorCut ? (
@@ -185,4 +209,4 @@ function TableRows(props: IProps) {
   );
 }
 
-export default TableRows
+export default TableRows;

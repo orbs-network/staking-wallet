@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
 import { getEffectiveStakeInUnits } from '../../util';
 
@@ -16,7 +15,6 @@ function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake
       arrow
       title={
         <>
-        {console.log('render')}
           <Typography>
             {translation('message_selfStake')}: {translation('xOrbs', { amount: selfStake?.toLocaleString() })}
           </Typography>
@@ -33,4 +31,4 @@ function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake
   );
 }
 
-export default EffectiveStake
+export default EffectiveStake;

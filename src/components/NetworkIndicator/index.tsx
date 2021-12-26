@@ -74,6 +74,7 @@ const ChainIndicator = ({ chainId }: IProps) => {
     <div className={classes.root}>
       <div>
         <Button
+          className={classes.selector}
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
           aria-haspopup='true'

@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { IMobileSection } from '../../interfaces';
-import { ICommitteeMemberData } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
-import GuardianShieldIcon from '../../components/guardian-shield-icon';
 import { Typography } from '@material-ui/core';
-import { getCommitteeMemberData } from '../../util';
 import { useCommonStyles } from './styles';
 import Arrow from '../../components/arrow';
+import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
+import GuardianShieldIcon from '../../components/guardian-shield-icon';
+import { getCommitteeMemberData } from '../../util';
+import { ICommitteeMemberData } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
+
 const useStyles = makeStyles({
   container: {
     borderBottom: '1px solid rgba(255,255,255, 0.6)',
@@ -20,24 +21,27 @@ const useStyles = makeStyles({
   },
 });
 
-interface IProps extends IMobileSection {
-  committeeMembers: ICommitteeMemberData[];
+interface IProps {
   onClick: () => void;
+  name: string;
+  guardian: Guardian | null;
+  committeeMembers: ICommitteeMemberData[];
 }
 
-const GuardianMobileHeader: FC<IProps> = ({ guardian, committeeMembers, onClick }) => {
-  const { IsCertified, Name, EthAddress } = guardian;
+const GuardianMobileHeader = ({ guardian, onClick, name, committeeMembers }: IProps) => {
   const classes = useStyles();
   const commonClasses = useCommonStyles();
   return (
     <div className={classes.container} onClick={onClick}>
       <Arrow />
-      <GuardianShieldIcon
-        IsCertified={IsCertified}
-        committeeMembershipData={getCommitteeMemberData(EthAddress, committeeMembers)}
-        customStyle={{ width: '30px', marginRight: '20px' }}
-      />
-      <Typography className={commonClasses.name}>{Name}</Typography>
+      {guardian && (
+        <GuardianShieldIcon
+          IsCertified={guardian.IsCertified}
+          committeeMembershipData={getCommitteeMemberData(guardian.EthAddress, committeeMembers)}
+          customStyle={{ width: '30px', marginRight: '20px' }}
+        />
+      )}
+      <Typography className={commonClasses.name}>{name}</Typography>
     </div>
   );
 };
