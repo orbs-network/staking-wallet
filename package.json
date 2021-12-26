@@ -1,6 +1,6 @@
 {
   "name": "staking-wallet",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "",
   "main": "index.js",
   "homepage": "https://staking.orbs.network",
@@ -61,6 +61,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "@material-ui/icons": "^4.9.1",
+    "@open-defi-notification-protocol/widget": "^0.0.3",
     "@orbs-network/contracts-js": "0.0.35",
     "@react-hook/hover": "^4.0.0",
     "@sentry/react": "^6.5.1",

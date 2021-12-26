@@ -1,9 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
 import { blue } from '@material-ui/core/colors';
 import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { CHAINS, DEFAULT_CHAIN } from '../constants';
 import { Theme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 const COLOR1 = '#0D0D0D'; // dark gray
 const COLOR2 = '#6ec6d8'; // bluish
