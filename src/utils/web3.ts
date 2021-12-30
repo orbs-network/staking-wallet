@@ -113,6 +113,12 @@ const getPropertyFromNetworks = (property: string) => {
   }
 };
 
+const getWeb3Instace = () => {
+  if ((window as any).ethereum) {
+    return new Web3(Web3.givenProvider);
+  }
+};
+
 export {
   triggerNetworkChange,
   addChangeEvents,
@@ -123,4 +129,5 @@ export {
   forceChainChange,
   getPropertyFromNetworks,
   getSortedChains,
+  getWeb3Instace
 };

@@ -3,7 +3,6 @@ export const TERMS_OF_SERVICE_URL = 'https://orbs.com/tetra-terms-of-use';
 export const PRIVACY_POLICY_URL = 'https://orbs.com/tetra-privacy-policy';
 export const NETWORK_QUERY_PARAM = 'network';
 
-
 export const CHAINS = {
   polygon: 137,
   ethereum: 1,
@@ -13,3 +12,4 @@ export const CHAINS = {
   goerliTest: 5,
 };
 export const DEFAULT_CHAIN = CHAINS.ethereum;
+export const CONTARCTS_NAMES = ['delegations', 'staking', 'stakingRewards', 'guardiansRegistration', 'committee'];

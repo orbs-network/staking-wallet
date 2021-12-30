@@ -1,3 +1,4 @@
+import { INetworkContractAddresses } from './../types/index';
 import { IOrbsPOSDataService, OrbsClientService, orbsPOSDataServiceFactory, IOrbsClientService } from 'orbs-pos-data';
 import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
@@ -26,7 +27,7 @@ import {
   IGuardiansService,
   GuardiansService,
 } from '@orbs-network/contracts-js';
-import { getPropertyFromNetworks, getSupportedChains } from '../utils/web3';
+import {  getSupportedChains } from '../utils/web3';
 
 export interface IServices {
   httpService: IHttpService;
@@ -46,10 +47,8 @@ export function buildServices(
   ethereumProvider: IEthereumProvider,
   axios: AxiosInstance,
   selectedChain: number,
+  addresses: INetworkContractAddresses,
 ): IServices {
-  const networkConfig = config.networks[selectedChain];
-  const { addresses } = networkConfig;
-
   const web3: Web3 = new Web3(ethereumProvider as any);
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
@@ -78,13 +77,13 @@ export function buildServices(
     httpService,
     cryptoWalletConnectionService: new CryptoWalletConnectionService(ethereumProvider),
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, addresses),
-    stakingService: new StakingService(web3, addresses?.stakingContract),
+    stakingService: new StakingService(web3, addresses?.staking),
     orbsTokenService: new OrbsTokenService(web3, addresses?.erc20Contract),
-    stakingRewardsService: new StakingRewardsService(web3, addresses?.stakingRewardsContract),
-    guardiansService: new GuardiansService(web3, addresses?.guardiansContract),
+    stakingRewardsService: new StakingRewardsService(web3, addresses?.stakingRewards),
+    guardiansService: new GuardiansService(web3, addresses?.guardiansRegistration),
     analyticsService: analyticsService,
     orbsNodeService: new OrbsNodeService(managementServiceStatusPageUrls, selectedChain),
-    delegationsService: new DelegationsService(web3, addresses?.delegationsContract),
-    committeeService: new CommitteeService(web3, addresses?.committeeContract),
+    delegationsService: new DelegationsService(web3, addresses?.delegations),
+    committeeService: new CommitteeService(web3, addresses?.committee),
   };
 }
