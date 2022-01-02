@@ -43,7 +43,11 @@ const getAddresses = async (chain: number) => {
   if (!web3 || !chain) {
     return;
   }
-  const { contractsRegistry, erc20Contract } = config.networks[chain];
+  const network = config.networks[chain];
+  if (!network) {
+    return;
+  }
+  const { contractsRegistry, erc20Contract } = network;
 
   try {
     const registryContract = new ContractRegistry(web3, contractsRegistry);
@@ -86,7 +90,6 @@ const NetworkWrapper = ({ children }: IProps) => {
         if (networkAddresses) {
           setAddresses(networkAddresses);
         }
-
         setIsLoading(false);
       }
       if (noProvider) {
