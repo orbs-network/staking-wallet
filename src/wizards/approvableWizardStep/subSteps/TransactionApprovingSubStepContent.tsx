@@ -4,23 +4,23 @@ import { useStateful, useBoolean } from 'react-hanger';
 import { BaseStepContent } from '../BaseStepContent';
 import { useApprovableWizardStepTranslations } from '../../../translations/translationsHooks';
 import { CommonActionButton } from '../../../components/base/CommonActionButton';
+import { useReReadAllStoresData } from '../../../store/storeHooks';
 
 interface IProps {
   txHash: string;
   confirmationsCount: number;
   onStepFinished(): void;
   requiredConfirmations: number;
+  transactionFinished: boolean;
 }
 
 export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations } = props;
+  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations, transactionFinished } = props;
 
   const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
   const allowToProceed = useBoolean(true);
   const message = useStateful(approvableWizardStepTranslations('weRecommendWaitingToReceiveEnoughConfirmations'));
   const subMessage = useStateful('');
-
-  const isTxConfirmed = confirmationsCount >= 1;
 
   // Update the verification count text
   useEffect(() => {
@@ -35,7 +35,7 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
   const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
     let actionContent = null;
-    if (allowToProceedValue && isTxConfirmed) {
+    if (allowToProceedValue && transactionFinished) {
       actionContent = (
         <CommonActionButton onClick={onStepFinished}>
           {approvableWizardStepTranslations('action_proceed')}
@@ -48,10 +48,10 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     }
 
     return actionContent;
-  }, [allowToProceedValue, approvableWizardStepTranslations, isTxConfirmed, onStepFinished]);
+  }, [allowToProceedValue, approvableWizardStepTranslations, transactionFinished, onStepFinished]);
 
   const titleFc = useMemo(() => {
-    const titleMessage = isTxConfirmed
+    const titleMessage = transactionFinished
       ? approvableWizardStepTranslations('txConfirmed').toLocaleUpperCase()
       : approvableWizardStepTranslations('txPending').toLocaleUpperCase();
 
@@ -66,7 +66,7 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
       }
       return titleMessage;
     };
-  }, [isTxConfirmed, approvableWizardStepTranslations, txHash]);
+  }, [transactionFinished, approvableWizardStepTranslations, txHash]);
 
   return (
     <BaseStepContent

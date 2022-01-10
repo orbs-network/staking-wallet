@@ -22,7 +22,7 @@ const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 const useStyes = makeStyles((theme: IExtenedTheme) => ({
   logoContainer: {
-    filter: theme.custom?.filter,
+     filter: theme.custom?.filter,
   },
   logo: {
     [theme.breakpoints.down('sm')]: {

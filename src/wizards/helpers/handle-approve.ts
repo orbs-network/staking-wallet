@@ -51,7 +51,6 @@ export const handleApprove = ({
     if (analyticsHandler) {
       analyticsHandler();
     }
-    reReadStoresData();
   });
 };
 

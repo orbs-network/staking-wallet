@@ -4,9 +4,10 @@ import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { MobXProviderContext } from 'mobx-react';
 import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprovingSubStepContent';
 import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import errorMonitoring from '../../services/error-monitoring';
 import config from '../../config';
+import useReceipt from './useReceipt';
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
 // const REQUIRED_CONFIRMATIONS = 7;
@@ -49,8 +50,10 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
   const { chainId } = useContext(MobXProviderContext);
   const requiredConfirmations = config.networks[chainId].requiredConfirmations;
   const { needsManualUpdatingOfState, manuallyReadAccountData } = useOrbsAccountStore();
-  const stepState = useStateful<TStepState>('Action');
+  const reReadStoresData = useReReadAllStoresData();
 
+  const stepState = useStateful<TStepState>('Action');
+  const { transactionFinished, onReceipt } = useReceipt();
   const unsubscribeFromAllPromiventListenersRef = useRef<() => void>(null);
   const goToApprovalSubStep = useCallback(() => stepState.setValue('Confirmation'), [stepState]);
   const goToCongratulationSubStep = useCallback(() => stepState.setValue('Success'), [stepState]);
@@ -104,7 +107,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
         return (promiEvent as any).removeAllListeners();
       };
 
-      promiEvent.on('confirmation', (confirmation) => {
+      promiEvent.on('confirmation', (confirmation, details) => {
         txConfirmationsCount.setValue(confirmation);
 
         if (!afterConfirmationCbCalled && afterTxConfirmedCb) {
@@ -123,7 +126,11 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
         goToApprovalSubStep();
         disableTxCreationInputs.setFalse();
       });
-      promiEvent.once('receipt', (receipt) => {});
+
+      promiEvent.on('receipt', (receipt) => {
+        onReceipt(receipt.blockNumber);
+      });
+
       promiEvent.on('error', (error) => {
         const { sections, captureException } = errorMonitoring;
         txCreatingError.setValue(error);
@@ -132,7 +139,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
         disableTxCreationInputs.setFalse();
       });
     },
-    [disableTxCreationInputs, txConfirmationsCount, txHash, goToApprovalSubStep, txCreatingError],
+    [disableTxCreationInputs, txConfirmationsCount, txHash, goToApprovalSubStep, onReceipt, txCreatingError],
   );
 
   useEffect(() => {
@@ -142,6 +149,13 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (transactionFinished) {
+      console.log('once');
+      reReadStoresData();
+    }
+  }, [transactionFinished, reReadStoresData]);
 
   const currentSubStepContent = useMemo(() => {
     switch (stepState.value) {
@@ -161,6 +175,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
           <TransactionApprovingSubStepContent
             requiredConfirmations={requiredConfirmations}
             confirmationsCount={txConfirmationsCount.value}
+            transactionFinished={transactionFinished}
             txHash={txHash.value}
             onStepFinished={onTransactionApprovingSubStepFinished}
           />
@@ -188,6 +203,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     propsForTransactionCreationSubStepContent,
     requiredConfirmations,
     txConfirmationsCount.value,
+    transactionFinished,
     txHash.value,
     onTransactionApprovingSubStepFinished,
     finishedActionName,

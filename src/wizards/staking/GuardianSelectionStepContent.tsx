@@ -109,14 +109,15 @@ export const GuardianSelectionStepContent = observer(
         </Grid>
       );
     }, [
+      chainId,
       mainAddress,
       orbsAccountStore.isGuardian,
+      orbsNodeStore.allChainsGuardians,
       orbsNodeStore.committeeMembers,
       selectGuardian,
       selectedGuardianAddress,
       guardianAddressToDelegatorsCut,
       disableInputs,
-      orbsNodeStore.allChainsGuardians,
     ]);
 
     return (
