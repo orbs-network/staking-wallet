@@ -35,7 +35,7 @@ export const GuardianSelectionStepContent = observer(
     const reReadStoresData = useReReadAllStoresData();
 
     const stakingRewardsService = useStakingRewardsService();
-      
+
     const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
     // Start and limit by allowance

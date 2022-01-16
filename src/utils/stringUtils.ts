@@ -13,7 +13,8 @@ export const checkIfCharactersIncludes = (characters: string, fullString: string
   return fullString.indexOf(characters) > -1;
 };
 
-export const formatStringAsNumber = (str: string, limitDecimals?: boolean): string => {
+export const formatStringAsNumber = (str: string, limitDecimals?: boolean, decimalsAmount?: number): string => {
+  const limit = decimalsAmount || constants.numbersDecimalToDisplayLimit
   if (!str) return;
   const [full, decimals] = str.split('.');
   const { decimal } = config.numberSeparator;
@@ -21,8 +22,8 @@ export const formatStringAsNumber = (str: string, limitDecimals?: boolean): stri
   if (!decimals) {
     return `${num}`;
   }
-  if (limitDecimals && decimals.length > constants.numbersDecimalToDisplayLimit) {
-    return `${num}${decimal}${decimals.substring(0, constants.numbersDecimalToDisplayLimit)}...`;
+  if (limitDecimals && decimals.length > limit) {
+    return `${num}${decimal}${decimals.substring(0, limit)}...`;
   }
   return `${num}${decimal}${decimals}`;
 };

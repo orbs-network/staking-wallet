@@ -104,7 +104,7 @@ export const OrbsStakingStepContent = observer(
         message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-          orbsForStaking: formatStringAsNumber(stakeAmount) || 0,
+          orbsForStaking: formatStringAsNumber(stakeAmount, true, 4) || 0,
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
         disableInputs={!stakeAmount || parseFloat(stakeAmount) === 0}
