@@ -351,6 +351,7 @@ export class OrbsAccountStore {
         accountAddress,
         this.stakingService.getStakingContractAddress(),
       );
+
       this.setStakingContractAllowance(stakingContractAllowance);
     } catch (error) {
       const { sections, captureException } = errorMonitoring;

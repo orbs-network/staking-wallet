@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
 import { observer } from 'mobx-react';
-import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
+import { fullOrbsFromWeiOrbs, fullOrbsFromWeiOrbsString, weiOrbsFromFullOrbs } from '../../cryptoUtils/unitConverter';
 import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
@@ -12,13 +12,25 @@ import constants from '../../constants/constants';
 import handleApprove from '../helpers/handle-approve';
 import { hanleStakingError } from '../helpers/error-handling';
 import { formatStringAsNumber } from '../../utils/stringUtils';
+import StakingInput from '../components/staking-input';
+import stakingUtil from '../../utils/stakingUtil';
 export interface IOrbsStakingStepContentProps {
   goBackToApproveStep: () => void;
+  stakeAmountFromApprovalStep: string;
+  goBackToChooseGuardianStep: () => void;
 }
 
 export const OrbsStakingStepContent = observer(
   (props: ITransactionCreationStepProps & IOrbsStakingStepContentProps) => {
-    const { disableInputs, onPromiEventAction, txError, goBackToApproveStep, closeWizard } = props;
+    const {
+      disableInputs,
+      onPromiEventAction,
+      txError,
+      goBackToApproveStep,
+      closeWizard,
+      stakeAmountFromApprovalStep,
+      goBackToChooseGuardianStep,
+    } = props;
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
@@ -31,9 +43,8 @@ export const OrbsStakingStepContent = observer(
     const orbsForStaking = orbsAccountStore.stakingContractAllowance;
 
     const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
-    const fullOrbsForStakingString = fullOrbsFromWeiOrbsString(orbsForStaking);
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
-
+    const [stakeAmount, setStakeAmount] = useState(stakeAmountFromApprovalStep);
     // Handle error by displaying the proper error message
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
@@ -41,7 +52,7 @@ export const OrbsStakingStepContent = observer(
       handleApprove({
         message,
         subMessage,
-        promiEvent: orbsAccountStore.stakeTokens(orbsForStaking),
+        promiEvent: orbsAccountStore.stakeTokens(weiOrbsFromFullOrbs(stakeAmount)),
         isBroadcastingMessage,
         onPromiEventAction,
         reReadStoresData,
@@ -53,15 +64,15 @@ export const OrbsStakingStepContent = observer(
         ),
       });
     }, [
-      analyticsService,
-      isBroadcastingMessage,
       message,
-      onPromiEventAction,
-      orbsAccountStore,
-      reReadStoresData,
       subMessage,
+      orbsAccountStore,
+      stakeAmount,
+      isBroadcastingMessage,
+      onPromiEventAction,
+      reReadStoresData,
       wizardsCommonTranslations,
-      orbsForStaking,
+      analyticsService,
       fullOrbsForStaking,
     ]);
 
@@ -73,22 +84,38 @@ export const OrbsStakingStepContent = observer(
       [stake, stakingWizardTranslations],
     );
 
+    const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
+
+    const allowanceInput = (
+      <StakingInput
+        id='orbsAllowance'
+        placeholder={wizardsCommonTranslations('popup_input_placeholder')}
+        value={stakeAmount}
+        onChange={setStakeAmount}
+        disabled={disableInputs}
+        showMaxBtn={stakingUtil.isMaxBtnEnabled(stakeAmount, liquidOrbsAsString, disableInputs)}
+        handleMax={() => setStakeAmount(liquidOrbsAsString)}
+        maxText={wizardsCommonTranslations('popup_max')}
+      />
+    );
+
     return (
       <BaseStepContent
         message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('stakingSubStep_stepTitle', {
-          orbsForStaking: formatStringAsNumber(fullOrbsForStakingString, true),
+          orbsForStaking: formatStringAsNumber(stakeAmount) || 0,
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
-        disableInputs={disableInputs}
+        disableInputs={!stakeAmount || parseFloat(stakeAmount) === 0}
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_staking_tx'}
         actionButtonProps={actionButtonProps}
+        innerContent={allowanceInput}
         addCancelButton={true}
-        onCancelButtonClicked={goBackToApproveStep}
+        onCancelButtonClicked={goBackToChooseGuardianStep}
         close={closeWizard}
-        cancelButtonText={stakingWizardTranslations('backToStep_changeAmount')}
+        cancelButtonText={stakingWizardTranslations('backToStep_changeGuardian')}
       />
     );
   },

@@ -13,3 +13,4 @@ export const CHAINS = {
 };
 export const DEFAULT_CHAIN = CHAINS.ethereum;
 export const CONTARCTS_NAMES = ['delegations', 'staking', 'stakingRewards', 'guardiansRegistration', 'committee'];
+export const ALLOWANCE_APPROVAL_AMOUNT_TO_SET = '18446744073709551615';
