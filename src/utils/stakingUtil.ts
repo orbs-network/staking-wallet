@@ -44,7 +44,6 @@ const disableGuardianSelectionInTable = (
   isGuardian: boolean,
   allowClickOnSelectedGuardian?: boolean,
 ): boolean => {
-
   if (!isGuardian && allowClickOnSelectedGuardian) {
     return false;
   }

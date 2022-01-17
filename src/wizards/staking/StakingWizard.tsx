@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNumber } from 'react-hanger';
 import { IOrbsStakingStepContentProps, OrbsStakingStepContent } from './OrbsStakingStepContent';
 import { ApprovableWizardStep } from '../approvableWizardStep/ApprovableWizardStep';
@@ -11,12 +11,19 @@ import { WizardFinishStep } from '../finishStep/WizardFinishStep';
 import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 import { Wizard } from '../../components/wizards/Wizard';
+import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 
-const STEPS_INDEXES = {
+const ROOT_STEPS_INDEXES = {
   selectGuardian: 0,
   allowTransfer: 1,
   stakeOrbs: 2,
   finish: 3,
+};
+
+const ALLOWANCE_APPROVED_STEPS_INDEXES = {
+  selectGuardian: 0,
+  stakeOrbs: 1,
+  finish: 2,
 };
 
 interface IProps {
@@ -33,24 +40,51 @@ export const StakingWizard = observer(
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
+    const [allowanceApproved, setAllowanceApproved] = useState(false);
     const orbsAccountStore = useOrbsAccountStore();
-    // DEV_NOTE : O.L : if a user has an unused allowance it probably means that his process was cut in the middle.
-    const initialStep = orbsAccountStore.hasSelectedGuardian
-      ? orbsAccountStore.hasUnusedAllowance
-        ? STEPS_INDEXES.stakeOrbs
-        : STEPS_INDEXES.allowTransfer
-      : STEPS_INDEXES.selectGuardian;
+    const [stepIndexes, setStepIndexes] = useState<{ [key: string]: number }>(ROOT_STEPS_INDEXES);
+    // Start and limit by liquid orbs
+    const orbsAllowance = orbsAccountStore.stakingContractAllowance;
+    const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
 
+    // DEV_NOTE : O.L : if a user has an unused allowance it probably means that his process was cut in the middle.
+
+    const initialStep = orbsAccountStore.hasSelectedGuardian ? stepIndexes.allowTransfer : stepIndexes.selectGuardian;
     const activeStep = useNumber(initialStep);
-    const goToSelectGuardianStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.selectGuardian), [activeStep]);
-    const goToSelectAmountStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.allowTransfer), [activeStep]);
-    const goToStakeOrbsStep = useCallback(() => activeStep.setValue(STEPS_INDEXES.stakeOrbs), [activeStep]);
+
+    useEffect(() => {
+      const isApproved = Number(fullOrbsFromWeiOrbsString(orbsAllowance)) > Number(liquidOrbsAsString);
+
+      if (isApproved) {
+        setAllowanceApproved(isApproved);
+        activeStep.setValue(ALLOWANCE_APPROVED_STEPS_INDEXES.stakeOrbs);
+        setStepIndexes(ALLOWANCE_APPROVED_STEPS_INDEXES);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const goToSelectGuardianStep = useCallback(() => activeStep.setValue(stepIndexes.selectGuardian), [
+      activeStep,
+      stepIndexes.selectGuardian,
+    ]);
+    const goToSelectAmountStep = useCallback(() => activeStep.setValue(stepIndexes.allowTransfer), [
+      activeStep,
+      stepIndexes.allowTransfer,
+    ]);
+    const goToStakeOrbsStep = useCallback(() => activeStep.setValue(stepIndexes.stakeOrbs), [
+      activeStep,
+      stepIndexes.stakeOrbs,
+    ]);
     const goToFinishStep = useCallback(() => {
       // DEV_NOTE : O.L : IMPORTANT : This manually reading is a dev hack to ensure the seleced guardian will be re-read.
       // TODO : ORL : Move this logic to a better place, and add event listener to the service.
       orbsAccountStore.manuallyReadAccountData();
-      activeStep.setValue(STEPS_INDEXES.finish);
-    }, [activeStep, orbsAccountStore]);
+      activeStep.setValue(stepIndexes.finish);
+    }, [activeStep, orbsAccountStore, stepIndexes.finish]);
+
+    const [stakeAmountFromApprovalStep, setStakeAmountFromApprovalStep] = useState(
+      fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs),
+    );
 
     // DEV_NOTE : adds the selected guardian address to allow user to press 'keep'
     const extraPropsForGuardianSelection = useMemo<IGuardianSelectionStepContentProps>(() => {
@@ -62,26 +96,30 @@ export const StakingWizard = observer(
     const extraPropsForOrbsStaking = useMemo<IOrbsStakingStepContentProps>(() => {
       return {
         goBackToApproveStep: goToSelectAmountStep,
+        stakeAmountFromApprovalStep,
+        goBackToChooseGuardianStep: goToSelectGuardianStep,
       };
-    }, [goToSelectAmountStep]);
+    }, [goToSelectAmountStep, goToSelectGuardianStep, stakeAmountFromApprovalStep]);
 
     const extraPropsForOrbsAllowance = useMemo<IOrbsAllowanceStepContentProps>(() => {
       return {
         goBackToChooseGuardianStep: goToSelectGuardianStep,
+        setAmount: (value: string) => setStakeAmountFromApprovalStep(value),
+        stakeAmountFromApprovalStep,
       };
-    }, [goToSelectGuardianStep]);
+    }, [goToSelectGuardianStep, stakeAmountFromApprovalStep]);
 
     const stepContent = useMemo(() => {
       switch (activeStep.value) {
         // TODO : ORL : TRANSLATIONS
         // Select a guardian
-        case STEPS_INDEXES.selectGuardian:
+        case stepIndexes.selectGuardian:
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={GuardianSelectionStepContent}
               displayCongratulationsSubStep={false}
               finishedActionName={stakingWizardTranslations('finishedAction_selectedGuardian')}
-              moveToNextStepAction={goToSelectAmountStep}
+              moveToNextStepAction={allowanceApproved ? goToStakeOrbsStep : goToSelectAmountStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
               closeWizard={closeWizard}
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
@@ -89,7 +127,7 @@ export const StakingWizard = observer(
             />
           );
         // Stake orbs
-        case STEPS_INDEXES.allowTransfer:
+        case stepIndexes.allowTransfer:
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsAllowanceStepContent}
@@ -103,7 +141,7 @@ export const StakingWizard = observer(
             />
           );
         // Stake orbs
-        case STEPS_INDEXES.stakeOrbs:
+        case stepIndexes.stakeOrbs:
           return (
             <ApprovableWizardStep
               transactionCreationSubStepContent={OrbsStakingStepContent}
@@ -116,7 +154,7 @@ export const StakingWizard = observer(
               key={'stakingStep'}
             />
           );
-        case STEPS_INDEXES.finish:
+        case stepIndexes.finish:
           return (
             <WizardFinishStep
               finishedActionDescription={stakingWizardTranslations('afterSuccessStateExplanation')}
@@ -128,25 +166,35 @@ export const StakingWizard = observer(
       }
     }, [
       activeStep.value,
+      stepIndexes.selectGuardian,
+      stepIndexes.allowTransfer,
+      stepIndexes.stakeOrbs,
+      stepIndexes.finish,
+      stakingWizardTranslations,
+      allowanceApproved,
+      goToStakeOrbsStep,
+      goToSelectAmountStep,
       closeWizard,
       extraPropsForGuardianSelection,
       extraPropsForOrbsAllowance,
-      extraPropsForOrbsStaking,
       goToFinishStep,
-      goToSelectAmountStep,
-      goToStakeOrbsStep,
-      stakingWizardTranslations,
       wizardsCommonTranslations,
+      extraPropsForOrbsStaking,
     ]);
 
     const stepperTitles = useMemo(() => {
-      return [
+      const result = [
         stakingWizardTranslations('stepLabel_selectGuardian'),
         stakingWizardTranslations('stepLabel_approve'),
         stakingWizardTranslations('stepLabel_stake'),
         wizardsCommonTranslations('stepLabel_finish'),
       ];
-    }, [stakingWizardTranslations, wizardsCommonTranslations]);
+      if (allowanceApproved) {
+        result.splice(1, 1);
+        return result;
+      }
+      return result;
+    }, [allowanceApproved, stakingWizardTranslations, wizardsCommonTranslations]);
 
     return (
       <Wizard
