@@ -7,7 +7,6 @@ import { BaseStepContent, IActionButtonProps } from '../approvableWizardStep/Bas
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import stakingUtil from '../../utils/stakingUtil';
-import StakingInput from '../components/staking-input';
 import handleApprove from '../helpers/handle-approve';
 import { hanleStakingAllowanceError } from '../helpers/error-handling';
 import { ALLOWANCE_APPROVAL_AMOUNT_TO_SET } from '../../constants';
@@ -25,7 +24,6 @@ export const OrbsAllowanceStepContent = observer(
       txError,
       closeWizard,
       goBackToChooseGuardianStep,
-      setAmount,
       stakeAmountFromApprovalStep,
     } = props;
 
@@ -51,9 +49,7 @@ export const OrbsAllowanceStepContent = observer(
           isApproveEnabled,
           message,
           subMessage,
-          promiEvent: orbsAccountStore.setAllowanceForStakingContract(
-            weiOrbsFromFullOrbs(ALLOWANCE_APPROVAL_AMOUNT_TO_SET),
-          ),
+          promiEvent: orbsAccountStore.setAllowanceForStakingContract(ALLOWANCE_APPROVAL_AMOUNT_TO_SET),
           isBroadcastingMessage,
           onPromiEventAction,
           reReadStoresData: () => {},
@@ -82,22 +78,8 @@ export const OrbsAllowanceStepContent = observer(
       [isApproveEnabled, handleAllowance, stakingWizardTranslations],
     );
 
-    const allowanceInput = (
-      <StakingInput
-        id='orbsAllowance'
-        placeholder={wizardsCommonTranslations('popup_input_placeholder')}
-        value={stakeAmountFromApprovalStep}
-        onChange={setAmount}
-        disabled={disableInputs}
-        showMaxBtn={stakingUtil.isMaxBtnEnabled(stakeAmountFromApprovalStep, liquidOrbsAsString, disableInputs)}
-        handleMax={() => setAmount(liquidOrbsAsString)}
-        maxText={wizardsCommonTranslations('popup_max')}
-      />
-    );
-
     return (
       <BaseStepContent
-        message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('allowanceSubStep_stepTitle')}
         infoTitle={stakingWizardTranslations('allowanceSubStep_stepExplanation')}
@@ -105,7 +87,6 @@ export const OrbsAllowanceStepContent = observer(
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_allowance_tx'}
         actionButtonProps={actionButtonProps}
-        innerContent={allowanceInput}
         addCancelButton
         close={closeWizard}
         onCancelButtonClicked={goBackToChooseGuardianStep}
