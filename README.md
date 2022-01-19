@@ -126,7 +126,7 @@ All contract interactions are done with the [orbs-pos-data](https://github.com/o
 - Run in terminal in root project directory:
 
   ```
-  npm run deploy
+  npm run deploy-production
   ```
 
 ## Deploy your own version to github pages
