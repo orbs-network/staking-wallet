@@ -142,7 +142,7 @@ You can deploy your own version of Tetra to github pages very easily.
 4. Change 'segmentCount' on '404.html' to 1 (for github pages).
 5. Run in terminal
    ```
-   npm run deploy
+   npm run deploy-production
    ```
 
 Your own tetra version will now be deployed on the URL (your-github-user).github.io/(your-repo-name)
