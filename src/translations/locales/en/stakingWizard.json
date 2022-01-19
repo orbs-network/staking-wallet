@@ -3,7 +3,7 @@
   "allowanceSubStep_action_approve": "Approve",
   "allowanceSubStep_label_allowance": "Allowance",
   "allowanceSubStep_message_selectAmountOfOrbs": "Select the amount of ORBS you want to stake:",
-  "allowanceSubStep_stepExplanation": "This step will approve the staking contract to transfer your ORBS into the contract in order to be staked (up to the approved amount).",
+  "allowanceSubStep_stepExplanation": "This step will approve the staking contract to transfer your ORBS into the contract in order to be staked",
   "allowanceSubStep_stepTitle": "Approve usage of your ORBS",
   "backToStep_changeAmount": "Change amount",
   "backToStep_changeGuardian": "Change Guardian",
