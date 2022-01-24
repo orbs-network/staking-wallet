@@ -26,8 +26,10 @@ import {
   StakingRewardsService,
   IGuardiansService,
   GuardiansService,
+  IElectionsService,
+  ElectionsService,
 } from '@orbs-network/contracts-js';
-import {  getSupportedChains } from '../utils/web3';
+import { getSupportedChains } from '../utils/web3';
 
 export interface IServices {
   httpService: IHttpService;
@@ -41,6 +43,7 @@ export interface IServices {
   orbsNodeService: IOrbsNodeService;
   delegationsService: IDelegationsService;
   committeeService: ICommitteeService;
+  electionsService: IElectionsService;
 }
 
 export function buildServices(
@@ -85,5 +88,6 @@ export function buildServices(
     orbsNodeService: new OrbsNodeService(managementServiceStatusPageUrls, selectedChain),
     delegationsService: new DelegationsService(web3, addresses?.delegations),
     committeeService: new CommitteeService(web3, addresses?.committee),
+    electionsService: new ElectionsService(web3, addresses?.elections),
   };
 }

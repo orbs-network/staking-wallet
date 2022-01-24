@@ -1,7 +1,7 @@
 {
   "action_keep": "Keep",
   "action_select": "Select",
-  "columnHeaderInfo_capacity_calculation": "Capacity = (Delegated stake x 8%) / Self stake.",
+  "columnHeaderInfo_capacity_calculation": "Capacity = (Delegated stake x {{amount}}%) / Self stake.",
   "columnHeaderInfo_capacity_explanation": "The Guardian ability to utilize additional delegations.",
   "columnHeaderInfo_capacity_note_content": "When the capacity is over 100%, an additional delegation does not increase the Guardian effective stake. That means that no rewards will be accumulated for any additional delegations.",
   "columnHeaderInfo_capacity_note_title": "Important:",

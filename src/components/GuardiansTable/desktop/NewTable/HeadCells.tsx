@@ -9,9 +9,10 @@ interface IProps {
   requestSort: (val: string) => void;
   order: string;
   sortBy: string;
+  minSelfStakePercentMille: number;
 }
 
-function HeadCells({ translations, requestSort, order, sortBy }: IProps) {
+function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePercentMille }: IProps) {
   return (
     <TableHead>
       <TableRow>
@@ -85,7 +86,7 @@ function HeadCells({ translations, requestSort, order, sortBy }: IProps) {
               headerText={translations('columnHeader_capacity')}
               tooltipText={[
                 translations('columnHeaderInfo_capacity_explanation'),
-                translations('columnHeaderInfo_capacity_calculation'),
+                translations('columnHeaderInfo_capacity_calculation', { amount: minSelfStakePercentMille }),
                 [
                   translations('columnHeaderInfo_capacity_note_title'),
                   translations('columnHeaderInfo_capacity_note_content'),

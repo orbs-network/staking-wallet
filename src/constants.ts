@@ -12,5 +12,12 @@ export const CHAINS = {
   goerliTest: 5,
 };
 export const DEFAULT_CHAIN = CHAINS.ethereum;
-export const CONTARCTS_NAMES = ['delegations', 'staking', 'stakingRewards', 'guardiansRegistration', 'committee'];
+export const CONTARCTS_NAMES = [
+  'delegations',
+  'staking',
+  'stakingRewards',
+  'guardiansRegistration',
+  'committee',
+  'elections',
+];
 export const ALLOWANCE_APPROVAL_AMOUNT_TO_SET = '18446744073709551615';

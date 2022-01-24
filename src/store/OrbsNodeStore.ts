@@ -1,3 +1,4 @@
+import { IElectionsService } from '@orbs-network/contracts-js';
 // DEV_NOTE : This store will keep all data that is read from an orbs node.
 
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
@@ -17,6 +18,7 @@ export class OrbsNodeStore {
   @observable public guardians: Guardian[] = [];
   @observable public committeeMembers: ICommitteeMemberData[] = [];
   @observable public committeeGuardians: Guardian[] = [];
+  @observable public minSelfStakePercentMille = 0;
   public allChainsGuardians: { [key: string]: IGuardiansDictionary };
 
   /**
@@ -25,8 +27,6 @@ export class OrbsNodeStore {
   @computed public get guardiansAddresses(): string[] {
     return this.guardians.map((guardian) => guardian.EthAddress.toLowerCase());
   }
-
- 
 
   @computed public get committeeEffectiveStake(): number {
     const committeeEffectiveStake = this.committeeGuardians.reduce((sum, committeeGuardian) => {
@@ -55,7 +55,7 @@ export class OrbsNodeStore {
     return +currentInterest.toFixed(2);
   }
 
-  constructor(private orbsNodeService: IOrbsNodeService) {
+  constructor(private orbsNodeService: IOrbsNodeService, private electionsService: IElectionsService) {
     this.readAllData();
   }
 
@@ -65,6 +65,7 @@ export class OrbsNodeStore {
     this.setDoneLoading(false);
     this.setErrorLoading(false);
     try {
+      await this.getSettings();
       await this.findReadAndSetNodeData();
       this.setDoneLoading(true);
     } catch (e) {
@@ -85,6 +86,15 @@ export class OrbsNodeStore {
     this.setCommitteeMemberData(committeeMembers);
     this.setCommitteeGuardians(committeeGuardians);
     this.setGuardians(allNetworksGuardians);
+  }
+
+  private async getSettings() {
+    try {
+      const res = await this.electionsService.getSettings();
+      const { minSelfStakePercentMille } = res;
+      const minSelfStakePercent = Number(minSelfStakePercentMille) / 1000;
+      this.setMinSelfStakePercentMille(minSelfStakePercent);
+    } catch (error) {}
   }
 
   private async readDataFromFirstSyncedNode(): Promise<IReadAndProcessResults> {
@@ -108,7 +118,10 @@ export class OrbsNodeStore {
       return null;
     } else {
       try {
-        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(allManagementStatuses);
+        const readAndProcessResult = await this.orbsNodeService.readAndProcessSystemState(
+          allManagementStatuses,
+          this.minSelfStakePercentMille,
+        );
 
         return readAndProcessResult;
       } catch (e) {
@@ -147,6 +160,11 @@ export class OrbsNodeStore {
   @action('setGuardians')
   private setGuardians(value: Guardian[]) {
     this.guardians = value;
+  }
+
+  @action('setMinSelfStakePercentMille')
+  private setMinSelfStakePercentMille(value: number) {
+    this.minSelfStakePercentMille = value;
   }
 
   @action('setCommitteeGuardians')

@@ -11,8 +11,11 @@ import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { OrbsNodeStore } from './OrbsNodeStore';
 import { IOrbsNodeService } from '../services/v2/orbsNodeService/IOrbsNodeService';
 import {
+  ElectionsService,
+  ICommitteeService,
   ICryptoWalletConnectionService,
   IDelegationsService,
+  IElectionsService,
   IStakingRewardsService,
   IStakingService,
 } from '@orbs-network/contracts-js';
@@ -38,10 +41,11 @@ export function getStores(
   analyticsService: IAnalyticsService,
   orbsNodeService: IOrbsNodeService,
   delegationsService: IDelegationsService,
+  electionsService: IElectionsService,
   alertErrors = false,
 ): IStores {
   // Create stores instances + Hydrate the stores
-  const orbsNodeStore = new OrbsNodeStore(orbsNodeService);
+  const orbsNodeStore = new OrbsNodeStore(orbsNodeService, electionsService);
   const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService);
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,

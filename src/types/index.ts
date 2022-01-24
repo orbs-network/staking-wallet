@@ -5,4 +5,5 @@ export interface INetworkContractAddresses {
   guardiansRegistration: string;
   staking: string;
   stakingRewards: string;
+  elections: string;
 }

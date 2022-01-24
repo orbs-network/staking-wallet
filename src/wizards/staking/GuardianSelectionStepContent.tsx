@@ -93,6 +93,7 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
+            minSelfStakePercentMille={orbsNodeStore.minSelfStakePercentMille}
             selectedChain={chainId}
             mainAddress={mainAddress}
             isGuardian={orbsAccountStore.isGuardian}
@@ -109,11 +110,12 @@ export const GuardianSelectionStepContent = observer(
         </Grid>
       );
     }, [
+      orbsNodeStore.minSelfStakePercentMille,
+      orbsNodeStore.allChainsGuardians,
+      orbsNodeStore.committeeMembers,
       chainId,
       mainAddress,
       orbsAccountStore.isGuardian,
-      orbsNodeStore.allChainsGuardians,
-      orbsNodeStore.committeeMembers,
       selectGuardian,
       selectedGuardianAddress,
       guardianAddressToDelegatorsCut,

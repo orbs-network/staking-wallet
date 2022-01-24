@@ -1,7 +1,7 @@
 {
   "action_keep": "キープ",
   "action_select": "選択",
-  "columnHeaderInfo_capacity_calculation": "キャパシティ = (委任ステーク x 8%) / セルフステーク",
+  "columnHeaderInfo_capacity_calculation": "キャパシティ = (委任ステーク x {{amount}}%) / セルフステーク",
   "columnHeaderInfo_capacity_explanation": "追加の委任を受け付けられるガーディアンの余力",
   "columnHeaderInfo_capacity_note_content": "キャパシティが100%を超える場合、委任を追加しても、ガーディアンの実効ステークは増加しません。 これは、追加のデリゲーたに対してリワードが支払われないことを意味します。",
   "columnHeaderInfo_capacity_note_title": "重要：",

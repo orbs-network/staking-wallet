@@ -7,7 +7,6 @@ import { detectEthereumProviderName } from './services/analytics/analyticsUtils'
 import moment from 'moment';
 import 'moment/locale/ja';
 import 'moment/locale/ko';
-import config from './config';
 import { DEFAULT_CHAIN } from './constants';
 
 const initApp = (chain?: number, addresses?: INetworkContractAddresses) => {
@@ -29,6 +28,7 @@ const initApp = (chain?: number, addresses?: INetworkContractAddresses) => {
     services.analyticsService,
     services.orbsNodeService,
     services.delegationsService,
+    services.electionsService,
     alertErrors,
   );
   services.analyticsService.init();

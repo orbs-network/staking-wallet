@@ -43,7 +43,8 @@ const DesktopTable = (props: IProps) => {
     disableSelection,
     isGuardian,
     sortedGuardians,
-    selectedChain
+    selectedChain,
+    minSelfStakePercentMille,
   } = props;
 
   const classes = useStyles();
@@ -82,7 +83,13 @@ const DesktopTable = (props: IProps) => {
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
-        <HeadCells order={order} sortBy={sortBy} requestSort={requestSort} translations={guardiansTableTranslations} />
+        <HeadCells
+          order={order}
+          sortBy={sortBy}
+          requestSort={requestSort}
+          translations={guardiansTableTranslations}
+          minSelfStakePercentMille={minSelfStakePercentMille}
+        />
         <TableBody>
           {data.map((group: IGuardiansDictionary) => {
             return (

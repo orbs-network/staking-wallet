@@ -17,6 +17,7 @@ export interface IBaseTableProps {
   isGuardian: boolean;
   mainAddress: string;
   selectedChain: number;
+  minSelfStakePercentMille: number;
 }
 
 export interface IGetGuardianSelectionCellContent extends ISelectionProps {

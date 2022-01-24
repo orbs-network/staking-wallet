@@ -44,20 +44,22 @@ export class OrbsNodeService implements IOrbsNodeService {
     }
   }
 
-  readAndProcessSystemState(allManagementStatuses: IManagementStatus[]): IReadAndProcessResults {
+  readAndProcessSystemState(
+    allManagementStatuses: IManagementStatus[],
+    minSelfStakePercentMille: number,
+  ): IReadAndProcessResults {
     //return states = all chains system state, selectedChainState = state of the current chain,
     // committeeMembers = the commitee members of the selected chain
     const { states, selectedChainState, committeeMembers } = createSystemStates(
       allManagementStatuses,
       this.selectedChain,
+      minSelfStakePercentMille,
     );
-
-    
 
     //groupedGuardiansByNetwork = all the guardians sorted by network,
     // allGuardians = all the guardians of all chains in one array
     const { groupedGuardiansByNetwork, allGuardians } = groupGuardiansByNetworks(states, this.selectedChain);
-      
+
     return {
       allNetworksGuardians: allGuardians,
       committeeMembers,
@@ -78,7 +80,7 @@ export class OrbsNodeService implements IOrbsNodeService {
           };
         }),
       );
-      
+
       return res;
     } catch (error) {
       const { sections, captureException } = errorMonitoring;

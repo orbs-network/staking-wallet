@@ -111,6 +111,7 @@ export const GuardiansSection = observer(() => {
             )}
             <Grid item xs={12}>
               <GuardiansTable
+                minSelfStakePercentMille={orbsNodeStore.minSelfStakePercentMille}
                 selectedChain={chainId}
                 mainAddress={mainAddress}
                 allChainsGuardians={orbsNodeStore.allChainsGuardians}

@@ -8,14 +8,18 @@ interface IGuardiansByChains {
   [key: number]: Guardian[];
 }
 
-const createSystemStates = (allManagementStatuses: IManagementStatus[], selectedChain: number) => {
+const createSystemStates = (
+  allManagementStatuses: IManagementStatus[],
+  selectedChain: number,
+  minSelfStakePercentMille: number,
+) => {
   const states: IProcessedSystemState[] = [];
   const { result } = allManagementStatuses.find((m) => m.chain === selectedChain);
   allManagementStatuses.forEach((status) => {
     const { chain, result } = status;
     const state = new SystemState();
     const timeStamp = Math.floor(Date.now() / 1000);
-    updateSystemState(state, result, timeStamp);
+    updateSystemState(state, result, timeStamp, minSelfStakePercentMille);
     states.push({ chain, state });
   });
   const selectedChainState = states.find((s: IProcessedSystemState) => s.chain === selectedChain).state;

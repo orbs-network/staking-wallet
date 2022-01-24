@@ -25,6 +25,7 @@ const GuardiansTable = (props: IProps) => {
     isGuardian: props.isGuardian,
     mainAddress: props.mainAddress,
     selectedChain: props.selectedChain,
+    minSelfStakePercentMille: props.minSelfStakePercentMille,
   };
   return isMobile ? <GuardiansMobile {...tableProps} /> : <DesktopTable {...tableProps} />;
 };
