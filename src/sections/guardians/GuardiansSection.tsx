@@ -52,6 +52,7 @@ export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const { isConnectedToWallet, mainAddress } = useCryptoWalletIntegrationStore();
   const { chainId } = useContext(MobXProviderContext);
+  console.log(chainId)
 
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();

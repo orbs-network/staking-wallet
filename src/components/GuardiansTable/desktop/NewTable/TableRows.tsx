@@ -99,7 +99,9 @@ function TableRows(props: IProps) {
     copyAddress,
   } = props;
   const { networks, EthAddress, Name, Website: website } = group;
-  const selectedChainGuardian = networks.find((n) => n.chain === selectedChain).guardian;
+  const selectedChainGuardian = networks.find((n) => n.chain === selectedChain)
+    ? networks.find((n) => n.chain === selectedChain).guardian
+    : null;
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
   const rowSpan = networks.length + 1;

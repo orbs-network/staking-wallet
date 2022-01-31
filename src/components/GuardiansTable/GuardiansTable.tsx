@@ -5,7 +5,6 @@ import { getSortedGuardians } from './util';
 import DesktopTable from './desktop/NewTable/index';
 import { IGuardiansDictionary } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import GuardiansMobile from './mobile/index';
-import { MobXProviderContext } from 'mobx-react';
 interface IProps extends IBaseTableProps {
   allChainsGuardians: { [key: string]: IGuardiansDictionary };
 }

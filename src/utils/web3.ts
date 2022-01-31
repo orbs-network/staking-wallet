@@ -80,12 +80,22 @@ const forceChainChange = (forcedChain?: number, selectedChain?: number) => {
   return forcedChain !== selectedChain;
 };
 
+
+
 const getSupportedChains = () => {
   try {
     return JSON.parse(process.env.TARGET_NETWORKS) || [];
   } catch (error) {
     return [];
   }
+};
+
+const isSupportedChain = (chain: number) => {
+  const availableChains = getSupportedChains();
+  if (!chain) {
+    return false;
+  }
+  return availableChains.includes(chain);
 };
 
 const getSortedChains = (selectedChain: number) => {
@@ -129,5 +139,6 @@ export {
   forceChainChange,
   getPropertyFromNetworks,
   getSortedChains,
-  getWeb3Instace
+  getWeb3Instace,
+  isSupportedChain
 };

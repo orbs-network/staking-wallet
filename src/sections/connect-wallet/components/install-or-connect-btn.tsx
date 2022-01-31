@@ -4,28 +4,22 @@ import { useConnectWalletSectionTranslations } from '../../../translations/trans
 
 interface IProps {
   walletConnectionState: string;
-  handleConnectClicked: () => void;
-  handleInstallClicked: () => void;
+  onClick: () => void;
   disabled: boolean;
 }
 
-const InstallOrConnectBtn = ({
-  walletConnectionState,
-  handleConnectClicked,
-  handleInstallClicked,
-  disabled,
-}: IProps) => {
+const InstallOrConnectBtn = ({ walletConnectionState, onClick, disabled }: IProps) => {
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
 
   if (walletConnectionState === 'connect') {
     return (
-      <CommonActionButton data-testid='button-connect-metamask' onClick={handleConnectClicked} disabled={disabled}>
+      <CommonActionButton data-testid='button-connect-metamask' onClick={onClick} disabled={disabled}>
         {connectWalletSectionTranslations('connectYourAccount')}
       </CommonActionButton>
     );
   } else {
     return (
-      <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
+      <CommonActionButton data-testid='button-install-metamask' onClick={onClick}>
         {connectWalletSectionTranslations('installMetaMask')}
       </CommonActionButton>
     );

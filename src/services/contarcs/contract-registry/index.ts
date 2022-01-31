@@ -2,16 +2,17 @@ import { AbiItem } from 'web3-utils';
 import abi from './abi.json';
 
 class ContractRegistry {
-  contarct;
+  contract;
   constructor(web3: any, address: string) {
-    this.contarct = new web3.eth.Contract(abi as AbiItem[], address);
+    this.contract = new web3.eth.Contract(abi as AbiItem[], address);
   }
 
   getContract(name: string) {
-    return this.contarct.methods.getContract(name).call();
+    return this.contract.methods.getContract(name).call();
   }
 
   async getContracts<T>(names: string[]): Promise<T> {
+    console.log(names);
     const promises = names.map((name: string) => {
       return this.getContract(name);
     });

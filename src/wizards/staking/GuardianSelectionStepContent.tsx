@@ -25,7 +25,7 @@ export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
     const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
     const { chainId } = useContext(MobXProviderContext);
-
+    console.log(chainId)
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
     const orbsAccountStore = useOrbsAccountStore();

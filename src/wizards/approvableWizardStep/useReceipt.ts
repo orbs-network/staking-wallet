@@ -6,11 +6,13 @@ function useReceipt() {
   const [finished, setFinished] = useState(false);
   const onReceipt = async (confirmationBlock: number) => {
     let stopped = false;
-    const web3 = getWeb3Instace();
+    // const web3 = getWeb3Instace();
+    const web3 = (window as any).web3;
     // infinite loop
     while (!stopped) {
       await sleep(1000);
       const latestBlock = await web3.eth.getBlockNumber();
+      console.log(latestBlock, confirmationBlock);
       if (latestBlock >= confirmationBlock) {
         stopped = true;
         setFinished(true);
