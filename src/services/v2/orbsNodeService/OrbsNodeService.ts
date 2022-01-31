@@ -50,6 +50,21 @@ export class OrbsNodeService implements IOrbsNodeService {
   ): IReadAndProcessResults {
     //return states = all chains system state, selectedChainState = state of the current chain,
     // committeeMembers = the commitee members of the selected chain
+
+    // const committeStakes = {};
+
+    // console.log(allManagementStatuses);
+    // allManagementStatuses.forEach((status) => {
+    //   const commitee = status.result.Payload.CurrentCommittee;
+    //   const committeeEffectiveStake = commitee.reduce((sum, committeeGuardian) => {
+    //     return sum + committeeGuardian.EffectiveStake;
+    //   }, 0);
+    //   const committeeEffectiveStake = commitee.reduce((sum, committeeGuardian) => {
+    //     return sum + committeeGuardian.EffectiveStake;
+    //   }, 0);
+    //   console.log(committeeEffectiveStake)
+    // });
+
     const { states, selectedChainState, committeeMembers } = createSystemStates(
       allManagementStatuses,
       this.selectedChain,

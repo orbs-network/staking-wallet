@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import clsx from 'clsx';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface IProps {
   className?: string;
-  message?: string;
+  message?: string | ReactNode;
   onClose?: () => void;
   variant: keyof typeof variantIcon;
 }

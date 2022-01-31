@@ -1,5 +1,5 @@
 {
-  "afterSuccessStateExplanation": "Your unstaked ORBS will be available after the unfreezing period.",
+  "afterSuccessStateExplanation": "Your unstaked ORBS will be available after the cool-down period.",
   "finishedAction_unstaked": "unstaked your tokens",
   "stepLabel_unstake": "Unstake",
   "unstakingSubStep_action_unstake": "Unstake",

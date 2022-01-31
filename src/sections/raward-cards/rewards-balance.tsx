@@ -14,9 +14,7 @@ const RewardsBalance = observer(({ onSecondaryActionButtonPressed }: IProps) => 
   const { rewardsBalance, doneLoading } = useOrbsAccountStore();
   return (
     <BalanceCard
-      title={`${rewardsSectionTranslations('title_rewardsBalance')} (${rewardsSectionTranslations(
-        'title_quantity_orbs',
-      )})`}
+      title={`${rewardsSectionTranslations('title_rewardsBalance')}`}
       amount={rewardsBalance.toString()}
       secondaryActionButtonActive={rewardsBalance > 0}
       secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}

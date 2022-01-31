@@ -13,6 +13,7 @@ interface IProps {
 
 function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) {
   const selfStakePercentage = +((selfStake / delegatedStake) * 100).toFixed(2);
+  const availableCapacity = 100 - capacity;
   return (
     <Tooltip
       arrow
@@ -30,8 +31,8 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
       }
     >
       <div>
-        <Line percent={capacity} strokeWidth={5} strokeColor={getCapacityColor(capacity)} />
-        <Typography>{capacity > 100 ? `100%` : getCapacityText(capacity, 2)}</Typography>
+        <Line percent={availableCapacity} strokeWidth={5} strokeColor={getCapacityColor(availableCapacity)} />
+        <Typography>{availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 2)}</Typography>
       </div>
     </Tooltip>
   );

@@ -1,5 +1,5 @@
 export default {
-  numbersDecimalToDisplayLimit: 6,
+  numbersDecimalToDisplayLimit: 5,
   numbersDecimalToInsertLimit: 18,
   mobile: 900,
 };

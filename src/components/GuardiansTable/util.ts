@@ -55,5 +55,5 @@ export const getCapacityText = (Capacity: any, toFixed: number) => {
 };
 
 export const getCapacityColor = (Capacity: any) => {
-  return Capacity <= 30 ? 'green' : Capacity <= 80 ? 'yellow' : 'red';
+  return Capacity <= 30 ? 'red' : Capacity <= 80 ? 'yellow' : 'green';
 };

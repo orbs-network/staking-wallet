@@ -84,14 +84,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
           >
             <ColumnHeaderWithTooltip
               headerText={translations('columnHeader_capacity')}
-              tooltipText={[
-                translations('columnHeaderInfo_capacity_explanation'),
-                translations('columnHeaderInfo_capacity_calculation', { amount: minSelfStakePercentMille }),
-                [
-                  translations('columnHeaderInfo_capacity_note_title'),
-                  translations('columnHeaderInfo_capacity_note_content'),
-                ],
-              ]}
+              tooltipText={[translations('columnHeaderInfo_capacity_explanation')]}
             />
           </TableSortLabel>
         </TableCell>

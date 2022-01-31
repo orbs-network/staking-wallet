@@ -11,6 +11,7 @@ import { observer } from 'mobx-react';
 import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
+import BridgeWarning from './warnings/BridgeWarning'
 
 export const App = observer(() => {
   useMonitoring();
@@ -18,6 +19,7 @@ export const App = observer(() => {
 
   return (
     <main>
+      <BridgeWarning />
       <Header />
       <ContentContainer id='appContainer'>
         <Switch>

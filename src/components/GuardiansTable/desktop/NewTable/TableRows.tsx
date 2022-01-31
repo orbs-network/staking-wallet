@@ -5,7 +5,7 @@ import {
   IGroupedGuardiansByNetwork,
 } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { v4 as uuidv4 } from 'uuid';
-
+import BaseTooltip from '../../../../components/tooltips/BaseTooltip';
 import Selection from './selection';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -159,7 +159,9 @@ function TableRows(props: IProps) {
         return (
           <TableRow key={uuidv4()} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
             <TableCell>
-              <img className={classes.logo} src={config.networks[chain].smallLogo} />
+              <BaseTooltip title='Polygon'>
+                <img className={classes.logo} src={config.networks[chain].smallLogo} />
+              </BaseTooltip>
             </TableCell>
             <TableCell align='center'>
               {guardianDelegatorCut ? (

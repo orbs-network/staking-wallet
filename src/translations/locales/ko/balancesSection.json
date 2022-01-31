@@ -10,6 +10,5 @@
   "title_tokensReadyForWithdrawal": "락업 해제 완료된 토큰",
   "title_unstakedOrbsInYourWallet": "지갑에 보유중인 락업되지 않은 ORBS",
   "tooltipTitle_pendingRewards": "계산중인 리워드",
-  "tooltipTitle_stakedOrbs": "스테이킹 오브스",
-  "warning_unstakedTokensNotEarningRewards": "이 토큰들은 스테이킹 되어있지 않아 리워드를 발생시키지 않습니다."
+  "tooltipTitle_stakedOrbs": "스테이킹 오브스"
 }

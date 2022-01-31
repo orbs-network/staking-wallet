@@ -1,79 +1,27 @@
 import { Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
-import { makeStyles } from '@material-ui/styles';
 import { NETWORK_QUERY_PARAM } from '../../constants';
 import { useHistory, useLocation } from 'react-router';
 import { removeQueryParam } from '../../utils/url';
 import { triggerNetworkChange } from '../../utils/web3';
 import config, { INetwork } from '../../config';
 import { CommonActionButton } from '../base/CommonActionButton';
-
-const useStyles = makeStyles({
-  container: {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    zIndex: 9999,
-  },
-  containerContent: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    flexDirection: 'column',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  btnsContainer: {
-    marginTop: 30,
-    display: 'flex',
-  },
-  networkBtn: {
-    marginRight: 20,
-    '&:last-child': {
-      marginRight: 0,
-    },
-  },
-  title: {
-    marginBottom: 10,
-    fontSize: 30,
-    fontWeight: 500,
-    textAlign: 'center',
-  },
-  icon: {
-    fontSize: 60,
-  },
-  text: {
-    marginTop: 10,
-    fontSize: 15,
-    textAlign: 'center',
-  },
-  overlay: {
-    width: '100%',
-    height: '100%',
-    background: 'black',
-    opacity: '0.9',
-  },
-});
+import { useStyles } from './styles';
 
 interface IProps {
   availableChains?: number[];
   selectedChain: number;
+  forcedChain?: number;
 }
 
-function WrongNetwork({ availableChains =[], selectedChain }: IProps) {
+function WrongNetwork({ availableChains = [], selectedChain, forcedChain }: IProps) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
 
-  const onSubmit = (id: number, network: INetwork) => {
+  const changeChain = (id: number) => {
+    const network = config.networks[id];
     const { nativeCurrency, rpcUrls, blockExplorerUrls, name: chainName } = network;
     const onNetworkChanged = () => {
       removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
@@ -81,6 +29,13 @@ function WrongNetwork({ availableChains =[], selectedChain }: IProps) {
 
     triggerNetworkChange(id, { chainName, nativeCurrency, rpcUrls, blockExplorerUrls }, onNetworkChanged);
   };
+
+  useEffect(() => {
+    if (forcedChain) {
+      changeChain(forcedChain);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forcedChain]);
 
   return (
     <div className={classes.container}>
@@ -92,17 +47,13 @@ function WrongNetwork({ availableChains =[], selectedChain }: IProps) {
         <div className={classes.btnsContainer}>
           {availableChains
             .filter((c) => c !== selectedChain)
-            .map((availableChain, index) => {
-              const network = config.networks[availableChain];
+            .map((chain, index) => {
+              const network = config.networks[chain];
               if (!network) {
                 return null;
               }
               return (
-                <CommonActionButton
-                  className={classes.networkBtn}
-                  key={index}
-                  onClick={() => onSubmit(availableChain, network)}
-                >
+                <CommonActionButton className={classes.networkBtn} key={index} onClick={() => changeChain(chain)}>
                   {network.name}
                 </CommonActionButton>
               );

@@ -113,7 +113,11 @@ const NetworkWrapper = ({ children }: IProps) => {
         <CssBaseline />
         <errorMonitoring.ErrorBoundary>
           {wrongChain ? (
-            <WrongNetwork availableChains={availableChains} selectedChain={Number(selectedChain)} />
+            <WrongNetwork
+              availableChains={availableChains}
+              selectedChain={Number(selectedChain)}
+              forcedChain={forcedChain}
+            />
           ) : (
             <ProviderWrapper addresses={addresses} chain={selectedChain}>
               {children}

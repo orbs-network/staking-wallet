@@ -88,6 +88,11 @@ export class OrbsAccountStore {
   @computed get hasStakedOrbs(): boolean {
     return this.stakedOrbs > 0;
   }
+
+  @computed get noTokens(): boolean {
+    return !this.hasOrbsInCooldown && !this.hasStakedOrbs && !this.hasUnusedAllowance;
+  }
+
   @computed get hasOrbsInCooldown(): boolean {
     return this.orbsInCoolDown > 0;
   }

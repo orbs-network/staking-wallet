@@ -18,8 +18,7 @@ const handleDecimals = (value: number) => {
   const calibratedDecimalLimit = constants.numbersDecimalToDisplayLimit + 1;
   const isOutOfLimit = stringValue.length > calibratedDecimalLimit;
   const val = stringValue.substring(1, calibratedDecimalLimit);
-  const result = isOutOfLimit ? `${val}...` : `${val}`;
-  return `${config.numberSeparator.decimal}${result}`;
+  return `${config.numberSeparator.decimal}${val}`;
 };
 interface IProps {
   amount: string;

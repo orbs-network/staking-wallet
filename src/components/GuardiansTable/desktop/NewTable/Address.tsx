@@ -12,7 +12,11 @@ const Address = ({ address, copyAddress }: IProps) => {
   return (
     <Tooltip title={<Typography>{address}</Typography>} arrow placement={'right'} interactive>
       <Typography style={{ fontFamily: 'monospace', textAlign: 'center', display: 'flex' }}>
-        <InTextLink href={`https://etherscan.io/address/${address}`} text={`${address.substring(0, 10)}...`} />
+        <InTextLink
+          href={`https://etherscan.io/address/${address}`}
+          text={address}
+          style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: '9vw' }}
+        />
         <CopyIcon
           style={{ width: '20px', height: '20px', cursor: 'pointer', marginLeft: '8px' }}
           onClick={() => copyAddress(address)}

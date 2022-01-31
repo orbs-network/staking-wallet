@@ -11,9 +11,7 @@ const RewardsRate: FC = observer(() => {
 
   return (
     <BalanceCard
-      title={`${rewardsSectionTranslations('title_totalRewardsAwarded')} (${rewardsSectionTranslations(
-        'title_quantity_orbs',
-      )})`}
+      title={`${rewardsSectionTranslations('title_totalRewardsAwarded')}`}
       amount={totalRewardedRewards.toString()}
       showFraction
       isLoading={!doneLoading}
