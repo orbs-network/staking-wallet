@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import InfoIcon from '@material-ui/icons/Info';
 import { HtmlTooltip } from '../base/HtmlTooltip';
 import { useMeasure } from 'react-use';
 import { Typography } from '@material-ui/core';
@@ -42,7 +42,7 @@ export const InfoToolTipIcon = React.memo<IProps>((props) => {
 
   return (
     <HtmlTooltip enterTouchDelay={0} leaveTouchDelay={4000} title={title} arrow interactive>
-      <HelpOutlineIcon />
+      <InfoIcon />
     </HtmlTooltip>
   );
 });

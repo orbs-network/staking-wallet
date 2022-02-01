@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 10,
-    paddingRight: 10,
+      paddingRight: 10,
     },
   },
   logo: {
@@ -36,6 +36,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   selector: {
     background: 'rgba(21, 61, 111, 0.44)',
     height: '40px',
+  },
+  tooltipText: {
+    fontSize: 16,
+    lineHeight: '20px',
+    padding: 10,
+    margin: 0,
   },
 }));
 

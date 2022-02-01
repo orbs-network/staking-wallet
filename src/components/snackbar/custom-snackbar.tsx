@@ -10,6 +10,8 @@ interface IProps {
   testId?: string;
   autoHideDuration?: number;
   withoutAutoHide?: boolean;
+  vertical?: 'top' | 'bottom';
+  horizontal?: 'left' | 'center' | 'right';
 }
 
 const CustomSnackbar = ({
@@ -20,12 +22,14 @@ const CustomSnackbar = ({
   variant,
   autoHideDuration = 2000,
   withoutAutoHide,
+  vertical = 'bottom',
+  horizontal = 'left',
 }: IProps) => {
   return !show ? null : (
     <Snackbar
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
+        vertical: vertical,
+        horizontal: horizontal,
       }}
       open={true}
       autoHideDuration={withoutAutoHide ? null : autoHideDuration}

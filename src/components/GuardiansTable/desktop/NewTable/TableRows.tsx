@@ -22,6 +22,8 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import Qualifications from './qualifications';
 import { makeStyles } from '@material-ui/core/styles';
 import config from '../../../../config';
+import { useCommonsTranslations } from '../../../../translations/translationsHooks';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 const useStyles = makeStyles((theme) => ({
   multipleGuardiansCell: {
@@ -32,8 +34,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  text: {
+    fontSize: 14,
+  },
   logo: {
-    width: 20,
+    width: 30,
     height: 'auto',
     objectFit: 'contain',
   },
@@ -60,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '70px',
     display: 'flex',
     alignItems: 'center',
+    fontSize: 14,
   },
 }));
 
@@ -84,6 +90,7 @@ interface IProps {
 function TableRows(props: IProps) {
   const theme = useTheme();
   const classes = useStyles();
+  const commonTranslations = useCommonsTranslations();
   const {
     guardiansToDelegatorsCut,
     committeeMembers,
@@ -98,12 +105,16 @@ function TableRows(props: IProps) {
     group,
     copyAddress,
   } = props;
-  const { networks, EthAddress, Name, Website: website } = group;
-  const selectedChainGuardian = networks.find((n) => n.chain === selectedChain).guardian;
+  const { networks, EthAddress, Name, Website: website, IsCertified, RegistrationTime } = group;
+  const selectedChainGuardian = selectedChain ? networks.find((n) => n.chain === selectedChain).guardian : null;
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
   const rowSpan = networks.length + 1;
-
+  const blockExplorer = config.networks[selectedChain] ? config.networks[selectedChain].blockExplorerUrls[0] : '';
+  if (selectedChainGuardian) {
+    selectedChainGuardian.RegistrationTime = RegistrationTime;
+    selectedChainGuardian.IsCertified = IsCertified;
+  }
   return (
     <>
       <TableRow className={classes.commonDetails}>
@@ -137,33 +148,35 @@ function TableRows(props: IProps) {
         </TableCell>
 
         <TableCell rowSpan={rowSpan}>
-          <div className={classes.commonDetailsCell} style={{ width: '14vw', paddingRight: 20 }}>
+          <div className={classes.commonDetailsCell} style={{ width: '12vw', paddingRight: 20 }}>
             {Name}
           </div>
         </TableCell>
-        <TableCell align='center' rowSpan={rowSpan}>
+        <TableCell rowSpan={rowSpan}>
           <div className={classes.commonDetailsCell}>
             <Website address={EthAddress} website={website} />
           </div>
         </TableCell>
-        <TableCell align='center' rowSpan={rowSpan}>
+        <TableCell rowSpan={rowSpan}>
           <div className={classes.commonDetailsCell} style={{ paddingRight: '30px' }}>
-            <Address address={EthAddress} copyAddress={copyAddress} />
+            <Address address={EthAddress} copyAddress={copyAddress} blockExplorer={blockExplorer} />
           </div>
         </TableCell>
       </TableRow>
       {networks.map((network: IGroupedGuardiansByNetwork) => {
         const { guardian, chain } = network;
+        const networkConfig = config.networks[chain];
         const guardianDelegatorCut = guardian ? guardiansToDelegatorsCut[guardian.EthAddress] : 0;
         const isActive = chain === selectedChain;
+        const translationName = networkConfig.name.toLowerCase();
         return (
           <TableRow key={uuidv4()} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
-            <TableCell>
-              <BaseTooltip title='Polygon'>
-                <img className={classes.logo} src={config.networks[chain].smallLogo} />
-              </BaseTooltip>
+            <TableCell style={{ paddingRight: 20 }}>
+              <HtmlTooltip arrow title={commonTranslations(translationName as any)}>
+                <img className={classes.logo} src={networkConfig.smallLogo} />
+              </HtmlTooltip>
             </TableCell>
-            <TableCell align='center'>
+            <TableCell>
               {guardianDelegatorCut ? (
                 <RewardPercentage
                   guardianDelegatorCut={guardianDelegatorCut}
@@ -173,7 +186,7 @@ function TableRows(props: IProps) {
                 '-'
               )}
             </TableCell>
-            <TableCell align='center'>
+            <TableCell>
               {guardian ? (
                 <EffectiveStake
                   selfStake={guardian.SelfStake}
@@ -185,14 +198,14 @@ function TableRows(props: IProps) {
                 '-'
               )}
             </TableCell>
-            <TableCell align='center'>
+            <TableCell>
               {guardian ? (
                 <Participation percentage={guardian.ParticipationPercentage} translation={guardiansTableTranslations} />
               ) : (
                 '-'
               )}
             </TableCell>
-            <TableCell align='center'>
+            <TableCell>
               {guardian ? (
                 <Capacity
                   translation={guardiansTableTranslations}

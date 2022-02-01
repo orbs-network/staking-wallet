@@ -1,6 +1,6 @@
 import React from 'react';
-import ColumnHeaderWithTooltip from '../../components/common-tooltip';
-import { Typography, Tooltip } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 interface IProps {
   guardianDelegatorCut: number;
@@ -10,10 +10,11 @@ interface IProps {
 function RewardPercentage({ translation, guardianDelegatorCut }: IProps) {
   const hasData = guardianDelegatorCut != undefined;
 
-  const percentageText = hasData ? `${guardianDelegatorCut}%` : '-';
+  const percentageText = hasData ? `${guardianDelegatorCut.toFixed(0)}%` : '-';
   return (
-    <Tooltip
+    <HtmlTooltip
       arrow
+
       title={
         <>
           <Typography>
@@ -25,7 +26,7 @@ function RewardPercentage({ translation, guardianDelegatorCut }: IProps) {
       }
     >
       <Typography>{percentageText}</Typography>
-    </Tooltip>
+    </HtmlTooltip>
   );
 }
 

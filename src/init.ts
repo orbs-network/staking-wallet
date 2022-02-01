@@ -1,4 +1,3 @@
-import { INetworkContractAddresses } from './types/index';
 import { buildServices } from './services/Services';
 import { configureMobx, getStores } from './store/storesInitialization';
 import axios from 'axios';
@@ -9,7 +8,7 @@ import 'moment/locale/ja';
 import 'moment/locale/ko';
 import { DEFAULT_CHAIN } from './constants';
 
-const initApp = (chain?: number, addresses?: INetworkContractAddresses) => {
+const initApp = async (chain?: number) => {
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -18,7 +17,7 @@ const initApp = (chain?: number, addresses?: INetworkContractAddresses) => {
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
   const ethereumProvider = (window as any).ethereum;
-  const services = buildServices(ethereumProvider, axios, chain || DEFAULT_CHAIN, addresses);
+  const services = await buildServices(ethereumProvider, axios, chain || DEFAULT_CHAIN);
   const stores = getStores(
     services.orbsPOSDataService,
     services.stakingService,

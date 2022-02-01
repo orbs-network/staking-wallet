@@ -8,11 +8,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import useStyles from './styles';
 import config from '../../config';
-import { getSupportedChains, triggerNetworkChange } from '../../utils/web3';
 import NetworkItem from './NetworkItem';
 import { useHistory } from 'react-router';
 import { removeQueryParam } from '../../utils/url';
 import { NETWORK_QUERY_PARAM } from '../../constants';
+import { getSupportedChains } from '../../utils';
+import web3Service from '../../services/web3Service';
+import { HtmlTooltip } from '../base/HtmlTooltip';
+import { useCommonsTranslations } from '../../translations/translationsHooks';
+
 interface IProps {
   chainId: string;
 }
@@ -20,6 +24,8 @@ interface IProps {
 const ChainIndicator = ({ chainId }: IProps) => {
   const history = useHistory();
   const supportedNetworks = getSupportedChains();
+  const commonsTranslations = useCommonsTranslations();
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -67,21 +73,27 @@ const ChainIndicator = ({ chainId }: IProps) => {
     };
 
     const { name: chainName, nativeCurrency, rpcUrls, blockExplorerUrls } = network;
-    triggerNetworkChange(id, { chainName, nativeCurrency, rpcUrls, blockExplorerUrls }, onSuccessfullyChainChanged);
+    web3Service.triggerNetworkChange(
+      id,
+      { chainName, nativeCurrency, rpcUrls, blockExplorerUrls },
+      onSuccessfullyChainChanged,
+    );
   };
 
   return (
     <div className={classes.root}>
       <div>
-        <Button
-          className={classes.selector}
-          ref={anchorRef}
-          aria-controls={open ? 'menu-list-grow' : undefined}
-          aria-haspopup='true'
-          onClick={handleToggle}
-        >
-          <NetworkItem img={selectedNetwork.logo} name={selectedNetwork.name} />
-        </Button>
+        <HtmlTooltip title={<p className={classes.tooltipText}>{commonsTranslations('networkSelectHoverText')}</p>}>
+          <Button
+            className={classes.selector}
+            ref={anchorRef}
+            aria-controls={open ? 'menu-list-grow' : undefined}
+            aria-haspopup='true'
+            onClick={handleToggle}
+          >
+            <NetworkItem img={selectedNetwork.logo} name={selectedNetwork.name} />
+          </Button>
+        </HtmlTooltip>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
             <Grow

@@ -82,10 +82,12 @@ export class OrbsNodeStore {
       committeeGuardians,
       groupedGuardiansByNetwork,
     } = await this.readDataFromFirstSyncedNode();
+   
     this.setAllChainsGuardians(groupedGuardiansByNetwork);
     this.setCommitteeMemberData(committeeMembers);
     this.setCommitteeGuardians(committeeGuardians);
     this.setGuardians(allNetworksGuardians);
+
   }
 
   private async getSettings() {

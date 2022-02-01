@@ -20,9 +20,9 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
         <TableCell></TableCell>
         <TableCell>{translations('columnHeader_name')}</TableCell>
         <TableCell>{translations('columnHeader_website')}</TableCell>
-        <TableCell align='center'>{translations('columnHeader_address')}</TableCell>
+        <TableCell>{translations('columnHeader_address')}</TableCell>
         <TableCell></TableCell>
-        <TableCell align='center'>
+        <TableCell>
           <TableSortLabel onClick={() => requestSort(sortOptions.rewards)}>
             <ColumnHeaderWithTooltip
               headerText={translations('columnHeader_rewardsPercentageToDelegators')}
@@ -33,7 +33,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
             />
           </TableSortLabel>
         </TableCell>
-        <TableCell align='center'>
+        <TableCell>
           <TableSortLabel
             active={sortBy === sortOptions.effectiveStake}
             direction={order as 'desc' | 'asc'}
@@ -64,7 +64,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
             />
           </TableSortLabel>
         </TableCell>
-        <TableCell align='center'>
+        <TableCell>
           <TableSortLabel
             active={sortBy === sortOptions.participation}
             direction={order as 'desc' | 'asc'}
@@ -76,7 +76,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
             />
           </TableSortLabel>
         </TableCell>
-        <TableCell align='center'>
+        <TableCell>
           <TableSortLabel
             active={sortBy === sortOptions.capacity}
             direction={order as 'desc' | 'asc'}

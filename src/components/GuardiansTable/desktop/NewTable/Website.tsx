@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import SvgIcon from '@material-ui/core/SvgIcon';
-import { ReactComponent as GlobeIcon } from '../../../../../assets/globe.svg';
+import { ReactComponent as WebsiteIcon } from '../../../../../assets/website.svg';
 import { getWebsiteAddress } from '../../util';
 
 interface IProps {
@@ -18,7 +18,7 @@ const Website = ({ website, address }: IProps) => {
         target='_blank'
         rel='noopener noreferrer'
       >
-        <SvgIcon component={GlobeIcon} />
+        <SvgIcon style={{ zoom: 1.4 }} component={WebsiteIcon} />
       </a>
     </Tooltip>
   );

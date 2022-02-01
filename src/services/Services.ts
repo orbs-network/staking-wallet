@@ -29,7 +29,10 @@ import {
   IElectionsService,
   ElectionsService,
 } from '@orbs-network/contracts-js';
-import { getSupportedChains } from '../utils/web3';
+import { getSupportedChains } from '../utils';
+import ContractRegistry from './contarcs/contract-registry';
+import { CONTARCTS_NAMES } from '../constants';
+import web3Service from './web3Service';
 
 export interface IServices {
   httpService: IHttpService;
@@ -46,12 +49,11 @@ export interface IServices {
   electionsService: IElectionsService;
 }
 
-export function buildServices(
+export async function buildServices(
   ethereumProvider: IEthereumProvider,
   axios: AxiosInstance,
   selectedChain: number,
-  addresses: INetworkContractAddresses,
-): IServices {
+): Promise<IServices> {
   const web3: Web3 = new Web3(ethereumProvider as any);
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
@@ -74,6 +76,26 @@ export function buildServices(
       return [];
     }
   };
+
+  const getAddresses = async () => {
+    if (!selectedChain) {
+      return;
+    }
+    const network = config.networks[selectedChain];
+    if (!network) {
+      return;
+    }
+    const { contractsRegistry, erc20Contract } = network;
+
+    try {
+      const registryContract = new ContractRegistry(web3, contractsRegistry);
+      const addresses = await registryContract.getContracts<INetworkContractAddresses>(CONTARCTS_NAMES);
+      addresses.erc20Contract = erc20Contract;
+      return addresses;
+    } catch (error) {}
+  };
+  const addresses = await getAddresses();
+
   const managementServiceStatusPageUrls = getPropertyFromNetworks();
 
   return {

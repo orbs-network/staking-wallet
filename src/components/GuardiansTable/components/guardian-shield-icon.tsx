@@ -34,7 +34,7 @@ const GuardianShieldIcon: FC<IProps> = (props) => {
     <SvgIcon
       component={getIcon()}
       viewBox='0 0 40.371 47.178'
-      style={{ height: '100%', width: '100%', ...customStyle }}
+      style={{ height: '100%', width: '100%', zoom: 0.1, ...customStyle }}
     />
   );
 };

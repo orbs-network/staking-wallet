@@ -8,25 +8,24 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import { useGuardiansTableTranslations } from '../../../translations/translationsHooks';
 import GuardianShieldIcon from './guardian-shield-icon';
 import { IExtenedTheme } from '../../../theme/Theme';
+import { HtmlTooltip } from '../../base/HtmlTooltip';
 interface IProps {
   guardian: Guardian;
   committeeMembershipData?: ICommitteeMemberData;
 }
 
 const useStyes = makeStyles((theme: IExtenedTheme) => ({
-  
   tooltip: {
     // width: 'max-content',
     width: 400,
     maxWidth: 'min(600px, 90%)',
   },
   imgContainer: {
-    height: '4rem',
-    width: '4rem',
+    height: '3.5rem',
+    width: '3.5rem',
     position: 'relative',
     cursor: 'pointer',
     color: 'rgba(0,0,0,0)',
-    filter: theme.custom?.filter,
   },
 }));
 
@@ -36,7 +35,7 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
   const classes = useStyes();
 
   return (
-    <Tooltip
+    <HtmlTooltip
       classes={{ tooltip: classes.tooltip }}
       enterTouchDelay={0}
       title={<GuardianQualificationsTooltip committeeMembershipData={committeeMembershipData} guardian={guardian} />}
@@ -46,7 +45,7 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
       <div className={classes.imgContainer}>
         <GuardianShieldIcon IsCertified={guardian.IsCertified} committeeMembershipData={committeeMembershipData} />
       </div>
-    </Tooltip>
+    </HtmlTooltip>
   );
 });
 
@@ -84,7 +83,7 @@ const GuardianQualificationsTooltip = React.memo<{
       committeeMessage = (
         <Typography className={classes.textValue} style={{ color: theme.palette.success.main }}>
           - {guardiansTableTranslations('message_inCommittee')}{' '}
-          <Typography className={classes.textValue} style={{ color: theme.palette.text.primary }}>
+          <Typography className={classes.textValue}>
             {guardiansTableTranslations('message_sinceDate', {
               dateText: Moment.unix(committeeEnterTime).utc().format('DD/MM/YYYY hh:mm'),
             })}
@@ -106,7 +105,6 @@ const GuardianQualificationsTooltip = React.memo<{
     guardiansTableTranslations,
     isInCommittee,
     theme.palette.success.main,
-    theme.palette.text.primary,
     theme.palette.warning.main,
   ]);
 

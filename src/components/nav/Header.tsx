@@ -1,4 +1,4 @@
-import { AppBarProps, Grid, ToolbarProps, Typography } from '@material-ui/core';
+import { AppBarProps, Grid, SvgIcon, ToolbarProps, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React, { useContext } from 'react';
@@ -11,6 +11,7 @@ import NetworkIndicator from '../NetworkIndicator';
 import { MobXProviderContext } from 'mobx-react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { IExtenedTheme } from '../../theme/Theme';
+import { ReactComponent as Test } from '../../../assets/navbar/test.svg';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   paddingTop: '1em',
@@ -22,7 +23,7 @@ const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 const useStyes = makeStyles((theme: IExtenedTheme) => ({
   logoContainer: {
-     filter: theme.custom?.filter,
+    filter: theme.custom?.filter,
   },
   logo: {
     [theme.breakpoints.down('sm')]: {

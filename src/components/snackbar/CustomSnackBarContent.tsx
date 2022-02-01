@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     backgroundColor: theme.palette.error.dark,
+    color: 'white',
+    '& a': {
+      color: 'white',
+    },
   },
   info: {
     backgroundColor: theme.palette.primary.main,

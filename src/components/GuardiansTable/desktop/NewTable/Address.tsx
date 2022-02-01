@@ -1,28 +1,34 @@
 import React from 'react';
-import { Typography, Tooltip } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { InTextLink } from '../../../shared/texts/InTextLink';
-import { ReactComponent as CopyIcon } from '../../../../../assets/copy.svg';
+import { ReactComponent as CopyIcon } from '../../../../../assets/table-copy.svg';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 interface IProps {
   address: string;
   copyAddress: (val: string) => void;
+  blockExplorer: string
 }
 
-const Address = ({ address, copyAddress }: IProps) => {
+const Address = ({ address, copyAddress, blockExplorer }: IProps) => {
   return (
-    <Tooltip title={<Typography>{address}</Typography>} arrow placement={'right'} interactive>
-      <Typography style={{ fontFamily: 'monospace', textAlign: 'center', display: 'flex' }}>
+    <HtmlTooltip title={<Typography>{address}</Typography>} arrow placement={'right'} interactive>
+      <Typography style={{ fontFamily: 'monospace', display: 'flex' }}>
         <InTextLink
-          href={`https://etherscan.io/address/${address}`}
+          href={`${blockExplorer}/address/${address}`}
           text={address}
-          style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: '9vw' }}
+          style={{
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            maxWidth: '9vw',
+            color: 'white',
+            fontSize: '14px',
+          }}
         />
-        <CopyIcon
-          style={{ width: '20px', height: '20px', cursor: 'pointer', marginLeft: '8px' }}
-          onClick={() => copyAddress(address)}
-        />
+        <CopyIcon style={{ zoom: 1.3, cursor: 'pointer' }} onClick={() => copyAddress(address)} />
       </Typography>
-    </Tooltip>
+    </HtmlTooltip>
   );
 };
 

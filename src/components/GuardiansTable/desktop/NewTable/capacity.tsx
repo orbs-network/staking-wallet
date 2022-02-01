@@ -30,9 +30,11 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
         </>
       }
     >
-      <div>
-        <Line percent={availableCapacity} strokeWidth={5} strokeColor={getCapacityColor(availableCapacity)} />
-        <Typography>{availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 2)}</Typography>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <section style={{ width: 'calc(100% - 50px)' }}>
+          <Line percent={availableCapacity} strokeWidth={8} strokeColor={'white'} />
+        </section>
+        <Typography>{availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 0)}</Typography>
       </div>
     </Tooltip>
   );

@@ -7,6 +7,7 @@ import BaseLoader from '../loaders';
 import Loaders from '../loaders/loader-components/index';
 import BalanceCardCounters from './components/counters';
 import { StyledGrid, useStyles } from './styles';
+import { HtmlTooltip } from '../base/HtmlTooltip';
 
 interface IProps {
   title: string | React.ElementType | JSX.Element;
@@ -76,11 +77,11 @@ const BalanceCard = (props: IProps) => {
           </Grid>
           <CommonDivider />
           {toolTipTitle ? (
-            <Tooltip placement={'right'} title={toolTipTitle} arrow>
+            <HtmlTooltip placement={'right'} title={toolTipTitle}>
               <div>
                 <BalanceCardCounters isLoading={isLoading} amount={amount} />
               </div>
-            </Tooltip>
+            </HtmlTooltip>
           ) : (
             <BalanceCardCounters isLoading={isLoading} amount={amount} />
           )}

@@ -4,18 +4,20 @@ import LinkOffIcon from '@material-ui/icons/LinkOff';
 import { NETWORK_QUERY_PARAM } from '../../constants';
 import { useHistory, useLocation } from 'react-router';
 import { removeQueryParam } from '../../utils/url';
-import { triggerNetworkChange } from '../../utils/web3';
 import config, { INetwork } from '../../config';
 import { CommonActionButton } from '../base/CommonActionButton';
 import { useStyles } from './styles';
+import web3Service from '../../services/web3Service';
+import { getSupportedChains } from '../../utils';
 
 interface IProps {
-  availableChains?: number[];
   selectedChain: number;
   forcedChain?: number;
+  hideLoader: () => void;
 }
+const availableChains = getSupportedChains();
 
-function WrongNetwork({ availableChains = [], selectedChain, forcedChain }: IProps) {
+function WrongNetwork({ selectedChain, forcedChain, hideLoader }: IProps) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -27,8 +29,12 @@ function WrongNetwork({ availableChains = [], selectedChain, forcedChain }: IPro
       removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
     };
 
-    triggerNetworkChange(id, { chainName, nativeCurrency, rpcUrls, blockExplorerUrls }, onNetworkChanged);
+    web3Service.triggerNetworkChange(id, { chainName, nativeCurrency, rpcUrls, blockExplorerUrls }, onNetworkChanged);
   };
+
+  useEffect(() => {
+    hideLoader();
+  }, []);
 
   useEffect(() => {
     if (forcedChain) {

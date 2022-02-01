@@ -23,7 +23,7 @@
   "columnHeader_name": "Name",
   "columnHeader_network": "Network",
   "columnHeader_participation": "Committee Uptime",
-  "columnHeader_rewardsPercentageToDelegators": "Rewards % to Delegators",
+  "columnHeader_rewardsPercentageToDelegators": "Rewards",
   "columnHeader_selection": "Selection",
   "columnHeader_stakingPercentageInLastElections": "Staking % in previous elections",
   "columnHeader_votedInLastElection": "Voted in previous election",

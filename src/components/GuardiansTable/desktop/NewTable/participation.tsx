@@ -9,8 +9,7 @@ interface IProps {
 }
 
 function Participation({ translation, percentage }: IProps) {
-  const color = percentage <= 30 ? 'red' : percentage <= 80 ? 'yellow' : 'green';
-  const timePercentageText = percentage.toFixed(2);
+  const timePercentageText = percentage.toFixed(0);
 
   return (
     <Tooltip
@@ -28,8 +27,10 @@ function Participation({ translation, percentage }: IProps) {
         </>
       }
     >
-      <div>
-        <Line percent={percentage} strokeWidth={5} strokeColor={color} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <section style={{ width: 'calc(100% - 50px)' }}>
+          <Line percent={percentage} strokeWidth={8} strokeColor='white' />
+        </section>
         <Typography>{timePercentageText}%</Typography>
       </div>
     </Tooltip>

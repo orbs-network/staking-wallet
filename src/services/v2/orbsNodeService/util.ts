@@ -1,8 +1,8 @@
 import { IManagementStatus } from './nodeResponseProcessing/RootNodeData';
 import { Guardian, SystemState } from './systemState';
-import { getSortedChains } from '../../../utils/web3';
 import { IGuardiansDictionary, IGroupedGuardiansByNetwork, IProcessedSystemState } from './OrbsNodeTypes';
 import { updateSystemState } from './nodeResponseProcessing/processor-public';
+import { getSortedChains } from '../../../utils';
 
 interface IGuardiansByChains {
   [key: number]: Guardian[];
@@ -76,6 +76,7 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
 
   const { guardiansByChains, allGuardians } = createGuardiansByChains(sortedStates);
 
+
   const groupedGuardiansByNetwork: { [key: string]: IGuardiansDictionary } = {};
   const networks = createNetworks(selectedChain);
 
@@ -88,6 +89,8 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
       EffectiveStake: 0,
       ParticipationPercentage: 0,
       Capacity: 0,
+      IsCertified: false,
+      RegistrationTime: 0,
     };
   }
 
@@ -96,7 +99,7 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
 
     for (const guardian of guardians) {
       const { EthAddress, EffectiveStake, ParticipationPercentage, Capacity } = guardian;
-      const { networks, Name, Website } = groupedGuardiansByNetwork[EthAddress];
+      const { networks, Name, Website, IsCertified, RegistrationTime } = groupedGuardiansByNetwork[EthAddress];
 
       groupedGuardiansByNetwork[EthAddress] = {
         EthAddress,
@@ -106,6 +109,11 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
         Name: Name || guardian.Name,
         Website: Website || guardian.Website,
         networks: handleNetworks(networks, guardian, chain),
+        IsCertified: IsCertified || guardian.IsCertified,
+        RegistrationTime:
+          RegistrationTime && RegistrationTime < guardian.RegistrationTime
+            ? RegistrationTime
+            : guardian.RegistrationTime,
       };
     }
   }

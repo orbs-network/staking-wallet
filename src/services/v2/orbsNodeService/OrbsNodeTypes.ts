@@ -13,6 +13,8 @@ export interface IGuardiansDictionary {
   networks: IGroupedGuardiansByNetwork[];
   ParticipationPercentage: number;
   Capacity: number;
+  IsCertified: boolean;
+  RegistrationTime: number;
 }
 
 export interface IReadAndProcessResults {

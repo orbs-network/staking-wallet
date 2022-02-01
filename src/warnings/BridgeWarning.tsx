@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useOrbsAccountStore } from '../store/storeHooks';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import { sleep } from '../utils';
+import { useAlertsTranslations, useCommonsTranslations } from '../translations/translationsHooks';
+import { CHAINS, POLYGON_BRIDGE_URL } from '../constants';
 
 const localStorageItem = 'BRIDGE_WARNING';
 
@@ -10,6 +12,8 @@ const BridgeWarning = observer(() => {
   const [showWarning, setShowWarning] = useState(false);
   const { noTokens } = useOrbsAccountStore();
   const { chainId } = useContext(MobXProviderContext);
+  const alertsTranslations = useAlertsTranslations();
+  const commonTranslations = useCommonsTranslations();
   const close = () => {
     localStorage.setItem(localStorageItem, JSON.stringify(true));
     setShowWarning(false);
@@ -31,12 +35,12 @@ const BridgeWarning = observer(() => {
       variant='warning'
       hide={close}
       withoutAutoHide
-      show={showWarning && noTokens && chainId === 137}
+      show={showWarning && noTokens && chainId === CHAINS.polygon}
       message={
         <>
-          Did you move your ORBS tokens on Polygon bridge from Ethereum? Read more
-          <a href='' style={{ marginLeft: 5 }}>
-            Link
+          {alertsTranslations('polygonBridgeTokens')}
+          <a href={POLYGON_BRIDGE_URL} style={{ marginLeft: 5 }} target='_blank' rel='noopener noreferrer'>
+            {commonTranslations('readMore')}
           </a>
         </>
       }

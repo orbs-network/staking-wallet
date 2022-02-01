@@ -1,21 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Creator: CorelDRAW 2019 (64-Bit) -->
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="100%" version="1.1" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd"
-viewBox="0 0 784.37 1277.39"
- xmlns:xlink="http://www.w3.org/1999/xlink"
- xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
- <g id="Layer_x0020_1">
-  <metadata id="CorelCorpID_0Corel-Layer"/>
-  <g id="_1421394342400">
-   <g>
-    <polygon fill="#343434" fill-rule="nonzero" points="392.07,0 383.5,29.11 383.5,873.74 392.07,882.29 784.13,650.54 "/>
-    <polygon fill="#8C8C8C" fill-rule="nonzero" points="392.07,0 -0,650.54 392.07,882.29 392.07,472.33 "/>
-    <polygon fill="#3C3C3B" fill-rule="nonzero" points="392.07,956.52 387.24,962.41 387.24,1263.28 392.07,1277.38 784.37,724.89 "/>
-    <polygon fill="#8C8C8C" fill-rule="nonzero" points="392.07,1277.38 392.07,956.52 -0,724.89 "/>
-    <polygon fill="#141414" fill-rule="nonzero" points="392.07,882.29 784.13,650.54 392.07,472.33 "/>
-    <polygon fill="#393939" fill-rule="nonzero" points="0,650.54 392.07,882.29 392.07,472.33 "/>
-   </g>
-  </g>
- </g>
+<svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="11.5" cy="11" rx="11.5" ry="11" fill="#454545"/>
+<g clip-path="url(#clip0_233_14208)">
+<path d="M11.498 15.0693V19.5557L17.037 11.8175L11.498 15.0693Z" fill="white"/>
+<path d="M11.498 8.27081V14.0312L17.037 10.7716L11.498 8.27081Z" fill="#CACACA"/>
+<path d="M11.498 1.6297V8.27082L17.037 10.7716L11.498 1.6297Z" fill="white"/>
+<path d="M11.498 15.0693V19.5557L5.96289 11.8175L11.498 15.0693Z" fill="#F2F2F2"/>
+<path d="M11.498 8.27081V14.0312L5.96289 10.7716L11.498 8.27081Z" fill="#BCB7B4"/>
+<path d="M11.498 1.6297V8.27082L5.96289 10.7716L11.498 1.6297Z" fill="#F2F2F2"/>
+</g>
+<defs>
+<clipPath id="clip0_233_14208">
+<rect width="11.0741" height="17.9259" fill="white" transform="translate(5.96289 1.6297)"/>
+</clipPath>
+</defs>
 </svg>

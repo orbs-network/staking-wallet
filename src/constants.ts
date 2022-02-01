@@ -20,4 +20,7 @@ export const CONTARCTS_NAMES = [
   'committee',
   'elections',
 ];
+
+export const POLYGON_BRIDGE_URL ='/'
+export const ORBS_TELEGRAM = '/'
 export const ALLOWANCE_APPROVAL_AMOUNT_TO_SET = '18446744073709551615';
