@@ -1,8 +1,9 @@
 import React from 'react';
-import { Typography, Tooltip } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { ReactComponent as WebsiteIcon } from '../../../../../assets/website.svg';
 import { getWebsiteAddress } from '../../util';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 interface IProps {
   website: string;
@@ -11,7 +12,7 @@ interface IProps {
 
 const Website = ({ website, address }: IProps) => {
   return (
-    <Tooltip arrow title={<Typography>{website}</Typography>}>
+    <HtmlTooltip placement='top' arrow title={<Typography>{website}</Typography>}>
       <a
         data-testid={`guardian-${address}-website`}
         href={getWebsiteAddress(website)}
@@ -20,7 +21,7 @@ const Website = ({ website, address }: IProps) => {
       >
         <SvgIcon style={{ zoom: 1.4 }} component={WebsiteIcon} />
       </a>
-    </Tooltip>
+    </HtmlTooltip>
   );
 };
 

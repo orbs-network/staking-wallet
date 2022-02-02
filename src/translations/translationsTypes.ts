@@ -36,6 +36,7 @@ export interface ICommonsTranslations {
   networkSelectHoverText: string;
   ethereum: string;
   polygon: string;
+  ropsten: string;
 }
 
 export interface ISectionTitlesTranslations {

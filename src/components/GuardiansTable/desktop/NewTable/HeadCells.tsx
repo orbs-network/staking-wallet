@@ -1,5 +1,6 @@
 import React from 'react';
-import { TableCell, TableHead, TableRow, TableSortLabel, Typography } from '@material-ui/core';
+import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { sortOptions } from './consts';
@@ -12,17 +13,25 @@ interface IProps {
   minSelfStakePercentMille: number;
 }
 
+export const useStyles = makeStyles({
+  text: {
+    fontSize: 13,
+  },
+});
+
 function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePercentMille }: IProps) {
+  const classes = useStyles();
+
   return (
     <TableHead>
       <TableRow>
         <TableCell></TableCell>
         <TableCell></TableCell>
-        <TableCell>{translations('columnHeader_name')}</TableCell>
-        <TableCell>{translations('columnHeader_website')}</TableCell>
-        <TableCell>{translations('columnHeader_address')}</TableCell>
+        <TableCell className={classes.text}>{translations('columnHeader_name')}</TableCell>
+        <TableCell className={classes.text}>{translations('columnHeader_website')}</TableCell>
+        <TableCell className={classes.text}>{translations('columnHeader_address')}</TableCell>
         <TableCell></TableCell>
-        <TableCell>
+        <TableCell className={classes.text}>
           <TableSortLabel onClick={() => requestSort(sortOptions.rewards)}>
             <ColumnHeaderWithTooltip
               headerText={translations('columnHeader_rewardsPercentageToDelegators')}
@@ -33,7 +42,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
             />
           </TableSortLabel>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.text}>
           <TableSortLabel
             active={sortBy === sortOptions.effectiveStake}
             direction={order as 'desc' | 'asc'}
@@ -64,7 +73,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
             />
           </TableSortLabel>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.text}>
           <TableSortLabel
             active={sortBy === sortOptions.participation}
             direction={order as 'desc' | 'asc'}
@@ -76,7 +85,7 @@ function HeadCells({ translations, requestSort, order, sortBy, minSelfStakePerce
             />
           </TableSortLabel>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.text}>
           <TableSortLabel
             active={sortBy === sortOptions.capacity}
             direction={order as 'desc' | 'asc'}

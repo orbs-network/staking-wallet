@@ -1,8 +1,11 @@
 import { getNumberSeparators } from './utils/numberUtils';
-import ethImg from '../assets/logos/eth.png';
-import polygonImg from '../assets/logos/polygon.png';
+
 import smallPolygonIcon from '../assets/logos/polygon-small.svg';
 import smallEthereumIcon from '../assets/logos/ethereum-small.svg';
+import navbarEthereumImg from '../assets/navbar/ethereum.png';
+import navbarPolygonImg from '../assets/navbar/polygon.png';
+import polygonImg from '../assets/navbar/polygon-menu-logo.svg';
+import ethImg from '../assets/navbar/ethereum-menu-logo.svg';
 
 import { CHAINS } from './constants';
 
@@ -30,6 +33,7 @@ export interface INetwork {
   blockExplorerUrls?: string[];
   contractsRegistry: string;
   erc20Contract: string;
+  navbarImage: string;
 }
 
 const networks: { [key: string]: INetwork } = {
@@ -41,6 +45,8 @@ const networks: { [key: string]: INetwork } = {
     requiredConfirmations: 7,
     contractsRegistry: process.env.NETWORK_1_REGISTRY,
     erc20Contract: process.env.NETWORK_1_ERC20,
+    blockExplorerUrls: ['https://etherscan.io'],
+    navbarImage: navbarEthereumImg,
   },
   [CHAINS.ropsten]: {
     name: 'Ropsten',
@@ -51,6 +57,9 @@ const networks: { [key: string]: INetwork } = {
     smallLogo: smallEthereumIcon,
     contractsRegistry: process.env.NETWORK_3_REGISTRY,
     erc20Contract: process.env.NETWORK_3_ERC20,
+    rpcUrls: ['https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+    blockExplorerUrls: ['https://ropsten.etherscan.io'],
+    navbarImage: navbarEthereumImg,
   },
   [CHAINS.polygon]: {
     logo: polygonImg,
@@ -64,6 +73,7 @@ const networks: { [key: string]: INetwork } = {
     blockExplorerUrls: ['https://www.polygonscan.com'],
     contractsRegistry: process.env.NETWORK_137_REGISTRY,
     erc20Contract: process.env.NETWORK_137_ERC20,
+    navbarImage: navbarPolygonImg,
   },
   local: {
     name: 'local',
@@ -71,6 +81,8 @@ const networks: { [key: string]: INetwork } = {
     managementServiceStatusPageUrl: 'http://localhost:7666/status',
     contractsRegistry: '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE',
     erc20Contract: '0x96A9b808F1C506a7684FC3AFFBE86681286C92aE',
+    navbarImage: navbarEthereumImg,
+    logo: ethImg,
   },
 };
 

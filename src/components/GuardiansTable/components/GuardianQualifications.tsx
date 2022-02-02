@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Guardian } from '../../../services/v2/orbsNodeService/systemState';
-import { Tooltip, Typography } from '@material-ui/core';
+import { SvgIcon, Tooltip, Typography } from '@material-ui/core';
 import { ICommitteeMemberData } from '../../../services/v2/orbsNodeService/OrbsNodeTypes';
 import Moment from 'moment';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -9,6 +9,12 @@ import { useGuardiansTableTranslations } from '../../../translations/translation
 import GuardianShieldIcon from './guardian-shield-icon';
 import { IExtenedTheme } from '../../../theme/Theme';
 import { HtmlTooltip } from '../../base/HtmlTooltip';
+import varifiedIcon from '../assets/verified.svg';
+import notCertifiedIcon from '../assets/not-certified.svg';
+
+import Box from '@material-ui/core/Box';
+import clsx from 'clsx';
+
 interface IProps {
   guardian: Guardian;
   committeeMembershipData?: ICommitteeMemberData;
@@ -17,7 +23,7 @@ interface IProps {
 const useStyes = makeStyles((theme: IExtenedTheme) => ({
   tooltip: {
     // width: 'max-content',
-    width: 400,
+    width: 300,
     maxWidth: 'min(600px, 90%)',
   },
   imgContainer: {
@@ -40,7 +46,7 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
       enterTouchDelay={0}
       title={<GuardianQualificationsTooltip committeeMembershipData={committeeMembershipData} guardian={guardian} />}
       arrow
-      placement={'right'}
+      placement='bottom'
     >
       <div className={classes.imgContainer}>
         <GuardianShieldIcon IsCertified={guardian.IsCertified} committeeMembershipData={committeeMembershipData} />
@@ -50,9 +56,6 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
 });
 
 const useStylesTooltip = makeStyles((theme: IExtenedTheme) => ({
-  shield: {
-    filter: theme.custom?.filter,
-  },
   textField: {
     fontWeight: 'bold',
     display: 'inline',
@@ -61,6 +64,27 @@ const useStylesTooltip = makeStyles((theme: IExtenedTheme) => ({
   textValue: {
     fontWeight: 'bold',
     display: 'inline',
+    textAlign: 'center',
+  },
+  messageBox: {
+    flexDirection: 'column',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  certified: {
+    position: 'relative',
+    marginTop: 10,
+    fontWeight: 400,
+    '&::before': {
+      position: 'absolute',
+      left: '50%',
+      transform: 'translate(-50%)',
+      top: '-13px',
+      content: '""',
+      height: '1px',
+      width: '80px',
+      background: 'white',
+    },
   },
 }));
 
@@ -81,32 +105,26 @@ const GuardianQualificationsTooltip = React.memo<{
 
     if (isInCommittee) {
       committeeMessage = (
-        <Typography className={classes.textValue} style={{ color: theme.palette.success.main }}>
-          - {guardiansTableTranslations('message_inCommittee')}{' '}
+        <Box className={classes.messageBox}>
+          <Box style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+            <img src={varifiedIcon} style={{ marginRight: 10, width: 20 }} />
+            <Typography>{guardiansTableTranslations('message_inCommittee')}</Typography>
+          </Box>
           <Typography className={classes.textValue}>
             {guardiansTableTranslations('message_sinceDate', {
               dateText: Moment.unix(committeeEnterTime).utc().format('DD/MM/YYYY hh:mm'),
             })}
           </Typography>
-        </Typography>
+        </Box>
       );
     } else {
       committeeMessage = (
-        <Typography className={classes.textValue} style={{ color: theme.palette.warning.main }}>
-          {guardiansTableTranslations('message_notInCommittee')}
-        </Typography>
+        <Typography className={classes.textValue}>{guardiansTableTranslations('message_notInCommittee')}</Typography>
       );
     }
 
     return <>{committeeMessage}</>;
-  }, [
-    classes.textValue,
-    committeeEnterTime,
-    guardiansTableTranslations,
-    isInCommittee,
-    theme.palette.success.main,
-    theme.palette.warning.main,
-  ]);
+  }, [classes.messageBox, classes.textValue, committeeEnterTime, guardiansTableTranslations, isInCommittee]);
 
   const committeeNote = useMemo(() => {
     if (!isInCommittee) {
@@ -130,7 +148,7 @@ const GuardianQualificationsTooltip = React.memo<{
     if (guardian.RegistrationTime) {
       return (
         <>
-          <Typography className={classes.textValue} color={'secondary'}>
+          <Typography className={classes.textValue} >
             {guardiansTableTranslations('message_registeredSinceDate', {
               dateText: Moment.unix(guardian.RegistrationTime).utc().format('DD/MM/YYYY'),
             })}
@@ -143,12 +161,19 @@ const GuardianQualificationsTooltip = React.memo<{
     }
   }, [classes.textValue, guardian.RegistrationTime, guardiansTableTranslations]);
 
-  const certifiedMessage = guardian.IsCertified
-    ? guardiansTableTranslations('message_certified')
-    : guardiansTableTranslations('message_notCertified');
+  const certifiedMessage = guardian.IsCertified ? (
+    <Box style={{ display: 'flex', alignItems: 'center' }}>
+      <Typography>{guardiansTableTranslations('message_certified')}</Typography>
+    </Box>
+  ) : (
+    <Box style={{ display: 'flex', alignItems: 'center' }}>
+      <img src={notCertifiedIcon} style={{ marginRight: 10, width: 14 }} />
+      <Typography>{guardiansTableTranslations('message_notCertified')}</Typography>
+    </Box>
+  );
 
   return (
-    <>
+    <Box className={classes.messageBox}>
       {/* Committee */}
       {committeePart}
       <br />
@@ -158,15 +183,15 @@ const GuardianQualificationsTooltip = React.memo<{
 
       {/* Certified */}
       <Typography
-        className={classes.textValue}
+        className={clsx(classes.textValue, classes.certified)}
         style={{ color: guardian.IsCertified ? theme.palette.success.main : theme.palette.warning.main }}
       >
-        - {certifiedMessage}
+        {certifiedMessage}
       </Typography>
       <br />
 
       {/* Registered since */}
       {registeredSincePart}
-    </>
+    </Box>
   );
 });

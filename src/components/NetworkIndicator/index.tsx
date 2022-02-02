@@ -82,8 +82,11 @@ const ChainIndicator = ({ chainId }: IProps) => {
 
   return (
     <div className={classes.root}>
-      <div>
-        <HtmlTooltip title={<p className={classes.tooltipText}>{commonsTranslations('networkSelectHoverText')}</p>}>
+      <>
+        <HtmlTooltip
+          style={{ borderRadius: '0px' }}
+          title={<p className={classes.tooltipText}>{commonsTranslations('networkSelectHoverText')}</p>}
+        >
           <Button
             className={classes.selector}
             ref={anchorRef}
@@ -94,15 +97,27 @@ const ChainIndicator = ({ chainId }: IProps) => {
             <NetworkItem img={selectedNetwork.logo} name={selectedNetwork.name} />
           </Button>
         </HtmlTooltip>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          transition
+          disablePortal
+          className={classes.container}
+        >
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
               style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
             >
-              <Paper>
+              <Paper style={{ width: '100%' }}>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id='menu-list-grow' onKeyDown={handleListKeyDown}>
+                  <MenuList
+                    className={classes.list}
+                    autoFocusItem={open}
+                    id='menu-list-grow'
+                    onKeyDown={handleListKeyDown}
+                  >
                     {supportedNetworks
                       .filter((n) => n !== Number(chainId))
                       .map((id, index) => {
@@ -111,7 +126,7 @@ const ChainIndicator = ({ chainId }: IProps) => {
                           return null;
                         }
                         return (
-                          <MenuItem onClick={(e) => onNetworkSelect(e, id)} key={index}>
+                          <MenuItem onClick={(e) => onNetworkSelect(e, id)} key={index} className={classes.listItem}>
                             <NetworkItem img={network.logo} name={network.name} />
                           </MenuItem>
                         );
@@ -122,7 +137,7 @@ const ChainIndicator = ({ chainId }: IProps) => {
             </Grow>
           )}
         </Popper>
-      </div>
+      </>
     </div>
   );
 };

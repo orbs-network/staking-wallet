@@ -1,4 +1,4 @@
-import { AppBarProps, Grid, SvgIcon, ToolbarProps, Typography } from '@material-ui/core';
+import { AppBarProps, Box, Grid, SvgIcon, ToolbarProps, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React, { useContext } from 'react';
@@ -12,11 +12,11 @@ import { MobXProviderContext } from 'mobx-react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { IExtenedTheme } from '../../theme/Theme';
 import { ReactComponent as Test } from '../../../assets/navbar/test.svg';
+import config from '../../config';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
-  paddingTop: '1em',
-  paddingBottom: '0.5em',
   borderBottom: '2px solid #363636',
+  height: '95px',
 });
 
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
@@ -25,26 +25,60 @@ const useStyes = makeStyles((theme: IExtenedTheme) => ({
   logoContainer: {
     filter: theme.custom?.filter,
   },
+  networkImage: {
+    position: 'absolute',
+    right: -60,
+    height: '100%',
+    overflow: 'hidden',
+    width: '100%',
+
+    '& img': {
+      height: '140px',
+      top: '50%',
+      transform: 'translate(0, -50%)',
+      position: 'absolute',
+      right: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
+  },
   logo: {
     [theme.breakpoints.down('sm')]: {
       zoom: 0.5,
     },
   },
+  container: {
+    position: 'relative',
+    height: '100%',
+  },
 }));
+
+const getNavbarImage = (chain: number) => {
+  const network = config.networks[chain];
+  if (!network) {
+    return '';
+  }
+  return network.navbarImage;
+};
 
 export const Header = () => {
   const { chainId } = useContext(MobXProviderContext);
   const classes = useStyes();
+
   return (
     <>
       <StyledAppBar position='fixed'>
-        <ContentContainer>
-          <StyledToolBar disableGutters>
-            <Grid container direction={'row'} alignItems={'center'} justify={'space-between'}>
+        <ContentContainer style={{ height: '100%' }}>
+          <StyledToolBar disableGutters className={classes.container}>
+            <Box className={classes.networkImage}>
+              <img src={getNavbarImage(chainId)} />
+            </Box>
+            <Grid container direction={'row'} alignItems={'center'} justify={'space-between'} style={{ zIndex: 99 }}>
               <Grid item className={classes.logoContainer}>
                 <TetraLogoAndIconSvg className={classes.logo} />
               </Grid>
-              <Grid item style={{ marginLeft: 'auto', marginRight: 30 }}>
+              <Grid item style={{ marginLeft: 'auto', marginRight: 70 }}>
                 <NetworkIndicator chainId={chainId} />
               </Grid>
 

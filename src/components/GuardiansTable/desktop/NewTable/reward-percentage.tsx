@@ -14,7 +14,6 @@ function RewardPercentage({ translation, guardianDelegatorCut }: IProps) {
   return (
     <HtmlTooltip
       arrow
-
       title={
         <>
           <Typography>

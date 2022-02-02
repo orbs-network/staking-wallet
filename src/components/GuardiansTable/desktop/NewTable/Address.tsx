@@ -7,7 +7,7 @@ import { HtmlTooltip } from '../../../base/HtmlTooltip';
 interface IProps {
   address: string;
   copyAddress: (val: string) => void;
-  blockExplorer: string
+  blockExplorer: string;
 }
 
 const Address = ({ address, copyAddress, blockExplorer }: IProps) => {
@@ -21,7 +21,7 @@ const Address = ({ address, copyAddress, blockExplorer }: IProps) => {
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
-            maxWidth: '9vw',
+            maxWidth: '8vw',
             color: 'white',
             fontSize: '14px',
           }}

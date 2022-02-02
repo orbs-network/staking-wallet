@@ -148,7 +148,7 @@ function TableRows(props: IProps) {
         </TableCell>
 
         <TableCell rowSpan={rowSpan}>
-          <div className={classes.commonDetailsCell} style={{ width: '12vw', paddingRight: 20 }}>
+          <div className={classes.commonDetailsCell} style={{ width: '10vw', paddingRight: 20 }}>
             {Name}
           </div>
         </TableCell>
@@ -158,7 +158,7 @@ function TableRows(props: IProps) {
           </div>
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          <div className={classes.commonDetailsCell} style={{ paddingRight: '30px' }}>
+          <div className={classes.commonDetailsCell} style={{ paddingRight: '10px' }}>
             <Address address={EthAddress} copyAddress={copyAddress} blockExplorer={blockExplorer} />
           </div>
         </TableCell>
@@ -172,7 +172,7 @@ function TableRows(props: IProps) {
         return (
           <TableRow key={uuidv4()} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
             <TableCell style={{ paddingRight: 20 }}>
-              <HtmlTooltip arrow title={commonTranslations(translationName as any)}>
+              <HtmlTooltip placement='top' arrow title={commonTranslations(translationName as any)}>
                 <img className={classes.logo} src={networkConfig.smallLogo} />
               </HtmlTooltip>
             </TableCell>
