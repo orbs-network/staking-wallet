@@ -1,7 +1,12 @@
 {
+  "ethereum": "Ethereum",
   "loading": "로딩중...",
   "loadingFailed": "로딩 실패",
+  "networkSelectHoverText": "Orbs supports multi-chain staking. Ethereum is the classic choice for large stakers. Polygon is great for smaller stakers looking to reduce fees.",
+  "polygon": "Polygon",
   "privacyPolicy": "개인정보 처리방침",
+  "readMore": "Read more",
+  "telegram": "Telegram",
   "termsOfUse": "이용 약관",
   "tetraV1ChangeV1Delegation": "Tetra V1 -  V1 위임 변경하기",
   "timeLeft": "{{timePhrase}} 남음",
