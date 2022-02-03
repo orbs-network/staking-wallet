@@ -1,4 +1,4 @@
-import { IManagementStatus } from './nodeResponseProcessing/RootNodeData';
+import { ICommitteeEffectiveStakeByChain, IManagementStatus } from './nodeResponseProcessing/RootNodeData';
 import { Guardian, SystemState } from './systemState';
 import { IGuardiansDictionary, IGroupedGuardiansByNetwork, IProcessedSystemState } from './OrbsNodeTypes';
 import { updateSystemState } from './nodeResponseProcessing/processor-public';
@@ -76,7 +76,6 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
 
   const { guardiansByChains, allGuardians } = createGuardiansByChains(sortedStates);
 
-
   const groupedGuardiansByNetwork: { [key: string]: IGuardiansDictionary } = {};
   const networks = createNetworks(selectedChain);
 
@@ -121,4 +120,19 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
   return { groupedGuardiansByNetwork, allGuardians };
 };
 
-export { groupGuardiansByNetworks, createSystemStates };
+const calculateEffectiveStakeByChain = (allManagementStatuses: IManagementStatus[]) => {
+  const committeEffectiveStakes: ICommitteeEffectiveStakeByChain = { chains: {}, total: 0 };
+  allManagementStatuses.forEach((status) => {
+    const { chain, result } = status;
+    const commitee = result.Payload.CurrentCommittee;
+    const committeeEffectiveStake = commitee.reduce((sum, committeeGuardian) => {
+      return sum + committeeGuardian.EffectiveStake;
+    }, 0);
+
+    committeEffectiveStakes.chains[chain] = committeeEffectiveStake;
+    committeEffectiveStakes.total += committeeEffectiveStake
+  });
+  return committeEffectiveStakes;
+};
+
+export { groupGuardiansByNetworks, createSystemStates, calculateEffectiveStakeByChain };

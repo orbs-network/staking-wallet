@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import React, { CSSProperties, SVGProps, useMemo } from 'react';
+import React, { CSSProperties, ReactNode, SVGProps, useMemo } from 'react';
 import styled from 'styled-components';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -9,10 +9,6 @@ import { GridJustification } from '@material-ui/core/Grid/Grid';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { TypographyTypeMap } from '@material-ui/core/Typography/Typography';
 import { Variant } from '@material-ui/core/styles/createTypography';
-import { Button, IconButton } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 const SectionHeaderGrid = styled<typeof Grid>((props) => (
   <Grid item container direction={'row'} alignItems={'center'} {...props} />
@@ -37,10 +33,11 @@ interface IProps {
   sideTitle?: string[] | string;
   icon: React.ElementType<SVGProps<SVGSVGElement>>;
   bottomPadding?: boolean;
+  sideComponent?: ReactNode;
 }
 
 export const SectionHeader: React.FC<IProps> = (props) => {
-  const { title, sideTitle, icon: MyIcon, bottomPadding } = props;
+  const { title, sideTitle, icon: MyIcon, bottomPadding, sideComponent } = props;
 
   const theme = useTheme();
   const largerThanMedium = useMediaQuery(theme.breakpoints.up('md'));
@@ -85,14 +82,7 @@ export const SectionHeader: React.FC<IProps> = (props) => {
         <SvgIcon component={MyIcon} />
         <Title variant={'h6'}>{title}</Title>
       </Grid>
-      {sidTitleComponent}
-      {/*<Grid item xs={12} container direction={'row'} style={{ justifyContent: 'flex-end' }}>*/}
-      {/*  <Grid item>*/}
-      {/*    <IconButton>*/}
-      {/*      <KeyboardArrowUpIcon />*/}
-      {/*    </IconButton>*/}
-      {/*  </Grid>*/}
-      {/*</Grid>*/}
+      {sideComponent ? sideComponent : sidTitleComponent}
     </SectionHeaderGrid>
   );
 };

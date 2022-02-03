@@ -11,6 +11,7 @@ import {
 } from '../services/v2/orbsNodeService/OrbsNodeTypes';
 import errorMonitoring from '../services/error-monitoring';
 import _ from 'lodash';
+import { ICommitteeEffectiveStakeByChain } from '../services/v2/orbsNodeService/nodeResponseProcessing/RootNodeData';
 
 export class OrbsNodeStore {
   @observable public doneLoading = false;
@@ -18,6 +19,9 @@ export class OrbsNodeStore {
   @observable public guardians: Guardian[] = [];
   @observable public committeeMembers: ICommitteeMemberData[] = [];
   @observable public committeeGuardians: Guardian[] = [];
+  @observable public committeeEffectiveStakeByChain: ICommitteeEffectiveStakeByChain;
+  @observable public committeeEffectiveStake = 0;
+
   @observable public minSelfStakePercentMille = 0;
   public allChainsGuardians: { [key: string]: IGuardiansDictionary };
 
@@ -26,14 +30,6 @@ export class OrbsNodeStore {
    */
   @computed public get guardiansAddresses(): string[] {
     return this.guardians.map((guardian) => guardian.EthAddress.toLowerCase());
-  }
-
-  @computed public get committeeEffectiveStake(): number {
-    const committeeEffectiveStake = this.committeeGuardians.reduce((sum, committeeGuardian) => {
-      return sum + committeeGuardian.EffectiveStake;
-    }, 0);
-
-    return committeeEffectiveStake;
   }
 
   @computed public get currentGuardiansAnnualRewardsInterest(): number {
@@ -81,13 +77,16 @@ export class OrbsNodeStore {
       committeeMembers,
       committeeGuardians,
       groupedGuardiansByNetwork,
+      committeEffectiveStakes,
+      selectedChain,
     } = await this.readDataFromFirstSyncedNode();
-   
+
     this.setAllChainsGuardians(groupedGuardiansByNetwork);
     this.setCommitteeMemberData(committeeMembers);
     this.setCommitteeGuardians(committeeGuardians);
     this.setGuardians(allNetworksGuardians);
-
+    this.setCommitteeEffectiveStake(committeEffectiveStakes[selectedChain]);
+    this.setCommitteeEffectiveStakeByChain(committeEffectiveStakes);
   }
 
   private async getSettings() {
@@ -162,6 +161,16 @@ export class OrbsNodeStore {
   @action('setGuardians')
   private setGuardians(value: Guardian[]) {
     this.guardians = value;
+  }
+
+  @action('setCommitteeEffectiveStake')
+  private setCommitteeEffectiveStake(value: number) {
+    this.committeeEffectiveStake = value;
+  }
+
+  @action('setCommitteeEffectiveStakeByChain')
+  private setCommitteeEffectiveStakeByChain(value: ICommitteeEffectiveStakeByChain) {
+    this.committeeEffectiveStakeByChain = value;
   }
 
   @action('setMinSelfStakePercentMille')

@@ -1,3 +1,4 @@
+import { ICommitteeEffectiveStakeByChain } from './nodeResponseProcessing/RootNodeData';
 import { Guardian, SystemState } from './systemState';
 
 export interface IGroupedGuardiansByNetwork {
@@ -22,6 +23,8 @@ export interface IReadAndProcessResults {
   committeeGuardians: Guardian[];
   committeeMembers: ICommitteeMemberData[];
   groupedGuardiansByNetwork: { [key: string]: IGuardiansDictionary };
+  committeEffectiveStakes: ICommitteeEffectiveStakeByChain;
+  selectedChain: number;
 }
 
 export interface ICommitteeMemberData {

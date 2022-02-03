@@ -7,7 +7,7 @@ import { IManagementStatus } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
 import errorMonitoring from '../../error-monitoring';
 import _ from 'lodash';
-import { groupGuardiansByNetworks, createSystemStates } from './util';
+import { groupGuardiansByNetworks, createSystemStates, calculateEffectiveStakeByChain } from './util';
 
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
@@ -51,30 +51,13 @@ export class OrbsNodeService implements IOrbsNodeService {
     //return states = all chains system state, selectedChainState = state of the current chain,
     // committeeMembers = the commitee members of the selected chain
 
-    const committeStakes = {};
-
-    console.log(allManagementStatuses);
-    allManagementStatuses.forEach((status) => {
-      const commitee = status.result.Payload.CurrentCommittee;
-      const committeeEffectiveStake = commitee.reduce((sum, committeeGuardian) => {
-        return sum + committeeGuardian.EffectiveStake;
-      }, 0);
-
-      // const committeeTotalStake = commitee.reduce((sum, committeeGuardian) => {
-      //   return sum + committeeGuardian.EffectiveStake;
-      // }, 0);
-
-      committeStakes[status.chain] = { ...committeStakes[status.chain], committeeEffectiveStake };
-
-      console.log(committeStakes);
-    });
-
+    const committeEffectiveStakes = calculateEffectiveStakeByChain(allManagementStatuses)
     const { states, selectedChainState, committeeMembers } = createSystemStates(
       allManagementStatuses,
       this.selectedChain,
       minSelfStakePercentMille,
     );
-
+      
     //groupedGuardiansByNetwork = all the guardians sorted by network,
     // allGuardians = all the guardians of all chains in one array
     const { groupedGuardiansByNetwork, allGuardians } = groupGuardiansByNetworks(states, this.selectedChain);
@@ -84,6 +67,8 @@ export class OrbsNodeService implements IOrbsNodeService {
       committeeMembers,
       committeeGuardians: Object.values(selectedChainState.CommitteeNodes),
       groupedGuardiansByNetwork,
+      committeEffectiveStakes,
+      selectedChain: this.selectedChain
     };
   }
 

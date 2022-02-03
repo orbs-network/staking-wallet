@@ -24,6 +24,7 @@ import { useGuardiansDelegatorsCut, useStakingRewardsService } from '../../servi
 import BaseLoader from '../../components/loaders/index';
 import ErrorFallback from '../../components/errors/index';
 import CustomLoaders from '../../components/loaders/loader-components/index';
+import StakingInformation from './staking-information/index';
 
 const handleIsLoading = (
   isConnected: boolean | undefined,
@@ -83,22 +84,19 @@ export const GuardiansSection = observer(() => {
     orbsNodeStore.errorLoading,
     orbsAccountStore.errorLoading,
   );
-  const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
-  const sideTitle = isLoading
-    ? ''
-    : [
-        `${sectionTitlesTranslations(
-          'allGuardians_sideTitleTotalStake',
-        )}: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
-        `${sectionTitlesTranslations(
-          'allGuardians_sideTitleCommitteeStake',
-        )}: ${committeeEffectiveStake.toLocaleString()}`,
-      ];
+  const committeeStakeByChain = orbsNodeStore.committeeEffectiveStakeByChain;
+
   return (
     <Section data-testid='guardians-section'>
       <SectionHeader
+        sideComponent={
+          <StakingInformation
+            isLoading={isLoading}
+            totalStake={orbsAccountStore.totalSystemStakedTokens}
+            committeeStakeByChain={committeeStakeByChain}
+          />
+        }
         title={sectionTitlesTranslations('allGuardians')}
-        sideTitle={sideTitle}
         icon={ShielIcon}
         bottomPadding
       />
