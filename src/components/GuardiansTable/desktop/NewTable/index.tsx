@@ -91,10 +91,10 @@ const DesktopTable = (props: IProps) => {
           minSelfStakePercentMille={minSelfStakePercentMille}
         />
         <TableBody>
-          {data.map((group: IGuardiansDictionary) => {
+          {data.map((group: IGuardiansDictionary, index: number) => {
             return (
               <TableRows
-                key={uuidv4()}
+                key={index}
                 group={group}
                 selectedChain={selectedChain}
                 guardiansToDelegatorsCut={guardiansToDelegatorsCut}

@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import { getEffectiveStakeInUnits } from '../../util';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 interface IProps {
   translation: any;
@@ -11,7 +12,7 @@ interface IProps {
 
 function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake }: IProps) {
   return (
-    <Tooltip
+    <HtmlTooltip
       arrow
       title={
         <>
@@ -26,8 +27,8 @@ function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake
         </>
       }
     >
-      <Typography>{getEffectiveStakeInUnits(effectiveStake)}</Typography>
-    </Tooltip>
+      <Typography style={{ width: 'fit-content' }}>{getEffectiveStakeInUnits(effectiveStake)}</Typography>
+    </HtmlTooltip>
   );
 }
 

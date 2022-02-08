@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { ReactElement, useRef } from 'react';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 import { CommonDivider } from '../base/CommonDivider';
 import { CommonActionButton } from '../base/CommonActionButton';
@@ -8,12 +8,13 @@ import Loaders from '../loaders/loader-components/index';
 import BalanceCardCounters from './components/counters';
 import { StyledGrid, useStyles } from './styles';
 import { HtmlTooltip } from '../base/HtmlTooltip';
+import WarningTooltip from '../tooltips/WarningTooltip';
 
 interface IProps {
   title: string | React.ElementType | JSX.Element;
   toolTipTitle?: string | React.ElementType | JSX.Element;
   amount: string;
-  warning?: string;
+  warning?: ReactElement;
   // Action buttons (main + secondary)
   actionButtonTitle?: string;
   onActionButtonPressed?: () => void;
@@ -47,7 +48,7 @@ const BalanceCard = (props: IProps) => {
     isLoading,
     warning,
   } = props;
-  const classes = useStyles({ warning });
+  const classes = useStyles();
   const titleElement = useStringOrElement(title);
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
@@ -88,12 +89,12 @@ const BalanceCard = (props: IProps) => {
 
           {hasMainButton && (
             <Grid item>
+              {warning && <WarningTooltip>{warning}</WarningTooltip>}
               <CommonActionButton fullWidth={true} disabled={!actionButtonActive} onClick={onActionButtonPressed}>
                 {actionButtonTitle}
               </CommonActionButton>
             </Grid>
           )}
-          {warning && <Typography className={classes.warning}>{warning}</Typography>}
         </>
       </BaseLoader>
     </StyledGrid>

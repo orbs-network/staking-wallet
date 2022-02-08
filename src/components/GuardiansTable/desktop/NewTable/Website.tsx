@@ -12,7 +12,7 @@ interface IProps {
 
 const Website = ({ website, address }: IProps) => {
   return (
-    <HtmlTooltip placement='top' arrow title={<Typography>{website}</Typography>}>
+    <HtmlTooltip placement='bottom' arrow title={<Typography>{website}</Typography>}>
       <a
         data-testid={`guardian-${address}-website`}
         href={getWebsiteAddress(website)}

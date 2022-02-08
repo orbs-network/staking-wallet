@@ -93,6 +93,7 @@ export const GuardiansSection = observer(() => {
           <StakingInformation
             isLoading={isLoading}
             totalStake={orbsAccountStore.totalSystemStakedTokens}
+            totalStakeByChain={orbsAccountStore.totalStakeByChain}
             committeeStakeByChain={committeeStakeByChain}
           />
         }

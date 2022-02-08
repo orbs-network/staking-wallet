@@ -31,9 +31,7 @@ export const useStyles = makeStyles({
     },
   },
   container: {
-    ['@media (max-width:700px)']: {
-      marginBottom: (props: any) => (props.warning ? 35 : 0),
-    },
+    
   },
   title: {
     ['@media (max-width:1300px)']: {

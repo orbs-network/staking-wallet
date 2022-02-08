@@ -2,6 +2,7 @@ import React from 'react';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
 import { Line } from 'rc-progress';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 interface IProps {
   translation: any;
@@ -12,7 +13,7 @@ function Participation({ translation, percentage }: IProps) {
   const timePercentageText = percentage.toFixed(0);
 
   return (
-    <Tooltip
+    <HtmlTooltip
       arrow
       title={
         <>
@@ -33,7 +34,7 @@ function Participation({ translation, percentage }: IProps) {
         </section>
         <Typography>{timePercentageText}%</Typography>
       </div>
-    </Tooltip>
+    </HtmlTooltip>
   );
 }
 

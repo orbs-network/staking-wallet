@@ -29,8 +29,8 @@ export interface INetwork {
   smallLogo?: string;
   requiredConfirmations?: number;
   nativeCurrency?: { name: string; symbol: string; decimals: number };
-  rpcUrls?: string[];
-  blockExplorerUrls?: string[];
+  rpcUrl?: string;
+  blockExplorerUrl?: string;
   contractsRegistry: string;
   erc20Contract: string;
   navbarImage: string;
@@ -45,8 +45,9 @@ const networks: { [key: string]: INetwork } = {
     requiredConfirmations: 7,
     contractsRegistry: process.env.NETWORK_1_REGISTRY,
     erc20Contract: process.env.NETWORK_1_ERC20,
-    blockExplorerUrls: ['https://etherscan.io'],
+    blockExplorerUrl: 'https://etherscan.io',
     navbarImage: navbarEthereumImg,
+    rpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
   },
   [CHAINS.ropsten]: {
     name: 'Ropsten',
@@ -57,8 +58,8 @@ const networks: { [key: string]: INetwork } = {
     smallLogo: smallEthereumIcon,
     contractsRegistry: process.env.NETWORK_3_REGISTRY,
     erc20Contract: process.env.NETWORK_3_ERC20,
-    rpcUrls: ['https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
-    blockExplorerUrls: ['https://ropsten.etherscan.io'],
+    rpcUrl: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
+    blockExplorerUrl: 'https://ropsten.etherscan.io',
     navbarImage: navbarEthereumImg,
   },
   [CHAINS.polygon]: {
@@ -69,8 +70,8 @@ const networks: { [key: string]: INetwork } = {
     name: 'Polygon',
     smallLogo: smallPolygonIcon,
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-    rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://www.polygonscan.com'],
+    rpcUrl: 'https://polygon-rpc.com',
+    blockExplorerUrl: 'https://www.polygonscan.com',
     contractsRegistry: process.env.NETWORK_137_REGISTRY,
     erc20Contract: process.env.NETWORK_137_ERC20,
     navbarImage: navbarPolygonImg,

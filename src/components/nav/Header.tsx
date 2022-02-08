@@ -27,7 +27,7 @@ const useStyes = makeStyles((theme: IExtenedTheme) => ({
   },
   networkImage: {
     position: 'absolute',
-    right: -60,
+    right: 0,
     height: '100%',
     overflow: 'hidden',
     width: '100%',
@@ -70,10 +70,10 @@ export const Header = () => {
     <>
       <StyledAppBar position='fixed'>
         <ContentContainer style={{ height: '100%' }}>
+          <Box className={classes.networkImage}>
+            <img src={getNavbarImage(chainId)} />
+          </Box>
           <StyledToolBar disableGutters className={classes.container}>
-            <Box className={classes.networkImage}>
-              <img src={getNavbarImage(chainId)} />
-            </Box>
             <Grid container direction={'row'} alignItems={'center'} justify={'space-between'} style={{ zIndex: 99 }}>
               <Grid item className={classes.logoContainer}>
                 <TetraLogoAndIconSvg className={classes.logo} />

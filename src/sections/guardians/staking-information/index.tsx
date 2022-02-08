@@ -6,13 +6,17 @@ import InformationItem from './Item';
 import CommitteeStakeTooltipContent from './CommitteeStakeTooltipContent';
 import { ICommitteeEffectiveStakeByChain } from '../../../services/v2/orbsNodeService/nodeResponseProcessing/RootNodeData';
 import { useSectionsTitlesTranslations } from '../../../translations/translationsHooks';
+import TotalStakeTooltipContent from './TotalStakeTooltipContent';
+import { ITotalChainStakeAmount } from '../../../store/types';
+
 interface IProps {
   totalStake: number;
   committeeStakeByChain: ICommitteeEffectiveStakeByChain;
   isLoading: boolean;
+  totalStakeByChain: ITotalChainStakeAmount[];
 }
 
-function StakingInformation({ totalStake, committeeStakeByChain, isLoading }: IProps) {
+function StakingInformation({ totalStake, totalStakeByChain, committeeStakeByChain, isLoading }: IProps) {
   const theme = useTheme();
   const largerThanMedium = useMediaQuery(theme.breakpoints.up('md'));
   const justification: GridJustification = largerThanMedium ? 'flex-end' : 'flex-start';
@@ -26,7 +30,7 @@ function StakingInformation({ totalStake, committeeStakeByChain, isLoading }: IP
       <InformationItem
         title={sectionTitlesTranslations('allGuardians_sideTitleTotalStake')}
         value={totalStake.toLocaleString()}
-        tooltipContent={null}
+        tooltipContent={<TotalStakeTooltipContent totalStakeByChain={totalStakeByChain} />}
       />
       <InformationItem
         title={sectionTitlesTranslations('allGuardians_sideTitleCommitteeStake')}

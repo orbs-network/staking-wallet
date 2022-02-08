@@ -10,6 +10,7 @@ import { HttpService } from './http/HttpService';
 import { IHttpService } from './http/IHttpService';
 import { IOrbsNodeService } from './v2/orbsNodeService/IOrbsNodeService';
 import { OrbsNodeService } from './v2/orbsNodeService/OrbsNodeService';
+import { getChainAddresses } from './utils';
 import {
   CommitteeService,
   CryptoWalletConnectionService,
@@ -33,6 +34,7 @@ import { getSupportedChains } from '../utils';
 import ContractRegistry from './contarcs/contract-registry';
 import { CONTARCTS_NAMES } from '../constants';
 import web3Service from './web3Service';
+import { NetworkBase } from 'web3-core';
 
 export interface IServices {
   httpService: IHttpService;
@@ -77,24 +79,7 @@ export async function buildServices(
     }
   };
 
-  const getAddresses = async () => {
-    if (!selectedChain) {
-      return;
-    }
-    const network = config.networks[selectedChain];
-    if (!network) {
-      return;
-    }
-    const { contractsRegistry, erc20Contract } = network;
-
-    try {
-      const registryContract = new ContractRegistry(web3, contractsRegistry);
-      const addresses = await registryContract.getContracts<INetworkContractAddresses>(CONTARCTS_NAMES);
-      addresses.erc20Contract = erc20Contract;
-      return addresses;
-    } catch (error) {}
-  };
-  const addresses = await getAddresses();
+  const addresses = await getChainAddresses(web3, selectedChain);
 
   const managementServiceStatusPageUrls = getPropertyFromNetworks();
 

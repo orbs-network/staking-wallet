@@ -1,3 +1,5 @@
+import { ITotalChainStakeAmount } from './types';
+import ContractRegistry from '../services/contarcs/contract-registry';
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import isNil from 'lodash/isNil';
 import { CryptoWalletConnectionStore } from './CryptoWalletConnectionStore';
@@ -15,9 +17,12 @@ import { STAKING_ACTIONS } from '../services/analytics/analyticConstants';
 import { OrbsNodeStore } from './OrbsNodeStore';
 import { Guardian } from '../services/v2/orbsNodeService/systemState';
 import { IStakingRewardsService } from '@orbs-network/contracts-js/dist/ethereumContractsServices/stakingRewardsService/IStakingRewardsService';
-import { IDelegationsService, IStakingService } from '@orbs-network/contracts-js';
+import { DelegationsService, IDelegationsService, IStakingService, StakingService } from '@orbs-network/contracts-js';
 import errorMonitoring from '../services/error-monitoring';
-
+import { getSupportedChains } from '../utils';
+import Web3 from 'web3';
+import web3Service from '../services/web3Service';
+import config from '../config';
 export class OrbsAccountStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
@@ -36,7 +41,8 @@ export class OrbsAccountStore {
   @observable public stakedOrbs = BigInt(0);
   @observable public orbsInCoolDown = BigInt(0);
   @observable public cooldownReleaseTimestamp = 0;
-
+  @observable public totalStakeByChain: ITotalChainStakeAmount[] = [];
+  @observable public totalSystemStakedTokens = 0;
   @observable public totalStakedOrbsInContract = 0;
   @observable public totalUncappedStakedOrbs = 0;
 
@@ -98,10 +104,6 @@ export class OrbsAccountStore {
   }
   @computed get participatingInStaking(): boolean {
     return this.hasStakedOrbs || this.hasOrbsInCooldown || this.hasOrbsToWithdraw;
-  }
-
-  @computed get totalSystemStakedTokens(): number {
-    return this.totalStakedOrbsInContract - this.totalUncappedStakedOrbs;
   }
 
   @computed get hasClaimableRewards(): boolean {
@@ -183,6 +185,35 @@ export class OrbsAccountStore {
     return this.stakingService.unstake(weiOrbsToUnstake);
   }
 
+  public async readTotalStakeByChain() {
+    let total = 0;
+    const result: ITotalChainStakeAmount[] = await Promise.all(
+      getSupportedChains().map(async (chain: number) => {
+        const { rpcUrl, contractsRegistry } = config.networks[chain];
+        const web3 = new Web3(new Web3.providers.HttpProvider(rpcUrl));
+        const { staking, delegations } = await new ContractRegistry(web3, contractsRegistry).getContracts([
+          'staking',
+          'delegations',
+        ]);
+
+        const totalStake = await new StakingService(web3, staking).readTotalStakedInFullOrbs();
+        const totalUncappedStakedOrbs = await new DelegationsService(
+          web3,
+          delegations,
+        ).readUncappedDelegatedStakeInFullOrbs();
+        
+        const totalSystemStakedTokens = totalStake - totalUncappedStakedOrbs;
+        total += totalSystemStakedTokens;
+        return {
+          chain,
+          totalSystemStakedTokens,
+        };
+      }),
+    );
+    this.setTotalStakeByChain(result);
+    this.setTotalSystemStakedTokens(total);
+  }
+
   public restakeTokens(): PromiEvent<TransactionReceipt> {
     this.analyticsService.trackStakingContractInteractionRequest(STAKING_ACTIONS.restaking);
 
@@ -252,6 +283,7 @@ export class OrbsAccountStore {
   private async readDataForAccount(accountAddress: string) {
     const { sections, captureException } = errorMonitoring;
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
+    this.readTotalStakeByChain();
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
       console.error(`Error in read-n-set liquid orbs : ${e}`);
@@ -560,10 +592,19 @@ export class OrbsAccountStore {
   private setClaimedRewards(claimedRewards: number) {
     this.claimedRewards = claimedRewards;
   }
+  @action('setTotalStakeByChain')
+  private setTotalStakeByChain(value: ITotalChainStakeAmount[]) {
+    this.totalStakeByChain = value;
+  }
 
   @action('setEstimatedRewardsForNextWeek')
   private setEstimatedRewardsForNextWeek(estimatedRewardsForNextWeek: number) {
     this.estimatedRewardsForNextWeek = estimatedRewardsForNextWeek;
+  }
+
+  @action('setTotalSystemStakedTokens')
+  private setTotalSystemStakedTokens(value: number) {
+    this.totalSystemStakedTokens = value;
   }
 
   @action('setTotalStakedOrbsInContract')

@@ -24,12 +24,16 @@ function WrongNetwork({ selectedChain, forcedChain, hideLoader }: IProps) {
 
   const changeChain = (id: number) => {
     const network = config.networks[id];
-    const { nativeCurrency, rpcUrls, blockExplorerUrls, name: chainName } = network;
+    const { nativeCurrency, rpcUrl, blockExplorerUrl, name: chainName } = network;
     const onNetworkChanged = () => {
       removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
     };
 
-    web3Service.triggerNetworkChange(id, { chainName, nativeCurrency, rpcUrls, blockExplorerUrls }, onNetworkChanged);
+    web3Service.triggerNetworkChange(
+      id,
+      { chainName, nativeCurrency, rpcUrls: [rpcUrl], blockExplorerUrls: [blockExplorerUrl] },
+      onNetworkChanged,
+    );
   };
 
   useEffect(() => {

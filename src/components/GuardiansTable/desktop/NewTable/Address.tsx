@@ -12,7 +12,7 @@ interface IProps {
 
 const Address = ({ address, copyAddress, blockExplorer }: IProps) => {
   return (
-    <HtmlTooltip title={<Typography>{address}</Typography>} arrow placement={'right'} interactive>
+    <HtmlTooltip title={<Typography>{address}</Typography>} arrow placement='bottom' interactive>
       <Typography style={{ fontFamily: 'monospace', display: 'flex' }}>
         <InTextLink
           href={`${blockExplorer}/address/${address}`}

@@ -24,7 +24,7 @@ function RewardPercentage({ translation, guardianDelegatorCut }: IProps) {
         </>
       }
     >
-      <Typography>{percentageText}</Typography>
+      <Typography style={{ width: 'fit-content' }}>{percentageText}</Typography>
     </HtmlTooltip>
   );
 }

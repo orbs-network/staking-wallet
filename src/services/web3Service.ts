@@ -7,6 +7,7 @@ class Web3Service {
     this.web3 = new Web3((window as any).ethereum);
   }
   triggerNetworkChange = async (id: number | string, params: any, callback?: () => void) => {
+    console.log(params);
     const ethereumProvider = (window as any).ethereum;
     const web3 = new Web3(Web3.givenProvider);
     const chainId = await web3.utils.toHex(id);

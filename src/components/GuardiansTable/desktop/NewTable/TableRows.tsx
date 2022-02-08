@@ -110,7 +110,7 @@ function TableRows(props: IProps) {
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
   const rowSpan = networks.length + 1;
-  const blockExplorer = config.networks[selectedChain] ? config.networks[selectedChain].blockExplorerUrls[0] : '';
+  const blockExplorer = config.networks[selectedChain] ? config.networks[selectedChain].blockExplorerUrl : '';
   if (selectedChainGuardian) {
     selectedChainGuardian.RegistrationTime = RegistrationTime;
     selectedChainGuardian.IsCertified = IsCertified;
@@ -163,16 +163,16 @@ function TableRows(props: IProps) {
           </div>
         </TableCell>
       </TableRow>
-      {networks.map((network: IGroupedGuardiansByNetwork) => {
+      {networks.map((network: IGroupedGuardiansByNetwork, index: number) => {
         const { guardian, chain } = network;
         const networkConfig = config.networks[chain];
         const guardianDelegatorCut = guardian ? guardiansToDelegatorsCut[guardian.EthAddress] : 0;
         const isActive = chain === selectedChain;
         const translationName = networkConfig.name.toLowerCase();
         return (
-          <TableRow key={uuidv4()} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
+          <TableRow key={index} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
             <TableCell style={{ paddingRight: 20 }}>
-              <HtmlTooltip placement='top' arrow title={commonTranslations(translationName as any)}>
+              <HtmlTooltip placement='bottom' arrow title={commonTranslations(translationName as any)}>
                 <img className={classes.logo} src={networkConfig.smallLogo} />
               </HtmlTooltip>
             </TableCell>

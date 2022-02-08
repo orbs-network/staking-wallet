@@ -72,10 +72,10 @@ const ChainIndicator = ({ chainId }: IProps) => {
       removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
     };
 
-    const { name: chainName, nativeCurrency, rpcUrls, blockExplorerUrls } = network;
+    const { name: chainName, nativeCurrency, rpcUrl, blockExplorerUrl } = network;
     web3Service.triggerNetworkChange(
       id,
-      { chainName, nativeCurrency, rpcUrls, blockExplorerUrls },
+      { chainName, nativeCurrency, rpcUrls: [rpcUrl], blockExplorerUrls: [blockExplorerUrl] },
       onSuccessfullyChainChanged,
     );
   };

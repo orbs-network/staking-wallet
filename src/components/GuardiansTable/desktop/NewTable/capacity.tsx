@@ -3,6 +3,7 @@ import { Typography, Tooltip } from '@material-ui/core';
 import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Line } from 'rc-progress';
 import { getCapacityColor, getCapacityText } from '../../util';
+import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
 interface IProps {
   translation: any;
@@ -15,7 +16,7 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
   const selfStakePercentage = +((selfStake / delegatedStake) * 100).toFixed(2);
   const availableCapacity = 100 - capacity;
   return (
-    <Tooltip
+    <HtmlTooltip
       arrow
       title={
         <>
@@ -36,7 +37,7 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
         </section>
         <Typography>{availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 0)}</Typography>
       </div>
-    </Tooltip>
+    </HtmlTooltip>
   );
 }
 
