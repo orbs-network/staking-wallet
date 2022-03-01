@@ -11,7 +11,7 @@ function NetworkItem({ img, name }: IProps) {
   return (
     <Box className={classes.item}>
       {img && <img className={classes.logo} src={img} alt={name} />}
-      <Typography style={{ fontWeight: 600 }} className={classes.name}>
+      <Typography style={{ fontWeight: 500, fontSize: 14 }} className={classes.name}>
         {name}
       </Typography>
     </Box>

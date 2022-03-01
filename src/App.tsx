@@ -11,16 +11,14 @@ import { observer } from 'mobx-react';
 import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
-import BridgeWarning from './warnings/BridgeWarning';
 import NoBalanceWarning from './warnings/NoBalanceWarning';
 
 export const App = observer(() => {
   useMonitoring();
   useLanguage();
- 
+
   return (
     <main>
-      <BridgeWarning />
       <NoBalanceWarning />
       <Header />
       <ContentContainer id='appContainer'>

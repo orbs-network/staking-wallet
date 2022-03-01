@@ -1,18 +1,20 @@
-import { AppBarProps, Box, Grid, SvgIcon, ToolbarProps, Typography } from '@material-ui/core';
+import { AppBarProps, Box, Grid, ToolbarProps, Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { LanguagesSelector } from './LanguagesSelector';
 import styled from 'styled-components';
 import { ContentContainer } from '../structure/ContentContainer';
-import { ReactComponent as OrbsLogoAndIconSvg } from '../../../assets/logos/orbs_logo_with_icon.svg';
 import { ReactComponent as TetraLogoAndIconSvg } from '../../../assets/logos/tetra_logo_with_icon.svg';
 import NetworkIndicator from '../NetworkIndicator';
 import { MobXProviderContext } from 'mobx-react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { IExtenedTheme } from '../../theme/Theme';
-import { ReactComponent as Test } from '../../../assets/navbar/test.svg';
+import WalletAddress from './WalletAddress';
 import config from '../../config';
+import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import CustomSnackbar from '../snackbar/custom-snackbar';
+import { useAlertsTranslations, useWalletInfoSectionTranslations } from '../../translations/translationsHooks';
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   borderBottom: '2px solid #363636',
@@ -22,9 +24,7 @@ const StyledAppBar = styled(AppBar)<AppBarProps>({
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 const useStyes = makeStyles((theme: IExtenedTheme) => ({
-  logoContainer: {
-    filter: theme.custom?.filter,
-  },
+  logoContainer: {},
   networkImage: {
     position: 'absolute',
     right: 0,
@@ -64,6 +64,8 @@ const getNavbarImage = (chain: number) => {
 
 export const Header = () => {
   const { chainId } = useContext(MobXProviderContext);
+  const { mainAddress } = useCryptoWalletIntegrationStore();
+
   const classes = useStyes();
 
   return (
@@ -78,11 +80,14 @@ export const Header = () => {
               <Grid item className={classes.logoContainer}>
                 <TetraLogoAndIconSvg className={classes.logo} />
               </Grid>
-              <Grid item style={{ marginLeft: 'auto', marginRight: 70 }}>
+              <Grid item style={{ marginLeft: 'auto' }}>
                 <NetworkIndicator chainId={chainId} />
               </Grid>
+              <Grid item style={{ marginLeft: 15 }}>
+                <WalletAddress address={mainAddress} />
+              </Grid>
 
-              <Grid item>
+              <Grid item style={{ marginLeft: 25 }}>
                 <LanguagesSelector />
               </Grid>
             </Grid>

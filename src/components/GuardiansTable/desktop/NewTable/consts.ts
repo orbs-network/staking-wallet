@@ -5,4 +5,6 @@ const sortOptions = {
   rewards: 'rewards',
 };
 
-export { sortOptions };
+const minStrokeWidth = 3;
+
+export { sortOptions, minStrokeWidth };

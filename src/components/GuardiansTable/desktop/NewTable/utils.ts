@@ -1,6 +1,6 @@
 import { join } from 'lodash';
 import { IGuardiansDictionary } from './../../../../services/v2/orbsNodeService/OrbsNodeTypes';
-import { sortOptions } from './consts';
+import { minStrokeWidth, sortOptions } from './consts';
 const sortData = (
   sortBy: string,
   sortOrder: string,
@@ -75,4 +75,21 @@ const sortData = (
   return sortedItems;
 };
 
-export { sortData };
+const getStrokeColor = (num: number) => {
+  if (num <= 10) {
+    return '#D70D0D';
+  }
+  return '#72F8F4';
+};
+
+const getStrokePerent = (num: number) => {
+  if (num <= minStrokeWidth) {
+    return minStrokeWidth;
+  }
+  if (num > 100) {
+    return 100;
+  }
+  return num;
+};
+
+export { sortData, getStrokeColor, getStrokePerent };

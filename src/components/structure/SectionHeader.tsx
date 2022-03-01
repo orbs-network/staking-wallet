@@ -77,7 +77,7 @@ export const SectionHeader: React.FC<IProps> = (props) => {
   }, [bottomPadding]);
 
   return (
-    <SectionHeaderGrid style={extraStyleForHeaderGrid} spacing={1}>
+    <SectionHeaderGrid style={extraStyleForHeaderGrid} spacing={1} justify='space-between'>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
         <SvgIcon component={MyIcon} />
         <Title variant={'h6'}>{title}</Title>

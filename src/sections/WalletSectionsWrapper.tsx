@@ -11,15 +11,9 @@ import { RewardsSection } from './RewardsSection';
 
 export const WalletSectionsWrapper = observer(() => {
   const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
-  // useEffect(() => {
-  //   if (isConnectedToWallet) {
-  //     addAccountChangedEvent();
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+
   return isConnectedToWallet ? (
     <>
-      <WalletInfoSection />
       <BalancesSection />
       <RewardsSection />
     </>

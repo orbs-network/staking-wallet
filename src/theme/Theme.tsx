@@ -57,7 +57,7 @@ export const themes = {
   [CHAINS.polygon]: createTheme({
     ...base,
     custom: {
-      filter: 'invert(44%) sepia(88%) saturate(5045%) hue-rotate(248deg) brightness(90%) contrast(93%)',
+      filter: '',
     },
 
     palette: {

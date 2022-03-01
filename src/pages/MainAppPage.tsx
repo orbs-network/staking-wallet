@@ -5,6 +5,7 @@ import { WalletSectionsWrapper } from '../sections/WalletSectionsWrapper';
 import useAnalytics from '../hooks/useAnalytics';
 import { events } from '../services/analytics/constants';
 import { version } from '../../package.json';
+import BridgeWarning from '../warnings/BridgeWarning';
 
 export const MainAppPage = () => {
   // DEV_NOTE : id the user is connected than we consider this as a 'log in' for analytics purposes
@@ -14,7 +15,7 @@ export const MainAppPage = () => {
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
       <GuardiansSection />
-
+      <BridgeWarning />
       <div style={{ fontSize: 8, textAlign: 'center' }}>{version}</div>
     </Grid>
   );

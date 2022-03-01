@@ -10,16 +10,25 @@ import useStyles from './styles';
 import config from '../../config';
 import NetworkItem from './NetworkItem';
 import { useHistory } from 'react-router';
+import InfoIcon from '@material-ui/icons/Info';
 import { removeQueryParam } from '../../utils/url';
 import { NETWORK_QUERY_PARAM } from '../../constants';
 import { getSupportedChains } from '../../utils';
 import web3Service from '../../services/web3Service';
 import { HtmlTooltip } from '../base/HtmlTooltip';
 import { useCommonsTranslations } from '../../translations/translationsHooks';
-
+import styled from 'styled-components';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { InfoToolTipIcon } from '../tooltips/InfoTooltipIcon';
 interface IProps {
   chainId: string;
 }
+
+const StyledButton = styled(Button)({
+  border: '0.5px solid #FFFFFF',
+  borderRadius: 0,
+  background: 'transparent',
+});
 
 const ChainIndicator = ({ chainId }: IProps) => {
   const history = useHistory();
@@ -83,20 +92,18 @@ const ChainIndicator = ({ chainId }: IProps) => {
   return (
     <div className={classes.root}>
       <>
-        <HtmlTooltip
-          style={{ borderRadius: '0px' }}
-          title={<p className={classes.tooltipText}>{commonsTranslations('networkSelectHoverText')}</p>}
+        <StyledButton
+          className={classes.selector}
+          ref={anchorRef}
+          aria-controls={open ? 'menu-list-grow' : undefined}
+          aria-haspopup='true'
+          onClick={handleToggle}
         >
-          <Button
-            className={classes.selector}
-            ref={anchorRef}
-            aria-controls={open ? 'menu-list-grow' : undefined}
-            aria-haspopup='true'
-            onClick={handleToggle}
-          >
-            <NetworkItem img={selectedNetwork.logo} name={selectedNetwork.name} />
-          </Button>
-        </HtmlTooltip>
+          <NetworkItem img={selectedNetwork.logo} name={selectedNetwork.name} />
+          <InfoToolTipIcon tooltipTitle={commonsTranslations('networkSelectHoverText')} />
+          <ArrowDropDownIcon className={classes.selectorArrow} />
+        </StyledButton>
+
         <Popper
           open={open}
           anchorEl={anchorRef.current}

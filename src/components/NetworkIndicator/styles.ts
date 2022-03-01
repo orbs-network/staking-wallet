@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
-    width: '100%',
-    paddingLeft: 10,
+    paddingLeft: 13,
     paddingRight: 10,
     display: 'flex',
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'flex-start',
     [theme.breakpoints.down('sm')]: {
@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
   },
   logo: {
-    marginRight: 14,
-    width: 22,
-    height: 22,
+    marginRight: 10,
+    width: 17,
+    height: 17,
     objectFit: 'contain',
     [theme.breakpoints.down('sm')]: {
       marginRight: '0px',
@@ -42,18 +42,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selector: {
     background: '#152136',
-    height: '40px',
+    height: 35,
     width: 211,
     padding: 0,
+    paddingRight: 12,
+    display: 'flex',
+    justifyContent: 'flex-start',
     [theme.breakpoints.down('sm')]: {
       width: 'auto',
     },
+  },
+  selectorArrow: {
+    marginLeft: 'auto',
   },
   container: {
     width: 211,
     [theme.breakpoints.down('sm')]: {
       width: 'auto',
     },
+  },
+  selectorInfoIcon: {
+    width: '14px',
+    height: '14px',
   },
   tooltipText: {
     fontSize: 16,

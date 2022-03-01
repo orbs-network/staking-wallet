@@ -4,6 +4,7 @@ import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Line } from 'rc-progress';
 import { getCapacityColor, getCapacityText } from '../../util';
 import { HtmlTooltip } from '../../../base/HtmlTooltip';
+import { getStrokeColor, getStrokePerent } from './utils';
 
 interface IProps {
   translation: any;
@@ -15,6 +16,8 @@ interface IProps {
 function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) {
   const selfStakePercentage = +((selfStake / delegatedStake) * 100).toFixed(2);
   const availableCapacity = 100 - capacity;
+
+  const color = getStrokeColor(availableCapacity);
   return (
     <HtmlTooltip
       arrow
@@ -33,9 +36,11 @@ function Capacity({ translation, selfStake, delegatedStake, capacity }: IProps) 
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <section style={{ width: 'calc(100% - 50px)' }}>
-          <Line percent={availableCapacity} strokeWidth={8} strokeColor={'white'} />
+          <Line percent={getStrokePerent(availableCapacity)} strokeWidth={8} strokeColor={color} />
         </section>
-        <Typography>{availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 0)}</Typography>
+        <Typography style={{ color: color }}>
+          {availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 0)}
+        </Typography>
       </div>
     </HtmlTooltip>
   );

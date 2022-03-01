@@ -6,7 +6,7 @@ import { useBoolean } from 'react-hanger';
 import styled from 'styled-components';
 import { Section } from '../components/structure/Section';
 import { SectionHeader } from '../components/structure/SectionHeader';
-import { useOrbsAccountStore } from '../store/storeHooks';
+import { useOrbsAccountStore, useCryptoWalletIntegrationStore } from '../store/storeHooks';
 import { StakingWizard } from '../wizards/staking/StakingWizard';
 import { UnstakingWizard } from '../wizards/unstaking/UnstakingWizard';
 import { WithdrawingWizard } from '../wizards/withdrawing/WithdrawingWizard';
@@ -23,9 +23,18 @@ import { CommonDivider } from '../components/base/CommonDivider';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import ErrorFallback from '../components/errors';
+import NotificationButton from '../components/NotificationButton';
+import { makeStyles } from '@material-ui/core/styles';
 
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};
+});
+
+const useStyles = makeStyles({
+  notification: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 });
 
 export const BalancesSection = observer(() => {
@@ -39,11 +48,20 @@ export const BalancesSection = observer(() => {
   const showCannotUnstakeNowSnackbar = useBoolean(false);
   const showRestakingModal = useBoolean(false);
   const showWithdrawingModal = useBoolean(false);
-
+  const { mainAddress } = useCryptoWalletIntegrationStore();
+  const classes = useStyles();
   return (
     <Section>
       {/* Balance */}
-      <SectionHeader title={sectionTitlesTranslations('balance')} icon={BalanceIcon} />
+      <SectionHeader
+        title={sectionTitlesTranslations('balance')}
+        icon={BalanceIcon}
+        sideComponent={
+          <Grid item sm={12} md={4} className={classes.notification}>
+            <NotificationButton address={mainAddress} />
+          </Grid>
+        }
+      />
       <CommonDivider />
 
       <ErrorFallback errorText={commonsTranslations('loadingFailed')} isError={errorLoading}>

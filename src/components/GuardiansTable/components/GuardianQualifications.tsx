@@ -108,7 +108,7 @@ const GuardianQualificationsTooltip = React.memo<{
         <Box className={classes.messageBox}>
           <Box style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
             <img src={varifiedIcon} style={{ marginRight: 10, width: 20 }} />
-            <Typography>{guardiansTableTranslations('message_inCommittee')}</Typography>
+            <Typography style={{ color: '#72F8F4', fontWeight: 600 }}>{guardiansTableTranslations('message_inCommittee')}</Typography>
           </Box>
           <Typography className={classes.textValue}>
             {guardiansTableTranslations('message_sinceDate', {
@@ -148,7 +148,7 @@ const GuardianQualificationsTooltip = React.memo<{
     if (guardian.RegistrationTime) {
       return (
         <>
-          <Typography className={classes.textValue} >
+          <Typography className={classes.textValue}>
             {guardiansTableTranslations('message_registeredSinceDate', {
               dateText: Moment.unix(guardian.RegistrationTime).utc().format('DD/MM/YYYY'),
             })}

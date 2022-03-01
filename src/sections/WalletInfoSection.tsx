@@ -29,7 +29,6 @@ import BaseLoader from '../components/loaders';
 import Loaders from '../components/loaders/loader-components/index';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import { getWalletAddressExtraStyle } from './utils/index';
-import ODNP from '@open-defi-notification-protocol/widget';
 
 const LoweCaseButton = styled(Button)({
   textTransform: 'none',
@@ -64,12 +63,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const odnp = new ODNP();
-
-odnp.init();
-odnp.hide();
-odnp.mainDiv.style.color = 'black';
-
 export const WalletInfoSection = observer(() => {
   const classes = useStyles();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -88,32 +81,8 @@ export const WalletInfoSection = observer(() => {
   const smOrLarger = useMediaQuery(theme.breakpoints.up('sm'));
   const largerThanLarge = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const onClick = (address: string) => {
-    odnp.show(address, 'orbs');
-  };
-
   return (
     <Section>
-      {/* Balance */}
-      <Grid container>
-        <Grid item xs={6}>
-          <SectionHeader title={sectionTitlesTranslations('walletInfo')} icon={walletIcon} />
-        </Grid>
-        <Grid item xs={6} justify='flex-end' alignItems='center' style={{ display: 'flex' }}>
-          <LoweCaseButton
-            className={classes.button}
-            style={{ paddingLeft: '10px' }}
-            onClick={() => onClick(mainAddress)}
-            startIcon={<NotificationsNoneOutlinedIcon style={{ fontSize: '36px', transform: 'translate(6px)' }} />}
-          >
-            {walletInfoSectionTranslations('notifications')}
-          </LoweCaseButton>
-        </Grid>
-      </Grid>
-
-      <CommonDivider />
-
-      {/* DEV_NOTE : On smaller than 'large' the spacing will be vertical */}
       <Grid
         container
         item
