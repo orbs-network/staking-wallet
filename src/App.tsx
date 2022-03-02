@@ -19,7 +19,7 @@ export const App = observer(() => {
 
   return (
     <main>
-      <NoBalanceWarning />
+     
       <Header />
       <ContentContainer id='appContainer'>
         <Switch>

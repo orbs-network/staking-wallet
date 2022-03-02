@@ -55,7 +55,7 @@ function WalletAddress({ address }: IProps) {
     copy(address);
     setShowSnackbar(true);
   };
-  return (
+  return address ? (
     <>
       <HtmlTooltip
         style={{ borderRadius: '0px' }}
@@ -73,7 +73,7 @@ function WalletAddress({ address }: IProps) {
         variant='success'
       />
     </>
-  );
+  ) : null;
 }
 
 export default WalletAddress;

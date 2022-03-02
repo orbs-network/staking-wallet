@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ODNP from '@open-defi-notification-protocol/widget';
 import { Button } from '@material-ui/core';
 import NotificationsActiveOutlinedIcon from '@material-ui/icons/NotificationsActiveOutlined';
@@ -30,9 +30,17 @@ const odnp = new ODNP();
 odnp.init();
 odnp.hide();
 odnp.mainDiv.style.color = 'black';
-
 const NotificationButton = ({ address }: IProps) => {
   const walletInfoSectionTranslations = useWalletInfoSectionTranslations();
+
+  useEffect(() => {
+    if (window.innerWidth <= 700) {
+      odnp.mainDiv.style.zoom = 0.55;
+      odnp.mainDiv.style.width = '90%'
+      odnp.mainDiv.style.left = '5%'
+    }
+  }, []);
+
   const classes = useStyles();
   return (
     <StyledButton

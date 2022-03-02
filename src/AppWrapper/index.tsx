@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { App } from '../App';
 import '../services/i18n/index';
 import web3Service from '../services/web3Service';
@@ -25,7 +25,7 @@ const getThemeAndStyles = (theme: Theme) => {
   };
 };
 
-web3Service.addChangeEvents();
+web3Service.addNetworkChangedEvent();
 
 export const AppWrapper = () => {
   const { isLoading, chain, forcedChain, chainLoaded, hideLoader, wrongChain } = useLogic();
@@ -45,7 +45,9 @@ export const AppWrapper = () => {
               <ProviderWrapper hideLoader={hideLoader} chain={chain}>
                 <App />
               </ProviderWrapper>
-            ) : null}
+            ) : (
+              <div>Error</div>
+            )}
           </>
         </errorMonitoring.ErrorBoundary>
       </SCThemeProvider>
