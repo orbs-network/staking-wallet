@@ -7,10 +7,9 @@ class Web3Service {
     this.web3 = new Web3((window as any).ethereum);
   }
   triggerNetworkChange = async (id: number | string, params: any, callback?: () => void) => {
-    console.log(params);
     const ethereumProvider = (window as any).ethereum;
     const web3 = new Web3(Web3.givenProvider);
-    const chainId = await web3.utils.toHex(id);
+    const chainId = web3.utils.toHex(id);
     try {
       // check if the chain to connect to is installed
       await ethereumProvider.request({
@@ -24,14 +23,16 @@ class Web3Service {
       console.log(error);
       if (error.code === 4902) {
         try {
+          const chainParams = {
+            chainId,
+            chainName: params.chainName,
+            nativeCurrency: params.nativeCurrency,
+            rpcUrls: params.rpcUrls,
+            blockExplorerUrls: params.blockExplorerUrls,
+          };
           await ethereumProvider.request({
             method: 'wallet_addEthereumChain',
-            params: [
-              {
-                chainId,
-                ...params,
-              },
-            ],
+            params: [chainParams],
           });
           if (callback) {
             callback();
@@ -48,7 +49,7 @@ class Web3Service {
     const ethereumProvider = (window as any).ethereum;
     if (ethereumProvider) {
       ethereumProvider.on('accountsChanged', async function () {
-        window.location.reload();
+        // window.location.reload();
       });
       ethereumProvider.on('networkChanged', function () {
         window.location.reload();
