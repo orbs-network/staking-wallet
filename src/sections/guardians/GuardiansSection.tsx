@@ -3,12 +3,10 @@ import { useBoolean } from 'react-hanger';
 import { Grid } from '@material-ui/core';
 import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
 import { MobXProviderContext, observer } from 'mobx-react';
-import Snackbar from '@material-ui/core/Snackbar';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
 import GuardiansTable from '../../components/GuardiansTable/GuardiansTable';
-import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
 import {
   useAlertsTranslations,
@@ -25,6 +23,7 @@ import BaseLoader from '../../components/loaders/index';
 import ErrorFallback from '../../components/errors/index';
 import CustomLoaders from '../../components/loaders/loader-components/index';
 import StakingInformation from './staking-information/index';
+import CustomSnackbar from '../../components/snackbar/custom-snackbar';
 
 const handleIsLoading = (
   isConnected: boolean | undefined,
@@ -138,23 +137,16 @@ export const GuardiansSection = observer(() => {
                 selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress}
               />
             </CommonDialog>
-
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={showSnackbarMessage.value}
+            <CustomSnackbar
+              vertical='bottom'
+              horizontal='left'
+              show={showSnackbarMessage.value}
               autoHideDuration={1500}
-              onClose={showSnackbarMessage.setFalse}
-            >
-              <CustomSnackBarContent
-                variant={'info'}
-                message={alertsTranslations('guardianAlreadySelected')}
-                onClose={showSnackbarMessage.setFalse}
-                data-testid={'message-guardian-already-selected'}
-              />
-            </Snackbar>
+              hide={showSnackbarMessage.setFalse}
+              variant='info'
+              message={alertsTranslations('guardianAlreadySelected')}
+              data-testid={'message-guardian-already-selected'}
+            />
           </>
         </BaseLoader>
       </ErrorFallback>

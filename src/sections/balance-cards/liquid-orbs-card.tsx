@@ -11,6 +11,7 @@ interface IProps {
   showStakingModal: UseBoolean;
 }
 
+const localStorageName = 'UNSTAKED_ORBS_WARNING';
 
 const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
   const [showWarning, setShowWarning] = useState(false);
@@ -19,12 +20,16 @@ const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
   const liquidOrbsAsString = fullOrbsFromWeiOrbsString(liquidOrbs);
   useEffect(() => {
     if (hasSelectedGuardian && Number(liquidOrbs)) {
-      setShowWarning(true);
+      const localStorageItem = localStorage.getItem(localStorageName);
+      if (!localStorageItem) {
+        setShowWarning(true);
+      }
     }
   }, [hasSelectedGuardian, liquidOrbs]);
 
   const closeWarning = () => {
     setShowWarning(false);
+    localStorage.setItem(localStorageName, JSON.stringify(true));
   };
 
   return (

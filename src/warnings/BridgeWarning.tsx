@@ -35,6 +35,7 @@ const BridgeWarning = observer(() => {
       variant='warning'
       hide={close}
       withoutAutoHide
+      persist
       show={showWarning && noTokens && chainId === CHAINS.polygon}
       message={
         <>

@@ -80,7 +80,6 @@ export async function buildServices(
   };
 
   const addresses = await getChainAddresses(web3, selectedChain);
-
   const managementServiceStatusPageUrls = getPropertyFromNetworks();
 
   return {
