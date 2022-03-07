@@ -10,7 +10,7 @@ import { useLocation } from 'react-router';
 import React, { useContext } from 'react';
 import { PreLangBasenameContext } from './PreLangBasenameContext';
 import { Link } from 'react-router-dom';
-import config from '../config';
+import config from '../../config';
 
 function addLangToCurrentLocation(location, preLangBasename: string, lang: string) {
   const langRegexp = /\/(en|ko|jp)\//;

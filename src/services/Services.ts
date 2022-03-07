@@ -2,7 +2,7 @@ import { INetworkContractAddresses } from './../types/index';
 import { IOrbsPOSDataService, OrbsClientService, orbsPOSDataServiceFactory, IOrbsClientService } from 'orbs-pos-data';
 import Web3 from 'web3';
 import { AxiosInstance } from 'axios';
-import config, { INetwork } from '../config';
+import config, { INetwork } from '../../config';
 import { BuildOrbsClient } from './OrbsClientFactory';
 import { AnalyticsService } from './analytics/analyticsService';
 import { IAnalyticsService } from './analytics/IAnalyticsService';

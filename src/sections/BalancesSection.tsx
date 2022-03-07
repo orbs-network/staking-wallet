@@ -62,7 +62,7 @@ export const BalancesSection = observer(() => {
           </Grid>
         }
       />
-      <CommonDivider />
+     
 
       <ErrorFallback errorText={commonsTranslations('loadingFailed')} isError={errorLoading}>
         <>

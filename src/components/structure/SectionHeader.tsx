@@ -9,6 +9,7 @@ import { GridJustification } from '@material-ui/core/Grid/Grid';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { TypographyTypeMap } from '@material-ui/core/Typography/Typography';
 import { Variant } from '@material-ui/core/styles/createTypography';
+import { makeStyles } from '@material-ui/core/styles';
 
 const SectionHeaderGrid = styled<typeof Grid>((props) => (
   <Grid item container direction={'row'} alignItems={'center'} {...props} />
@@ -22,6 +23,12 @@ const Title = styled(Typography)`
   margin-left: 0.5em;
   text-transform: uppercase;
 `;
+
+const useStyles = makeStyles({
+  container: {
+    marginBottom: 10,
+  },
+});
 
 const SideTitle = styled(Typography)<OverridableComponent<TypographyTypeMap>>`
   margin-right: 0.5em;
@@ -38,7 +45,7 @@ interface IProps {
 
 export const SectionHeader: React.FC<IProps> = (props) => {
   const { title, sideTitle, icon: MyIcon, bottomPadding, sideComponent } = props;
-
+  const styles = useStyles();
   const theme = useTheme();
   const largerThanMedium = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -77,9 +84,9 @@ export const SectionHeader: React.FC<IProps> = (props) => {
   }, [bottomPadding]);
 
   return (
-    <SectionHeaderGrid style={extraStyleForHeaderGrid} spacing={1} justify='space-between'>
+    <SectionHeaderGrid style={extraStyleForHeaderGrid} spacing={1} justify='space-between' className={styles.container}>
       <Grid container item sm={12} md={4} direction={'row'} alignItems={'center'}>
-        <SvgIcon component={MyIcon} />
+        <MyIcon />
         <Title variant={'h6'}>{title}</Title>
       </Grid>
       {sideComponent ? sideComponent : sidTitleComponent}

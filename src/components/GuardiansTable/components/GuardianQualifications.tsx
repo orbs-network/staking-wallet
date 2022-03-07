@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react';
 import { Guardian } from '../../../services/v2/orbsNodeService/systemState';
-import { SvgIcon, Tooltip, Typography } from '@material-ui/core';
+import {  Typography } from '@material-ui/core';
 import { ICommitteeMemberData } from '../../../services/v2/orbsNodeService/OrbsNodeTypes';
 import Moment from 'moment';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { useGuardiansTableTranslations } from '../../../translations/translationsHooks';
 import GuardianShieldIcon from './guardian-shield-icon';
-import { IExtenedTheme } from '../../../theme/Theme';
 import { HtmlTooltip } from '../../base/HtmlTooltip';
 import varifiedIcon from '../assets/verified.svg';
 import notCertifiedIcon from '../assets/not-certified.svg';
@@ -18,9 +17,10 @@ import clsx from 'clsx';
 interface IProps {
   guardian: Guardian;
   committeeMembershipData?: ICommitteeMemberData;
+  qualificationImages: any;
 }
 
-const useStyes = makeStyles((theme: IExtenedTheme) => ({
+const useStyes = makeStyles((theme) => ({
   tooltip: {
     // width: 'max-content',
     width: 300,
@@ -36,7 +36,7 @@ const useStyes = makeStyles((theme: IExtenedTheme) => ({
 }));
 
 export const GuardianQualifications = React.memo<IProps>((props) => {
-  const { guardian, committeeMembershipData } = props;
+  const { guardian, committeeMembershipData, qualificationImages } = props;
 
   const classes = useStyes();
 
@@ -49,13 +49,13 @@ export const GuardianQualifications = React.memo<IProps>((props) => {
       placement='bottom'
     >
       <div className={classes.imgContainer}>
-        <GuardianShieldIcon IsCertified={guardian.IsCertified} committeeMembershipData={committeeMembershipData} />
+        <GuardianShieldIcon qualificationImages = {qualificationImages} IsCertified={guardian.IsCertified} committeeMembershipData={committeeMembershipData} />
       </div>
     </HtmlTooltip>
   );
 });
 
-const useStylesTooltip = makeStyles((theme: IExtenedTheme) => ({
+const useStylesTooltip = makeStyles((theme) => ({
   textField: {
     fontWeight: 'bold',
     display: 'inline',

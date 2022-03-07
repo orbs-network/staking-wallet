@@ -100,7 +100,7 @@ export const GuardiansSection = observer(() => {
         icon={ShielIcon}
         bottomPadding
       />
-      <CommonDivider />
+     
       <ErrorFallback isError={isErrorOnLoading} errorText={commonsTranslations('loadingFailed')}>
         <BaseLoader isLoading={isLoading} hideContent LoaderComponent={CustomLoaders.GuardiansSection}>
           <>

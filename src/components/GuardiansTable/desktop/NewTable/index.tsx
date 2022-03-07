@@ -8,19 +8,22 @@ import { useAlertsTranslations, useGuardiansTableTranslations } from '../../../.
 import copy from 'copy-to-clipboard';
 import CustomSnackbar from '../../../snackbar/custom-snackbar';
 import TableRows from './TableRows';
-import { v4 as uuidv4 } from 'uuid';
 import { sortData } from './utils';
 import { IGuardiansDictionary } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
-import { MobXProviderContext } from 'mobx-react';
 import HeadCells from './HeadCells';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     marginTop: theme.spacing(3),
     overflowX: 'auto',
+    paddingLeft: 20, paddingRight: 20,
+    border: `1px solid ${theme.chain.current.mainColor}`,
+    background: '#1B1C1E',
   },
   table: {
     minWidth: 700,
+
+
 
     '& td': {
       paddingBottom: '20px',

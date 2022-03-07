@@ -1,5 +1,5 @@
 import { CONTARCTS_NAMES } from './../constants';
-import config from '../config';
+import config from '../../config';
 import { INetworkContractAddresses } from '../types';
 import Web3 from 'web3';
 import ContractRegistry from './contarcs/contract-registry';

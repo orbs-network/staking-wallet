@@ -10,6 +10,9 @@ export const HtmlTooltip = withStyles((theme: Theme) => ({
     lineHeight: '16px',
     fontWeight: 400,
     padding: 10,
+    '& p ': {
+      fontSize: '14px'
+    }
   },
   arrow: {
     color: '#282828',

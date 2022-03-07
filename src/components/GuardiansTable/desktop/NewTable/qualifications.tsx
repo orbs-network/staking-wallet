@@ -8,11 +8,13 @@ interface IProps {
   guardian: Guardian;
   address: string;
   committeeMembers: ICommitteeMemberData[];
+  qualificationImages: any;
 }
 
-function Qualifications({ guardian, committeeMembers, address }: IProps) {
+function Qualifications({ guardian, committeeMembers, address, qualificationImages }: IProps) {
   return (
     <GuardianQualifications
+    qualificationImages = {qualificationImages}
       guardian={guardian}
       committeeMembershipData={getCommitteeMemberData(address, committeeMembers)}
     />

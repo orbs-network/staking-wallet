@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { useCommonStyles } from './styles';
 
-import config from '../../../../config';
+import config from '../../../../../config';
 
 interface IProps {
   chain: number;

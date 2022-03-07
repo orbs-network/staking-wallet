@@ -21,7 +21,7 @@ import Capacity from './capacity';
 import useTheme from '@material-ui/core/styles/useTheme';
 import Qualifications from './qualifications';
 import { makeStyles } from '@material-ui/core/styles';
-import config from '../../../../config';
+import config from '../../../../../config';
 import { useCommonsTranslations } from '../../../../translations/translationsHooks';
 import { HtmlTooltip } from '../../../base/HtmlTooltip';
 
@@ -43,29 +43,13 @@ const useStyles = makeStyles((theme) => ({
     objectFit: 'contain',
   },
   notSelectedChain: {
-    opacity: 0.5,
-    border: 'none',
-    '& td': {
-      paddingTop: '20px',
-    },
+    color: 'rgba(255, 255, 255, 0.5)',
   },
   selectedChain: {
     '& td': {
       borderBottom: '1px solid transparent',
       paddingTop: '30px',
     },
-  },
-  commonDetails: {
-    '& td': {
-      verticalAlign: 'top',
-      paddingTop: '10px',
-    },
-  },
-  commonDetailsCell: {
-    minHeight: '70px',
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: 14,
   },
 }));
 
@@ -110,56 +94,63 @@ function TableRows(props: IProps) {
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
   const rowSpan = networks.length + 1;
-  const blockExplorer = config.networks[selectedChain] ? config.networks[selectedChain].blockExplorerUrl : '';
+  const selectedNetworkConfig = config.networks[selectedChain];
+  const blockExplorer = selectedNetworkConfig ? selectedNetworkConfig.blockExplorerUrl : '';
   if (selectedChainGuardian) {
     selectedChainGuardian.RegistrationTime = RegistrationTime;
     selectedChainGuardian.IsCertified = IsCertified;
   }
   return (
     <>
-      <TableRow className={classes.commonDetails}>
+      <TableRow>
         <TableCell rowSpan={rowSpan}>
           {addSelectionColumn && selectedChainGuardian && (
-            <div className={classes.commonDetailsCell}>
-              <Selection
-                guardiansTableTranslations={guardiansTableTranslations}
-                onGuardianSelect={onGuardianSelect}
-                selectedGuardian={selectedGuardian}
-                guardianSelectionMode={guardianSelectionMode}
-                theme={theme}
-                disableSelection={disableSelection}
-                isGuardian={isGuardian}
-                mainAddress={mainAddress}
-                guardian={selectedChainGuardian}
-              />
-            </div>
+            <Selection
+              guardiansTableTranslations={guardiansTableTranslations}
+              onGuardianSelect={onGuardianSelect}
+              selectedGuardian={selectedGuardian}
+              guardianSelectionMode={guardianSelectionMode}
+              theme={theme}
+              disableSelection={disableSelection}
+              isGuardian={isGuardian}
+              mainAddress={mainAddress}
+              guardian={selectedChainGuardian}
+            />
           )}
         </TableCell>
-        <TableCell rowSpan={rowSpan} style={{ height: '70px' }}>
+        <TableCell rowSpan={rowSpan}>
           {selectedChainGuardian && (
-            <div className={classes.commonDetailsCell}>
+            <div>
               <Qualifications
                 address={EthAddress}
                 guardian={selectedChainGuardian}
                 committeeMembers={committeeMembers}
+                qualificationImages={selectedNetworkConfig && selectedNetworkConfig.ui.guardians}
               />
             </div>
           )}
         </TableCell>
 
         <TableCell rowSpan={rowSpan}>
-          <div className={classes.commonDetailsCell} style={{ width: '10vw', paddingRight: 20 }}>
-            {Name}
+          <div style={{ width: '10vw', paddingRight: 20 }}>{Name}</div>
+        </TableCell>
+        <TableCell rowSpan={rowSpan}>
+          <div>
+            <Website
+              address={EthAddress}
+              website={website}
+              linkImage={selectedNetworkConfig && selectedNetworkConfig.ui.linkImage}
+            />
           </div>
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          <div className={classes.commonDetailsCell}>
-            <Website address={EthAddress} website={website} />
-          </div>
-        </TableCell>
-        <TableCell rowSpan={rowSpan}>
-          <div className={classes.commonDetailsCell} style={{ paddingRight: '10px' }}>
-            <Address address={EthAddress} copyAddress={copyAddress} blockExplorer={blockExplorer} />
+          <div style={{ paddingRight: '10px' }}>
+            <Address
+              address={EthAddress}
+              copyAddress={copyAddress}
+              blockExplorer={blockExplorer}
+              copyImage={selectedNetworkConfig && selectedNetworkConfig.ui.copyImage}
+            />
           </div>
         </TableCell>
       </TableRow>
@@ -170,7 +161,7 @@ function TableRows(props: IProps) {
         const isActive = chain === selectedChain;
         const translationName = networkConfig.name.toLowerCase();
         return (
-          <TableRow key={index} className={!isActive ? classes.notSelectedChain : classes.selectedChain}>
+          <TableRow key={index} className={isActive && classes.selectedChain}>
             <TableCell style={{ paddingRight: 20 }}>
               <HtmlTooltip placement='bottom' arrow title={commonTranslations(translationName as any)}>
                 <img className={classes.logo} src={networkConfig.smallLogo} />
@@ -181,6 +172,7 @@ function TableRows(props: IProps) {
                 <RewardPercentage
                   guardianDelegatorCut={guardianDelegatorCut}
                   translation={guardiansTableTranslations}
+                  className={!isActive && classes.notSelectedChain}
                 />
               ) : (
                 '-'
@@ -193,6 +185,7 @@ function TableRows(props: IProps) {
                   effectiveStake={guardian.EffectiveStake}
                   delegatedStake={guardian.DelegatedStake}
                   translation={guardiansTableTranslations}
+                  className={!isActive && classes.notSelectedChain}
                 />
               ) : (
                 '-'
@@ -200,7 +193,12 @@ function TableRows(props: IProps) {
             </TableCell>
             <TableCell>
               {guardian ? (
-                <Participation percentage={guardian.ParticipationPercentage} translation={guardiansTableTranslations} />
+                <Participation
+                  chain={chain}
+                  percentage={guardian.ParticipationPercentage}
+                  translation={guardiansTableTranslations}
+                  isSelectedChain={chain === selectedChain}
+                />
               ) : (
                 '-'
               )}
@@ -212,6 +210,8 @@ function TableRows(props: IProps) {
                   selfStake={guardian.SelfStake}
                   delegatedStake={guardian.DelegatedStake}
                   capacity={guardian.Capacity}
+                  chain={chain}
+                  isSelectedChain={chain === selectedChain}
                 />
               ) : (
                 '-'

@@ -5,76 +5,101 @@ import { CHAINS, DEFAULT_CHAIN } from '../constants';
 import { Theme } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 
+interface ChainStyles {
+  mainColor: string;
+  strokeColors: {
+    low: string;
+    hight: string;
+  };
+}
+
+declare module '@material-ui/core/styles' {
+  interface CustomTheme {
+    chain: any;
+  }
+
+  interface Theme extends CustomTheme {}
+  interface ThemeOptions extends CustomTheme {}
+}
+
 const COLOR1 = '#0D0D0D'; // dark gray
-const COLOR2 = '#6ec6d8'; // bluish
 const COLOR3 = '#03FCF5'; // bright bluish- Tetra
 
 const PRIMARY_TEXT = '#dbdbdb';
-const SECONDARY_TEXT = '#7B7B7B';
 
-const base = {
-  palette: {
-    type: 'dark',
-    primary: {
-      main: COLOR1,
-    },
-    secondary: {
-      main: COLOR3,
-    },
-    background: {
-      // DEV_NOTE : This sets the app background color
-      default: '#000000',
-    },
+const polygon = {
+  mainColor: '#844FDA',
+  strokeColors: {
+    low: '#D70D0D',
+    high: '#A857FF',
+    disabled: '#311758',
   },
-  typography: {
-    fontFamily: 'Montserrat',
-  },
-  overrides: {
-    MuiPaper: {
-      root: {
-        backgroundColor: COLOR1,
-      },
-    },
-    MuiTypography: {
-      colorPrimary: {
-        color: PRIMARY_TEXT,
-      },
-    },
-    MuiLink: {
-      root: {
-        color: blue[500],
-      },
-    },
-  },
+  actionButtonTextColor: '#ffffff',
+  actionButtonBackground: '#844FDA',
 };
 
-const createTheme = (props: {}) => {
-  return responsiveFontSizes(createMuiTheme(props));
+const ethereum = {
+  mainColor: '#03FCF5',
+  strokeColors: {
+    low: '#D70D0D',
+    high: '#15F9FF',
+    disabled: '#18302F',
+  },
+  actionButtonTextColor: 'rgba(0, 0, 0, 0.87)',
+  actionButtonBackground: '#15F9FF',
 };
 
-export const themes = {
-  [DEFAULT_CHAIN]: createTheme(base),
-  [CHAINS.polygon]: createTheme({
-    ...base,
-    custom: {
-      filter: '',
-    },
+const chainsCustomStyles = {
+  [CHAINS.polygon]: polygon,
+  [CHAINS.ethereum]: ethereum,
+  [CHAINS.ropsten]: ethereum,
+};
 
-    palette: {
-      ...base.palette,
-      secondary: {
-        main: '#7E46DE',
+export const getTheme = (chain: number) => {
+  return responsiveFontSizes(
+    createMuiTheme({
+      palette: {
+        type: 'dark',
+        primary: {
+          main: COLOR1,
+        },
+
+        secondary: {
+          main: COLOR3,
+        },
+        background: {
+          // DEV_NOTE : This sets the app background color
+          default: '#000000',
+        },
       },
-    },
-  }),
-  [CHAINS.ropsten]: createTheme(base),
-};
+      typography: {
+        fontFamily: 'Montserrat',
+      },
+      chain: {
+        current: chainsCustomStyles[chain],
+        ...chainsCustomStyles,
+      },
 
-export interface IExtenedTheme extends Theme {
-  custom: {
-    filter: string;
-  };
-}
+      overrides: {
+        MuiPaper: {
+          root: {
+            backgroundColor: COLOR1,
+          },
+        },
+        MuiTypography: {
+          colorPrimary: {
+            color: PRIMARY_TEXT,
+          },
+        },
+        MuiLink: {
+          root: {
+            color: blue[500],
+          },
+        },
+      },
+    }),
+  );
+};
 
 export const AppStyles = {};
 

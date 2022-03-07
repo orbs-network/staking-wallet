@@ -3,16 +3,21 @@ import ColumnHeaderWithTooltip from '../../components/common-tooltip';
 import { Typography, Tooltip } from '@material-ui/core';
 import { Line } from 'rc-progress';
 import { HtmlTooltip } from '../../../base/HtmlTooltip';
-import { getStrokeColor, getStrokePerent } from './utils';
+import { getStrokeColor, getStrokePercent } from './utils';
+import useTheme from '@material-ui/core/styles/useTheme';
+import Stroke from '../../components/Stroke';
 
 interface IProps {
   translation: any;
   percentage: number;
+  chain: number;
+  isSelectedChain: boolean;
 }
 
-function Participation({ translation, percentage }: IProps) {
+function Participation({ translation, percentage, chain, isSelectedChain }: IProps) {
+  const theme = useTheme();
   const timePercentageText = percentage.toFixed(0);
-  const color = getStrokeColor(percentage);
+  const strokeColor = getStrokeColor(percentage, theme, chain, isSelectedChain);
   return (
     <HtmlTooltip
       arrow
@@ -30,10 +35,8 @@ function Participation({ translation, percentage }: IProps) {
       }
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <section style={{ width: 'calc(100% - 50px)' }}>
-          <Line percent={getStrokePerent(percentage)} strokeWidth={7} strokeColor={color} />
-        </section>
-        <Typography style={{ color: color }}>{timePercentageText}%</Typography>
+      <Stroke style={{ flex: 1, marginRight: 10 }} percent={getStrokePercent(percentage)} color={strokeColor} />
+        <Typography>{timePercentageText}%</Typography>
       </div>
     </HtmlTooltip>
   );

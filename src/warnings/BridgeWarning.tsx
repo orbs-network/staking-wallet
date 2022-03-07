@@ -1,8 +1,7 @@
 import { MobXProviderContext, observer } from 'mobx-react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useOrbsAccountStore } from '../store/storeHooks';
 import CustomSnackbar from '../components/snackbar/custom-snackbar';
-import { sleep } from '../utils';
 import { useAlertsTranslations, useCommonsTranslations } from '../translations/translationsHooks';
 import { CHAINS, POLYGON_BRIDGE_URL } from '../constants';
 
@@ -10,10 +9,12 @@ const localStorageItem = 'BRIDGE_WARNING';
 
 const BridgeWarning = observer(() => {
   const [showWarning, setShowWarning] = useState(false);
-  const { noTokens } = useOrbsAccountStore();
+  const { noTokens, doneLoading } = useOrbsAccountStore();
   const { chainId } = useContext(MobXProviderContext);
   const alertsTranslations = useAlertsTranslations();
   const commonTranslations = useCommonsTranslations();
+  const loadedOnce = useRef<boolean>(false);
+
   const close = () => {
     localStorage.setItem(localStorageItem, JSON.stringify(true));
     setShowWarning(false);
@@ -21,22 +22,28 @@ const BridgeWarning = observer(() => {
 
   useEffect(() => {
     const onload = async () => {
-      await sleep(3000);
+      if (!loadedOnce.current) {
+        return;
+      }
       const item = localStorage.getItem(localStorageItem);
       if (!item) {
         setShowWarning(true);
       }
     };
-    onload();
-  }, []);
+    if (doneLoading) {
+      onload();
+      loadedOnce.current = true;
+    }
+  }, [doneLoading]);
 
+  const show = showWarning && noTokens && chainId === CHAINS.polygon;
   return (
     <CustomSnackbar
       variant='warning'
       hide={close}
       withoutAutoHide
       persist
-      show={showWarning && noTokens && chainId === CHAINS.polygon}
+      show={show}
       message={
         <>
           {alertsTranslations('polygonBridgeTokens')}

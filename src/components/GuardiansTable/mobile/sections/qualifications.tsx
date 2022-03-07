@@ -9,15 +9,17 @@ interface IProps {
   guardian: Guardian;
   committeeMembers: ICommitteeMemberData[];
   size?: number;
+  qualificationImages?: any;
 }
 
-const Qualification: FC<IProps> = ({ guardian, committeeMembers }) => {
+const Qualification: FC<IProps> = ({ guardian, committeeMembers, qualificationImages }) => {
   const committeeMembershipData = guardian && getCommitteeMemberData(guardian.EthAddress, committeeMembers);
   return committeeMembershipData ? (
     <GuardianShieldIcon
       IsCertified={guardian.IsCertified}
       committeeMembershipData={committeeMembershipData}
       customStyle={{ width: '30px', marginRight: '10px' }}
+      qualificationImages={qualificationImages}
     />
   ) : null;
 };

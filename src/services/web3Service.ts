@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import { getSupportedChains } from '../utils/index';
-import config from '../config';
+import config from '../../config';
 class Web3Service {
   web3: Web3;
   constructor() {

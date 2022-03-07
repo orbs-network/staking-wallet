@@ -8,9 +8,11 @@ interface IProps {
   selfStake: number;
   delegatedStake: number;
   effectiveStake: number;
+  className?: string;
+
 }
 
-function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake }: IProps) {
+function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake, className = '' }: IProps) {
   return (
     <HtmlTooltip
       arrow
@@ -27,7 +29,7 @@ function EffectiveStake({ translation, selfStake, delegatedStake, effectiveStake
         </>
       }
     >
-      <Typography style={{ width: 'fit-content' }}>{getEffectiveStakeInUnits(effectiveStake)}</Typography>
+      <Typography className={className} style={{ width: 'fit-content' }}>{getEffectiveStakeInUnits(effectiveStake)}</Typography>
     </HtmlTooltip>
   );
 }

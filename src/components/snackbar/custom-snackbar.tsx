@@ -31,10 +31,6 @@ const CustomSnackbar = ({
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const notistackRef = React.createRef();
 
-  const close = (key) => {
-    hide();
-    closeSnackbar(key);
-  };
 
   const createSnackbar = () => {
     if (show && message) {
@@ -46,10 +42,10 @@ const CustomSnackbar = ({
           vertical: vertical,
           horizontal: horizontal,
         },
-        onClose: (key) => close(key),
+        onExit: hide,
         autoHideDuration: withoutAutoHide ? null : autoHideDuration,
         action: (key) => (
-          <IconButton key='close' aria-label='close' color='inherit' onClick={() => close(key)}>
+          <IconButton key='close' aria-label='close' color='inherit' onClick={() => closeSnackbar(key)}>
             <CloseIcon />
           </IconButton>
         ),
