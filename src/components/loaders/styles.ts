@@ -41,6 +41,10 @@ export const useLoaderStyles = makeStyles((theme) => ({
     maxWidth: '200px',
     marginTop: '0px',
   },
+  balanceCardSmallFigure: {
+    maxWidth: '100px',
+    marginTop: '0px',
+  },
   balanceCardlastFigure: {
     maxWidth: '100px',
     marginTop: '20px',

@@ -7,7 +7,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import useStyles from './styles';
-import config from '../../config';
+import config from '../../../config';
 import NetworkItem from './NetworkItem';
 import { useHistory } from 'react-router';
 import InfoIcon from '@material-ui/icons/Info';

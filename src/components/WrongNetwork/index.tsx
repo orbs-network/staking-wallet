@@ -4,7 +4,7 @@ import LinkOffIcon from '@material-ui/icons/LinkOff';
 import { NETWORK_QUERY_PARAM } from '../../constants';
 import { useHistory, useLocation } from 'react-router';
 import { removeQueryParam } from '../../utils/url';
-import config, { INetwork } from '../../config';
+import config, { INetwork } from '../../../config';
 import { CommonActionButton } from '../base/CommonActionButton';
 import { useStyles } from './styles';
 import web3Service from '../../services/web3Service';

@@ -26,9 +26,14 @@ interface IProps {
   name: string;
   guardian: Guardian | null;
   committeeMembers: ICommitteeMemberData[];
+  qualificationImages?: any;
 }
 
-const GuardianMobileHeader = ({ guardian, onClick, name, committeeMembers }: IProps) => {
+
+
+
+const GuardianMobileHeader = ({ guardian, onClick, name, committeeMembers, qualificationImages }: IProps) => {
+
   const classes = useStyles();
   const commonClasses = useCommonStyles();
   return (
@@ -38,7 +43,8 @@ const GuardianMobileHeader = ({ guardian, onClick, name, committeeMembers }: IPr
         <GuardianShieldIcon
           IsCertified={guardian.IsCertified}
           committeeMembershipData={getCommitteeMemberData(guardian.EthAddress, committeeMembers)}
-          customStyle={{ width: '30px', marginRight: '20px' }}
+          customStyle={{zoom:1,width: 40, marginRight: '12px' }}
+          qualificationImages = {qualificationImages}
         />
       )}
       <Typography className={commonClasses.name}>{name}</Typography>

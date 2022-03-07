@@ -1,3 +1,6 @@
+import config from '../../config/index';
+import { DEFAULT_CHAIN } from '../constants';
+
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -17,4 +20,18 @@ const getSortedChains = (selectedChain: number) => {
   return chains;
 };
 
-export { sleep, getSupportedChains, getSortedChains };
+const getChainConfig = (chain: number) => {
+  let network = config.networks[chain];
+  if (!network) {
+    network = config.networks[DEFAULT_CHAIN];
+  }
+  return network;
+};
+
+const getNavbarImagesByChain = (chain: number) => {
+  let network = getChainConfig(chain);
+
+  return network.ui.navbar;
+};
+
+export { sleep, getSupportedChains, getSortedChains, getNavbarImagesByChain, getChainConfig };

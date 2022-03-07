@@ -16,8 +16,7 @@ export const MainAppPage = () => {
     <Grid container item direction={'column'} id={'mainPage'}>
       <WalletSectionsWrapper />
       <GuardiansSection />
-      <BridgeWarning />
-      <NoBalanceWarning />
+    
       <div style={{ fontSize: 8, textAlign: 'center' }}>{version}</div>
     </Grid>
   );

@@ -15,6 +15,7 @@ import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import GuardianMobileHeader from './header';
 import { useCommonStyles } from './styles';
 import { IGuardiansDictionary } from '../../../../services/v2/orbsNodeService/OrbsNodeTypes';
+import { getChainConfig } from '../../../../utils';
 
 interface IProps extends IBaseTableProps {
   group: IGuardiansDictionary;
@@ -22,10 +23,12 @@ interface IProps extends IBaseTableProps {
 }
 
 const GuardiansMobileSection = (props: IProps) => {
-  const { committeeMembers, guardiansToDelegatorsCut, group } = props;
+  const { committeeMembers, guardiansToDelegatorsCut, group, selectedChain } = props;
   const guardiansTableTranslations = useGuardiansTableTranslations();
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const theme = useTheme();
+
+  const chainConfig = getChainConfig(selectedChain);
 
   const commonClasses = useCommonStyles();
   const { networks } = group;
@@ -38,6 +41,7 @@ const GuardiansMobileSection = (props: IProps) => {
         name={group.Name}
         committeeMembers={committeeMembers}
         guardian={guardian}
+        qualificationImages={chainConfig.ui.guardians}
       />
       {showDetails && (
         <div style={{ paddingTop: '20px', paddingBottom: '20px', borderBottom: '1px solid rgba(255,255,255, 0.6)' }}>
@@ -57,8 +61,8 @@ const GuardiansMobileSection = (props: IProps) => {
                   <Network chain={chain} translation={guardiansTableTranslations} />
                   <Rewards {...sectionProps} guardiansToDelegatorsCut={guardiansToDelegatorsCut} />
                   <EffectiveStake {...sectionProps} />
-                  <Participation {...sectionProps} />
-                  <Capacity {...sectionProps} />
+                  <Participation {...sectionProps} isSelectedChain={chain === selectedChain} chain={chain}  />
+                  <Capacity {...sectionProps} isSelectedChain={chain === selectedChain} chain={chain} />
                   <Selection
                     {...sectionProps}
                     onGuardianSelect={props.onGuardianSelect}

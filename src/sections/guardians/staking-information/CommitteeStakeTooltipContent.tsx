@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { ICommitteeEffectiveStakeByChain } from '../../../services/v2/orbsNodeService/nodeResponseProcessing/RootNodeData';
-import config from '../../../config';
+import config from '../../../../config';
 import useStyles from './styles';
 
 const CommitteeStakeTooltipContent = ({

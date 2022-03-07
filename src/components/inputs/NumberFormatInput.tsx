@@ -4,7 +4,7 @@ import { useTheme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 import constants from '../../constants/constants';
-import config from '../../config';
+import config from '../../../config';
 interface INumberFormatCustomProps {
   // Usage props
   allowNegative?: boolean;

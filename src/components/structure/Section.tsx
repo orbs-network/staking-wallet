@@ -3,8 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledGrid = styled(Grid)({
-  marginTop: '1em',
-  marginBottom: '2em',
+  marginBottom: '3em',
 
   // DEV_NOTE : These are to negate the 'spacing' sideways margin
   marginRight: 0,

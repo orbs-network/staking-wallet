@@ -2,7 +2,7 @@ import React from 'react';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
 import constants from '../../../constants/constants';
-import config from '../../../config';
+import config from '../../../../config';
 
 const counterProps = {
   preserveValue: true,

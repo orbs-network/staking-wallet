@@ -22,7 +22,7 @@ import errorMonitoring from '../services/error-monitoring';
 import { getSupportedChains } from '../utils';
 import Web3 from 'web3';
 import web3Service from '../services/web3Service';
-import config from '../config';
+import config from '../../config';
 export class OrbsAccountStore {
   @observable public doneLoading = false;
   @observable public errorLoading = false;
@@ -188,8 +188,12 @@ export class OrbsAccountStore {
   public async readTotalStakeByChain() {
     let total = 0;
     const result: ITotalChainStakeAmount[] = await Promise.all(
+     
       getSupportedChains().map(async (chain: number) => {
+        
         const { rpcUrl, contractsRegistry } = config.networks[chain];
+        console.log(rpcUrl);
+        
         const web3 = new Web3(new Web3.providers.HttpProvider(rpcUrl));
         const { staking, delegations } = await new ContractRegistry(web3, contractsRegistry).getContracts([
           'staking',
@@ -197,6 +201,7 @@ export class OrbsAccountStore {
         ]);
 
         const totalStake = await new StakingService(web3, staking).readTotalStakedInFullOrbs();
+
         const totalUncappedStakedOrbs = await new DelegationsService(
           web3,
           delegations,
@@ -209,7 +214,9 @@ export class OrbsAccountStore {
           totalSystemStakedTokens,
         };
       }),
-    );
+    )
+   
+    
     this.setTotalStakeByChain(result);
     this.setTotalSystemStakedTokens(total);
   }

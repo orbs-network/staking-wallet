@@ -1,6 +1,7 @@
-import React, { ReactNode, useState } from 'react';
-import { Snackbar } from '@material-ui/core';
-import { CustomSnackBarContent } from './CustomSnackBarContent';
+import React, { ReactNode, useEffect, useState } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import { useSnackbar } from 'notistack';
+import CloseIcon from '@material-ui/icons/Close';
 
 interface IProps {
   message: string | ReactNode;
@@ -12,6 +13,7 @@ interface IProps {
   withoutAutoHide?: boolean;
   vertical?: 'top' | 'bottom';
   horizontal?: 'left' | 'center' | 'right';
+  persist?: boolean;
 }
 
 const CustomSnackbar = ({
@@ -19,29 +21,46 @@ const CustomSnackbar = ({
   hide,
   show,
   testId = '',
-  variant,
+  variant = 'warning',
   autoHideDuration = 2000,
   withoutAutoHide,
   vertical = 'bottom',
   horizontal = 'left',
+  persist = false,
 }: IProps) => {
-  return !show ? null : (
-    <Snackbar
-      anchorOrigin={{
-        vertical: vertical,
-        horizontal: horizontal,
-      }}
-      open={true}
-      autoHideDuration={withoutAutoHide ? null : autoHideDuration}
-      onClose={(event, reason) => {
-        if (reason !== 'clickaway') {
-          hide();
-        }
-      }}
-    >
-      <CustomSnackBarContent variant={variant} message={message} onClose={hide} data-testid={testId} />
-    </Snackbar>
-  );
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const notistackRef = React.createRef();
+
+
+  const createSnackbar = () => {
+    if (show && message) {
+      enqueueSnackbar(message, {
+        ref: notistackRef,
+        variant,
+        persist,
+        anchorOrigin: {
+          vertical: vertical,
+          horizontal: horizontal,
+        },
+        onExit: hide,
+        autoHideDuration: withoutAutoHide ? null : autoHideDuration,
+        action: (key) => (
+          <IconButton key='close' aria-label='close' color='inherit' onClick={() => closeSnackbar(key)}>
+            <CloseIcon />
+          </IconButton>
+        ),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (show) {
+      createSnackbar();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
+  return null;
 };
 
 export default CustomSnackbar;

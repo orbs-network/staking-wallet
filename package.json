@@ -82,6 +82,7 @@
     "mobx": "^5.15.6",
     "mobx-react": "^6.3.0",
     "moment": "^2.25.3",
+    "notistack": "^1.0.10",
     "orbs-client-sdk": "^2.5.0",
     "orbs-pos-data": "^6.20.0",
     "rc-progress": "^3.0.0",

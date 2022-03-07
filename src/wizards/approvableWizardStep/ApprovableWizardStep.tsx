@@ -6,7 +6,7 @@ import { TransactionApprovingSubStepContent } from './subSteps/TransactionApprov
 import { CongratulationsSubStepContent } from './subSteps/CongratulationsSubStepContent';
 import { useOrbsAccountStore, useReReadAllStoresData } from '../../store/storeHooks';
 import errorMonitoring from '../../services/error-monitoring';
-import config from '../../config';
+import config from '../../../config';
 import useReceipt from './useReceipt';
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 

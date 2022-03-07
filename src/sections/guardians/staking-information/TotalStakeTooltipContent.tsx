@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import config from '../../../config';
+import config from '../../../../config';
 import useStyles from './styles';
 import { ITotalChainStakeAmount } from '../../../store/types';
 

@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../../config';
 import constants from '../constants/constants';
 
 export function ensurePrefix(text: string, prefix: string): string {

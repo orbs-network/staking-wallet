@@ -1,10 +1,7 @@
 import React, { FC } from 'react';
 import { CssBaselineProps, SvgIcon } from '@material-ui/core';
 
-import { ReactComponent as NotCommitteeGuardianShield } from '../assets/guardian_no_committee.svg';
-import { ReactComponent as CertifiedNotCommitteeGuardianShield } from '../assets/guardian_no_committee_certified.svg';
-import { ReactComponent as CommitteeGuardianShield } from '../assets/guardian_committe.svg';
-import { ReactComponent as CertifiedCommitteeGuardianShield } from '../assets/guardian_committee_certiied.svg';
+
 import { ICommitteeMemberData } from '../../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
@@ -12,20 +9,21 @@ interface IProps {
   IsCertified: boolean;
   committeeMembershipData: ICommitteeMemberData;
   customStyle?: CSSProperties;
+  qualificationImages: any;
 }
 
 const GuardianShieldIcon: FC<IProps> = (props) => {
-  const { IsCertified, committeeMembershipData, customStyle = {} } = props;
+  const { IsCertified, committeeMembershipData, customStyle = {}, qualificationImages } = props;
 
   const getIcon = () => {
-    let shieldIcon = NotCommitteeGuardianShield;
+    let shieldIcon = qualificationImages.nonCommitttee;
 
     // Is in committee ?
     if (committeeMembershipData) {
-      shieldIcon = IsCertified ? CertifiedCommitteeGuardianShield : CommitteeGuardianShield;
+      shieldIcon = IsCertified ?    qualificationImages.certifiedCommittee  : qualificationImages.committee;
     } else {
       // Certified ?
-      shieldIcon = IsCertified ? CertifiedNotCommitteeGuardianShield : NotCommitteeGuardianShield;
+      shieldIcon = IsCertified ? qualificationImages.certifiedNotCommittee : qualificationImages.nonCommitttee;
     }
     return shieldIcon;
   };

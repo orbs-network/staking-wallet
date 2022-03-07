@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, ReactNode, useRef } from 'react';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 import { CommonDivider } from '../base/CommonDivider';
 import { CommonActionButton } from '../base/CommonActionButton';
@@ -30,6 +30,7 @@ interface IProps {
   // Testing
   balanceCardTestId?: string;
   isLoading?: boolean;
+  LoaderComponent?: ReactNode;
 }
 
 const BalanceCard = (props: IProps) => {
@@ -47,6 +48,7 @@ const BalanceCard = (props: IProps) => {
     balanceCardTestId,
     isLoading,
     warning,
+    LoaderComponent
   } = props;
   const classes = useStyles();
   const titleElement = useStringOrElement(title);
@@ -55,7 +57,7 @@ const BalanceCard = (props: IProps) => {
 
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} className={classes.container}>
-      <BaseLoader isLoading={isLoading} LoaderComponent={Loaders.BalanceCard}>
+      <BaseLoader isLoading={isLoading} LoaderComponent={LoaderComponent || Loaders.BalanceCard}>
         <>
           <Grid item container alignItems={'center'} justify={'space-between'} style={{ height: '2rem' }}>
             <Grid item>

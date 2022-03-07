@@ -1,30 +1,28 @@
 import React, { FC } from 'react';
 import { Typography } from '@material-ui/core';
-import { Line } from 'rc-progress';
-import { IMobileSection } from '../../interfaces';
 import { useCommonStyles } from './styles';
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
+import { getStrokeColor, getStrokePercent } from '../../desktop/NewTable/utils';
+import useTheme from '@material-ui/core/styles/useTheme';
+import Stroke from '../../components/Stroke';
 
 interface IProps {
   translation: any;
   guardian: Guardian | null;
+  chain: number;
+  isSelectedChain: boolean
 }
 
-const Participation = ({ guardian, translation }: IProps) => {
+const Participation = ({ guardian, translation, chain, isSelectedChain }: IProps) => {
   const commonClasses = useCommonStyles();
   // TODO : ORL : Make this color gradient
 
-  const participationPercentage = guardian ? guardian.ParticipationPercentage : null;
+  const participationPercentage = guardian ? guardian.ParticipationPercentage : 0;
 
-  const color = !participationPercentage
-    ? ''
-    : participationPercentage <= 30
-    ? 'red'
-    : participationPercentage <= 80
-    ? 'yellow'
-    : 'green';
 
   const timePercentageText = guardian ? `${participationPercentage.toFixed(0)}%` : '-';
+  const theme = useTheme()
+  const strokeColor = getStrokeColor(participationPercentage, theme, chain, isSelectedChain);
   return (
     <div className={commonClasses.row}>
       <div className={commonClasses.rowName}>
@@ -34,14 +32,7 @@ const Participation = ({ guardian, translation }: IProps) => {
       <div className={commonClasses.rowContent}>
         {guardian ? (
           <>
-            <Line
-              percent={participationPercentage}
-              strokeWidth={2}
-              strokeLinecap='square'
-              trailColor='transparent'
-              strokeColor={color}
-              className={commonClasses.line}
-            />
+           <Stroke color={strokeColor} percent={getStrokePercent(participationPercentage)} style={{ flex: 1, marginRight: 10 }} />
             <Typography className={commonClasses.lineText}>{timePercentageText}</Typography>
           </>
         ) : (

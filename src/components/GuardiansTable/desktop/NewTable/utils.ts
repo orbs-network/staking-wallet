@@ -1,6 +1,8 @@
 import { join } from 'lodash';
 import { IGuardiansDictionary } from './../../../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { minStrokeWidth, sortOptions } from './consts';
+import { Theme } from '@material-ui/core/styles';
+
 const sortData = (
   sortBy: string,
   sortOrder: string,
@@ -75,14 +77,17 @@ const sortData = (
   return sortedItems;
 };
 
-const getStrokeColor = (num: number) => {
-  if (num <= 10) {
-    return '#D70D0D';
+const getStrokeColor = (percent: number, theme: Theme, chain: number, isSelectedChain: boolean) => {
+  if(!isSelectedChain){
+    return theme.chain[chain].strokeColors.disabled;
   }
-  return '#72F8F4';
+  if (percent <= 10) {
+    return theme.chain[chain].strokeColors.low;
+  }
+  return theme.chain[chain].strokeColors.high;
 };
 
-const getStrokePerent = (num: number) => {
+const getStrokePercent = (num: number) => {
   if (num <= minStrokeWidth) {
     return minStrokeWidth;
   }
@@ -92,4 +97,4 @@ const getStrokePerent = (num: number) => {
   return num;
 };
 
-export { sortData, getStrokeColor, getStrokePerent };
+export { sortData, getStrokeColor, getStrokePercent };

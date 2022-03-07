@@ -4,6 +4,7 @@ import BalanceCard from '../../components/balance-card/index';
 
 import { useRewardsSectionTranslations } from '../../translations/translationsHooks';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import Loaders from '../../components/loaders/loader-components';
 
 const TotalRewards = observer(() => {
   const rewardsSectionTranslations = useRewardsSectionTranslations();
@@ -11,6 +12,7 @@ const TotalRewards = observer(() => {
 
   return (
     <BalanceCard
+    LoaderComponent = {Loaders.BalanceCardSmaller}
       title={`${rewardsSectionTranslations('title_rewardsRate')} (${rewardsSectionTranslations(
         'title_quantity_orbsPerWeek',
       )})`}

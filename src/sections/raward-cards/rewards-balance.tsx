@@ -4,6 +4,7 @@ import BalanceCard from '../../components/balance-card/index';
 
 import { useRewardsSectionTranslations } from '../../translations/translationsHooks';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import Loaders from '../../components/loaders/loader-components';
 
 interface IProps {
   onSecondaryActionButtonPressed: () => void;
@@ -14,6 +15,7 @@ const RewardsBalance = observer(({ onSecondaryActionButtonPressed }: IProps) => 
   const { rewardsBalance, doneLoading } = useOrbsAccountStore();
   return (
     <BalanceCard
+    LoaderComponent = {Loaders.BalanceCardSmaller}
       title={`${rewardsSectionTranslations('title_rewardsBalance')}`}
       amount={rewardsBalance.toString()}
       secondaryActionButtonActive={rewardsBalance > 0}

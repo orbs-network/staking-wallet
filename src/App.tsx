@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
-import NoBalanceWarning from './warnings/NoBalanceWarning';
+import ChainTopBackground from './components/chain/ChainTopBackground';
 
 export const App = observer(() => {
   useMonitoring();
@@ -19,9 +19,9 @@ export const App = observer(() => {
 
   return (
     <main>
-     
       <Header />
       <ContentContainer id='appContainer'>
+        <ChainTopBackground />
         <Switch>
           <Route exact path={routes.guardiansPage} component={GuardianDisplayPage} />
           <Route exact path={routes.main} component={MainAppPage} />
