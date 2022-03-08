@@ -13,7 +13,6 @@ import errorMonitoring from '../services/error-monitoring/index';
 import WrongNetwork from '../components/WrongNetwork';
 import ProviderWrapper from '../wrappers/ProviderWrapper';
 import AppLoader from '../components/app-loader';
-import { DEFAULT_CHAIN } from '../constants';
 
 const getThemeAndStyles = (theme: Theme) => {
   return {
@@ -27,7 +26,9 @@ web3Service.addNetworkChangedEvent();
 export const AppWrapper = () => {
   const { isLoading, chain, forcedChain, chainLoaded, hideLoader, wrongChain } = useLogic();
 
-  const theme = getTheme(chain || DEFAULT_CHAIN);
+  
+
+  const theme = getTheme(chain);
   
   return (
     <ThemeProvider theme={theme}>

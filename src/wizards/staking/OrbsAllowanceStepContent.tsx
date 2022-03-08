@@ -97,7 +97,7 @@ export const OrbsAllowanceStepContent = observer(
 
     return (
       <BaseStepContent
-        message={message.value}
+        // message={message.value}
         subMessage={subMessage.value}
         title={stakingWizardTranslations('allowanceSubStep_stepTitle')}
         infoTitle={stakingWizardTranslations('allowanceSubStep_stepExplanation')}
@@ -105,7 +105,7 @@ export const OrbsAllowanceStepContent = observer(
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_allowance_tx'}
         actionButtonProps={actionButtonProps}
-        innerContent={allowanceInput}
+        // innerContent={allowanceInput}
         addCancelButton
         close={closeWizard}
         onCancelButtonClicked={goBackToChooseGuardianStep}

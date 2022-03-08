@@ -68,7 +68,6 @@ export const getTheme = (chain: number) => {
           main: COLOR3,
         },
         background: {
-          // DEV_NOTE : This sets the app background color
           default: '#000000',
         },
       },
@@ -76,7 +75,7 @@ export const getTheme = (chain: number) => {
         fontFamily: 'Montserrat',
       },
       chain: {
-        current: chainsCustomStyles[chain],
+        current: chainsCustomStyles[chain] || chainsCustomStyles[DEFAULT_CHAIN],
         ...chainsCustomStyles,
       },
 

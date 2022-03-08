@@ -26,7 +26,7 @@ const BridgeWarning = observer(() => {
         return;
       }
       const item = localStorage.getItem(localStorageItem);
-      if (!item) {
+      if (!item && noTokens && chainId === CHAINS.polygon) {
         setShowWarning(true);
       }
     };
@@ -34,16 +34,19 @@ const BridgeWarning = observer(() => {
       onload();
       loadedOnce.current = true;
     }
-  }, [doneLoading]);
+   
+    
+  }, [doneLoading, noTokens, chainId]);
 
-  const show = showWarning && noTokens && chainId === CHAINS.polygon;
+  console.log(noTokens);
+  
   return (
     <CustomSnackbar
       variant='warning'
       hide={close}
       withoutAutoHide
       persist
-      show={show}
+      show={showWarning}
       message={
         <>
           {alertsTranslations('polygonBridgeTokens')}

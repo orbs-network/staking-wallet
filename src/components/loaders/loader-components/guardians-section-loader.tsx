@@ -5,7 +5,6 @@ import { CommonDivider } from '../../base/CommonDivider';
 import { LoaderFigure, useLoaderStyles } from '../styles';
 import { IBaseLoader } from '../types';
 const StyledGrid = styled(Grid)(({ theme }) => ({
-  backgroundColor: 'rgba(47,47,47,0.6)',
   padding: '20px',
   height: '500px',
   width: '100%',
@@ -13,6 +12,8 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   position: 'relative',
   top: '0px',
   left: '0px',
+  border: `1px solid ${theme.chain.current.mainColor}`,
+  background: '#1B1C1E',
 }));
 
 const GuardiansLoader = ({ style }: IBaseLoader) => {

@@ -175,7 +175,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
           <TransactionApprovingSubStepContent
             requiredConfirmations={requiredConfirmations}
             confirmationsCount={txConfirmationsCount.value}
-            transactionFinished={transactionFinished}
+            transactionFinished={txConfirmationsCount.value >= 1}
             txHash={txHash.value}
             onStepFinished={onTransactionApprovingSubStepFinished}
           />

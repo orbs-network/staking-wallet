@@ -19,11 +19,11 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 20, paddingRight: 20,
     border: `1px solid ${theme.chain.current.mainColor}`,
     background: '#1B1C1E',
+    borderRadius: 0,
   },
   table: {
     minWidth: 700,
-
-
+    borderRadius: 0,
 
     '& td': {
       paddingBottom: '20px',
@@ -93,7 +93,7 @@ const DesktopTable = (props: IProps) => {
           translations={guardiansTableTranslations}
           minSelfStakePercentMille={minSelfStakePercentMille}
         />
-        <TableBody>
+        <TableBody style={{ borderRadius: 0 }}>
           {data.map((group: IGuardiansDictionary, index: number) => {
             return (
               <TableRows
