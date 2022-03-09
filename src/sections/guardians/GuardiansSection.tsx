@@ -143,7 +143,7 @@ export const GuardiansSection = observer(() => {
               show={showSnackbarMessage.value}
               autoHideDuration={1500}
               hide={showSnackbarMessage.setFalse}
-              variant='info'
+              variant='warning'
               message={alertsTranslations('guardianAlreadySelected')}
               data-testid={'message-guardian-already-selected'}
             />

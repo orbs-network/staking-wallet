@@ -138,6 +138,7 @@ export const WalletInfoSection = observer(() => {
 
       <QR showQrModal={showQrModal} mainAddress={mainAddress} />
       <CustomSnackbar
+       autoHideDuration={2000}
         message={alertsTranslations('walletAddressWasCopied')}
         show={showSnackbar}
         hide={() => setShowSnackbar(false)}

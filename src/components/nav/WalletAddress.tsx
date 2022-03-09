@@ -71,7 +71,7 @@ function WalletAddress({ address }: IProps) {
         hide={() => setShowSnackbar(false)}
         testId='message-address-was-copied'
         variant='success'
-        autoHideDuration={4000}
+        autoHideDuration={2000}
       />
     </>
   ) : null;

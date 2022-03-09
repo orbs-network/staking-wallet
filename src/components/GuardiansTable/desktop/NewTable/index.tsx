@@ -121,6 +121,7 @@ const DesktopTable = (props: IProps) => {
         hide={() => setShowSnackbar(false)}
         testId='message-address-was-copied'
         variant='success'
+        autoHideDuration={2000}
       />
     </Paper>
   );

@@ -6,7 +6,11 @@ import web3Service from '../services/web3Service';
 import { useAlertsTranslations, useCommonsTranslations } from '../translations/translationsHooks';
 import { CHAINS, ORBS_TELEGRAM } from '../constants';
 
-const localStorageItem = 'NO_BALANCE_WARNING';
+
+
+// TODO ADD ADDRESS TO ITEM NAME
+// TODO Connect page add shadow according to chain
+
 
 const NoBalanceWarning = observer(() => {
   const [showWarning, setShowWarning] = useState(false);
@@ -14,6 +18,7 @@ const NoBalanceWarning = observer(() => {
   const { chainId } = useContext(MobXProviderContext);
   const alerts = useAlertsTranslations();
   const common = useCommonsTranslations();
+  const localStorageItem = `NO_BALANCE_WARNING_${mainAddress}`;
 
   const close = () => {
     localStorage.setItem(localStorageItem, JSON.stringify(true));
@@ -52,7 +57,7 @@ const NoBalanceWarning = observer(() => {
   }, [alerts, chainId, common]);
 
   return (
-    <CustomSnackbar persist variant='error' hide={close} withoutAutoHide show={showWarning} message={getMessage()} />
+    <CustomSnackbar persist variant='warning' hide={close} withoutAutoHide show={showWarning} message={getMessage()} />
   );
 });
 

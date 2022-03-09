@@ -128,6 +128,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       });
 
       promiEvent.on('receipt', (receipt) => {
+        console.log(receipt);
         onReceipt(receipt.blockNumber);
       });
 
@@ -141,6 +142,8 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     },
     [disableTxCreationInputs, txConfirmationsCount, txHash, goToApprovalSubStep, onReceipt, txCreatingError],
   );
+
+  console.log({ txConfirmationsCount: txConfirmationsCount.value });
 
   useEffect(() => {
     return () => {
@@ -175,7 +178,6 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
           <TransactionApprovingSubStepContent
             requiredConfirmations={requiredConfirmations}
             confirmationsCount={txConfirmationsCount.value}
-            transactionFinished={txConfirmationsCount.value >= 1}
             txHash={txHash.value}
             onStepFinished={onTransactionApprovingSubStepFinished}
           />

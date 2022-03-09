@@ -11,17 +11,15 @@ interface IProps {
   confirmationsCount: number;
   onStepFinished(): void;
   requiredConfirmations: number;
-  transactionFinished: boolean;
 }
 
 export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations, transactionFinished } = props;
+  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations } = props;
 
   const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
-  const allowToProceed = useBoolean(true);
   const message = useStateful(approvableWizardStepTranslations('weRecommendWaitingToReceiveEnoughConfirmations'));
   const subMessage = useStateful('');
-
+  const transactionFinished = confirmationsCount >= 1;
   // Update the verification count text
   useEffect(() => {
     subMessage.setValue(
@@ -32,10 +30,9 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     );
   }, [approvableWizardStepTranslations, confirmationsCount, requiredConfirmations, subMessage]);
 
-  const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
     let actionContent = null;
-    if (allowToProceedValue && transactionFinished) {
+    if (transactionFinished) {
       actionContent = (
         <CommonActionButton onClick={onStepFinished}>
           {approvableWizardStepTranslations('action_proceed')}
@@ -48,7 +45,7 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     }
 
     return actionContent;
-  }, [allowToProceedValue, approvableWizardStepTranslations, transactionFinished, onStepFinished]);
+  }, [approvableWizardStepTranslations, transactionFinished, onStepFinished]);
 
   const titleFc = useMemo(() => {
     const titleMessage = transactionFinished

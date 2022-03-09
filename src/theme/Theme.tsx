@@ -63,6 +63,15 @@ export const getTheme = (chain: number) => {
         primary: {
           main: COLOR1,
         },
+        success: {
+          main: '#30CB01',
+          dark: '#30CB01',
+        },
+        error: {
+          main: '#30CB01',
+          dark: '#30CB01',
+          contrastText: '#30CB01',
+        },
 
         secondary: {
           main: COLOR3,

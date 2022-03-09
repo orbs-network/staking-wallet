@@ -64,6 +64,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@open-defi-notification-protocol/widget": "^0.0.3",
     "@orbs-network/contracts-js": "0.0.36",
     "@react-hook/hover": "^4.0.0",

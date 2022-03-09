@@ -2,7 +2,8 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import { useSnackbar } from 'notistack';
 import CloseIcon from '@material-ui/icons/Close';
-
+import { makeStyles } from '@material-ui/core/styles';
+import SnackbarContent from './SnackbarContent';
 interface IProps {
   message: string | ReactNode;
   show: boolean;
@@ -15,6 +16,14 @@ interface IProps {
   horizontal?: 'left' | 'center' | 'right';
   persist?: boolean;
 }
+
+const useStyles = makeStyles({
+  root: {
+    '& .notistack-snackbar': {
+      backgroundColor: 'yellow',
+    },
+  },
+});
 
 const CustomSnackbar = ({
   message,
@@ -30,7 +39,7 @@ const CustomSnackbar = ({
 }: IProps) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const notistackRef = React.createRef();
-
+  const classes = useStyles();
 
   const createSnackbar = () => {
     if (show && message) {
@@ -42,13 +51,13 @@ const CustomSnackbar = ({
           vertical: vertical,
           horizontal: horizontal,
         },
+        content: (key) => (
+          <SnackbarContent variant={variant} onClose={() => closeSnackbar(key)}>
+            {message}
+          </SnackbarContent>
+        ),
         onExit: hide,
         autoHideDuration: withoutAutoHide ? null : autoHideDuration,
-        action: (key) => (
-          <IconButton key='close' aria-label='close' color='inherit' onClick={() => closeSnackbar(key)}>
-            <CloseIcon />
-          </IconButton>
-        ),
       });
     }
   };
@@ -57,7 +66,7 @@ const CustomSnackbar = ({
     if (show) {
       createSnackbar();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
   return null;

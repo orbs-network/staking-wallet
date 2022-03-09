@@ -132,7 +132,7 @@ function TableRows(props: IProps) {
         </TableCell>
 
         <TableCell rowSpan={rowSpan}>
-          <div style={{ width: '10vw', paddingRight: 20 }}>{Name}</div>
+          <div style={{ width: '10vw', maxWidth: '160px', paddingRight: 20 }}>{Name}</div>
         </TableCell>
         <TableCell rowSpan={rowSpan}>
           <div>

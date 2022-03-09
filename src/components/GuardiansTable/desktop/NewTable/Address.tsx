@@ -21,7 +21,7 @@ const Address = ({ address, copyAddress, blockExplorer, copyImage: CopyIcon }: I
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
-            maxWidth: '8vw',
+            maxWidth: '100px',
             color: 'white',
             fontSize: '14px',
           }}

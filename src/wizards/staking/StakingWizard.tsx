@@ -104,7 +104,6 @@ export const StakingWizard = observer(
     const extraPropsForOrbsAllowance = useMemo<IOrbsAllowanceStepContentProps>(() => {
       return {
         goBackToChooseGuardianStep: goToSelectGuardianStep,
-        setAmount: (value: string) => setStakeAmountFromApprovalStep(value),
         stakeAmountFromApprovalStep,
       };
     }, [goToSelectGuardianStep, stakeAmountFromApprovalStep]);

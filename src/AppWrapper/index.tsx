@@ -14,6 +14,7 @@ import WrongNetwork from '../components/WrongNetwork';
 import ProviderWrapper from '../wrappers/ProviderWrapper';
 import AppLoader from '../components/app-loader';
 
+
 const getThemeAndStyles = (theme: Theme) => {
   return {
     ...theme,
@@ -21,18 +22,20 @@ const getThemeAndStyles = (theme: Theme) => {
   };
 };
 
+
 web3Service.addNetworkChangedEvent();
 
 export const AppWrapper = () => {
   const { isLoading, chain, forcedChain, chainLoaded, hideLoader, wrongChain } = useLogic();
 
-  
-
   const theme = getTheme(chain);
-  
+
   return (
     <ThemeProvider theme={theme}>
-      <SnackbarProvider preventDuplicate>
+      <SnackbarProvider
+    
+        preventDuplicate
+      >
         <SCThemeProvider theme={getThemeAndStyles(theme)}>
           <CssBaseline />
           <errorMonitoring.ErrorBoundary>

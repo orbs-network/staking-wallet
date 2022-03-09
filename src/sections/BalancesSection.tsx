@@ -110,7 +110,7 @@ export const BalancesSection = observer(() => {
 
           {/* Cannot unstake now snackbar */}
           <CustomSnackbar
-            autoHideDuration={10000}
+            autoHideDuration={3000}
             message={alertsTranslations('cannotUnstakeWhenThereAreOrbsReadyToWithdraw')}
             hide={showCannotUnstakeNowSnackbar.setFalse}
             show={showCannotUnstakeNowSnackbar.value}
