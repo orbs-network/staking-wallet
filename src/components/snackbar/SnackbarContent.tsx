@@ -18,7 +18,9 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: 20,
-    borderRadius: '6px'
+    borderRadius: '6px',
+    paddingTop: 10, 
+    paddingBottom: 10
   },
   content: (props: any) => ({
     paddingLeft:10,

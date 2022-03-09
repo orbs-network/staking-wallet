@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import Typography from '@material-ui/core/Typography';
+import useTheme from '@material-ui/core/styles/useTheme';
 
 interface IProps {
   stakeTitle: string;
@@ -7,19 +8,19 @@ interface IProps {
   rewardsBalance: string;
   pendingRewardsTitle: string;
 }
-
 const BalaceTooltip: FC<IProps> = ({ stakeTitle, stakedOrbs, rewardsBalance, pendingRewardsTitle }) => {
+  const theme = useTheme()
   return (
     <>
-      <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
+      <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
         {`${stakeTitle} `}
       </Typography>
-      <Typography style={{ display: 'inline', fontWeight: 'bold' }}>{stakedOrbs}</Typography>
+      <Typography style={{ display: 'inline', fontWeight: 'bold', color: theme.chain.current.mainColor }}>{stakedOrbs}</Typography>
       <br />
-      <Typography color={'secondary'} style={{ display: 'inline', fontWeight: 'bold' }}>
+      <Typography style={{ display: 'inline', fontWeight: 'bold'}}>
         {`${pendingRewardsTitle} `}
       </Typography>
-      <Typography style={{ display: 'inline', fontWeight: 'bold' }}>{rewardsBalance}</Typography>
+      <Typography style={{ display: 'inline', fontWeight: 'bold', color: theme.chain.current.mainColor }}>{rewardsBalance}</Typography>
     </>
   );
 };

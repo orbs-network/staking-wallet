@@ -21,7 +21,6 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
   const orbsAccountStore = useOrbsAccountStore();
   const analyticsService = useAnalyticsService();
 
-  const reReadStoresData = useReReadAllStoresData();
   const stakedOrbsNumericalFormat = fullOrbsFromWeiOrbs(orbsAccountStore.stakedOrbs);
 
   const stakedOrbsStringFormat = fullOrbsFromWeiOrbsString(orbsAccountStore.stakedOrbs);
@@ -46,7 +45,6 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
       promiEvent: orbsAccountStore.unstakeTokens(weiOrbsFromFullOrbs(orbsForUnstaking)),
       isBroadcastingMessage,
       onPromiEventAction,
-      reReadStoresData,
       wizardsCommonTranslations,
       errorHandler: hanleUnstakingError,
       warnMsg: `tried to un-stake out of range amount of ${orbsForUnstaking}`,
@@ -63,7 +61,6 @@ export const OrbsUntakingStepContent = observer((props: ITransactionCreationStep
     onPromiEventAction,
     orbsAccountStore,
     orbsForUnstaking,
-    reReadStoresData,
     stakedOrbsNumericalFormat,
     subMessage,
     wizardsCommonTranslations,

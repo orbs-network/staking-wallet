@@ -19,7 +19,6 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
   const orbsAccountStore = useOrbsAccountStore();
   const analyticsService = useAnalyticsService();
 
-  const reReadStoresData = useReReadAllStoresData();
 
   // Start and limit by allowance
   const fullOrbsForRestaking = fullOrbsFromWeiOrbsString(orbsAccountStore.orbsInCoolDown);
@@ -41,7 +40,6 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
         promiEvent: orbsAccountStore.restakeTokens(),
         isBroadcastingMessage,
         onPromiEventAction,
-        reReadStoresData,
         wizardsCommonTranslations,
         errorHandler: handleRestakingError,
         analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.restaking),
@@ -51,7 +49,6 @@ export const OrbsRestakingStepContent = observer((props: ITransactionCreationSte
       message,
       onPromiEventAction,
       orbsAccountStore,
-      reReadStoresData,
       subMessage,
       wizardsCommonTranslations,
       analyticsService,

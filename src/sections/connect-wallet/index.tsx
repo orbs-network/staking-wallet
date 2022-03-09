@@ -9,8 +9,7 @@ import {
   useConnectWalletSectionTranslations,
   useSectionsTitlesTranslations,
 } from '../../translations/translationsHooks';
-import { ReactComponent as TetraIconSvg } from '../../../assets/logos/tetra_icon.svg';
-import { ReactComponent as TetraLogoSvg } from '../../../assets/logos/tetra_logo.svg';
+import { ReactComponent as TetraLogoSvg } from '../../../assets/logos/tetra-white.svg';
 import InstallOrConnectBtn from './components/install-or-connect-btn';
 import LegalAgreement from './components/legal-agreement';
 import Message from './components/message';
@@ -61,14 +60,7 @@ const ConnectWalletSection = observer(() => {
         ref={hoverTargetRef}
       >
         {/* Brand logos */}
-        <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
-          <Grid item style={{ maxWidth: '90%' }}>
-            <TetraIconSvg style={{ height: '5em', marginRight: 'auto', marginLeft: 'auto' }} />
-          </Grid>
-          <Grid item style={{ maxWidth: '90%' }}>
-            <TetraLogoSvg style={{ height: '2em' }} />
-          </Grid>
-        </Grid>
+        <TetraLogoSvg style={{ height: '8em' }} />
 
         {/* Texts */}
         <Grid item container direction={'column'} spacing={5} style={{ textAlign: 'center' }}>

@@ -1,6 +1,7 @@
-import { observer } from 'mobx-react';
-import React, { useEffect, useState } from 'react';
+import { MobXProviderContext, observer } from 'mobx-react';
+import React, { useContext, useEffect, useState } from 'react';
 import CustomSnackbar from '../../components/snackbar/custom-snackbar';
+import { CHAINS } from '../../constants';
 import { useCryptoWalletIntegrationStore, useOrbsAccountStore } from '../../store/storeHooks';
 import { useAlertsTranslations } from '../../translations/translationsHooks';
 
@@ -8,10 +9,14 @@ import { useAlertsTranslations } from '../../translations/translationsHooks';
 const StakingWarning = observer(() => {
    const { hasStakedOrbs } = useOrbsAccountStore();
   const [show, setShow] = useState(false);
+  const { chainId } = useContext(MobXProviderContext);
+
   const alertsTranslations = useAlertsTranslations();
   const { mainAddress } = useCryptoWalletIntegrationStore();
 
   const localStorageItem = `POLYGON_CHANGE_MESSAGE_${mainAddress}`;
+
+
   const close = () => {
     localStorage.setItem(localStorageItem, JSON.stringify(true));
     setShow(false);
@@ -19,10 +24,10 @@ const StakingWarning = observer(() => {
 
   useEffect(() => {
     const seen = localStorage.getItem(localStorageItem);
-    if (!seen && !hasStakedOrbs) {
+    if (!seen && !hasStakedOrbs && chainId === CHAINS.ethereum) {
       setShow(true);
     }
-  }, [hasStakedOrbs]);
+  }, [hasStakedOrbs, chainId]);
 
   return (
     <CustomSnackbar

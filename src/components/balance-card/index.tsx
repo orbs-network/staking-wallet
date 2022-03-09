@@ -9,6 +9,7 @@ import BalanceCardCounters from './components/counters';
 import { StyledGrid, useStyles } from './styles';
 import { HtmlTooltip } from '../base/HtmlTooltip';
 import WarningTooltip from '../tooltips/WarningTooltip';
+import useTheme from '@material-ui/core/styles/useTheme';
 
 interface IProps {
   title: string | React.ElementType | JSX.Element;
@@ -54,7 +55,7 @@ const BalanceCard = (props: IProps) => {
   const titleElement = useStringOrElement(title);
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
-
+  const theme = useTheme()
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} className={classes.container}>
       <BaseLoader isLoading={isLoading} LoaderComponent={LoaderComponent || Loaders.BalanceCard}>
@@ -69,7 +70,7 @@ const BalanceCard = (props: IProps) => {
               <Grid item>
                 <Button
                   className={classes.secondaryActionButton}
-                  color={'secondary'}
+                  color={theme.chain.current.mainColor}
                   onClick={onSecondaryActionButtonPressed}
                   disabled={!secondaryActionButtonActive}
                 >

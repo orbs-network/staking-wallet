@@ -3,7 +3,7 @@
   "guardianAlreadySelected": "既にガーディアンを選択済みです",
   "noEthereumBalance": "You need a little ETH to pay for fees on Ethereum.",
   "noMaticBalance": "You need a little MATIC to pay for fees on Polygon. Ask for some on",
-  "polygonBridgeTokens": "Did you move your ORBS tokens on Polygon bridge from Ethereum",
+  "polygonBridgeTokens": "Did you move your ORBS tokens on Polygon bridge from Ethereum?",
   "swicthToPolygon": "Did you know? by switching network on top to Polygon, you can enjoy reduced fees and auto rewards compounding.",
   "undergoingMaintenance": "メインテナンス中。全てのウォレット内の情報が非表示になっています。数時間後に再度お試しください。",
   "walletAddressWasCopied": "アドレスがコピーされました"

@@ -8,7 +8,6 @@ import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../.
 import { useTxCreationErrorHandlingEffect, useWizardState } from '../wizardHooks';
 import { useAnalyticsService } from '../../services/ServicesHooks';
 import { STAKING_ACTIONS } from '../../services/analytics/analyticConstants';
-import constants from '../../constants/constants';
 import handleApprove from '../helpers/handle-approve';
 import { hanleStakingError } from '../helpers/error-handling';
 import { formatStringAsNumber } from '../../utils/stringUtils';
@@ -37,7 +36,6 @@ export const OrbsStakingStepContent = observer(
     const orbsAccountStore = useOrbsAccountStore();
     const analyticsService = useAnalyticsService();
 
-    const reReadStoresData = useReReadAllStoresData();
 
     // Start and limit by allowance
     const orbsForStaking = orbsAccountStore.stakingContractAllowance;
@@ -45,17 +43,20 @@ export const OrbsStakingStepContent = observer(
     const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
     const [stakeAmount, setStakeAmount] = useState(stakeAmountFromApprovalStep);
-    // Handle error by displaying the proper error message
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+
+    const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
+
+    const isApproveEnabled = stakingUtil.isApproveEnabled(liquidOrbsAsString, stakeAmount)
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
     const stake = useCallback(() => {
       handleApprove({
+        isApproveEnabled,
         message,
         subMessage,
         promiEvent: orbsAccountStore.stakeTokens(weiOrbsFromFullOrbs(stakeAmount)),
         isBroadcastingMessage,
         onPromiEventAction,
-        reReadStoresData,
         wizardsCommonTranslations,
         errorHandler: hanleStakingError,
         analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(
@@ -70,7 +71,6 @@ export const OrbsStakingStepContent = observer(
       stakeAmount,
       isBroadcastingMessage,
       onPromiEventAction,
-      reReadStoresData,
       wizardsCommonTranslations,
       analyticsService,
       fullOrbsForStaking,
@@ -80,11 +80,11 @@ export const OrbsStakingStepContent = observer(
       () => ({
         onClick: stake,
         title: stakingWizardTranslations('stakingSubStep_action_stake'),
+        isDisabled: !isApproveEnabled
       }),
-      [stake, stakingWizardTranslations],
+      [stake, stakingWizardTranslations, isApproveEnabled],
     );
 
-    const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
 
     const allowanceInput = (
       <StakingInput
@@ -107,7 +107,6 @@ export const OrbsStakingStepContent = observer(
           orbsForStaking: formatStringAsNumber(stakeAmount, true, 4) || 0,
         })}
         infoTitle={stakingWizardTranslations('stakingSubStep_stepExplanation')}
-        disableInputs={!stakeAmount || parseFloat(stakeAmount) === 0}
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_staking_tx'}
         actionButtonProps={actionButtonProps}

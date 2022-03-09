@@ -4,7 +4,7 @@ import { sleep } from '../../utils';
 
 function useReceipt() {
   const [finished, setFinished] = useState(false);
-  const onReceipt = async (confirmationBlock: number) => {
+  const onReceipt = async (confirmationBlock: number, callback?: () => void) => {
     let stopped = false;
     // infinite loop
     while (!stopped) {
@@ -13,6 +13,10 @@ function useReceipt() {
       if (latestBlock >= confirmationBlock) {
         stopped = true;
         setFinished(true);
+        console.log('done');
+        if (callback) {
+          callback();
+        }
       }
     }
   };

@@ -1,7 +1,8 @@
 import { useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
-import { NETWORK_QUERY_PARAM } from '../constants';
+import { DEFAULT_CHAIN, NETWORK_QUERY_PARAM } from '../constants';
 import web3Service from '../services/web3Service';
+import { getSupportedChains } from '../utils';
 
 const detectForcedNetwork = (location) => {
   const network = new URLSearchParams(location.search).get(NETWORK_QUERY_PARAM);
@@ -41,8 +42,9 @@ const useNetwork = (): {
       getChain();
     }
     const forced = detectForcedNetwork(location);
+    const availableChains = getSupportedChains();
     if (forced) {
-      setForcedChain(forced);
+      setForcedChain(availableChains.includes(forced) ? forced : Number(DEFAULT_CHAIN));
     }
   }, []);
 

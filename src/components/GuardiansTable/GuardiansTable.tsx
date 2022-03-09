@@ -19,7 +19,7 @@ const GuardiansTable = (props: IProps) => {
     selectedGuardian: props.selectedGuardian,
     guardianSelectionMode: props.guardianSelectionMode,
     disableSelection: props.disableSelection,
-    sortedGuardians: getSortedGuardians(Object.values(props.allChainsGuardians), props.selectedGuardian),
+    sortedGuardians: props.allChainsGuardians && getSortedGuardians(Object.values(props.allChainsGuardians), props.selectedGuardian),
     tableTitle: props.tableTitle,
     densePadding: props.densePadding,
     isGuardian: props.isGuardian,

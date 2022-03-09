@@ -129,7 +129,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
 
       promiEvent.on('receipt', (receipt) => {
         console.log(receipt);
-        onReceipt(receipt.blockNumber);
+        onReceipt(receipt.blockNumber, reReadStoresData);
       });
 
       promiEvent.on('error', (error) => {
@@ -153,12 +153,6 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (transactionFinished) {
-      console.log('once');
-      reReadStoresData();
-    }
-  }, [transactionFinished, reReadStoresData]);
 
   const currentSubStepContent = useMemo(() => {
     switch (stepState.value) {

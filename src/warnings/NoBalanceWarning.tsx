@@ -7,17 +7,13 @@ import { useAlertsTranslations, useCommonsTranslations } from '../translations/t
 import { CHAINS, ORBS_TELEGRAM } from '../constants';
 
 
-
-// TODO ADD ADDRESS TO ITEM NAME
-// TODO Connect page add shadow according to chain
-
-
 const NoBalanceWarning = observer(() => {
   const [showWarning, setShowWarning] = useState(false);
   const { mainAddress } = useCryptoWalletIntegrationStore();
   const { chainId } = useContext(MobXProviderContext);
   const alerts = useAlertsTranslations();
   const common = useCommonsTranslations();
+
   const localStorageItem = `NO_BALANCE_WARNING_${mainAddress}`;
 
   const close = () => {

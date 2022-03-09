@@ -50,7 +50,6 @@ export const OrbsAllowanceStepContent = observer(
           ),
           isBroadcastingMessage,
           onPromiEventAction,
-          reReadStoresData: () => {},
           wizardsCommonTranslations,
           errorHandler: hanleStakingAllowanceError,
           warnMsg: `tried to set out of range allowance of ${stakeAmountFromApprovalStep}`,

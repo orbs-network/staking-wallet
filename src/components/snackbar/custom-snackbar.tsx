@@ -1,7 +1,5 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import IconButton from '@material-ui/core/IconButton';
+import React, { ReactNode, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
-import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
 import SnackbarContent from './SnackbarContent';
 interface IProps {
@@ -39,7 +37,6 @@ const CustomSnackbar = ({
 }: IProps) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const notistackRef = React.createRef();
-  const classes = useStyles();
 
   const createSnackbar = () => {
     if (show && message) {

@@ -13,6 +13,7 @@ const BridgeWarning = observer(() => {
   const commonTranslations = useCommonsTranslations();
   const { mainAddress } = useCryptoWalletIntegrationStore();
   const loadedOnce = useRef<boolean>(false);
+
   const localStorageItem = `BRIDGE_WARNING_${mainAddress}`;
 
   const close = () => {
@@ -48,9 +49,11 @@ const BridgeWarning = observer(() => {
       message={
         <>
           {alertsTranslations('polygonBridgeTokens')}
-          <a href={POLYGON_BRIDGE_URL} style={{ marginLeft: 5 }} target='_blank' rel='noopener noreferrer'>
-            {commonTranslations('readMore')}
-          </a>
+          {POLYGON_BRIDGE_URL && (
+            <a href={POLYGON_BRIDGE_URL} style={{ marginLeft: 5 }} target='_blank' rel='noopener noreferrer'>
+              {commonTranslations('readMore')}
+            </a>
+          )}
         </>
       }
     />

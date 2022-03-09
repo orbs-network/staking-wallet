@@ -32,7 +32,6 @@ export const GuardianSelectionStepContent = observer(
     const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
     const { mainAddress } = useCryptoWalletIntegrationStore();
-    const reReadStoresData = useReReadAllStoresData();
 
     const stakingRewardsService = useStakingRewardsService();
 
@@ -68,7 +67,6 @@ export const GuardianSelectionStepContent = observer(
             promiEvent: orbsAccountStore.delegate(guardian.EthAddress),
             isBroadcastingMessage,
             onPromiEventAction,
-            reReadStoresData,
             wizardsCommonTranslations,
             errorHandler: handleGuardianSelectionError,
             analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
@@ -85,7 +83,6 @@ export const GuardianSelectionStepContent = observer(
         onPromiEventAction,
         isBroadcastingMessage,
         analyticsService,
-        reReadStoresData,
       ],
     );
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="overflow-x: hidden;">
   <head>
     <meta charset="UTF-8" />
     <title><%= htmlWebpackPlugin.options.title %></title>
@@ -62,7 +62,7 @@
 
     <% } %>
   </head>
-  <body style="background-color: black;overflow-x: hidden;" >
+  <body style="background-color: black;" >
     <div id="app" style="height: 100%;"> </div>
     
     <% if (!process.env.IS_DEV) { %>
