@@ -140,6 +140,7 @@ export class OrbsAccountStore {
     private delegationsService: IDelegationsService,
     private alertErrors = false,
   ) {
+    this.readTotalStakeByChain();
     this.addressChangeReaction = reaction(
       () => this.cryptoWalletIntegrationStore.mainAddress,
       async (address) => {
@@ -191,16 +192,17 @@ export class OrbsAccountStore {
     const result: ITotalChainStakeAmount[] = await Promise.all(
      
       getSupportedChains().map(async (chain: number) => {
+
+        const { rpcUrls, contractsRegistry } = config.networks[chain];
         
-        const { rpcUrl, contractsRegistry } = config.networks[chain];
-        console.log(rpcUrl);
-        
-        const web3 = new Web3(new Web3.providers.HttpProvider(rpcUrl));
+          
+        const web3 = new Web3(new Web3.providers.HttpProvider(rpcUrls[0]));
         const { staking, delegations } = await new ContractRegistry(web3, contractsRegistry).getContracts([
           'staking',
           'delegations',
         ]);
-
+        
+        
         const totalStake = await new StakingService(web3, staking).readTotalStakedInFullOrbs();
 
         const totalUncappedStakedOrbs = await new DelegationsService(
@@ -289,9 +291,10 @@ export class OrbsAccountStore {
   }
 
   private async readDataForAccount(accountAddress: string) {
+    
     const { sections, captureException } = errorMonitoring;
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
-    this.readTotalStakeByChain();
+    
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
       console.error(`Error in read-n-set liquid orbs : ${e}`);

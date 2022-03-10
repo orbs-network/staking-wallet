@@ -8,6 +8,7 @@ import { RewardsSection } from './RewardsSection';
 import web3Service from '../services/web3Service';
 import BridgeWarning from '../warnings/BridgeWarning';
 import NoBalanceWarning from '../warnings/NoBalanceWarning';
+import { hasInjectedProvider } from '../constants';
 
 // TODO : FUTURE : the tests will expect to see the "data-testid='wallet-information-sections'" so we should fix that
 //  (have them looking for the sections instead)
@@ -16,7 +17,7 @@ export const WalletSectionsWrapper = observer(() => {
   const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
 
   useEffect(() => {
-    if (isConnectedToWallet) {
+    if (hasInjectedProvider) {
       web3Service.addAccountChangedEvent();
     }
   }, [isConnectedToWallet]);

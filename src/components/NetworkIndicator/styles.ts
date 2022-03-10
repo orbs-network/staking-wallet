@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   listItem: {
     padding: 0,
+    height: 40 
   },
   logo: {
     marginRight: 10,
@@ -22,17 +23,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 17,
     objectFit: 'contain',
     [theme.breakpoints.down('sm')]: {
-      marginRight: '0px',
+     
     },
   },
   name: {
     textTransform: 'none',
     [theme.breakpoints.down('sm')]: {
-      display: 'none',
+     
     },
   },
   root: {
     display: 'flex',
+    width: '100%',
+    position: 'relative',
+  
   },
   paper: {
     marginRight: 20,
@@ -43,22 +47,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   selector: {
     background: '#152136',
     height: 35,
-    width: 211,
+    width: '100%',
     padding: 0,
     paddingRight: 12,
     display: 'flex',
     justifyContent: 'flex-start',
     [theme.breakpoints.down('sm')]: {
-      width: 'auto',
     },
   },
   selectorArrow: {
     marginLeft: 'auto',
   },
   container: {
-    width: 211,
+    width: '100%',
     [theme.breakpoints.down('sm')]: {
-      width: 'auto',
+    
     },
   },
   selectorInfoIcon: {

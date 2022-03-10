@@ -12,9 +12,9 @@ import WalletAddress from './WalletAddress';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 import useScroll from '../../hooks/useScroll';
 import { getChainConfig } from '../../utils';
-
-
-
+import { hasInjectedProvider } from '../../constants';
+import useScrollDirection from '../../hooks/useScrollDirection';
+import useResize from '../../hooks/useResize';
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 const useStyes = makeStyles((theme) => ({
@@ -26,38 +26,68 @@ const useStyes = makeStyles((theme) => ({
   toolbar: {
     marginBottom: '7.5em',
     [theme.breakpoints.down('sm')]: {
-      marginBottom: '6.5em',
+      marginBottom: '10em',
     },
   },
   container: (props: any) => ({
     position: 'relative',
     height: '100%',
-    borderBottom: props.scrollPosition <= 30 ? `0.5px solid ${theme.chain.current.mainColor}` : null,
-  }),
-  root: (props: any) => ({
-    background: props.scrollPosition >= 30 ? '#000000' : 'transparent',
-
-    transition: '0.2s all',
-    position: 'fixed',
-    height: '95px',
+    borderBottom: props.scrollPosition <= 30  ? `0.5px solid ${theme.chain.current.mainColor}` : null,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     [theme.breakpoints.down('xs')]: {
-      height: '120px',
+      paddingTop: '20px',
+      paddingBottom: '20px',
     },
   }),
-  walletAddress: {
-    marginLeft: '15px',
+  root: (props: any) => ({
+    background: props.scrollPosition >= 30  ? '#000000' : props.width <= 600 ? '#000000' :  'transparent',
+    transition: '0.3s all',
+    position: 'fixed',
+    height: '95px',
+    transform: props.scrollPosition >= 70 && props.width <= 600 && !props.scrollingTop ? 'translate(0, -100%)' : 'translate(0, 0%)',
     [theme.breakpoints.down('xs')]: {
-      marginLeft: '0px',
-      marginRight: 20,
-      marginTop: 15
+      height: 'auto',
+    },
+  }),
+  walletAddressDesktop: {
+    marginLeft: '15px',
+    width: 137,
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
+  walletAddressMobile: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+      marginBottom: '15px',
+      width: '100%',  
     },
   },
   languageSelector: {
-    marginLeft: 25 ,
+    marginLeft: 25,
+  },
+  networkIndicator: {
+    marginLeft: 'auto',
+    width: 211,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 15
+      display: 'none',
     },
-  }
+  },
+  mobileGrid: {
+    display: 'none',
+    width: '100%',
+    marginTop: 20,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+    },
+  },
+  networkIndicatorMobile: {
+    width: '100%',
+    maxWidth: 250,
+  },
 }));
 
 export const Header = () => {
@@ -67,7 +97,10 @@ export const Header = () => {
   const TetraLogoAndIconSvg: any = chainConfig.ui.navbar.logo;
 
   const scrollPosition = useScroll();
-  const classes = useStyes({ scrollPosition });
+  const scrollingTop = useScrollDirection();
+  const [width] = useResize();
+
+  const classes = useStyes({ scrollPosition, scrollingTop, width });
 
   return (
     <>
@@ -78,16 +111,33 @@ export const Header = () => {
               <Grid item>
                 <TetraLogoAndIconSvg className={classes.logo} />
               </Grid>
-              <Grid item style={{ marginLeft: 'auto' }}>
-                <NetworkIndicator chainId={chainId} />
-              </Grid>
-              <Grid item className={classes.walletAddress}>
-                <WalletAddress address={mainAddress} />
-              </Grid>
+              {hasInjectedProvider && (
+                <Grid item className={classes.networkIndicator}>
+                  <NetworkIndicator chainId={chainId} />
+                </Grid>
+              )}
+
+              {hasInjectedProvider && mainAddress && (
+                <Grid item className={classes.walletAddressDesktop}>
+                  <WalletAddress address={mainAddress} />
+                </Grid>
+              )}
 
               <Grid item className={classes.languageSelector}>
                 <LanguagesSelector />
               </Grid>
+            </Grid>
+            <Grid container className={classes.mobileGrid} direction='column'>
+              {hasInjectedProvider && mainAddress && (
+                <Grid item className={classes.walletAddressMobile}>
+                  <WalletAddress address={mainAddress} />
+                </Grid>
+              )}
+              {hasInjectedProvider && (
+                <Grid item className={classes.networkIndicatorMobile}>
+                  <NetworkIndicator chainId={chainId} />
+                </Grid>
+              )}
             </Grid>
           </StyledToolBar>
         </ContentContainer>

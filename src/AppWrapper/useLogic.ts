@@ -12,11 +12,11 @@ function useLogic() {
   const hideLoader = () => {
     setIsLoading(false);
   };
-
+  
   const wrongChain =
     web3Service.isWrongNetwork(chain, availableChains) || web3Service.forceChainChange(forcedChain, chain);
 
-  return { isLoading, chain, forcedChain, chainLoaded, hideLoader, wrongChain };
+  return { isLoading, chain, forcedChain, chainLoaded, hideLoader, wrongChain};
 }
 
 export default useLogic;

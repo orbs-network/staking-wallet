@@ -14,7 +14,7 @@ const StyledButton = styled(Button)({
   border: '0.5px solid #FFFFFF',
   borderRadius: 0,
   background: 'transparent',
-  width: 137,
+  width: '100%',
   height: 35,
   paddingLeft: 15,
   paddingRight: 10,
@@ -55,7 +55,7 @@ function WalletAddress({ address }: IProps) {
     copy(address);
     setShowSnackbar(true);
   };
-  return address ? (
+  return  (
     <>
       <HtmlTooltip
         style={{ borderRadius: '0px' }}
@@ -74,7 +74,7 @@ function WalletAddress({ address }: IProps) {
         autoHideDuration={2000}
       />
     </>
-  ) : null;
+  ) 
 }
 
 export default WalletAddress;

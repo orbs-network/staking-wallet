@@ -88,10 +88,12 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
         style={{
           ...style,
           ...blurStyle,
-          textIndent: btnWidth,
+          paddingRight: 70,
+          paddingLeft: 70
+         
         }}
       />
-      <div ref={btnRef}>{buttonComponent}</div>
+      <div ref={btnRef} style={{position:'absolute', right: 0}}>{buttonComponent}</div>
     </>
   );
 }

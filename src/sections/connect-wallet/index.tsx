@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
 import { Section } from '../../components/structure/Section';
 import {
@@ -14,8 +14,18 @@ import InstallOrConnectBtn from './components/install-or-connect-btn';
 import LegalAgreement from './components/legal-agreement';
 import Message from './components/message';
 import { WalletConnectionInnerGrid } from './components/style';
+import { hasInjectedProvider } from '../../constants';
+import styled from 'styled-components';
+import { Theme } from '@material-ui/core';
 
 type TWalletConnectionPhase = 'install' | 'connect';
+
+export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: Theme }) => ({
+  marginTop: '5em' ,
+  [theme.breakpoints.down('sm')]: {
+    marginTop: '1.7em',
+  },
+}));
 
 const ConnectWalletSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -27,9 +37,7 @@ const ConnectWalletSection = observer(() => {
 
   const hoverTargetRef = useRef();
 
-  const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.hasEthereumProvider
-    ? 'connect'
-    : 'install';
+  const walletConnectionState: TWalletConnectionPhase = hasInjectedProvider ? 'connect' : 'install';
 
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
@@ -44,10 +52,9 @@ const ConnectWalletSection = observer(() => {
   }, [pressedOnInstallMetamask]);
 
   return (
-    <Section
+    <StyledSection
       data-testid='connect-to-wallet-section'
       alignItems={'center'}
-      style={{ marginTop: '5em' }}
       id='connectWalletSection'
     >
       <WalletConnectionInnerGrid
@@ -97,12 +104,12 @@ const ConnectWalletSection = observer(() => {
           />
           <Message
             pressedOnInstallMetamask={pressedOnInstallMetamask.value}
-            hasEthereumProvider={cryptoWalletIntegrationStore.hasEthereumProvider}
+            hasEthereumProvider={hasInjectedProvider}
             rejectedConnection={rejectedConnection.value}
           />
         </Grid>
       </WalletConnectionInnerGrid>
-    </Section>
+    </StyledSection>
   );
 });
 

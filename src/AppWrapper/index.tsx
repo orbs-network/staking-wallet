@@ -13,6 +13,7 @@ import errorMonitoring from '../services/error-monitoring/index';
 import WrongNetwork from '../components/WrongNetwork';
 import ProviderWrapper from '../wrappers/ProviderWrapper';
 import AppLoader from '../components/app-loader';
+import { DEFAULT_CHAIN, hasInjectedProvider } from '../constants';
 
 
 const getThemeAndStyles = (theme: Theme) => {
@@ -23,7 +24,9 @@ const getThemeAndStyles = (theme: Theme) => {
 };
 
 
-web3Service.addNetworkChangedEvent();
+if(hasInjectedProvider){
+  web3Service.addNetworkChangedEvent();
+}
 
 export const AppWrapper = () => {
   const { isLoading, chain, forcedChain, chainLoaded, hideLoader, wrongChain } = useLogic();
@@ -44,7 +47,7 @@ export const AppWrapper = () => {
               {wrongChain ? (
                 <WrongNetwork hideLoader={hideLoader} selectedChain={Number(chain)} forcedChain={forcedChain} />
               ) : chainLoaded ? (
-                <ProviderWrapper hideLoader={hideLoader} chain={chain}>
+                <ProviderWrapper hideLoader={hideLoader} chain={chain || forcedChain || DEFAULT_CHAIN} >
                   <App />
                 </ProviderWrapper>
               ) : (

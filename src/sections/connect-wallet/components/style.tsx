@@ -23,8 +23,9 @@ export const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { t
 
   [theme.breakpoints.down('sm')]: {
     padding: '1.5em',
-    width: '80%',
-    maxWidth: '80%',
+    width: '100%',
+    maxWidth: '95%',
+    minWidth:'unset'
   },
   [theme.breakpoints.up('sm')]: {
     paddingLeft: '9em',

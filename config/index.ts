@@ -20,7 +20,6 @@ import { ReactElement } from 'react';
 
 export const IS_DEV = process.env.IS_DEV;
 
-////////////// CONFIG VARIABLES ///////////////
 
 export interface INetwork {
   managementServiceStatusPageUrl?: string;
@@ -30,7 +29,7 @@ export interface INetwork {
   smallLogo?: string;
   requiredConfirmations?: number;
   nativeCurrency?: { name: string; symbol: string; decimals: number };
-  rpcUrl?: string;
+  rpcUrls?: string[];
   blockExplorerUrl?: string;
   contractsRegistry: string;
   erc20Contract: string;
@@ -41,14 +40,14 @@ export interface INetwork {
       certifiedNotCommittee: string;
       committee: string;
       certifiedCommittee: string;
-    },
-    linkImage: string
+    };
+    linkImage: string;
     copyImage: string;
     navbar: {
-      chainLogo: any,
-      ellipsis: string,
-      logo: any
-    }
+      chainLogo: any;
+      ellipsis: string;
+      logo: any;
+    };
   };
 }
 
@@ -57,13 +56,14 @@ const networks: { [key: string]: INetwork } = {
     name: 'Ethereum',
     managementServiceStatusPageUrl: process.env.NETWORK_1_STATUS_URL,
     logo: ethImg,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     smallLogo: smallEthereumIcon,
     requiredConfirmations: 3,
     contractsRegistry: process.env.NETWORK_1_REGISTRY,
     erc20Contract: process.env.NETWORK_1_ERC20,
     blockExplorerUrl: 'https://etherscan.io',
     navbarImage: navbarEthereumImg,
-    rpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+    rpcUrls: [`https://mainnet.infura.io/v3/${process.env.INFURA_ID}`],
     ui: uiConfig[CHAINS.ethereum],
   },
   [CHAINS.ropsten]: {
@@ -75,7 +75,7 @@ const networks: { [key: string]: INetwork } = {
     smallLogo: smallEthereumIcon,
     contractsRegistry: process.env.NETWORK_3_REGISTRY,
     erc20Contract: process.env.NETWORK_3_ERC20,
-    rpcUrl: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
+    rpcUrls: [`https://ropsten.infura.io/v3/${process.env.INFURA_ID}`],
     blockExplorerUrl: 'https://ropsten.etherscan.io',
     navbarImage: navbarEthereumImg,
     ui: uiConfig[CHAINS.ethereum],
@@ -88,7 +88,14 @@ const networks: { [key: string]: INetwork } = {
     name: 'Polygon',
     smallLogo: smallPolygonIcon,
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-    rpcUrl: 'https://polygon-rpc.com',
+    rpcUrls: [
+      'https://polygon-rpc.com/',
+      'https://rpc-mainnet.matic.network',
+      'https://matic-mainnet.chainstacklabs.com',
+      'https://rpc-mainnet.maticvigil.com',
+      'https://rpc-mainnet.matic.quiknode.pro',
+      'https://matic-mainnet-full-rpc.bwarelabs.com',
+    ],
     blockExplorerUrl: 'https://www.polygonscan.com',
     contractsRegistry: process.env.NETWORK_137_REGISTRY,
     erc20Contract: process.env.NETWORK_137_ERC20,

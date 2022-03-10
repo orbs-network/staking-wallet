@@ -6,13 +6,13 @@ class Web3Service {
   constructor() {
     this.web3 = new Web3((window as any).ethereum);
   }
-  triggerNetworkChange = async (id: number | string, params: any, callback?: () => void) => {
-    const ethereumProvider = (window as any).ethereum;
-    const web3 = new Web3(Web3.givenProvider);
-    const chainId = web3.utils.toHex(id);
+
+  triggerNetworkChange = async (id: number | string, callback?: () => void) => {
+    const ethereum = (window as any).ethereum;
+    const chainId = this.web3.utils.toHex(id);
     try {
       // check if the chain to connect to is installed
-      await ethereumProvider.request({
+      await ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId }], // chainId must be in hexadecimal numbers
       });
@@ -20,27 +20,30 @@ class Web3Service {
         callback();
       }
     } catch (error) {
-      console.log(error);
-      if (error.code === 4902) {
-        try {
-          const chainParams = {
-            chainId,
-            chainName: params.chainName,
-            nativeCurrency: params.nativeCurrency,
-            rpcUrls: params.rpcUrls,
-            blockExplorerUrls: params.blockExplorerUrls,
-          };
-          await ethereumProvider.request({
-            method: 'wallet_addEthereumChain',
-            params: [chainParams],
-          });
-          if (callback) {
-            callback();
-          }
-        } catch (addError) {
-          console.error(addError);
-        }
+    
+      const chain = config.networks[id];
+      const params = {
+        chainId: this.web3.utils.toHex(id), // A 0x-prefixed hexadecimal string
+        chainName: chain.name,
+        nativeCurrency: {
+          name: chain.nativeCurrency.name,
+          symbol: chain.nativeCurrency.symbol, // 2-6 characters long
+          decimals: chain.nativeCurrency.decimals,
+        },
+        rpcUrls: chain.rpcUrls,
+        blockExplorerUrls: [chain.blockExplorerUrl],
+      };
+
+      await this.web3.eth.getAccounts((error, accounts) => {
+        (window as any).ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [params, accounts[0]],
+        });
+      });
+      if (callback) {
+        callback();
       }
+
       console.error(error);
     }
   };
