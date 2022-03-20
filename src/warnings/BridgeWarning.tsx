@@ -37,8 +37,6 @@ const BridgeWarning = observer(() => {
     }
   }, [doneLoading, noTokens, chainId]);
 
-  console.log(noTokens);
-
   return (
     <CustomSnackbar
       variant='warning'

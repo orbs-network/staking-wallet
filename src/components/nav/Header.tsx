@@ -71,7 +71,7 @@ const useStyes = makeStyles((theme) => ({
   },
   networkIndicator: {
     marginLeft: 'auto',
-    width: 211,
+    width: 170,
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },

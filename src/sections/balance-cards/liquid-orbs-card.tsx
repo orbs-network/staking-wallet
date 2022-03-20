@@ -4,26 +4,30 @@ import BalanceCard from '../../components/balance-card/index';
 import { UseBoolean } from 'react-hanger';
 import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
 import { useBalancesSectionTranslations } from '../../translations/translationsHooks';
-import { useOrbsAccountStore } from '../../store/storeHooks';
+import { useCryptoWalletIntegrationStore, useOrbsAccountStore } from '../../store/storeHooks';
 import WarningTooltipContent from '../../components/tooltips/WarningTooltip/WarningTooltipContent';
 
 interface IProps {
   showStakingModal: UseBoolean;
 }
 
-const localStorageName = 'UNSTAKED_ORBS_WARNING';
-
 const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
   const [showWarning, setShowWarning] = useState(false);
   const balancesSectionTranslations = useBalancesSectionTranslations();
   const { liquidOrbs, doneLoading, hasSelectedGuardian } = useOrbsAccountStore();
+  const { mainAddress } = useCryptoWalletIntegrationStore();
+
   const liquidOrbsAsString = fullOrbsFromWeiOrbsString(liquidOrbs);
+  const localStorageName = `UNSTAKED_ORBS_WARNING_${mainAddress}`;
+
   useEffect(() => {
-    if (hasSelectedGuardian && Number(liquidOrbs)) {
+    if (hasSelectedGuardian && Number(liquidOrbs) > 0) {
       const localStorageItem = localStorage.getItem(localStorageName);
       if (!localStorageItem) {
         setShowWarning(true);
       }
+    } else {
+      localStorage.setItem(localStorageName, JSON.stringify(true));
     }
   }, [hasSelectedGuardian, liquidOrbs]);
 

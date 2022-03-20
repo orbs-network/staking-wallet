@@ -14,7 +14,7 @@ const RewardsRate: FC = observer(() => {
     <BalanceCard
     LoaderComponent = {Loaders.BalanceCardSmaller}
       title={`${rewardsSectionTranslations('title_totalRewardsAwarded')}`}
-      amount={totalRewardedRewards.toString()}
+      amount={totalRewardedRewards}
       showFraction
       isLoading={!doneLoading}
     />

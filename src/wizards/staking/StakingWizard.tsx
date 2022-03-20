@@ -120,7 +120,7 @@ export const StakingWizard = observer(
               finishedActionName={stakingWizardTranslations('finishedAction_selectedGuardian')}
               moveToNextStepAction={allowanceApproved ? goToStakeOrbsStep : goToSelectAmountStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
-              closeWizard={closeWizard}
+              closeWizard={!allowanceApproved ? goToSelectAmountStep : goToStakeOrbsStep }
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
               key={'guardianSelectionStep'}
             />

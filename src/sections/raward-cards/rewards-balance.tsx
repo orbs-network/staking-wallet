@@ -13,12 +13,13 @@ interface IProps {
 const RewardsBalance = observer(({ onSecondaryActionButtonPressed }: IProps) => {
   const rewardsSectionTranslations = useRewardsSectionTranslations();
   const { rewardsBalance, doneLoading } = useOrbsAccountStore();
+  
   return (
     <BalanceCard
     LoaderComponent = {Loaders.BalanceCardSmaller}
       title={`${rewardsSectionTranslations('title_rewardsBalance')}`}
-      amount={rewardsBalance.toString()}
-      secondaryActionButtonActive={rewardsBalance > 0}
+      amount={rewardsBalance}
+      secondaryActionButtonActive={Number(rewardsBalance) > 0}
       secondaryActionButtonTitle={rewardsSectionTranslations('action_claim')}
       onSecondaryActionButtonPressed={onSecondaryActionButtonPressed}
       showFraction

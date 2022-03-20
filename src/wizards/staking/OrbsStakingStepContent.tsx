@@ -27,7 +27,6 @@ export const OrbsStakingStepContent = observer(
       txError,
       goBackToApproveStep,
       closeWizard,
-      stakeAmountFromApprovalStep,
       goBackToChooseGuardianStep,
     } = props;
 
@@ -42,13 +41,17 @@ export const OrbsStakingStepContent = observer(
 
     const fullOrbsForStaking = fullOrbsFromWeiOrbs(orbsForStaking);
     const { message, subMessage, isBroadcastingMessage } = useWizardState('', '', false);
-    const [stakeAmount, setStakeAmount] = useState(stakeAmountFromApprovalStep);
-
-
     const liquidOrbsAsString = fullOrbsFromWeiOrbsString(orbsAccountStore.liquidOrbs);
+
+    const [stakeAmount, setStakeAmount] = useState(liquidOrbsAsString);
+
+      
+    console.log(stakeAmount, liquidOrbsAsString);
 
     const isApproveEnabled = stakingUtil.isApproveEnabled(liquidOrbsAsString, stakeAmount)
     useTxCreationErrorHandlingEffect(message, subMessage, isBroadcastingMessage, txError);
+
+    
     const stake = useCallback(() => {
       handleApprove({
         isApproveEnabled,
@@ -98,6 +101,8 @@ export const OrbsStakingStepContent = observer(
         maxText={wizardsCommonTranslations('popup_max')}
       />
     );
+    console.log(liquidOrbsAsString);
+    
 
     return (
       <BaseStepContent

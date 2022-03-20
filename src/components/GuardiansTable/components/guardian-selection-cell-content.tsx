@@ -40,7 +40,6 @@ const GuardianSelectionCellContent = (props: IGetGuardianSelectionCellContent) =
         <RadioButtonUncheckedIcon data-testid={'unselected-guardian-icon'} />
       );
 
-      const iconColor = isSelectedGuardian ? theme.palette.secondary.main : theme.palette.grey['500'];
       if (isGuardian && disableSelection) {
         selectedGuardianCell = (
           <Typography data-testid={`guardian-${g.EthAddress}-selected-status`}>
@@ -63,7 +62,7 @@ const GuardianSelectionCellContent = (props: IGetGuardianSelectionCellContent) =
               data-testid={actionButtonTestId}
               onClick={actionButtonOnClick}
               disabled={!enabled || disableSelection}
-              style={{ color: iconColor }}
+              style={{ color: theme.chain.current.mainColor  }}
             >
               {actionButtonIcon}
             </IconButton>

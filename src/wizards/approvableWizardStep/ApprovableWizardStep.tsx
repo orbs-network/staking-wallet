@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useBoolean, useNumber, useStateful } from 'react-hanger';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { MobXProviderContext } from 'mobx-react';
@@ -10,7 +10,6 @@ import config from '../../../config';
 import useReceipt from './useReceipt';
 type TStepState = 'Action' | 'Confirmation' | 'Success';
 
-// const REQUIRED_CONFIRMATIONS = 7;
 
 export interface ITransactionCreationStepProps {
   onPromiEventAction(promiEvent: PromiEvent<TransactionReceipt>, afterTxConfirmedCb?: () => void): void;
@@ -53,6 +52,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
   const reReadStoresData = useReReadAllStoresData();
 
   const stepState = useStateful<TStepState>('Action');
+    // const stepState = useStateful<TStepState>('Confirmation');
   const { transactionFinished, onReceipt } = useReceipt();
   const unsubscribeFromAllPromiventListenersRef = useRef<() => void>(null);
   const goToApprovalSubStep = useCallback(() => stepState.setValue('Confirmation'), [stepState]);
@@ -106,7 +106,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       unsubscribeFromAllPromiventListenersRef.current = () => {
         return (promiEvent as any).removeAllListeners();
       };
-
+    
       promiEvent.on('confirmation', (confirmation, details) => {
         txConfirmationsCount.setValue(confirmation);
 
@@ -128,7 +128,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
       });
 
       promiEvent.on('receipt', (receipt) => {
-        console.log(receipt);
+        console.log({receipt});
         onReceipt(receipt.blockNumber, reReadStoresData);
       });
 
@@ -172,8 +172,10 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
           <TransactionApprovingSubStepContent
             requiredConfirmations={requiredConfirmations}
             confirmationsCount={txConfirmationsCount.value}
+            transactionFinished={transactionFinished}
             txHash={txHash.value}
             onStepFinished={onTransactionApprovingSubStepFinished}
+
           />
         );
       case 'Success':

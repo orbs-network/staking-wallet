@@ -84,7 +84,7 @@ const networks: { [key: string]: INetwork } = {
     logo: polygonImg,
     earliestBlockForDelegationOverride: 0,
     managementServiceStatusPageUrl: process.env.NETWORK_137_STATUS_URL,
-    requiredConfirmations: 3,
+    requiredConfirmations: 18,
     name: 'Polygon',
     smallLogo: smallPolygonIcon,
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },

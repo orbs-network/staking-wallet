@@ -17,7 +17,7 @@ interface IProps {
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   maxHeight: '100%',
   height: 'auto',
-
+  
   [theme.breakpoints.down('xs')]: {
     paddingRight: 0,
     paddingLeft: 0,
@@ -33,8 +33,8 @@ export const Wizard = React.memo<IProps>((props) => {
 
   const stepperStepTitles = useMemo(() => {
     return stepperTitles.map((title) => (
-      <Step key={title}>
-        <StepLabel>{title}</StepLabel>
+      <Step key={title} >
+        <StepLabel >{title}</StepLabel>
       </Step>
     ));
   }, [stepperTitles]);

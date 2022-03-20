@@ -48,8 +48,8 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
     overflow: 'hidden',
   };
 
-  const btnWidth = (btnRef.current && btnRef.current.clientWidth) || 0;
   const { thousand, decimal } = config.numberSeparator;
+
   return (
     <>
       <NumberFormat
@@ -81,15 +81,15 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
         decimalSeparator={decimal}
         decimalScale={constants.numbersDecimalToInsertLimit}
         allowNegative={false}
-        isNumericString={true}
+        // isNumericString={true}
         allowLeadingZeros={false}
-        suffix={suffix}
         ref={ref}
         style={{
           ...style,
           ...blurStyle,
           paddingRight: 70,
-          paddingLeft: 70
+          paddingLeft: 70,
+  
          
         }}
       />

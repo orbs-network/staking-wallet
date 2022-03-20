@@ -46,8 +46,8 @@ export class OrbsAccountStore {
   @observable public totalStakedOrbsInContract = 0;
   @observable public totalUncappedStakedOrbs = 0;
 
-  @observable public rewardsBalance = 0;
-  @observable public claimedRewards = 0;
+  @observable public rewardsBalance = '0';
+  @observable public claimedRewards = '0';
   @observable public estimatedRewardsForNextWeek = 0;
 
   @observable public _selectedGuardianAddress: string;
@@ -108,10 +108,11 @@ export class OrbsAccountStore {
   }
 
   @computed get hasClaimableRewards(): boolean {
-    return this.rewardsBalance > 0;
+    return Number(this.rewardsBalance) > 0;
   }
-  @computed get totalRewardedRewards(): number {
-    return this.rewardsBalance + this.claimedRewards;
+  @computed get totalRewardedRewards(): string {
+      
+    return new Number(Number(this.rewardsBalance )+ Number(this.claimedRewards)).toFixed(18);
   }
 
   @computed get needsManualUpdatingOfState(): boolean {
@@ -425,7 +426,7 @@ export class OrbsAccountStore {
   private async readAndSetClaimedRewards(accountAddress: string) {
     try {
       const claimedRewardsInFullOrbs = await this.stakingRewardsService.readClaimedRewardsFullOrbs(accountAddress);
-      this.setClaimedRewards(claimedRewardsInFullOrbs);
+      this.setClaimedRewards(new Number(claimedRewardsInFullOrbs).toFixed(18));
     } catch (error) {
       const { sections, captureException } = errorMonitoring;
       captureException(error, sections.accountStore, 'error in function: readAndSetClaimedRewards');
@@ -450,7 +451,7 @@ export class OrbsAccountStore {
   private async readAndSetRewardsBalance(accountAddress: string) {
     try {
       const rewardsBalance = await this.stakingRewardsService.readRewardsBalanceFullOrbs(accountAddress);
-      this.setRewardsBalance(rewardsBalance);
+      this.setRewardsBalance(new Number(rewardsBalance).toFixed(18));
     } catch (error) {
       const { sections, captureException } = errorMonitoring;
       captureException(error, sections.accountStore, 'error in function: readAndSetRewardsBalance');
@@ -595,12 +596,12 @@ export class OrbsAccountStore {
   }
 
   @action('setRewardsBalance')
-  private setRewardsBalance(rewardsBalance: number) {
+  private setRewardsBalance(rewardsBalance: string) {
     this.rewardsBalance = rewardsBalance;
   }
 
   @action('setClaimedRewards')
-  private setClaimedRewards(claimedRewards: number) {
+  private setClaimedRewards(claimedRewards: string) {
     this.claimedRewards = claimedRewards;
   }
   @action('setTotalStakeByChain')

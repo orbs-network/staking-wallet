@@ -26,7 +26,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>((props) => {
     width: '100%',
   };
   const style: CSSProperties = customStyle ? { ...inputStyle, ...customStyle } : inputStyle;
-
+  
   return (
     <TextField
       id={id}
@@ -39,7 +39,7 @@ export const FullWidthOrbsInputField = React.memo<IProps>((props) => {
         inputProps: {
           buttonComponent: buttonComponent,
           fontSize: fontSize,
-          // value: Strin/g(val),
+          value: props.value,
         },
       }}
       disabled={disabled}

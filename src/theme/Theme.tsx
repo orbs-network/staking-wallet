@@ -34,7 +34,7 @@ const polygon = {
     high: '#A857FF',
     disabled: '#311758',
   },
-  actionButtonTextColor: '#ffffff',
+  textColor: '#ffffff',
   actionButtonBackground: '#844FDA',
 };
 
@@ -45,7 +45,7 @@ const ethereum = {
     high: '#15F9FF',
     disabled: '#18302F',
   },
-  actionButtonTextColor: 'rgba(0, 0, 0, 0.87)',
+  textColor: 'rgba(0, 0, 0, 0.87)',
   actionButtonBackground: '#15F9FF',
 };
 

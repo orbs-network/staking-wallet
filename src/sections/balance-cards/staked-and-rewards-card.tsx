@@ -30,8 +30,10 @@ const StakedAndRewardsCard: FC<IProps> = observer(({ showCannotUnstakeNowSnackba
 
   const orbsToUnstakeAsString = stakingUtil.addNumbersAsStrings(
     fullOrbsFromWeiOrbsString(stakedOrbs),
-    rewardsBalance.toString(),
+    rewardsBalance,
   );
+
+  
 
   return (
     <BalanceCard
@@ -40,7 +42,7 @@ const StakedAndRewardsCard: FC<IProps> = observer(({ showCannotUnstakeNowSnackba
         <BalanceTooltip
           stakeTitle={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
           stakedOrbs={formatStringAsNumber(stakedOrbsAsString, true, constants.numbersDecimalToDisplayLimit)}
-          rewardsBalance={formatStringAsNumber(rewardsBalance.toString(), true, constants.numbersDecimalToDisplayLimit)}
+          rewardsBalance={formatStringAsNumber(rewardsBalance, true, constants.numbersDecimalToDisplayLimit)}
           pendingRewardsTitle={balancesSectionTranslations('tooltipTitle_pendingRewards')}
         />
       }

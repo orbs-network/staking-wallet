@@ -23,7 +23,7 @@ export interface IGuardianSelectionStepContentProps {
 
 export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
+    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress, closeWizard } = props;
     const { chainId } = useContext(MobXProviderContext);
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
@@ -119,6 +119,8 @@ export const GuardianSelectionStepContent = observer(
       disableInputs,
     ]);
 
+    console.log(closeWizard);
+    
     return (
       <BaseStepContent
         message={message.value}
@@ -129,6 +131,8 @@ export const GuardianSelectionStepContent = observer(
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
         innerContent={guardianSelectionContent}
+
+        close={closeWizard}
       />
     );
   },

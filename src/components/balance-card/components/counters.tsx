@@ -27,14 +27,21 @@ interface IProps {
 
 const BalanceCardCounters = ({ amount, isLoading }: IProps) => {
   const [full, decimal] = amount.split('.');
+
+
   return (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
+        {/* {amount} */}
         {!isLoading ? (
-          <>
-            <CountUp end={full as any} formattingFn={handleFullNumber} {...counterProps} />
-            {decimal && <CountUp end={parseInt('1' + decimal) as any} preserveValue formattingFn={handleDecimals} />}
-          </>
+          Number(amount) === 0 ? (
+            0
+          ) : (
+            <>
+              <CountUp end={full as any} formattingFn={handleFullNumber} {...counterProps} />
+              {decimal && Number(decimal) > 0 && <CountUp end={parseInt('1' + decimal) as any} preserveValue formattingFn={handleDecimals} />}
+            </>
+          )
         ) : (
           '---'
         )}

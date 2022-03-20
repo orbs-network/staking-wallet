@@ -9,7 +9,7 @@ import Loaders from '../../components/loaders/loader-components';
 const TotalRewards = observer(() => {
   const rewardsSectionTranslations = useRewardsSectionTranslations();
   const { estimatedRewardsForNextWeek, doneLoading } = useOrbsAccountStore();
-
+  
   return (
     <BalanceCard
     LoaderComponent = {Loaders.BalanceCardSmaller}

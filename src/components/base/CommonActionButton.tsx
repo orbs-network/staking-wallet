@@ -11,7 +11,7 @@ export const CommonActionButton = styled(({ variant, color, ...rest }: ButtonPro
     border: '1px solid transparent',
     transitionDuration: '0.3s all',
     background: theme.chain.current.actionButtonBackground,
-    color: theme.chain.current.actionButtonTextColor,
+    color: theme.chain.current.textColor,
     '&:hover': {
       border: '1px solid white',
       background: 'transparent',
