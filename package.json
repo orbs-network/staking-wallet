@@ -20,7 +20,7 @@
     "build-dev-tunnel": "cross-env ENV_FILE=.env.development-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-dev-fork": "cross-env ENV_FILE=.env.mainnet-fork TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
     "build-dev-fork-tunnel": "cross-env ENV_FILE=.env.mainnet-fork-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
-    "build-beta": "cross-env ENV_FILE=.env.beta TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d",
+    "build-beta": "cross-env ENV_FILE=.env.beta TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -d && cp dist/index.html dist/404.html",
     "dev": "cross-env ENV_FILE=.env.development TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-tunnel": "cross-env ENV_FILE=.env.development-tunnel TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-fork": "cross-env ENV_FILE=.env.mainnet-fork TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w --host 0.0.0.0",

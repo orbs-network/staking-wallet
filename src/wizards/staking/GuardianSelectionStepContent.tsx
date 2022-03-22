@@ -119,7 +119,6 @@ export const GuardianSelectionStepContent = observer(
       disableInputs,
     ]);
 
-    console.log(closeWizard);
     
     return (
       <BaseStepContent

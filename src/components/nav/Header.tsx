@@ -15,6 +15,7 @@ import { getChainConfig } from '../../utils';
 import { hasInjectedProvider } from '../../constants';
 import useScrollDirection from '../../hooks/useScrollDirection';
 import useResize from '../../hooks/useResize';
+import { Link } from 'react-router-dom';
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 const useStyes = makeStyles((theme) => ({
@@ -109,7 +110,9 @@ export const Header = () => {
           <StyledToolBar disableGutters className={classes.container}>
             <Grid container direction={'row'} alignItems={'center'} justify={'space-between'} style={{ zIndex: 99 }}>
               <Grid item>
+                <Link to='/'>
                 <TetraLogoAndIconSvg className={classes.logo} />
+                </Link>
               </Grid>
               {hasInjectedProvider && (
                 <Grid item className={classes.networkIndicator}>

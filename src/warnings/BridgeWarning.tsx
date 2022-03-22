@@ -23,7 +23,7 @@ const BridgeWarning = observer(() => {
 
   useEffect(() => {
     const onload = async () => {
-      if (!loadedOnce.current) {
+      if (!loadedOnce.current || !mainAddress) {
         return;
       }
       const item = localStorage.getItem(localStorageItem);

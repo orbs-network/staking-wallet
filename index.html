@@ -25,24 +25,28 @@
       // the correct url will be waiting in the browser's history for
       // the single page app to route accordingly.
       (function (l) {
-        if (l.search) {
-          var q = {};
-          l.search
+        if (l.search[1] === '/') {
+          var decoded = l.search
             .slice(1)
             .split('&')
-            .forEach(function (v) {
-              var a = v.split('=');
-              q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
-            });
-          if (q.p !== undefined) {
-            window.history.replaceState(
-              null,
-              null,
-              l.pathname.slice(0, -1) + (q.p || '') + (q.q ? '?' + q.q : '') + l.hash,
-            );
-          }
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
         }
       })(window.location);
+      // if it's on index.html
+      if (window.sessionStorage.path) {
+        let path = window.sessionStorage.path; // gets the path saved on sessionStorage
+        window.history.pushState(null, null, path); // push it on url
+        window.sessionStorage.removeItem('path'); // removes from session
+      } else {
+        // if it's on 404.html (path doens't exist)
+        let path = window.location.pathname; // get the path url
+        window.sessionStorage.path = path; // saves on sessionStorage
+        window.location.href = '/'; // go to index
+      }
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
 
@@ -62,9 +66,9 @@
 
     <% } %>
   </head>
-  <body style="background-color: black;" >
-    <div id="app" style="height: 100%;"> </div>
-    
+  <body style="background-color: black;">
+    <div id="app" style="height: 100%;"></div>
+
     <% if (!process.env.IS_DEV) { %>
     <!--	<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>-->
     <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>

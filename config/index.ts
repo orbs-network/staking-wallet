@@ -89,12 +89,7 @@ const networks: { [key: string]: INetwork } = {
     smallLogo: smallPolygonIcon,
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: [
-      'https://polygon-rpc.com/',
-      'https://rpc-mainnet.matic.network',
-      'https://matic-mainnet.chainstacklabs.com',
-      'https://rpc-mainnet.maticvigil.com',
-      'https://rpc-mainnet.matic.quiknode.pro',
-      'https://matic-mainnet-full-rpc.bwarelabs.com',
+      'https://polygon-rpc.com',
     ],
     blockExplorerUrl: 'https://www.polygonscan.com',
     contractsRegistry: process.env.NETWORK_137_REGISTRY,

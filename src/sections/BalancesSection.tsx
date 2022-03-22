@@ -62,7 +62,6 @@ export const BalancesSection = observer(() => {
           </Grid>
         }
       />
-     
 
       <ErrorFallback errorText={commonsTranslations('loadingFailed')} isError={errorLoading}>
         <>
@@ -94,7 +93,11 @@ export const BalancesSection = observer(() => {
           </CommonDialog>
 
           {/* Unstaking */}
-          <CommonDialog open={showUnStakingModal.value} onClose={showUnStakingModal.setFalse}>
+          <CommonDialog
+            style={{ maxWidth: '1000px', marginLeft:'auto', marginRight:'auto' }}
+            open={showUnStakingModal.value}
+            onClose={showUnStakingModal.setFalse}
+          >
             <UnstakingWizard closeWizard={showUnStakingModal.setFalse} />
           </CommonDialog>
 

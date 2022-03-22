@@ -96,8 +96,7 @@ export class OrbsAccountStore {
   }
 
   @computed get noTokens(): boolean {
-    
-    return !this.hasOrbsInCooldown && !this.hasStakedOrbs && !this.liquidOrbs;
+    return !this.hasOrbsInCooldown && !this.hasStakedOrbs && !this.liquidOrbs && !this.totalRewardedRewards;
   }
 
   @computed get hasOrbsInCooldown(): boolean {
@@ -111,8 +110,7 @@ export class OrbsAccountStore {
     return Number(this.rewardsBalance) > 0;
   }
   @computed get totalRewardedRewards(): string {
-      
-    return new Number(Number(this.rewardsBalance )+ Number(this.claimedRewards)).toFixed(18);
+    return new Number(Number(this.rewardsBalance) + Number(this.claimedRewards)).toFixed(18);
   }
 
   @computed get needsManualUpdatingOfState(): boolean {
@@ -191,26 +189,22 @@ export class OrbsAccountStore {
   public async readTotalStakeByChain() {
     let total = 0;
     const result: ITotalChainStakeAmount[] = await Promise.all(
-     
       getSupportedChains().map(async (chain: number) => {
-
         const { rpcUrls, contractsRegistry } = config.networks[chain];
-        
-          
+
         const web3 = new Web3(new Web3.providers.HttpProvider(rpcUrls[0]));
         const { staking, delegations } = await new ContractRegistry(web3, contractsRegistry).getContracts([
           'staking',
           'delegations',
         ]);
-        
-        
+
         const totalStake = await new StakingService(web3, staking).readTotalStakedInFullOrbs();
 
         const totalUncappedStakedOrbs = await new DelegationsService(
           web3,
           delegations,
         ).readUncappedDelegatedStakeInFullOrbs();
-        
+
         const totalSystemStakedTokens = totalStake - totalUncappedStakedOrbs;
         total += totalSystemStakedTokens;
         return {
@@ -218,9 +212,8 @@ export class OrbsAccountStore {
           totalSystemStakedTokens,
         };
       }),
-    )
-   
-    
+    );
+
     this.setTotalStakeByChain(result);
     this.setTotalSystemStakedTokens(total);
   }
@@ -292,10 +285,9 @@ export class OrbsAccountStore {
   }
 
   private async readDataForAccount(accountAddress: string) {
-    
     const { sections, captureException } = errorMonitoring;
     // TODO : O.L : Add error handling (logging ?) for each specific "read and set" function.
-    
+
     await this.readAndSetLiquidOrbs(accountAddress).catch((e) => {
       this.alertIfEnabled(`Error in reading liquid orbs : ${e}`);
       console.error(`Error in read-n-set liquid orbs : ${e}`);
@@ -492,16 +484,22 @@ export class OrbsAccountStore {
     this.stakingContractAllowanceChangeUnsubscribeFunction = this.orbsTokenService.subscribeToAllowanceChange(
       accountAddress,
       this.stakingService.getStakingContractAddress(),
-      (error, newAllowance) => this.setStakingContractAllowance(newAllowance),
+      (error, newAllowance) => {
+        if (!error) {
+          this.setStakingContractAllowance(newAllowance);
+        }
+      },
     );
 
     // Staked orbs
     const onStakedAmountChanged = (error: Error, stakedAmountInEvent: bigint, totalStakedAmount: bigint) => {
       // TODO : O.L : Handle error
-      this.setStakedOrbs(totalStakedAmount);
+
       if (error) {
         const { sections, captureException } = errorMonitoring;
         captureException(error, sections.accountStore, 'error in function: onStakedAmountChanged');
+      } else {
+        this.setStakedOrbs(totalStakedAmount);
       }
     };
     this.stakedAmountChangeUnsubscribeFunction = subscribeToStakeAmountChange(

@@ -21,6 +21,9 @@ const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
   const localStorageName = `UNSTAKED_ORBS_WARNING_${mainAddress}`;
 
   useEffect(() => {
+    if(!mainAddress){
+      return 
+    }
     if (hasSelectedGuardian && Number(liquidOrbs) > 0) {
       const localStorageItem = localStorage.getItem(localStorageName);
       if (!localStorageItem) {
@@ -29,7 +32,7 @@ const LiquidOrbsCard: FC<IProps> = observer(({ showStakingModal }) => {
     } else {
       localStorage.setItem(localStorageName, JSON.stringify(true));
     }
-  }, [hasSelectedGuardian, liquidOrbs]);
+  }, [hasSelectedGuardian, liquidOrbs, mainAddress]);
 
   const closeWarning = () => {
     setShowWarning(false);
