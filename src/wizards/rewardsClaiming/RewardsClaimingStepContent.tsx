@@ -87,7 +87,7 @@ export const RewardsClaimingStepContent = observer(
       return (
         <Typography variant={'h5'}>
           {rewardsClaimingWizardTranslations('rewardsClaimingSubStep_text_rewardsBalanceIs')}{' '}
-          <span style={{ display: 'inline', color: theme.chain.current.mainColor }}>
+          <span style={{ display: 'inline', color: theme.palette.secondary.main }}>
             {commonsTranslations('xOrbs', {
               amount: formatStringAsNumber(orbsAccountStore.rewardsBalance.toString(), true),
             })}

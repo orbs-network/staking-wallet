@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     overflowX: 'auto',
     paddingLeft: 20, paddingRight: 20,
-    border: `1px solid ${theme.chain.current.mainColor}`,
+    border: `1px solid ${theme.palette.secondary.main}`,
     background: '#1B1C1E',
     borderRadius: 0,
   },

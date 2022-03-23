@@ -15,12 +15,12 @@ const BalaceTooltip: FC<IProps> = ({ stakeTitle, stakedOrbs, rewardsBalance, pen
       <Typography style={{ display: 'inline', fontWeight: 'bold' }}>
         {`${stakeTitle} `}
       </Typography>
-      <Typography style={{ display: 'inline', fontWeight: 'bold', color: theme.chain.current.mainColor }}>{stakedOrbs}</Typography>
+      <Typography style={{ display: 'inline', fontWeight: 'bold', color: theme.palette.secondary.main }}>{stakedOrbs}</Typography>
       <br />
       <Typography style={{ display: 'inline', fontWeight: 'bold'}}>
         {`${pendingRewardsTitle} `}
       </Typography>
-      <Typography style={{ display: 'inline', fontWeight: 'bold', color: theme.chain.current.mainColor }}>{rewardsBalance}</Typography>
+      <Typography style={{ display: 'inline', fontWeight: 'bold', color: theme.palette.secondary.main }}>{rewardsBalance}</Typography>
     </>
   );
 };

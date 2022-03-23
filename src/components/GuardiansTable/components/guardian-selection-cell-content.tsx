@@ -62,7 +62,7 @@ const GuardianSelectionCellContent = (props: IGetGuardianSelectionCellContent) =
               data-testid={actionButtonTestId}
               onClick={actionButtonOnClick}
               disabled={!enabled || disableSelection}
-              style={{ color: theme.chain.current.mainColor  }}
+              style={{ color: theme.palette.secondary.main  }}
             >
               {actionButtonIcon}
             </IconButton>

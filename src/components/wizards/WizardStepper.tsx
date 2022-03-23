@@ -7,7 +7,7 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
     '.MuiStepIcon-text': {
       fill: theme.palette.primary.main, // Affects the numbers
     },
-    color: theme.chain.current.mainColor, // Affects the circles
+    color: theme.palette.secondary.main, // Affects the circles
   },
 
 
@@ -16,7 +16,7 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
   // Active step label
   '& .MuiStepLabel-active': {
     fontWeight: 'bold',
-    color: theme.chain.current.mainColor,
+    color: theme.palette.secondary.main,
   
   },
 

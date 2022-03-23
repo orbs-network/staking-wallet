@@ -49,13 +49,13 @@ const BalanceCard = (props: IProps) => {
     balanceCardTestId,
     isLoading,
     warning,
-    LoaderComponent
+    LoaderComponent,
   } = props;
   const classes = useStyles();
   const titleElement = useStringOrElement(title);
   const hasMainButton = actionButtonTitle || onActionButtonPressed;
   const hasSecondaryActionButton = secondaryActionButtonTitle || onSecondaryActionButtonPressed;
-  const theme = useTheme()
+  const theme = useTheme();
   return (
     <StyledGrid container direction={'column'} data-testid={balanceCardTestId} className={classes.container}>
       <BaseLoader isLoading={isLoading} LoaderComponent={LoaderComponent || Loaders.BalanceCard}>

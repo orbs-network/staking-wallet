@@ -12,7 +12,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   position: 'relative',
   top: '0px',
   left: '0px',
-  border: `1px solid ${theme.chain.current.mainColor}`,
+  border: `1px solid ${theme.palette.secondary.main}`,
   background: '#1B1C1E',
 }));
 

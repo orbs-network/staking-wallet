@@ -21,7 +21,7 @@ function LegalAgreement({ shouldDisplayLegalTicker, checked, onChange }: IProps)
   const agreement = connectWalletSectionTranslations('agreeToTheToUAndPrivacyPolicy', {
     termsOfUseText: renderToString(
       <a
-        style={{ color: theme.chain.current.mainColor }}
+        style={{ color: theme.palette.secondary.main }}
         target={'_blank'}
         rel={'noopener noreferrer'}
         href={TERMS_OF_SERVICE_URL}
@@ -31,7 +31,7 @@ function LegalAgreement({ shouldDisplayLegalTicker, checked, onChange }: IProps)
     ),
     privacyPolicyText: renderToString(
       <a
-        style={{ color: theme.chain.current.mainColor  }}
+        style={{ color: theme.palette.secondary.main  }}
         target={'_blank'}
         rel={'noopener noreferrer'}
         href={PRIVACY_POLICY_URL}

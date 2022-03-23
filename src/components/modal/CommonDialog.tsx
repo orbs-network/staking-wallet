@@ -13,7 +13,7 @@ const DarkBackdrop = styled(Backdrop)(() => ({
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '.MuiDialog-paper': {
     // Box Effect
-    border: `1px solid ${theme.chain.current.mainColor}`,
+    border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: 5,
     boxShadow: theme.shadows[2],
 

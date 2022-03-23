@@ -16,6 +16,7 @@ import { hasInjectedProvider } from '../../constants';
 import useScrollDirection from '../../hooks/useScrollDirection';
 import useResize from '../../hooks/useResize';
 import { Link } from 'react-router-dom';
+
 const StyledToolBar = styled(Toolbar)<ToolbarProps>({});
 
 const useStyes = makeStyles((theme) => ({
@@ -33,7 +34,7 @@ const useStyes = makeStyles((theme) => ({
   container: (props: any) => ({
     position: 'relative',
     height: '100%',
-    borderBottom: props.scrollPosition <= 30  ? `0.5px solid ${theme.chain.current.mainColor}` : null,
+    borderBottom: props.scrollPosition <= 30  ? `0.5px solid ${theme.palette.secondary.main}` : null,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

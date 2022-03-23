@@ -2,16 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import { blue } from '@material-ui/core/colors';
 import responsiveFontSizes from '@material-ui/core/styles/responsiveFontSizes';
 import { CHAINS, DEFAULT_CHAIN } from '../constants';
-import { Theme } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
-
-interface ChainStyles {
-  mainColor: string;
-  strokeColors: {
-    low: string;
-    hight: string;
-  };
-}
 
 declare module '@material-ui/core/styles' {
   interface CustomTheme {
@@ -23,7 +14,6 @@ declare module '@material-ui/core/styles' {
 }
 
 const COLOR1 = '#0D0D0D'; // dark gray
-const COLOR3 = '#03FCF5'; // bright bluish- Tetra
 
 const PRIMARY_TEXT = '#dbdbdb';
 
@@ -56,6 +46,7 @@ const chainsCustomStyles = {
 };
 
 export const getTheme = (chain: number) => {
+  const chainConfig = chainsCustomStyles[chain] || chainsCustomStyles[DEFAULT_CHAIN];
   return responsiveFontSizes(
     createMuiTheme({
       palette: {
@@ -63,9 +54,9 @@ export const getTheme = (chain: number) => {
         primary: {
           main: COLOR1,
         },
-     
+
         secondary: {
-          main: COLOR3,
+          main: chainConfig.mainColor,
         },
         background: {
           default: '#000000',
@@ -75,7 +66,7 @@ export const getTheme = (chain: number) => {
         fontFamily: 'Montserrat',
       },
       chain: {
-        current: chainsCustomStyles[chain] || chainsCustomStyles[DEFAULT_CHAIN],
+        current: chainConfig,
         ...chainsCustomStyles,
       },
 

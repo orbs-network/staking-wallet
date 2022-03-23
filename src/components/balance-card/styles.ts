@@ -9,7 +9,7 @@ export const StyledGrid = styled(Grid)(({ theme }) => ({
   paddingLeft: '1.25em',
   paddingBottom: '1.5em',
   position: 'relative',
-  border:`1px solid ${theme.chain.current.mainColor}`
+  border:`1px solid ${theme.palette.secondary.main}`
 }));
 
 export const useStyles = makeStyles({

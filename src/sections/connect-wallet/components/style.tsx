@@ -6,14 +6,14 @@ export const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { t
   // Look& Feel
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
   borderRadius: '10%',
-  boxShadow: `0px 0px 41px 12px ${theme.chain.current.mainColor}`,
+  boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.main}`,
   marginBottom: '50px',
 
   transition: '0.7s',
 
   '&:hover': {
     backgroundColor: 'rgba(47, 47, 47, 0.2)',
-    boxShadow: `0px 0px 41px 12px ${theme.chain.current.mainColor}`,
+    boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.main}`,
   },
 
   // Dimensions
