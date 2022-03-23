@@ -8,6 +8,8 @@ import { useCommonsTranslations } from '../../translations/translationsHooks';
 import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '../../constants';
 import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import TermsOfUse from '../../../assets/pdf/Terms-of-Use.pdf'
+import PrivacyPolicy from '../../../assets/pdf/Privacy-Policy.pdf'
 
 const StyledAppBar = styled(AppBar)<AppBarProps>({
   // paddingTop: '1em',
@@ -47,7 +49,7 @@ export const Footer = observer(() => {
               <Grid container direction={'row'} alignItems={'flex-start'} spacing={1}>
                 <Grid item>
                   <a
-                    href={PRIVACY_POLICY_URL}
+                    href={PrivacyPolicy}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}
@@ -57,7 +59,7 @@ export const Footer = observer(() => {
                 </Grid>
                 <Grid item>
                   <a
-                    href={TERMS_OF_SERVICE_URL}
+                    href={TermsOfUse}
                     target={'_blank'}
                     rel={'noopener noreferrer'}
                     style={{ color: 'inherit' }}

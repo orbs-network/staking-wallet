@@ -20,7 +20,8 @@ import PolygonNavbarEllipsis from '../assets/chains/polygon/shape.png';
 
 import { ReactComponent as EthereumTetraLogo } from '../assets/chains/ethereum/tetra-logo.svg';
 import { ReactComponent as PolygonTetraLogo } from '../assets/chains/polygon/tetra-logo.svg';
-
+import EthereumFavicon from '../assets/favicons/tet.png'
+import PolygonFavicon from '../assets/favicons/poly.png'
 
 import { CHAINS } from '../src/constants';
 
@@ -31,7 +32,9 @@ const uiConfig = {
       certifiedNotCommittee: EthereumCertifiedNotCommitteeGuardianShield,
       committee: EthereumCommitteeGuardianShield,
       certifiedCommittee: EthereumCertifiedCommitteeGuardianShield,
+     
     },
+    favicon: EthereumFavicon,
     linkImage: EthereumLink,
     copyImage: EthereumCopy,
     navbar: {
@@ -49,6 +52,7 @@ const uiConfig = {
     },
     linkImage: PolygonLink,
     copyImage: PolygonCopy,
+    favicon: PolygonFavicon,
     navbar: {
       chainLogo: PolygonNavbarChainLogo,
       ellipsis: PolygonNavbarEllipsis,

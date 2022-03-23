@@ -33,6 +33,7 @@ export const AppWrapper = () => {
 
   const theme = getTheme(chain);
 
+
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider
