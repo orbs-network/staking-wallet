@@ -16,7 +16,7 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
   // Active step label
   '& .MuiStepLabel-active': {
     fontWeight: 'bold',
-    color: theme.palette.secondary.main,
+    color: theme.chain.current.mainColor,
   
   },
 
