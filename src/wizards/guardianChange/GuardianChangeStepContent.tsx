@@ -30,8 +30,6 @@ export const GuardianChangeStepContent = observer(
     const [t] = useTranslation();
     const analyticsService = useAnalyticsService();
 
-    const reReadStoresData = useReReadAllStoresData();
-
     // TODO : ORL : TRANSLATIONS
 
     // Start and limit by allowance
@@ -57,7 +55,6 @@ export const GuardianChangeStepContent = observer(
           promiEvent: orbsAccountStore.delegate(newGuardianAddress),
           isBroadcastingMessage,
           onPromiEventAction,
-          reReadStoresData,
           wizardsCommonTranslations,
           errorHandler: handleGuardianChangeError,
           analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
@@ -67,7 +64,6 @@ export const GuardianChangeStepContent = observer(
         message,
         onPromiEventAction,
         orbsAccountStore,
-        reReadStoresData,
         subMessage,
         wizardsCommonTranslations,
         analyticsService,

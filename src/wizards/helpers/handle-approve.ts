@@ -8,7 +8,6 @@ interface IProps {
   isBroadcastingMessage: UseBoolean;
   promiEvent: PromiEvent<TransactionReceipt>;
   onPromiEventAction: any;
-  reReadStoresData: any;
   wizardsCommonTranslations: any;
   errorHandler: (error: Error) => void;
   warnMsg?: string;
@@ -22,7 +21,6 @@ export const handleApprove = ({
   promiEvent,
   isBroadcastingMessage,
   onPromiEventAction,
-  reReadStoresData,
   wizardsCommonTranslations,
   errorHandler,
   warnMsg,
@@ -51,7 +49,6 @@ export const handleApprove = ({
     if (analyticsHandler) {
       analyticsHandler();
     }
-    reReadStoresData();
   });
 };
 

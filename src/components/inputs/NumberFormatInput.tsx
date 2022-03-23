@@ -4,7 +4,7 @@ import { useTheme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 import constants from '../../constants/constants';
-import config from '../../config';
+import config from '../../../config';
 interface INumberFormatCustomProps {
   // Usage props
   allowNegative?: boolean;
@@ -48,8 +48,8 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
     overflow: 'hidden',
   };
 
-  const btnWidth = (btnRef.current && btnRef.current.clientWidth) || 0;
   const { thousand, decimal } = config.numberSeparator;
+
   return (
     <>
       <NumberFormat
@@ -81,17 +81,19 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
         decimalSeparator={decimal}
         decimalScale={constants.numbersDecimalToInsertLimit}
         allowNegative={false}
-        isNumericString={true}
+        // isNumericString={true}
         allowLeadingZeros={false}
-        suffix={suffix}
         ref={ref}
         style={{
           ...style,
           ...blurStyle,
-          textIndent: btnWidth,
+          paddingRight: 70,
+          paddingLeft: 70,
+  
+         
         }}
       />
-      <div ref={btnRef}>{buttonComponent}</div>
+      <div ref={btnRef} style={{position:'absolute', right: 0}}>{buttonComponent}</div>
     </>
   );
 }

@@ -1,41 +1,37 @@
-import React, { useEffect, useMemo } from 'react';
-import { Button, Link, Typography } from '@material-ui/core';
-import { useStateful, useBoolean } from 'react-hanger';
+import React, { useContext, useEffect, useMemo } from 'react';
+import { Link, Typography } from '@material-ui/core';
+import { useStateful } from 'react-hanger';
 import { BaseStepContent } from '../BaseStepContent';
 import { useApprovableWizardStepTranslations } from '../../../translations/translationsHooks';
 import { CommonActionButton } from '../../../components/base/CommonActionButton';
+import config from '../../../../config/index';
+import { MobXProviderContext } from 'mobx-react';
 
 interface IProps {
   txHash: string;
   confirmationsCount: number;
   onStepFinished(): void;
   requiredConfirmations: number;
+  transactionFinished: boolean;
 }
 
+const getBlockExplorer = (chain: number) => {
+  const network = config.networks[chain];
+  if (!network) {
+    return;
+  }
+  return config.networks[chain].blockExplorerUrl;
+};
+
 export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IProps) => {
-  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations } = props;
-
+  const { onStepFinished, txHash, confirmationsCount, requiredConfirmations, transactionFinished } = props;
+  const { chainId } = useContext(MobXProviderContext);
+  const blockExplorer = getBlockExplorer(chainId);
   const approvableWizardStepTranslations = useApprovableWizardStepTranslations();
-  const allowToProceed = useBoolean(true);
-  const message = useStateful(approvableWizardStepTranslations('weRecommendWaitingToReceiveEnoughConfirmations'));
-  const subMessage = useStateful('');
 
-  const isTxConfirmed = confirmationsCount >= 1;
-
-  // Update the verification count text
-  useEffect(() => {
-    subMessage.setValue(
-      approvableWizardStepTranslations('gotXConfirmationsOutOfRecommendedY', {
-        count: confirmationsCount,
-        recommended: requiredConfirmations,
-      }),
-    );
-  }, [approvableWizardStepTranslations, confirmationsCount, requiredConfirmations, subMessage]);
-
-  const allowToProceedValue = allowToProceed.value;
   const transactionApprovementContent = useMemo(() => {
     let actionContent = null;
-    if (allowToProceedValue && isTxConfirmed) {
+    if (transactionFinished) {
       actionContent = (
         <CommonActionButton onClick={onStepFinished}>
           {approvableWizardStepTranslations('action_proceed')}
@@ -48,34 +44,40 @@ export const TransactionApprovingSubStepContent: React.FC<IProps> = (props: IPro
     }
 
     return actionContent;
-  }, [allowToProceedValue, approvableWizardStepTranslations, isTxConfirmed, onStepFinished]);
+  }, [approvableWizardStepTranslations, transactionFinished, onStepFinished]);
 
-  const titleFc = useMemo(() => {
-    const titleMessage = isTxConfirmed
+  const titleMessage = useMemo(() => {
+    return transactionFinished
       ? approvableWizardStepTranslations('txConfirmed').toLocaleUpperCase()
       : approvableWizardStepTranslations('txPending').toLocaleUpperCase();
+  }, [transactionFinished]);
 
-    // TODO : ORL : Fix the link to depend on the used network
-    return () => {
-      if (txHash) {
-        return (
-          <Link href={`https://etherscan.io/tx/${txHash}`} rel={'noopener noreferrer'} target={'_blank'}>
-            {titleMessage}
-          </Link>
-        );
-      }
-      return titleMessage;
-    };
-  }, [isTxConfirmed, approvableWizardStepTranslations, txHash]);
+  const blockExplorerLink = useMemo(
+    () => (
+      <Typography>
+        You can see the transaction{' '}
+        <Link
+          href={`${blockExplorer}/tx/${txHash}`}
+          rel={'noopener noreferrer'}
+          target={'_blank'}
+          underline='always'
+          style={{ color: '#2196f3' }}
+        >
+          here
+        </Link>
+      </Typography>
+    ),
+    [txHash, blockExplorer],
+  );
 
   return (
     <BaseStepContent
-      message={message.value}
-      subMessage={subMessage.value}
-      title={titleFc}
+      title={titleMessage}
+      component={blockExplorerLink}
       disableInputs={false}
       contentTestId={'wizard_sub_step_wait_for_tx_confirmation'}
       innerContent={transactionApprovementContent}
+      isLoading={!transactionFinished}
     />
   );
 };

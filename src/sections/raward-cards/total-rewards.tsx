@@ -4,6 +4,7 @@ import BalanceCard from '../../components/balance-card/index';
 
 import { useRewardsSectionTranslations } from '../../translations/translationsHooks';
 import { useOrbsAccountStore } from '../../store/storeHooks';
+import Loaders from '../../components/loaders/loader-components';
 
 const RewardsRate: FC = observer(() => {
   const rewardsSectionTranslations = useRewardsSectionTranslations();
@@ -11,10 +12,9 @@ const RewardsRate: FC = observer(() => {
 
   return (
     <BalanceCard
-      title={`${rewardsSectionTranslations('title_totalRewardsAwarded')} (${rewardsSectionTranslations(
-        'title_quantity_orbs',
-      )})`}
-      amount={totalRewardedRewards.toString()}
+    LoaderComponent = {Loaders.BalanceCardSmaller}
+      title={`${rewardsSectionTranslations('title_totalRewardsAwarded')}`}
+      amount={totalRewardedRewards}
       showFraction
       isLoading={!doneLoading}
     />

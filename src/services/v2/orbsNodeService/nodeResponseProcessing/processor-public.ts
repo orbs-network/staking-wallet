@@ -35,6 +35,7 @@ export function updateSystemState(
   systemState: SystemState,
   rootNodeData: IManagementStatusResponse,
   currentTimestamp: number,
+  minSelfStakePercentMille: number,
 ) {
   // const rootNodeData = await fetchJson(`${config.RootNodeEndpoint}${ManagementStatusSuffix}`);
 
@@ -52,8 +53,9 @@ export function updateSystemState(
     Service.Rewards,
   ];
 
-  const guardians = extractGuardians(rootNodeData, currentTimestamp);
+  const guardians = extractGuardians(rootNodeData, currentTimestamp, minSelfStakePercentMille);
   const committeeMembersAddresses = _.map(rootNodeData.Payload.CurrentCommittee, 'EthAddress');
+
   const committeeMembers = _.pick(guardians, committeeMembersAddresses);
   if (_.size(committeeMembers) === 0) {
     console.error(`Could not read a valid Committee, current network seems empty.`);
@@ -106,9 +108,12 @@ function formatParticipationPercentage(raw: number): number {
   return formattedParticipation;
 }
 
-function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimestamp: number): Guardian[] {
+function extractGuardians(
+  rootNodeData: IManagementStatusResponse,
+  currentTimestamp: number,
+  minSelfStakePercentMille: number,
+): Guardian[] {
   return _.mapValues(rootNodeData.Payload.Guardians, (guardianData: IGuardianData) => {
-
     const ip = _.isString(guardianData.Ip) ? guardianData.Ip : '';
 
     const guardian: Guardian = {
@@ -133,7 +138,7 @@ function extractGuardians(rootNodeData: IManagementStatusResponse, currentTimest
       ParticipationPercentage: formatParticipationPercentage(
         rootNodeData.Payload.Participation30Days[guardianData.EthAddress],
       ),
-      Capacity: calculateCapacity(guardianData),
+      Capacity: calculateCapacity(guardianData, minSelfStakePercentMille),
       DelegatedStake: guardianData.DelegatedStake,
       SelfStake: guardianData.SelfStake,
     };
@@ -160,11 +165,15 @@ function extractDistributionFrequency(guardianData: IGuardianData): number {
   return manuallySetValue ? manuallySetValue : DEFAULT_DISTRIBUTION_FREQUENCY;
 }
 
-function calculateCapacity(guardianData: IGuardianData): number {
-  // TODO : ORL : Move to proper constants config.
-  const MIN_SELF_STAKE_PERCENTAGE = 8;
+function calculateCapacity(guardianData: IGuardianData, minSelfStakePercentMille: number): number {
 
-  const capacity = guardianData.DelegatedStake / (guardianData.SelfStake / MIN_SELF_STAKE_PERCENTAGE);
+  const { DelegatedStake, SelfStake } = guardianData;
+
+  const capacity = SelfStake
+    ? minSelfStakePercentMille
+      ? DelegatedStake / (SelfStake / minSelfStakePercentMille)
+      : 0
+    : 0;
 
   return capacity;
 }

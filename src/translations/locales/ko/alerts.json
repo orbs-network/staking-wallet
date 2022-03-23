@@ -1,6 +1,10 @@
 {
   "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "회수해야할 ORBS 토큰이 있는 경우, 추가로 락업해제할 수 없습니다'",
   "guardianAlreadySelected": "'이미 가디언을 선택하였습니다!'",
+  "noEthereumBalance": "You need a little ETH to pay for fees on Ethereum.",
+  "noMaticBalance": "You need a little MATIC to pay for fees on Polygon. Ask for some on",
+  "polygonBridgeTokens": "Did you move your ORBS tokens on Polygon bridge from Ethereum?",
+  "swicthToPolygon": "Did you know? by switching network on top to Polygon, you can enjoy reduced fees and auto rewards compounding.",
   "undergoingMaintenance": "기능 점검 중에는 모든 지갑 기능을 잠시동안 사용할 수 없습니다. 몇 시간 후에 다시 이용해주세요.",
   "walletAddressWasCopied": "주소가 복사되었습니다!"
 }

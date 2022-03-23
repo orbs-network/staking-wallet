@@ -7,11 +7,14 @@ const isMaxBtnEnabled = (orbsAllowance: string, liquidOrbs: string, disableInput
   return !second.eq(first);
 };
 
-const isApproveEnabled = (orbsAllowance: string, liquidOrbs: string): boolean => {
-  if (!liquidOrbs || liquidOrbs === '0') return false;
+const isApproveEnabled = (orbsAllowance?: string, liquidOrbs?: string): boolean => {
+  if (!orbsAllowance || !liquidOrbs) {
+    return false;
+  }
+  if (liquidOrbs === '0' || orbsAllowance === '0') return false;
   const first = new Big(orbsAllowance);
   const second = new Big(liquidOrbs);
-  return second.lte(first);
+  return second.lte(first)
 };
 
 const addNumbersAsStrings = (str1: string, str2: string): string => {

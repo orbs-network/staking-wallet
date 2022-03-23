@@ -99,7 +99,9 @@ export const UnstakingWizard = observer(
     }, [
       activeStep.value,
       closeWizard,
+      extraStepsForRewardsClaiming,
       goToFinishStep,
+      goToUnstakeStep,
       rewardsClaimingWizardTranslations,
       unstakingWizardTranslations,
       wizardsCommonTranslations,

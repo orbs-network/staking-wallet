@@ -10,12 +10,14 @@ export const WizardStepper = styled(Stepper)(({ theme }) => ({
     color: theme.palette.secondary.main, // Affects the circles
   },
 
-  padding: 0, // Removes the excessive padding
 
+  padding: 0, // Removes the excessive padding
+ 
   // Active step label
   '& .MuiStepLabel-active': {
     fontWeight: 'bold',
     color: theme.palette.secondary.main,
+  
   },
 
   // Visited step label

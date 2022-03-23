@@ -5,7 +5,6 @@ export const createActionButtonProps = (
   title: string,
   isDisabled: boolean,
 ): IActionButtonProps => {
-  console.log('lalala');
   return {
     onClick,
     title,

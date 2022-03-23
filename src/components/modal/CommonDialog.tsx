@@ -2,7 +2,7 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { DialogProps } from '@material-ui/core/Dialog/Dialog';
 import styled from 'styled-components';
-import { Backdrop, DialogContent, DialogTitle, useMediaQuery } from '@material-ui/core';
+import { Backdrop, useMediaQuery } from '@material-ui/core';
 import useTheme from '@material-ui/core/styles/useTheme';
 import Color from 'color';
 
@@ -13,7 +13,7 @@ const DarkBackdrop = styled(Backdrop)(() => ({
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '.MuiDialog-paper': {
     // Box Effect
-    border: '1px solid #979797',
+    border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: 5,
     boxShadow: theme.shadows[2],
 
@@ -21,6 +21,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxHeight: '90%',
     maxWidth: '100%',
     width: 'fit-content',
+    minWidth:'600px',
 
     // Colors
     backgroundColor: Color(theme.palette.primary.dark)
@@ -31,6 +32,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
     [theme.breakpoints.down('xs')]: {
       margin: '0.5em',
+     paddingLeft:'0.5em',
+     paddingRight:'0.5em',
+     minWidth:'unset',
+    
     },
 
     [theme.breakpoints.down('sm')]: {

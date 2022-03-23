@@ -5,7 +5,7 @@ export function fullOrbsFromWeiOrbs(weiOrbs?: bigint): number {
   return parseFloat(web3.utils.fromWei(weiOrbs.toString(), 'ether'));
 }
 
-export function fullOrbsFromWeiOrbsString(weiOrbs?: bigint): string {
+export function fullOrbsFromWeiOrbsString(weiOrbs?: bigint | string): string {
   if (!weiOrbs) return '0';
   return web3.utils.fromWei(weiOrbs.toString(), 'ether');
 }

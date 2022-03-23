@@ -31,7 +31,6 @@ const plugins = [
     },
   ]),
   // Adds the favicons to the dist
-  new FaviconsWebpackPlugin('./assets/favicons/tetra_favicon.svg'),
   // DEV_NOTE : this plugin replaces the usage of 'process.env.X' with the actual values of the key.
   new webpack.DefinePlugin(createEnvObjectForWebpack(envFromPathMergedWithRuntime)),
 
@@ -107,7 +106,7 @@ const config: Configuration = {
         ],
       },
       {
-        test: /.jpe?g$|.gif$|.png$|.woff$|.woff2$|.ttf$|.eot$/,
+        test: /.jpe?g$|.gif$|.png$|.woff$|.woff2$|.pdf$|.ttf$|.eot$/,
         use: 'url-loader?limit=10000',
       },
       {

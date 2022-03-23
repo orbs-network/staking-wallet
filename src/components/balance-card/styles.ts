@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
 export const StyledGrid = styled(Grid)(({ theme }) => ({
-  backgroundColor: 'rgba(47, 47, 47, 0.6)',
+  backgroundColor: '#1B1C1E',
   paddingTop: '0.5em',
   paddingRight: '1.25em',
   paddingLeft: '1.25em',
   paddingBottom: '1.5em',
   position: 'relative',
+  border:`1px solid ${theme.palette.secondary.main}`
 }));
 
 export const useStyles = makeStyles({
@@ -31,9 +32,7 @@ export const useStyles = makeStyles({
     },
   },
   container: {
-    ['@media (max-width:700px)']: {
-      marginBottom: (props: any) => (props.warning ? 35 : 0),
-    },
+    
   },
   title: {
     ['@media (max-width:1300px)']: {

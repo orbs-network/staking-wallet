@@ -8,6 +8,7 @@ import { UseBoolean } from 'react-hanger';
 import { useOrbsAccountStore } from '../../store/storeHooks';
 import { useBalancesSectionTranslations } from '../../translations/translationsHooks';
 import { formatStringAsNumber } from '../../utils/stringUtils';
+import constants from '../../constants/constants';
 interface IProps {
   showCannotUnstakeNowSnackbar: UseBoolean;
   showUnStakingModal: UseBoolean;
@@ -29,8 +30,10 @@ const StakedAndRewardsCard: FC<IProps> = observer(({ showCannotUnstakeNowSnackba
 
   const orbsToUnstakeAsString = stakingUtil.addNumbersAsStrings(
     fullOrbsFromWeiOrbsString(stakedOrbs),
-    rewardsBalance.toString(),
+    rewardsBalance,
   );
+
+  
 
   return (
     <BalanceCard
@@ -38,8 +41,8 @@ const StakedAndRewardsCard: FC<IProps> = observer(({ showCannotUnstakeNowSnackba
       toolTipTitle={
         <BalanceTooltip
           stakeTitle={balancesSectionTranslations('tooltipTitle_stakedOrbs')}
-          stakedOrbs={formatStringAsNumber(stakedOrbsAsString)}
-          rewardsBalance={formatStringAsNumber(rewardsBalance.toString())}
+          stakedOrbs={formatStringAsNumber(stakedOrbsAsString, true, constants.numbersDecimalToDisplayLimit)}
+          rewardsBalance={formatStringAsNumber(rewardsBalance, true, constants.numbersDecimalToDisplayLimit)}
           pendingRewardsTitle={balancesSectionTranslations('tooltipTitle_pendingRewards')}
         />
       }

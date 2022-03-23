@@ -31,7 +31,7 @@ interface IProps {
   addCancelButton?: boolean;
   cancelButtonText?: string;
   onCancelButtonClicked?: () => void;
-
+  component?: ReactNode;
   // Tests props
   contentTestId?: string;
   close?: () => void;
@@ -67,6 +67,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
     onCancelButtonClicked,
     infoTitle,
     close,
+    component,
   } = props;
   const classes = useStyles();
   const relevantStylingForActionButtons = addCancelButton ? stylingForTwoActionButtons : stylingForSingleActionButton;
@@ -108,7 +109,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
 
   const hasMessage = message && message.length > 0;
   const hasSubMessage = subMessage && subMessage.length > 0;
-
+  // change to string
   return (
     <WizardContent data-testid={contentTestId}>
       {/* Title */}
@@ -123,14 +124,16 @@ export const BaseStepContent = React.memo<IProps>((props) => {
         <Typography variant={'body1'}>{message}</Typography>
       </Grid>
 
-      {/* Sub Message */}
+      <Grid item hidden={!component} style={{ textAlign: 'center', marginBottom:'10px' }}>
+        {component}
+      </Grid>
       <Grid item hidden={!hasSubMessage} style={{ textAlign: 'center' }}>
         <Typography variant={'body2'}>{subMessage}</Typography>
       </Grid>
 
       {/* Display loading */}
       {isLoading && (
-        <Grid item container direction={'column'} alignItems={'center'} style={{ textAlign: 'center' }}>
+        <Grid item container direction={'column'} alignItems={'center'} style={{ textAlign: 'center', marginTop: 10 }}>
           <Grid item>
             <CircularProgress color={'secondary'} />
           </Grid>
@@ -142,7 +145,7 @@ export const BaseStepContent = React.memo<IProps>((props) => {
       <Grid item container justify={'center'} style={{ position: 'relative' }}>
         {innerContent}
       </Grid>
-
+      {close && <CommonClosePopupButton onClick={close} />}
       {/* Action Buttons */}
       {hasAnyButtons && (
         <Grid
@@ -151,11 +154,11 @@ export const BaseStepContent = React.memo<IProps>((props) => {
           justify={'space-around'}
           direction={'row'}
           spacing={0}
-          style={{ margin: 0, width: '100%' }}
+          style={{ margin: 0, width: '100%', marginTop: '10px' }}
         >
-          {close && <CommonClosePopupButton onClick={close} />}
+          
           {addCancelButton && (
-            <Grid item>
+            <Grid>
               <CommonActionButton
                 style={relevantStylingForActionButtons}
                 onClick={onCancelButtonClicked}

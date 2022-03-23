@@ -25,14 +25,18 @@ export interface ICommonsTranslations {
   loadingFailed: string;
   // As in "5 Days -left- for something"
   timeLeft: string;
-
   termsOfUse: string;
   privacyPolicy: string;
   xOrbs: string;
-
   // Temps
   tetraV1ChangeV1Delegation: string;
   v1HistoricRewards: string;
+  telegram: string;
+  readMore: string;
+  networkSelectHoverText: string;
+  ethereum: string;
+  polygon: string;
+  ropsten: string;
 }
 
 export interface ISectionTitlesTranslations {
@@ -323,4 +327,8 @@ export interface IAlertsTranslations {
   walletAddressWasCopied: string;
   guardianAlreadySelected: string;
   undergoingMaintenance: string;
+  noEthereumBalance: string;
+  noMaticBalance: string;
+  polygonBridgeTokens: string;
+  swicthToPolygon: string;
 }

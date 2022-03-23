@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { memo, useContext } from 'react';
 import useMobile from '../../hooks/useMobile';
-import { Guardian } from '../../services/v2/orbsNodeService/systemState';
-import GuardiansDesktop from './desktop/index';
 import { IBaseTableProps } from './interfaces';
-import GuardiansMobile from './mobile/index';
 import { getSortedGuardians } from './util';
+import DesktopTable from './desktop/NewTable/index';
+import { IGuardiansDictionary } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
+import GuardiansMobile from './mobile/index';
+import { MobXProviderContext } from 'mobx-react';
 interface IProps extends IBaseTableProps {
-  guardians: Guardian[];
+  allChainsGuardians: { [key: string]: IGuardiansDictionary };
 }
 
-export const GuardiansTable = React.memo<IProps>((props) => {
+const GuardiansTable = (props: IProps) => {
   const [isMobile] = useMobile();
-
   const tableProps = {
     committeeMembers: props.committeeMembers,
     guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
@@ -19,13 +19,15 @@ export const GuardiansTable = React.memo<IProps>((props) => {
     selectedGuardian: props.selectedGuardian,
     guardianSelectionMode: props.guardianSelectionMode,
     disableSelection: props.disableSelection,
-    sortedGuardians: getSortedGuardians(props.guardians, props.selectedGuardian),
-    pageSize: Math.min(50, props.guardians.length),
+    sortedGuardians: props.allChainsGuardians && getSortedGuardians(Object.values(props.allChainsGuardians), props.selectedGuardian),
     tableTitle: props.tableTitle,
     densePadding: props.densePadding,
     isGuardian: props.isGuardian,
     mainAddress: props.mainAddress,
+    selectedChain: props.selectedChain,
+    minSelfStakePercentMille: props.minSelfStakePercentMille,
   };
+  return isMobile ? <GuardiansMobile {...tableProps} /> : <DesktopTable {...tableProps} />;
+};
 
-  return isMobile ? <GuardiansMobile {...tableProps} /> : <GuardiansDesktop {...tableProps} />;
-});
+export default GuardiansTable;

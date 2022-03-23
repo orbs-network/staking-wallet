@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import {
   useCryptoWalletIntegrationStore,
   useOrbsAccountStore,
@@ -6,8 +6,8 @@ import {
   useReReadAllStoresData,
 } from '../../store/storeHooks';
 import { ITransactionCreationStepProps } from '../approvableWizardStep/ApprovableWizardStep';
-import { observer } from 'mobx-react';
-import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
+import { MobXProviderContext, observer } from 'mobx-react';
+import GuardiansTable from '../../components/GuardiansTable/GuardiansTable';
 import { BaseStepContent } from '../approvableWizardStep/BaseStepContent';
 import { useStakingWizardTranslations, useWizardsCommonTranslations } from '../../translations/translationsHooks';
 import { Grid } from '@material-ui/core';
@@ -23,7 +23,8 @@ export interface IGuardianSelectionStepContentProps {
 
 export const GuardianSelectionStepContent = observer(
   (props: ITransactionCreationStepProps & IGuardianSelectionStepContentProps) => {
-    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress } = props;
+    const { onPromiEventAction, skipToSuccess, txError, disableInputs, selectedGuardianAddress, closeWizard } = props;
+    const { chainId } = useContext(MobXProviderContext);
 
     const wizardsCommonTranslations = useWizardsCommonTranslations();
     const stakingWizardTranslations = useStakingWizardTranslations();
@@ -31,9 +32,9 @@ export const GuardianSelectionStepContent = observer(
     const orbsNodeStore = useOrbsNodeStore();
     const analyticsService = useAnalyticsService();
     const { mainAddress } = useCryptoWalletIntegrationStore();
-    const reReadStoresData = useReReadAllStoresData();
 
     const stakingRewardsService = useStakingRewardsService();
+
     const guardianAddressToDelegatorsCut = useGuardiansDelegatorsCut(orbsNodeStore.guardians, stakingRewardsService);
 
     // Start and limit by allowance
@@ -66,7 +67,6 @@ export const GuardianSelectionStepContent = observer(
             promiEvent: orbsAccountStore.delegate(guardian.EthAddress),
             isBroadcastingMessage,
             onPromiEventAction,
-            reReadStoresData,
             wizardsCommonTranslations,
             errorHandler: handleGuardianSelectionError,
             analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.guardianChange),
@@ -83,7 +83,6 @@ export const GuardianSelectionStepContent = observer(
         onPromiEventAction,
         isBroadcastingMessage,
         analyticsService,
-        reReadStoresData,
       ],
     );
 
@@ -91,10 +90,12 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
+            minSelfStakePercentMille={orbsNodeStore.minSelfStakePercentMille}
+            selectedChain={chainId}
             mainAddress={mainAddress}
             isGuardian={orbsAccountStore.isGuardian}
-            guardians={orbsNodeStore.guardians}
             guardianSelectionMode={'Select'}
+            allChainsGuardians={orbsNodeStore.allChainsGuardians}
             onGuardianSelect={selectGuardian}
             selectedGuardian={selectedGuardianAddress}
             tableTestId={'guardian_selection_sub_step_guardians_table'}
@@ -106,16 +107,19 @@ export const GuardianSelectionStepContent = observer(
         </Grid>
       );
     }, [
-      disableInputs,
-      guardianAddressToDelegatorsCut,
+      orbsNodeStore.minSelfStakePercentMille,
+      orbsNodeStore.allChainsGuardians,
       orbsNodeStore.committeeMembers,
-      orbsNodeStore.guardians,
+      chainId,
+      mainAddress,
+      orbsAccountStore.isGuardian,
       selectGuardian,
       selectedGuardianAddress,
-      orbsAccountStore.isGuardian,
-      mainAddress,
+      guardianAddressToDelegatorsCut,
+      disableInputs,
     ]);
 
+    
     return (
       <BaseStepContent
         message={message.value}
@@ -126,6 +130,8 @@ export const GuardianSelectionStepContent = observer(
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
         innerContent={guardianSelectionContent}
+
+        close={closeWizard}
       />
     );
   },

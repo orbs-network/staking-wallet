@@ -11,5 +11,5 @@
   "title_unstakedOrbsInYourWallet": "ウォレット内のステーキングされていないORBS",
   "tooltipTitle_pendingRewards": "保留中のリワード",
   "tooltipTitle_stakedOrbs": "ステーキング中ORBS",
-  "warning_unstakedTokensNotEarningRewards": "これらのトークンはステーキングされておらず、報酬の対象になっていません。"
+  "warning_unstakedTokensNotEarningRewards": "These tokens are unstaked and not earning rewards."
 }

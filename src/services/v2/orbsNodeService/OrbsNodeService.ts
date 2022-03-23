@@ -1,32 +1,36 @@
 import { IOrbsNodeService } from './IOrbsNodeService';
-import Web3 from 'web3';
 import { fetchJson } from './nodeResponseProcessing/helpers';
 import { SystemState } from './systemState';
 import { updateSystemState } from './nodeResponseProcessing/processor-public';
 import { IReadAndProcessResults } from './OrbsNodeTypes';
-import { IManagementStatusResponse } from './nodeResponseProcessing/RootNodeData';
+import { IManagementStatus } from './nodeResponseProcessing/RootNodeData';
 import Moment from 'moment';
 import errorMonitoring from '../../error-monitoring';
-import errorMessages from '../../error-monitoring/errors';
+import _ from 'lodash';
+import { groupGuardiansByNetworks, createSystemStates, calculateEffectiveStakeByChain } from './util';
 
-const ManagementServiceStatusPageUrl = process.env.URL_MGMT_SERV || 'http://localhost:7666/status';
 // TODO : O.L : Consider using httpService
 export class OrbsNodeService implements IOrbsNodeService {
-  constructor(private defaultStatusUrl: string = ManagementServiceStatusPageUrl) {}
-  checkIfDefaultNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean {
-    return this.checkIfNodeIsInSync(managementStatusResponse);
+  constructor(
+    private defaultStatusUrls: { chain: number; managementServiceStatusPageUrl: string }[],
+    private selectedChain: number,
+  ) {}
+  checkIfDefaultNodeIsInSync(managementStatusResponses: IManagementStatus[]): boolean {
+    const selectedChainManagementStatus = managementStatusResponses.find((m) => this.selectedChain);
+    return this.checkIfNodeIsInSync(selectedChainManagementStatus);
   }
 
-  checkIfNodeIsInSync(managementStatusResponse: IManagementStatusResponse): boolean {
+  checkIfNodeIsInSync(managementStatusResponse: IManagementStatus): boolean {
+    const result = managementStatusResponse.result;
     try {
       const currentTimestamp = Moment().unix();
 
       const ACCEPTED_RANGE_IN_SECONDS = 60 * 60; // 60 minutes
       const earliestAcceptedTimestamp = currentTimestamp - ACCEPTED_RANGE_IN_SECONDS;
 
-      const nodeRefTime = managementStatusResponse.Payload.CurrentRefTime;
+      const nodeRefTime = result.Payload.CurrentRefTime;
       const isManagementServiceReferenceFresh = nodeRefTime >= earliestAcceptedTimestamp;
-      const isManagementServiceError = managementStatusResponse.Error?.length > 0;
+      const isManagementServiceError = result.Error?.length > 0;
 
       const checkNodeSync = process.env.CHECK_NODE_SYNC && process.env.CHECK_NODE_SYNC.toLowerCase().trim() === 'true';
       const isNodeInSync = !checkNodeSync || (isManagementServiceReferenceFresh && !isManagementServiceError);
@@ -35,28 +39,53 @@ export class OrbsNodeService implements IOrbsNodeService {
     } catch (e) {
       const { sections, captureException } = errorMonitoring;
       captureException(e, sections.orbsNodeStore, 'error in function: checkIfNodeIsInSync');
-      console.error(`Error while getting node ${this.defaultStatusUrl} status: ${e}`);
+      console.error(`Error while getting node  status: ${e}`);
       return false;
     }
   }
 
-  readAndProcessSystemState(managementStatusResponse: IManagementStatusResponse): IReadAndProcessResults {
-    const systemState = new SystemState();
+  readAndProcessSystemState(
+    allManagementStatuses: IManagementStatus[],
+    minSelfStakePercentMille: number,
+  ): IReadAndProcessResults {
+    //return states = all chains system state, selectedChainState = state of the current chain,
+    // committeeMembers = the commitee members of the selected chain
 
-    const currentTimeStamp = Math.floor(Date.now() / 1000);
-    updateSystemState(systemState, managementStatusResponse, currentTimeStamp);
+    const committeEffectiveStakes = calculateEffectiveStakeByChain(allManagementStatuses)
+    const { states, selectedChainState, committeeMembers } = createSystemStates(
+      allManagementStatuses,
+      this.selectedChain,
+      minSelfStakePercentMille,
+    );
+      
+    //groupedGuardiansByNetwork = all the guardians sorted by network,
+    // allGuardians = all the guardians of all chains in one array
+    const { groupedGuardiansByNetwork, allGuardians } = groupGuardiansByNetworks(states, this.selectedChain);
 
     return {
-      systemState,
-      committeeMembers: managementStatusResponse.Payload.CurrentCommittee,
+      allNetworksGuardians: allGuardians,
+      committeeMembers,
+      committeeGuardians: Object.values(selectedChainState.CommitteeNodes),
+      groupedGuardiansByNetwork,
+      committeEffectiveStakes,
+      selectedChain: this.selectedChain
     };
   }
 
-  async fetchNodeManagementStatus(): Promise<IManagementStatusResponse> {
-    const statusUrl = this.defaultStatusUrl;
-
+  async fetchNodeManagementStatus(): Promise<IManagementStatus[]> {
+    const statusUrls = this.defaultStatusUrls;
     try {
-      return fetchJson(statusUrl);
+      const res = await Promise.all(
+        statusUrls.map(async (u) => {
+          const { chain } = u;
+          return {
+            chain,
+            result: await fetchJson(u.managementServiceStatusPageUrl),
+          };
+        }),
+      );
+
+      return res;
     } catch (error) {
       const { sections, captureException } = errorMonitoring;
       captureException(error, sections.orbsNodeStore, 'error in function: fetchNodeManagementStatus');

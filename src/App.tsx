@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
@@ -11,18 +11,17 @@ import { observer } from 'mobx-react';
 import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
-import useConnection from './hooks/useConnection';
-import NetworkIndicator from './components/NetworkIndicator/index';
+import ChainTopBackground from './components/chain/ChainTopBackground';
+
 export const App = observer(() => {
   useMonitoring();
   useLanguage();
-  useConnection();
 
   return (
     <main>
-      <NetworkIndicator />
       <Header />
       <ContentContainer id='appContainer'>
+        <ChainTopBackground />
         <Switch>
           <Route exact path={routes.guardiansPage} component={GuardianDisplayPage} />
           <Route exact path={routes.main} component={MainAppPage} />

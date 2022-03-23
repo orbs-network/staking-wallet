@@ -1,14 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useBoolean } from 'react-hanger';
 import { Grid } from '@material-ui/core';
 import { ReactComponent as ShielIcon } from '../../../assets/shield.svg';
-import { observer } from 'mobx-react';
-import Snackbar from '@material-ui/core/Snackbar';
+import { MobXProviderContext, observer } from 'mobx-react';
 import { Section } from '../../components/structure/Section';
 import { SectionHeader } from '../../components/structure/SectionHeader';
 import { useCryptoWalletIntegrationStore, useOrbsAccountStore, useOrbsNodeStore } from '../../store/storeHooks';
-import { GuardiansTable } from '../../components/GuardiansTable/GuardiansTable';
-import { CustomSnackBarContent } from '../../components/snackbar/CustomSnackBarContent';
+import GuardiansTable from '../../components/GuardiansTable/GuardiansTable';
 import { GuardianChangingWizard } from '../../wizards/guardianChange/GuardianChangingWizard';
 import {
   useAlertsTranslations,
@@ -24,6 +22,8 @@ import { useGuardiansDelegatorsCut, useStakingRewardsService } from '../../servi
 import BaseLoader from '../../components/loaders/index';
 import ErrorFallback from '../../components/errors/index';
 import CustomLoaders from '../../components/loaders/loader-components/index';
+import StakingInformation from './staking-information/index';
+import CustomSnackbar from '../../components/snackbar/custom-snackbar';
 
 const handleIsLoading = (
   isConnected: boolean | undefined,
@@ -51,6 +51,7 @@ const handleIsError = (
 export const GuardiansSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const { isConnectedToWallet, mainAddress } = useCryptoWalletIntegrationStore();
+  const { chainId } = useContext(MobXProviderContext);
 
   const alertsTranslations = useAlertsTranslations();
   const commonsTranslations = useCommonsTranslations();
@@ -82,26 +83,24 @@ export const GuardiansSection = observer(() => {
     orbsNodeStore.errorLoading,
     orbsAccountStore.errorLoading,
   );
-  const committeeEffectiveStake = orbsNodeStore.committeeEffectiveStake;
-  const sideTitle = isLoading
-    ? ''
-    : [
-        `${sectionTitlesTranslations(
-          'allGuardians_sideTitleTotalStake',
-        )}: ${orbsAccountStore.totalSystemStakedTokens.toLocaleString()}`,
-        `${sectionTitlesTranslations(
-          'allGuardians_sideTitleCommitteeStake',
-        )}: ${committeeEffectiveStake.toLocaleString()}`,
-      ];
+  const committeeStakeByChain = orbsNodeStore.committeeEffectiveStakeByChain;
+
   return (
     <Section data-testid='guardians-section'>
       <SectionHeader
+        sideComponent={
+          <StakingInformation
+            isLoading={isLoading}
+            totalStake={orbsAccountStore.totalSystemStakedTokens}
+            totalStakeByChain={orbsAccountStore.totalStakeByChain}
+            committeeStakeByChain={committeeStakeByChain}
+          />
+        }
         title={sectionTitlesTranslations('allGuardians')}
-        sideTitle={sideTitle}
         icon={ShielIcon}
         bottomPadding
       />
-      <CommonDivider />
+     
       <ErrorFallback isError={isErrorOnLoading} errorText={commonsTranslations('loadingFailed')}>
         <BaseLoader isLoading={isLoading} hideContent LoaderComponent={CustomLoaders.GuardiansSection}>
           <>
@@ -110,11 +109,13 @@ export const GuardiansSection = observer(() => {
             )}
             <Grid item xs={12}>
               <GuardiansTable
+                minSelfStakePercentMille={orbsNodeStore.minSelfStakePercentMille}
+                selectedChain={chainId}
                 mainAddress={mainAddress}
+                allChainsGuardians={orbsNodeStore.allChainsGuardians}
                 isGuardian={orbsAccountStore.isGuardian}
                 guardianSelectionMode={'Change'}
                 selectedGuardian={orbsAccountStore.hasSelectedGuardian ? orbsAccountStore.selectedGuardianAddress : ''}
-                guardians={orbsNodeStore.guardians}
                 onGuardianSelect={onGuardianSelect}
                 tableTestId={'guardians-table'}
                 committeeMembers={orbsNodeStore.committeeMembers}
@@ -136,23 +137,16 @@ export const GuardiansSection = observer(() => {
                 selectedGuardianAddress={orbsAccountStore.selectedGuardianAddress}
               />
             </CommonDialog>
-
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={showSnackbarMessage.value}
+            <CustomSnackbar
+              vertical='bottom'
+              horizontal='left'
+              show={showSnackbarMessage.value}
               autoHideDuration={1500}
-              onClose={showSnackbarMessage.setFalse}
-            >
-              <CustomSnackBarContent
-                variant={'info'}
-                message={alertsTranslations('guardianAlreadySelected')}
-                onClose={showSnackbarMessage.setFalse}
-                data-testid={'message-guardian-already-selected'}
-              />
-            </Snackbar>
+              hide={showSnackbarMessage.setFalse}
+              variant='warning'
+              message={alertsTranslations('guardianAlreadySelected')}
+              data-testid={'message-guardian-already-selected'}
+            />
           </>
         </BaseLoader>
       </ErrorFallback>

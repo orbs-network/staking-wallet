@@ -8,7 +8,7 @@ interface IColumnHeaderWithTooltipProps {
 
 const ColumnHeaderWithTooltip: FC<IColumnHeaderWithTooltipProps> = ({ headerText, tooltipText }) => {
   return (
-    <span style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
       {headerText} <span style={{ width: '0.5rem' }} /> <InfoToolTipIcon tooltipTitle={tooltipText} />
     </span>
   );

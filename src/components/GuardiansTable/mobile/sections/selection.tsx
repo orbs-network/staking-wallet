@@ -1,22 +1,29 @@
 import React from 'react';
 import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
 import { EMPTY_ADDRESS } from '../../../../constants';
-import { ISelectionProps } from '../../interfaces';
+import { TGuardianSelectionMode } from '../../interfaces';
 import { Typography } from '@material-ui/core';
 import getGuardianSelectionCellContent from '../../components/guardian-selection-cell-content-mobile';
 import { useCommonStyles } from './styles';
 import stakingUtil from '../../../../utils/stakingUtil';
 
-interface IProps extends ISelectionProps {
+interface IProps {
+  onGuardianSelect?: (guardian: Guardian) => void;
+  selectedGuardian?: string;
+  guardianSelectionMode: TGuardianSelectionMode;
+  theme: any;
+  disableSelection?: boolean;
   guardian: Guardian;
   isGuardian: boolean;
   mainAddress: string;
+  isSelectedChain: boolean;
+  translation: any;
 }
 
 const Selection = (props: IProps) => {
   const commonClasses = useCommonStyles();
   const {
-    guardiansTableTranslations,
+    translation,
     onGuardianSelect,
     selectedGuardian,
     guardianSelectionMode,
@@ -25,21 +32,22 @@ const Selection = (props: IProps) => {
     guardian,
     isGuardian,
     mainAddress,
+    isSelectedChain,
   } = props;
   const hasSelectedGuardian = !!selectedGuardian && selectedGuardian !== EMPTY_ADDRESS;
   const addSelectionColumn = hasSelectedGuardian || (onGuardianSelect && guardianSelectionMode === 'Select');
-  if (!addSelectionColumn) return <></>;
+  if (!addSelectionColumn || !guardian || !isSelectedChain) return <></>;
   return (
     <div className={commonClasses.row}>
       <div className={commonClasses.rowName}>
-        <Typography>{guardiansTableTranslations('columnHeader_selection')}</Typography>
+        <Typography>{translation('columnHeader_selection')}</Typography>
       </div>
 
       {getGuardianSelectionCellContent({
         g: guardian,
         onGuardianSelect,
         selectedGuardian,
-        guardiansTableTranslations,
+        guardiansTableTranslations: translation,
         guardianSelectionMode,
         isGuardian,
         theme,

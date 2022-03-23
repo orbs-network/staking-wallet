@@ -1,6 +1,10 @@
 {
   "cannotUnstakeWhenThereAreOrbsReadyToWithdraw": "Cannot unstake when there are ORBS to be withdrawn",
   "guardianAlreadySelected": "Guardian already selected!",
+  "noEthereumBalance": "You need a little ETH to pay for fees on Ethereum.",
+  "noMaticBalance": "You need a little MATIC to pay for fees on Polygon. Ask for some on",
+  "polygonBridgeTokens": "Did you move your ORBS tokens on Polygon bridge from Ethereum?",
+  "swicthToPolygon": "Did you know? by switching network on top to Polygon, you can enjoy reduced fees and auto rewards compounding.",
   "undergoingMaintenance": "Undergoing maintenance, all wallet interaction temporarily disabled. Please try again in a few hours.",
   "walletAddressWasCopied": "Copied address!"
 }

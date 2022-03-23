@@ -3,12 +3,15 @@ import { configureMobx, getStores } from './store/storesInitialization';
 import axios from 'axios';
 import { TEthereumProviderName } from './services/analytics/IAnalyticsService';
 import { detectEthereumProviderName } from './services/analytics/analyticsUtils';
-import { AppStyles, baseTheme } from './theme/Theme';
 import moment from 'moment';
 import 'moment/locale/ja';
 import 'moment/locale/ko';
+import { DEFAULT_CHAIN } from './constants';
+import Web3 from 'web3';
+import config from '../config';
 
-const initApp = () => {
+const initApp = async (chain?: number) => {
+  const selectedChain = chain || DEFAULT_CHAIN;
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -16,8 +19,11 @@ const initApp = () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
-  const ethereumProvider = (window as any).ethereum;
-  const services = buildServices(ethereumProvider, axios);
+
+  const infuraProvider = new Web3.providers.HttpProvider(config.networks[selectedChain].rpcUrls[0]);
+
+  const ethereumProvider = (window as any).ethereum || infuraProvider;
+  const services = await buildServices(ethereumProvider, axios, selectedChain);
   const stores = getStores(
     services.orbsPOSDataService,
     services.stakingService,
@@ -27,11 +33,11 @@ const initApp = () => {
     services.analyticsService,
     services.orbsNodeService,
     services.delegationsService,
+    services.electionsService,
     alertErrors,
   );
   services.analyticsService.init();
 
-  // TODO : FUTURE : O.L : Move this with the analytics 'init'
   let ethereumProviderName: TEthereumProviderName;
   if (ethereumProvider) {
     ethereumProviderName = detectEthereumProviderName(ethereumProvider);
@@ -42,12 +48,7 @@ const initApp = () => {
   services.analyticsService.setEthereumProvider(ethereumProviderName);
   (window as any).services = services;
 
-  const themeAndStyle = {
-    ...baseTheme,
-    styles: AppStyles,
-  };
-
-  return { services, stores, themeAndStyle };
+  return { services, stores };
 };
 
 export default initApp;

@@ -20,7 +20,6 @@ const OrbsInCooldownCard: FC<IProps> = observer((props) => {
 
   const { hasOrbsInCooldown, canWithdrawCooldownOrbs } = useOrbsInCooldownState();
   const orbsInCoolDownAsString = fullOrbsFromWeiOrbsString(orbsInCoolDown);
-  console.log({ canWithdrawCooldownOrbs });
   const orbsCooldownTitle = useMemo(
     () =>
       OrbsCooldownTitle({

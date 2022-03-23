@@ -12,7 +12,7 @@ import { useTrackModal } from '../../services/analytics/analyticsHooks';
 import { MODAL_IDS } from '../../services/analytics/analyticConstants';
 import { Wizard } from '../../components/wizards/Wizard';
 import { fullOrbsFromWeiOrbsString } from '../../cryptoUtils/unitConverter';
-
+import StakingWarning from './StakingWarning';
 const ROOT_STEPS_INDEXES = {
   selectGuardian: 0,
   allowTransfer: 1,
@@ -104,7 +104,6 @@ export const StakingWizard = observer(
     const extraPropsForOrbsAllowance = useMemo<IOrbsAllowanceStepContentProps>(() => {
       return {
         goBackToChooseGuardianStep: goToSelectGuardianStep,
-        setAmount: (value: string) => setStakeAmountFromApprovalStep(value),
         stakeAmountFromApprovalStep,
       };
     }, [goToSelectGuardianStep, stakeAmountFromApprovalStep]);
@@ -121,7 +120,7 @@ export const StakingWizard = observer(
               finishedActionName={stakingWizardTranslations('finishedAction_selectedGuardian')}
               moveToNextStepAction={allowanceApproved ? goToStakeOrbsStep : goToSelectAmountStep}
               moveToNextStepTitle={stakingWizardTranslations('moveToStep_stake')}
-              closeWizard={closeWizard}
+              closeWizard={!allowanceApproved ? goToSelectAmountStep : goToStakeOrbsStep }
               propsForTransactionCreationSubStepContent={extraPropsForGuardianSelection}
               key={'guardianSelectionStep'}
             />
@@ -197,12 +196,15 @@ export const StakingWizard = observer(
     }, [allowanceApproved, stakingWizardTranslations, wizardsCommonTranslations]);
 
     return (
-      <Wizard
-        activeStep={activeStep.value}
-        stepperTitles={stepperTitles}
-        content={stepContent}
-        dataTestId={'wizard_staking'}
-      />
+      <>
+        <StakingWarning />
+        <Wizard
+          activeStep={activeStep.value}
+          stepperTitles={stepperTitles}
+          content={stepContent}
+          dataTestId={'wizard_staking'}
+        />
+      </>
     );
   }),
 );

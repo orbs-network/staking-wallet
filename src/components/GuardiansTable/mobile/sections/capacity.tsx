@@ -1,31 +1,42 @@
 import React, { FC } from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import { Line } from 'rc-progress';
-import { IMobileSection } from '../../interfaces';
 import { useCommonStyles } from './styles';
 import { getCapacityColor, getCapacityText } from '../../util';
+import { Guardian } from '../../../../services/v2/orbsNodeService/systemState';
+import { getStrokeColor } from '../../desktop/NewTable/utils';
+import Stroke from '../../components/Stroke';
+import useTheme from '@material-ui/core/styles/useTheme';
 
-const Capacity: FC<IMobileSection> = ({ guardian, guardiansTableTranslations }) => {
-  const { Capacity } = guardian;
+interface IProps {
+  translation: any;
+  guardian: Guardian | null;
+  chain: number;
+  isSelectedChain: boolean;
+}
 
+const Capacity = ({ guardian, translation, isSelectedChain, chain }: IProps) => {
+  const theme = useTheme();
   const commonClasses = useCommonStyles();
-
+  const availableCapacity = guardian ? 100 - guardian.Capacity : 0;
+  const strokeColor = getStrokeColor(availableCapacity, theme, chain, isSelectedChain);
   return (
     <div className={commonClasses.row}>
       <div className={commonClasses.rowName}>
-        <Typography>{guardiansTableTranslations('columnHeader_capacity')}</Typography>
+        <Typography>{translation('columnHeader_capacity')}</Typography>
       </div>
 
       <div className={commonClasses.rowContent}>
-        <Line
-          percent={Capacity}
-          strokeWidth={2}
-          strokeLinecap='square'
-          trailColor='transparent'
-          strokeColor={getCapacityColor(Capacity)}
-          className={commonClasses.line}
-        />
-        <Typography className={commonClasses.lineText}>{getCapacityText(Capacity, 0)}</Typography>
+        {guardian ? (
+          <>
+            <Stroke color={strokeColor} percent={availableCapacity} style={{ flex: 1, marginRight: 10 }} />
+            <Typography className={commonClasses.lineText}>
+              {availableCapacity > 100 ? `100%` : getCapacityText(availableCapacity, 0)}
+            </Typography>
+          </>
+        ) : (
+          <Typography>-</Typography>
+        )}
       </div>
     </div>
   );

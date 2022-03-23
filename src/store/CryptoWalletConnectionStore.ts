@@ -3,6 +3,7 @@ import { IReactionDisposer } from 'mobx/lib/core/reaction';
 import { IAnalyticsService } from '../services/analytics/IAnalyticsService';
 import { ICryptoWalletConnectionService } from '@orbs-network/contracts-js';
 import errorMonitoring from '../services/error-monitoring';
+import { hasInjectedProvider } from '../constants';
 
 export class CryptoWalletConnectionStore {
   @observable private walletConnectionRequestApproved: boolean;
@@ -19,7 +20,7 @@ export class CryptoWalletConnectionStore {
     private cryptoWalletConnectionService: ICryptoWalletConnectionService,
     private analyticsService: IAnalyticsService,
   ) {
-    this.hasEthereumProvider = cryptoWalletConnectionService.hasEthereumProvider;
+    this.hasEthereumProvider = hasInjectedProvider;
     this.hasEventsSupport = cryptoWalletConnectionService.hasEventsSupport;
 
     this.reactionToWalletConnection = reaction(
@@ -85,7 +86,7 @@ export class CryptoWalletConnectionStore {
 
   @action('setWalletConnectionRequestApproved')
   private setWalletConnectionRequestApproved(requestApproved: boolean) {
-    this.walletConnectionRequestApproved = requestApproved;
+     this.walletConnectionRequestApproved = requestApproved;
   }
 
   @action('setMainAddress')

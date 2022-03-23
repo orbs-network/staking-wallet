@@ -2,21 +2,30 @@ import React, { useCallback, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
 import { Section } from '../../components/structure/Section';
 import {
   useConnectWalletSectionTranslations,
   useSectionsTitlesTranslations,
 } from '../../translations/translationsHooks';
-import { ReactComponent as TetraIconSvg } from '../../../assets/logos/tetra_icon.svg';
-import { ReactComponent as TetraLogoSvg } from '../../../assets/logos/tetra_logo.svg';
+import { ReactComponent as TetraLogoSvg } from '../../../assets/logos/tetra-white.svg';
 import InstallOrConnectBtn from './components/install-or-connect-btn';
 import LegalAgreement from './components/legal-agreement';
 import Message from './components/message';
 import { WalletConnectionInnerGrid } from './components/style';
+import { hasInjectedProvider } from '../../constants';
+import styled from 'styled-components';
+import { Theme } from '@material-ui/core';
 
 type TWalletConnectionPhase = 'install' | 'connect';
+
+export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: Theme }) => ({
+  marginTop: '5em' ,
+  [theme.breakpoints.down('sm')]: {
+    marginTop: '1.7em',
+  },
+}));
 
 const ConnectWalletSection = observer(() => {
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -28,9 +37,7 @@ const ConnectWalletSection = observer(() => {
 
   const hoverTargetRef = useRef();
 
-  const walletConnectionState: TWalletConnectionPhase = cryptoWalletIntegrationStore.hasEthereumProvider
-    ? 'connect'
-    : 'install';
+  const walletConnectionState: TWalletConnectionPhase = hasInjectedProvider ? 'connect' : 'install';
 
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
@@ -45,10 +52,9 @@ const ConnectWalletSection = observer(() => {
   }, [pressedOnInstallMetamask]);
 
   return (
-    <Section
+    <StyledSection
       data-testid='connect-to-wallet-section'
       alignItems={'center'}
-      style={{ marginTop: '5em' }}
       id='connectWalletSection'
     >
       <WalletConnectionInnerGrid
@@ -61,14 +67,7 @@ const ConnectWalletSection = observer(() => {
         ref={hoverTargetRef}
       >
         {/* Brand logos */}
-        <Grid item container direction={'column'} alignItems={'center'} spacing={2}>
-          <Grid item style={{ maxWidth: '90%' }}>
-            <TetraIconSvg style={{ height: '5em', marginRight: 'auto', marginLeft: 'auto' }} />
-          </Grid>
-          <Grid item style={{ maxWidth: '90%' }}>
-            <TetraLogoSvg style={{ height: '2em' }} />
-          </Grid>
-        </Grid>
+        <TetraLogoSvg style={{ height: '8em' }} />
 
         {/* Texts */}
         <Grid item container direction={'column'} spacing={5} style={{ textAlign: 'center' }}>
@@ -105,12 +104,12 @@ const ConnectWalletSection = observer(() => {
           />
           <Message
             pressedOnInstallMetamask={pressedOnInstallMetamask.value}
-            hasEthereumProvider={cryptoWalletIntegrationStore.hasEthereumProvider}
+            hasEthereumProvider={hasInjectedProvider}
             rejectedConnection={rejectedConnection.value}
           />
         </Grid>
       </WalletConnectionInnerGrid>
-    </Section>
+    </StyledSection>
   );
 });
 

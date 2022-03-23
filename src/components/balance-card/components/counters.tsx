@@ -2,7 +2,7 @@ import React from 'react';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
 import constants from '../../../constants/constants';
-import config from '../../../config';
+import config from '../../../../config';
 
 const counterProps = {
   preserveValue: true,
@@ -18,8 +18,7 @@ const handleDecimals = (value: number) => {
   const calibratedDecimalLimit = constants.numbersDecimalToDisplayLimit + 1;
   const isOutOfLimit = stringValue.length > calibratedDecimalLimit;
   const val = stringValue.substring(1, calibratedDecimalLimit);
-  const result = isOutOfLimit ? `${val}...` : `${val}`;
-  return `${config.numberSeparator.decimal}${result}`;
+  return `${config.numberSeparator.decimal}${val}`;
 };
 interface IProps {
   amount: string;
@@ -28,14 +27,21 @@ interface IProps {
 
 const BalanceCardCounters = ({ amount, isLoading }: IProps) => {
   const [full, decimal] = amount.split('.');
+
+
   return (
     <Grid item>
       <Typography variant={'h4'} style={{ marginBottom: '0.7em', marginTop: '0.2em' }} data-testid={'balance_text'}>
+        {/* {amount} */}
         {!isLoading ? (
-          <>
-            <CountUp end={full as any} formattingFn={handleFullNumber} {...counterProps} />
-            {decimal && <CountUp end={parseInt('1' + decimal) as any} preserveValue formattingFn={handleDecimals} />}
-          </>
+          Number(amount) === 0 ? (
+            0
+          ) : (
+            <>
+              <CountUp end={full as any} formattingFn={handleFullNumber} {...counterProps} />
+              {decimal && Number(decimal) > 0 && <CountUp end={parseInt('1' + decimal) as any} preserveValue formattingFn={handleDecimals} />}
+            </>
+          )
         ) : (
           '---'
         )}

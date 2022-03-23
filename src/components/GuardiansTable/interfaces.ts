@@ -1,4 +1,4 @@
-import { ICommitteeMemberData } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
+import { ICommitteeMemberData, IGuardiansDictionary } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 export type TGuardianSelectionMode = 'Select' | 'Change' | 'None';
 
@@ -16,6 +16,8 @@ export interface IBaseTableProps {
   densePadding?: boolean;
   isGuardian: boolean;
   mainAddress: string;
+  selectedChain: number;
+  minSelfStakePercentMille: number;
 }
 
 export interface IGetGuardianSelectionCellContent extends ISelectionProps {

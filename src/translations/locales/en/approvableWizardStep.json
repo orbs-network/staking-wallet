@@ -2,7 +2,7 @@
   "action_proceed": "Proceed",
   "congratulations": "Congratulations",
   "gotXConfirmationsOutOfRecommendedY": "Got {{count}} of {{recommended}} recommended confirmations. ",
-  "thisMightTakeAFewMoments": "This might take a few moments...",
+  "thisMightTakeAFewMoments": "This might take a few moments ...",
   "txConfirmed": "TRANSACTION CONFIRMED",
   "txPending": "Transaction pending",
   "weRecommendWaitingToReceiveEnoughConfirmations": "We recommend waiting until enough confirmations have been received.",

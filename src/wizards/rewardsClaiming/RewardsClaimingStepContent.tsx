@@ -15,6 +15,8 @@ import { Typography } from '@material-ui/core';
 import handleApprove from '../helpers/handle-approve';
 import { handleRewardClaimingError } from '../helpers/error-handling';
 import { formatStringAsNumber } from '../../utils/stringUtils';
+import useTheme from '@material-ui/core/styles/useTheme';
+
 export interface IRewardsClaimingStepContentProps {
   shouldAddSkip?: boolean;
   skipToNextStep?: () => void;
@@ -39,7 +41,7 @@ export const RewardsClaimingStepContent = observer(
     const analyticsService = useAnalyticsService();
 
     const reReadStoresData = useReReadAllStoresData();
-
+    const theme = useTheme();
     // Start and limit by allowance
     const { message, subMessage, isBroadcastingMessage } = useWizardState(
       rewardsClaimingWizardTranslations('rewardsClaimingSubStep_message_pressClaimWithExplanation'),
@@ -59,7 +61,6 @@ export const RewardsClaimingStepContent = observer(
           promiEvent: orbsAccountStore.claimRewards(),
           isBroadcastingMessage,
           onPromiEventAction,
-          reReadStoresData,
           wizardsCommonTranslations,
           errorHandler: handleRewardClaimingError,
           analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(STAKING_ACTIONS.rewardsClaiming),
@@ -69,7 +70,6 @@ export const RewardsClaimingStepContent = observer(
         message,
         onPromiEventAction,
         orbsAccountStore,
-        reReadStoresData,
         subMessage,
         wizardsCommonTranslations,
         analyticsService,
@@ -87,11 +87,11 @@ export const RewardsClaimingStepContent = observer(
       return (
         <Typography variant={'h5'}>
           {rewardsClaimingWizardTranslations('rewardsClaimingSubStep_text_rewardsBalanceIs')}{' '}
-          <Typography variant={'h5'} style={{ display: 'inline' }} color={'secondary'}>
+          <span style={{ display: 'inline', color: theme.palette.secondary.main }}>
             {commonsTranslations('xOrbs', {
               amount: formatStringAsNumber(orbsAccountStore.rewardsBalance.toString(), true),
             })}
-          </Typography>
+          </span>
         </Typography>
       );
     }, [commonsTranslations, orbsAccountStore.rewardsBalance, rewardsClaimingWizardTranslations]);

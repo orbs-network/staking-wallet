@@ -6,14 +6,14 @@ export const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { t
   // Look& Feel
   backgroundColor: 'rgba(47, 47, 47, 0.6)',
   borderRadius: '10%',
-  boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.dark}`,
+  boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.main}`,
   marginBottom: '50px',
 
   transition: '0.7s',
 
   '&:hover': {
     backgroundColor: 'rgba(47, 47, 47, 0.2)',
-    boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.light}`,
+    boxShadow: `0px 0px 41px 12px ${theme.palette.secondary.main}`,
   },
 
   // Dimensions
@@ -23,15 +23,16 @@ export const WalletConnectionInnerGrid = styled(Grid)<GridProps>(({ theme }: { t
 
   [theme.breakpoints.down('sm')]: {
     padding: '1.5em',
-    width: '80%',
-    maxWidth: '80%',
+    width: '100%',
+    maxWidth: '95%',
+    minWidth:'unset'
   },
   [theme.breakpoints.up('sm')]: {
     paddingLeft: '9em',
     paddingRight: '9em',
   },
   [theme.breakpoints.up('md')]: {
-    paddingLeft: '13em',
-    paddingRight: '13em',
+    paddingLeft: '8em',
+    paddingRight: '8em',
   },
 }));

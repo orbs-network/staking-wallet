@@ -1,58 +1,79 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
-export const useNetworkIndicatorStyles = makeStyles({
-  devContainer: {
-    padding: '10px 20px 10px 20px',
-    color: 'white',
-    background: '#388e3c',
-    borderRadius: '4px',
-    fontSize: '16px',
-    zIndex: 9999,
-    fontWeight: 600,
-    position: 'fixed',
-    top: '20px',
-    left: '50%',
-    transform: 'translate(-50%)',
-  },
-  prodContainer: {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    zIndex: 9999,
-  },
-  prodContainerContent: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    flexDirection: 'column',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 10,
+const useStyles = makeStyles((theme: Theme) => ({
+  item: {
+    paddingLeft: 13,
     paddingRight: 10,
-  },
-  title: {
-    marginBottom: 10,
-    fontSize: 30,
-    fontWeight: 500,
-    textAlign: 'center',
-  },
-  icon: {
-    fontSize: 60,
-  },
-  text: {
-    marginTop: 10,
-    fontSize: 15,
-    textAlign: 'center',
-  },
-  overlay: {
-    width: '100%',
+    display: 'flex',
     height: '100%',
-    background: 'black',
-    opacity: '0.9',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'center',
+    },
   },
-});
+  listItem: {
+    padding: 0,
+    height: 40 
+  },
+  logo: {
+    marginRight: 10,
+    width: 17,
+    height: 17,
+    objectFit: 'contain',
+    [theme.breakpoints.down('sm')]: {
+     
+    },
+  },
+  name: {
+    textTransform: 'none',
+    [theme.breakpoints.down('sm')]: {
+     
+    },
+  },
+  root: {
+    display: 'flex',
+    width: '100%',
+    position: 'relative',
+  
+  },
+  paper: {
+    marginRight: 20,
+  },
+  list: {
+    width: '100%',
+  },
+  selector: {
+    background: '#152136',
+    height: 35,
+    width: '100%',
+    padding: 0,
+    paddingRight: 12,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+    },
+  },
+  selectorArrow: {
+    marginLeft: 'auto',
+  },
+  container: {
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+    
+    },
+  },
+  selectorInfoIcon: {
+    width: '14px',
+    height: '14px',
+  },
+  tooltipText: {
+    fontSize: 16,
+    lineHeight: '20px',
+    padding: 10,
+    margin: 0,
+  },
+}));
+
+export default useStyles;

@@ -19,7 +19,6 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
   const orbsAccountStore = useOrbsAccountStore();
   const analyticsService = useAnalyticsService();
 
-  const reReadStoresData = useReReadAllStoresData();
 
   // Start and limit by allowance
   const fullOrbsReadyForWithdrawal = fullOrbsFromWeiOrbs(orbsAccountStore.orbsInCoolDown);
@@ -43,7 +42,6 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
         promiEvent: orbsAccountStore.withdrawTokens(),
         isBroadcastingMessage,
         onPromiEventAction,
-        reReadStoresData,
         wizardsCommonTranslations,
         errorHandler: handleWithdrawingError,
         analyticsHandler: analyticsService.trackStakingContractInteractionSuccess(
@@ -56,7 +54,6 @@ export const OrbsWithdrawingStepContent = observer((props: ITransactionCreationS
       message,
       onPromiEventAction,
       orbsAccountStore,
-      reReadStoresData,
       subMessage,
       wizardsCommonTranslations,
       analyticsService,

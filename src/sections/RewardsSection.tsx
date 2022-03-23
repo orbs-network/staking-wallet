@@ -13,7 +13,7 @@ import { CommonDivider } from '../components/base/CommonDivider';
 import { CommonDialog } from '../components/modal/CommonDialog';
 import { RewardsClaimingWizard } from '../wizards/rewardsClaiming/RewardsClaimingWizard';
 import useInterval from 'use-interval';
-import config from '../config';
+import config from '../../config';
 import TotalRewards from './raward-cards/total-rewards';
 import RewardsRate from './raward-cards/rewards-rate';
 import RewardsBalance from './raward-cards/rewards-balance';
@@ -39,7 +39,6 @@ export const RewardsSection = observer(() => {
     <Section>
       <SectionHeader title={sectionTitlesTranslations('rewards')} icon={RewardsIcon} />
 
-      <CommonDivider />
       <Grid container item direction={'row'} justify={'space-between'} spacing={3}>
         <GridItem>
           <TotalRewards />

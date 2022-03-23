@@ -4,6 +4,13 @@ export const useCommonStyles = makeStyles({
   container: {
     position: 'relative',
   },
+  networkSection: {
+    marginBottom: '40px',
+   
+    '&:last-child': {
+      marginBottom: '0px',
+    },
+  },
   name: {
     fontWeight: 600,
     fontSize: '16px',

@@ -17,6 +17,16 @@ export interface IManagementStatusResponse {
   };
 }
 
+export interface IManagementStatus {
+  chain: number;
+  result: IManagementStatusResponse;
+}
+
+export interface ICommitteeEffectiveStakeByChain {
+  chains: { [key: number]: number };
+  total: number;
+}
+
 export interface IGuardianData {
   EthAddress: string;
   OrbsAddress: string;

@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../../config';
 import constants from '../constants/constants';
 
 export function ensurePrefix(text: string, prefix: string): string {
@@ -23,7 +23,7 @@ export const formatStringAsNumber = (str: string, limitDecimals?: boolean, decim
     return `${num}`;
   }
   if (limitDecimals && decimals.length > limit) {
-    return `${num}${decimal}${decimals.substring(0, limit)}...`;
+    return `${num}${decimal}${decimals.substring(0, limit)}`;
   }
   return `${num}${decimal}${decimals}`;
 };

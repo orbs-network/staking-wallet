@@ -1,5 +1,5 @@
 {
-  "afterSuccessStateExplanation": "Your unstaked ORBS will be available after the cooldown period",
+  "afterSuccessStateExplanation": "Your ORBS have been successfully withdrawn",
   "finishedAction_withdrew": "Withdrew your cooled-down tokens",
   "stepLabel_withdraw": "Withdraw ORBS",
   "withdrawingSubStep_action_withdraw": "Withdraw",

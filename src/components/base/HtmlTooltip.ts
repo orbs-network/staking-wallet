@@ -3,10 +3,21 @@ import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
 
 export const HtmlTooltip = withStyles((theme: Theme) => ({
   tooltip: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
+    backgroundColor: '#282828',
+    color: 'white',
     // maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
+    lineHeight: '16px',
+    fontWeight: 400,
+    padding: 10,
+    '& p ': {
+      fontSize: '14px'
+    }
+  },
+  arrow: {
+    color: '#282828',
+    '&::before': {
+      color: '#282828',
+    },
   },
 }))(Tooltip);
