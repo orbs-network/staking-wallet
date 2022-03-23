@@ -13,7 +13,6 @@ function useReceipt() {
       if (latestBlock >= confirmationBlock) {
         stopped = true;
         setFinished(true);
-        console.log('done');
         if (callback) {
           callback();
         }
