@@ -97,14 +97,27 @@ const groupGuardiansByNetworks = (states: IProcessedSystemState[], selectedChain
     const guardians = guardiansByChains[chain];
 
     for (const guardian of guardians) {
-      const { EthAddress, EffectiveStake, ParticipationPercentage, Capacity } = guardian;
-      const { networks, Name, Website, IsCertified, RegistrationTime } = groupedGuardiansByNetwork[EthAddress];
+      const { EthAddress } = guardian;
+      const {
+        networks,
+        Name,
+        Website,
+        IsCertified,
+        RegistrationTime,
+        EffectiveStake,
+        Capacity,
+        ParticipationPercentage,
+      } = groupedGuardiansByNetwork[EthAddress];
 
       groupedGuardiansByNetwork[EthAddress] = {
         EthAddress,
-        EffectiveStake: Number(chain) === selectedChain ? EffectiveStake : 0,
-        ParticipationPercentage: Number(chain) === selectedChain ? ParticipationPercentage : 0,
-        Capacity: Number(chain) === selectedChain ? Capacity : 0,
+        EffectiveStake: EffectiveStake ? EffectiveStake : Number(chain) === selectedChain ? guardian.EffectiveStake : 0,
+        ParticipationPercentage: ParticipationPercentage
+          ? ParticipationPercentage
+          : Number(chain) === selectedChain
+          ? guardian.ParticipationPercentage
+          : 0,
+        Capacity: Capacity ? Capacity :  Number(chain) === selectedChain ? guardian.Capacity : 0,
         Name: Name || guardian.Name,
         Website: Website || guardian.Website,
         networks: handleNetworks(networks, guardian, chain),
@@ -130,7 +143,7 @@ const calculateEffectiveStakeByChain = (allManagementStatuses: IManagementStatus
     }, 0);
 
     committeEffectiveStakes.chains[chain] = committeeEffectiveStake;
-    committeEffectiveStakes.total += committeeEffectiveStake
+    committeEffectiveStakes.total += committeeEffectiveStake;
   });
   return committeEffectiveStakes;
 };
