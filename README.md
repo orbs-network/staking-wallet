@@ -153,3 +153,13 @@ Note : After your first deploy you will need to set your repo to be used as a pr
 2. Go to 'Settings' -> options
 3. Go to the 'GitHub Pages' section.
 4. Activate GitHub pages and select you master branch as its source for deployment.
+
+
+<img src="https://analyticsinsight.b-cdn.net/wp-content/uploads/2022/03/Polygon-MATIC-amp-Terra-LUNA-Price-Drop-Bitgert-Surge-To.jpeg" alt="drawing" width="200"/>
+
+## Polygon network support
+As of march 29 2022, Orbs network and Tetra staking wallet supports both ETH and Polygon network.
+
+Staking and reward claiming is now cheaper and faster using the L2 Polygon netwrok.
+
+Network selector is on the top right of the screen next to languages selector.
