@@ -109,7 +109,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     
       promiEvent.on('confirmation', (confirmation, details) => {
         txConfirmationsCount.setValue(confirmation);
-
+        
         if (!afterConfirmationCbCalled && afterTxConfirmedCb) {
           afterConfirmationCbCalled = true;
 
