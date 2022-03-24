@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import { ReactComponent as BalanceIcon } from '../../assets/balance.svg';
-import { observer } from 'mobx-react';
-import React from 'react';
+import { MobXProviderContext, observer } from 'mobx-react';
+import React, { useContext } from 'react';
 import { useBoolean } from 'react-hanger';
 import styled from 'styled-components';
 import { Section } from '../components/structure/Section';
@@ -25,6 +25,7 @@ import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import ErrorFallback from '../components/errors';
 import NotificationButton from '../components/NotificationButton';
 import { makeStyles } from '@material-ui/core/styles';
+import { CHAINS } from '../constants';
 
 const GridItem = styled((props) => <Grid item xs={12} sm={12} md={4} lg={4} xl={4} {...props} />)((styledProps) => {
   return {};
@@ -48,6 +49,8 @@ export const BalancesSection = observer(() => {
   const showCannotUnstakeNowSnackbar = useBoolean(false);
   const showRestakingModal = useBoolean(false);
   const showWithdrawingModal = useBoolean(false);
+  const { chainId } = useContext(MobXProviderContext);
+
   const { mainAddress } = useCryptoWalletIntegrationStore();
   const classes = useStyles();
   return (
@@ -57,9 +60,11 @@ export const BalancesSection = observer(() => {
         title={sectionTitlesTranslations('balance')}
         icon={BalanceIcon}
         sideComponent={
-          <Grid item sm={12} md={4} className={classes.notification}>
-            <NotificationButton address={mainAddress} />
-          </Grid>
+          chainId === CHAINS.ethereum && (
+            <Grid item sm={12} md={4} className={classes.notification}>
+              <NotificationButton address={mainAddress} />
+            </Grid>
+          )
         }
       />
 
@@ -94,7 +99,7 @@ export const BalancesSection = observer(() => {
 
           {/* Unstaking */}
           <CommonDialog
-            style={{ maxWidth: '1000px', marginLeft:'auto', marginRight:'auto' }}
+            style={{ maxWidth: '1000px', marginLeft: 'auto', marginRight: 'auto' }}
             open={showUnStakingModal.value}
             onClose={showUnStakingModal.setFalse}
           >
