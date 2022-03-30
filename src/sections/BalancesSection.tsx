@@ -60,11 +60,9 @@ export const BalancesSection = observer(() => {
         title={sectionTitlesTranslations('balance')}
         icon={BalanceIcon}
         sideComponent={
-          chainId === CHAINS.ethereum && (
-            <Grid item sm={12} md={4} className={classes.notification}>
-              <NotificationButton address={mainAddress} />
-            </Grid>
-          )
+          <Grid item sm={12} md={4} className={classes.notification}>
+            <NotificationButton address={mainAddress} />
+          </Grid>
         }
       />
 

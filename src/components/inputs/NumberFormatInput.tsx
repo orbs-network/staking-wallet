@@ -63,7 +63,7 @@ export function NumberFormatCustom(props: INumberFormatCustomProps & NumberForma
           });
         }}
         // value={bigInt(String(props.value))}
-        onBlur={onBlur}
+        // onBlur={onBlur}
         // onFocus={onFocus}
         onClickCapture={() => {
           // Dev Note : By design, zny leading zero will be removed only after focus lost.
