@@ -2,12 +2,12 @@ import { Button, Grid, Typography } from '@material-ui/core';
 import React, { ReactNode, useEffect } from 'react';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import { makeStyles } from '@material-ui/styles';
-import { triggerNetworkChange } from '../../utils/web3';
 import config from '../../config';
 import { CommonActionButton } from '../base/CommonActionButton';
 import { removeQueryParam } from '../../utils/url';
 import { NETWORK_QUERY_PARAM } from '../../constants';
 import { useHistory, useLocation } from 'react-router';
+import web3Service from '../../services/web3Service'
 
 const useStyles = makeStyles({
   container: {
@@ -65,7 +65,7 @@ function ForceChangeNetwork({ chain, availableChains }: IProps) {
     const onNetworkChanged = () => {
       removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
     };
-    triggerNetworkChange(id, { chainName: name, nativeCurrency, rpcUrls, blockExplorerUrls }, onNetworkChanged);
+    web3Service.triggerNetworkChange(id, { chainName: name, nativeCurrency, rpcUrls, blockExplorerUrls }, onNetworkChanged);
   };
 
   const classes = useStyles();

@@ -14,7 +14,7 @@ import WrongNetwork from '../components/WrongNetwork';
 import ProviderWrapper from '../wrappers/ProviderWrapper';
 import AppLoader from '../components/app-loader';
 import { DEFAULT_CHAIN, hasInjectedProvider } from '../constants';
-
+import {AppContext} from '../context/app-context/index'
 
 const getThemeAndStyles = (theme: Theme) => {
   return {
@@ -35,9 +35,9 @@ export const AppWrapper = () => {
 
 
   return (
+    <AppContext>
     <ThemeProvider theme={theme}>
       <SnackbarProvider
-    
         preventDuplicate
       >
         <SCThemeProvider theme={getThemeAndStyles(theme)}>
@@ -59,5 +59,6 @@ export const AppWrapper = () => {
         </SCThemeProvider>
       </SnackbarProvider>
     </ThemeProvider>
+    </AppContext>
   );
 };

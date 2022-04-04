@@ -1,6 +1,5 @@
-import React, { useCallback, useRef } from 'react';
-import { observer } from 'mobx-react';
-import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import React, { useCallback, useContext, useRef } from 'react';
+import { MobXProviderContext, observer } from 'mobx-react';
 import Typography from '@material-ui/core/Typography';
 import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
@@ -17,20 +16,24 @@ import { WalletConnectionInnerGrid } from './components/style';
 import { hasInjectedProvider } from '../../constants';
 import styled from 'styled-components';
 import { Theme } from '@material-ui/core';
-
+import { createWeb3Modal } from '../../services/web3modal';
+import { useAppContext } from '../../context/app-context';
+import web3Service from '../../services/web3Service';
+import Web3 from 'web3';
 type TWalletConnectionPhase = 'install' | 'connect';
 
 export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: Theme }) => ({
-  marginTop: '5em' ,
+  marginTop: '5em',
   [theme.breakpoints.down('sm')]: {
     marginTop: '1.7em',
   },
 }));
 
 const ConnectWalletSection = observer(() => {
+  const { setProvider } = useAppContext();
+  const { chainId } = useContext(MobXProviderContext);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
   const legalDocsAgreedTo = useBoolean(false);
@@ -42,9 +45,20 @@ const ConnectWalletSection = observer(() => {
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
-    const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
-    rejectedConnection.setValue(!approvedConnection);
-  }, [rejectedConnection, cryptoWalletIntegrationStore]);
+    const web3Modal = createWeb3Modal(chainId);
+    web3Modal.clearCachedProvider();
+    const provider = await web3Modal.connect();
+    const chain = await new Web3(provider).eth.getChainId()
+    
+    if (chain === chainId) {
+      setProvider(provider);
+    } else {
+      alert('swicth chain');
+    }
+
+    // const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
+    // rejectedConnection.setValue(!approvedConnection);
+  }, []);
 
   const handleInstallClicked = useCallback(async () => {
     window.open('https://metamask.io/', '_blank');
@@ -52,11 +66,7 @@ const ConnectWalletSection = observer(() => {
   }, [pressedOnInstallMetamask]);
 
   return (
-    <StyledSection
-      data-testid='connect-to-wallet-section'
-      alignItems={'center'}
-      id='connectWalletSection'
-    >
+    <StyledSection data-testid='connect-to-wallet-section' alignItems={'center'} id='connectWalletSection'>
       <WalletConnectionInnerGrid
         container
         item

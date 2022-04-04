@@ -1,5 +1,6 @@
 import { Provider } from 'mobx-react';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { useAppContext } from '../context/app-context';
 import initApp from '../init';
 
 interface IProps {
@@ -12,11 +13,15 @@ function ProviderWrapper({ children, chain, hideLoader }: IProps) {
   const [services, setServices] = useState(null);
   const [stores, setStores] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { provider } = useAppContext();
 
   useEffect(() => {
     const onLoad = async () => {
+      setIsLoaded(false);
       try {
-        const res = await initApp(chain);
+        const web3Provider = provider || (window as any).ethereum;
+        const res = await initApp(web3Provider, chain);
+        
         setServices(res.services);
         setStores(res.stores);
       } catch (error) {
@@ -27,7 +32,7 @@ function ProviderWrapper({ children, chain, hideLoader }: IProps) {
     };
     onLoad();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chain]);
+  }, [chain, provider]);
 
   return isLoaded ? (
     <Provider {...services} {...stores} chainId={chain}>

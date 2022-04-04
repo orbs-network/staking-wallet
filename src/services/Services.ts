@@ -34,7 +34,7 @@ import { getSupportedChains } from '../utils';
 import ContractRegistry from './contarcs/contract-registry';
 import { CONTARCTS_NAMES } from '../constants';
 import web3Service from './web3Service';
-import { NetworkBase } from 'web3-core';
+import { HttpProvider, NetworkBase } from 'web3-core';
 
 export interface IServices {
   httpService: IHttpService;

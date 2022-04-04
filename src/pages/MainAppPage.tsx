@@ -10,7 +10,8 @@ import NoBalanceWarning from '../warnings/NoBalanceWarning';
 
 export const MainAppPage = () => {
   // DEV_NOTE : id the user is connected than we consider this as a 'log in' for analytics purposes
-  useAnalytics(events.trackAppLogin);
+  // useAnalytics(events.trackAppLogin);
+  
 
   return (
     <Grid container item direction={'column'} id={'mainPage'}>

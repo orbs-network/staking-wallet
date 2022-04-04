@@ -273,9 +273,9 @@ export class OrbsAccountStore {
 
   // **** Data reading and setting ****
 
-  public async manuallyReadAccountData() {
+  public async manuallyReadAccountData(address?: string) {
     try {
-      await this.readDataForAccount(this.cryptoWalletIntegrationStore.mainAddress);
+      await this.readDataForAccount(address || this.cryptoWalletIntegrationStore.mainAddress);
     } catch (e) {
       const { sections, captureException } = errorMonitoring;
       this.failLoadingProcess(e);
@@ -359,6 +359,8 @@ export class OrbsAccountStore {
   private async readAndSetLiquidOrbs(accountAddress: string) {
     try {
       const liquidOrbs = await this.orbsPOSDataService.readOrbsBalance(accountAddress);
+      console.log(liquidOrbs);
+      
       this.setLiquidOrbs(liquidOrbs);
     } catch (error) {
       const { sections, captureException } = errorMonitoring;
@@ -473,6 +475,7 @@ export class OrbsAccountStore {
   // ****  Subscriptions ****
 
   private async refreshAccountListeners(accountAddress: string) {
+  
     this.cancelAllCurrentSubscriptions();
     // Orbs balance
     this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
@@ -480,6 +483,7 @@ export class OrbsAccountStore {
       (newBalance) => this.setLiquidOrbs(newBalance),
     );
 
+  
     // Staking contract allowance
     this.stakingContractAllowanceChangeUnsubscribeFunction = this.orbsTokenService.subscribeToAllowanceChange(
       accountAddress,

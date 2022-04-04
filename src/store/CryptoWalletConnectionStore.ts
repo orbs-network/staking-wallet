@@ -10,6 +10,7 @@ export class CryptoWalletConnectionStore {
 
   @observable public hasEthereumProvider: boolean;
   @observable public hasEventsSupport: boolean;
+  @observable public isConnected: boolean;
 
   @observable public mainAddress: string;
 
@@ -36,6 +37,8 @@ export class CryptoWalletConnectionStore {
     );
 
     if (this.hasEthereumProvider) {
+      console.log('test');
+      
       // We will only detect address change if the Ethereum provider can support it
       if (this.cryptoWalletConnectionService.hasEventsSupport) {
         this.cryptoWalletConnectionService.onMainAddressChange((address) => this.setMainAddress(address));
@@ -53,11 +56,11 @@ export class CryptoWalletConnectionStore {
 
   @computed
   public get isConnectedToWallet(): boolean {
-    return (
-      this.hasEthereumProvider &&
-      (this.cryptoWalletConnectionService.didUserApproveDappInThePast || this.walletConnectionRequestApproved)
-    );
+    return this.isConnected
   }
+
+
+
 
   public async askToConnect(): Promise<boolean> {
     if (this.isConnectedToWallet) {
@@ -88,9 +91,15 @@ export class CryptoWalletConnectionStore {
   private setWalletConnectionRequestApproved(requestApproved: boolean) {
      this.walletConnectionRequestApproved = requestApproved;
   }
+  @action('setIsConnected')
+  public setIsConnected = (val: boolean) => {
+    this.isConnected = val
+  }
 
   @action('setMainAddress')
   private setMainAddress(mainAddress: string) {
+    console.log(mainAddress);
+    
     this.mainAddress = mainAddress;
 
     this.analyticsService.setUserAddress(mainAddress);

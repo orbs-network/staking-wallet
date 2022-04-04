@@ -12,10 +12,24 @@ import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
 import ChainTopBackground from './components/chain/ChainTopBackground';
+import ConnectWalletSection from './sections/connect-wallet';
+import WrongNetwork from './components/WrongNetwork';
+import { useCryptoWalletIntegrationStore, useOrbsAccountStore } from './store/storeHooks';
+import { useAppContext } from './context/app-context';
 
 export const App = observer(() => {
+  const { provider } = useAppContext()
   useMonitoring();
   useLanguage();
+
+  const store = useCryptoWalletIntegrationStore();
+
+  useEffect(() => {
+   
+    if(provider){
+      store.setIsConnected(true);
+    }
+  }, [provider]);
 
   return (
     <main>
@@ -27,6 +41,7 @@ export const App = observer(() => {
           <Route exact path={routes.main} component={MainAppPage} />
         </Switch>
       </ContentContainer>
+
       <AppVersion />
       <Footer />
     </main>
