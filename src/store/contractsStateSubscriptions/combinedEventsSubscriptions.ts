@@ -7,6 +7,7 @@ export function subscribeToOrbsInCooldownChange(
   accountAddress: string,
   callback: StakingServiceEventCallback,
 ): () => Promise<boolean> {
+  
   const unstakeEventUnsubscribe = stakingService.subscribeToUnstakedEvent(accountAddress, callback);
   const restakeEventUnsubscribe = stakingService.subscribeToRestakedEvent(accountAddress, callback);
   const withdrewEventUnsubscribe = stakingService.subscribeToWithdrewEvent(accountAddress, callback);

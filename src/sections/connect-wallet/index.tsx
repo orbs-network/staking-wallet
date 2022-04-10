@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import { MobXProviderContext, observer } from 'mobx-react';
 import Typography from '@material-ui/core/Typography';
 import Grid, { GridProps } from '@material-ui/core/Grid';
@@ -16,10 +16,11 @@ import { WalletConnectionInnerGrid } from './components/style';
 import { hasInjectedProvider } from '../../constants';
 import styled from 'styled-components';
 import { Theme } from '@material-ui/core';
-import { createWeb3Modal } from '../../services/web3modal';
+import { web3Modal } from '../../services/web3modal';
 import { useAppContext } from '../../context/app-context';
-import web3Service from '../../services/web3Service';
-import Web3 from 'web3';
+import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import Web3Service from '../../services/web3Service';
+import WrongNetworkPopup from './WrongNetworkPopup';
 type TWalletConnectionPhase = 'install' | 'connect';
 
 export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: Theme }) => ({
@@ -30,14 +31,14 @@ export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: The
 }));
 
 const ConnectWalletSection = observer(() => {
-  const { setProvider } = useAppContext();
+  const { setProvider, setShowWrongNetworkPopup } = useAppContext();
   const { chainId } = useContext(MobXProviderContext);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
   const legalDocsAgreedTo = useBoolean(false);
-
+  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const hoverTargetRef = useRef();
 
   const walletConnectionState: TWalletConnectionPhase = hasInjectedProvider ? 'connect' : 'install';
@@ -45,25 +46,28 @@ const ConnectWalletSection = observer(() => {
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
-    const web3Modal = createWeb3Modal(chainId);
-    web3Modal.clearCachedProvider();
-    const provider = await web3Modal.connect();
-    const chain = await new Web3(provider).eth.getChainId()
-    
-    if (chain === chainId) {
-      setProvider(provider);
-    } else {
-      alert('swicth chain');
-    }
+    try {
+      const provider = await web3Modal.connect();
+      const web3 = new Web3Service(provider);
+      const chain = await web3.getChainId();
+      if (chain !== Number(chainId)) {
+        setShowWrongNetworkPopup(true)
 
-    // const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
-    // rejectedConnection.setValue(!approvedConnection);
+      } else {
+        setProvider(provider);
+      }
+    } catch (error) {
+    }
   }, []);
 
   const handleInstallClicked = useCallback(async () => {
     window.open('https://metamask.io/', '_blank');
     pressedOnInstallMetamask.setTrue();
   }, [pressedOnInstallMetamask]);
+
+  const handleOntoInstallClicked = () => {
+    window.open('https://onto.app/', '_blank');
+  };
 
   return (
     <StyledSection data-testid='connect-to-wallet-section' alignItems={'center'} id='connectWalletSection'>
@@ -104,6 +108,7 @@ const ConnectWalletSection = observer(() => {
               handleConnectClicked={handleConnectClicked}
               handleInstallClicked={handleInstallClicked}
               disabled={!legalDocsAgreedTo.value}
+              handleOntoInstallClicked={handleOntoInstallClicked}
             />
           </Grid>
 

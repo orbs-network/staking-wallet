@@ -1,18 +1,28 @@
 import Web3 from 'web3';
 import { getSupportedChains } from '../utils/index';
 import config from '../../config';
+import { web3Modal } from './web3modal';
 class Web3Service {
-  web3: Web3;
-  constructor() {
-    this.web3 = new Web3((window as any).ethereum);
+  web3: Web3
+  provider: any;
+
+
+
+  constructor(provider) {
+    this.web3 = new Web3(provider);
+    this.provider = provider
   }
 
+
   triggerNetworkChange = async (id: number | string, callback?: () => void) => {
-    const ethereum = (window as any).ethereum;
+
+      console.log(this.provider);
+      
+
     const chainId = this.web3.utils.toHex(id);
     try {
       // check if the chain to connect to is installed
-      await ethereum.request({
+      await this.provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId }], // chainId must be in hexadecimal numbers
       });
@@ -35,7 +45,7 @@ class Web3Service {
       };
 
       await this.web3.eth.getAccounts((error, accounts) => {
-        (window as any).ethereum.request({
+        this.provider.request({
           method: 'wallet_addEthereumChain',
           params: [params, accounts[0]],
         });
@@ -49,18 +59,19 @@ class Web3Service {
   };
 
   addChangeEvents = () => {
-    const ethereumProvider = (window as any).ethereum;
-    if (ethereumProvider) {
-      ethereumProvider.on('accountsChanged', async function () {
+    const provider = this.provider
+    if (provider) {
+      provider.on('accountsChanged', async function () {
         // window.location.reload();
       });
-      ethereumProvider.on('networkChanged', function () {
+      provider.on('networkChanged', function () {
         window.location.reload();
       });
     }
   };
 
   getAccountBalance = async (walletAddress: string) => {
+
     try {
       const result = await this.web3.eth.getBalance(walletAddress);
       const balance = this.web3.utils.fromWei(result);
@@ -71,35 +82,32 @@ class Web3Service {
   };
 
   addNetworkChangedEvent = () => {
-    const ethereumProvider = (window as any).ethereum;
-    if (ethereumProvider) {
-      ethereumProvider.on('networkChanged', function () {
-        window.location.reload();
+    const provider = this.provider
+    if (provider) {
+      provider.on('chainChanged', function () {
+          
+         window.location.reload();
       });
     }
   };
+
+
+
   addAccountChangedEvent = () => {
-    const ethereumProvider = (window as any).ethereum;
-    if (ethereumProvider) {
-      ethereumProvider.on('accountsChanged', async function () {
+    const provider = this.provider
+    if (provider) {
+      provider.on('accountsChanged', async function (accounts) {
         window.location.reload();
+        if(!accounts[0]){
+          web3Modal.clearCachedProvider()
+        }
       });
     }
   };
 
-  isWrongNetwork = (chain: number, availableChains: number[]) => {
-    if (!chain) {
-      return false;
-    }
-    return !availableChains.includes(chain);
-  };
+ 
 
-  forceChainChange = (forcedChain?: number, selectedChain?: number) => {
-    if (!forcedChain || !selectedChain) {
-      return false;
-    }
-    return forcedChain !== selectedChain;
-  };
+
 
   getChainId = async () => {
     try {
@@ -133,4 +141,4 @@ class Web3Service {
   };
 }
 
-export default new Web3Service();
+export default Web3Service

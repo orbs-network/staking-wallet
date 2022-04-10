@@ -1,44 +1,45 @@
 import { Provider } from 'mobx-react';
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { useAppContext } from '../context/app-context';
+import React, { ReactNode, useEffect, useState } from 'react';
+import AppLoader from '../components/app-loader';
+import { useAppContext } from '../context/app-context/';
+import useWeb3 from '../hooks/useWeb3';
 import initApp from '../init';
+import { web3Modal } from '../services/web3modal';
 
 interface IProps {
   children: ReactNode;
   chain?: number;
-  hideLoader: () => void;
 }
 
-function ProviderWrapper({ children, chain, hideLoader }: IProps) {
+function ProviderWrapper({ children, chain }: IProps) {
   const [services, setServices] = useState(null);
   const [stores, setStores] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const { provider } = useAppContext();
 
   useEffect(() => {
     const onLoad = async () => {
-      setIsLoaded(false);
+      setServices(null);
+      setStores(null);
       try {
-        const web3Provider = provider || (window as any).ethereum;
-        const res = await initApp(web3Provider, chain);
         
+        const res = await initApp(provider, chain);
         setServices(res.services);
         setStores(res.stores);
       } catch (error) {
       } finally {
-        hideLoader();
-        setIsLoaded(true);
       }
     };
     onLoad();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chain, provider]);
 
-  return isLoaded ? (
+  return services && stores ? (
     <Provider {...services} {...stores} chainId={chain}>
       {children}
     </Provider>
-  ) : null;
+  ) : (
+    <AppLoader />
+  );
 }
 
 export default ProviderWrapper;

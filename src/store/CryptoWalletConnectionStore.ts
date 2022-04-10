@@ -12,7 +12,7 @@ export class CryptoWalletConnectionStore {
   @observable public hasEventsSupport: boolean;
   @observable public isConnected: boolean;
 
-  @observable public mainAddress: string;
+  @observable public mainAddress: string
 
   private addressCheckingInterval: NodeJS.Timeout;
   reactionToWalletConnection: IReactionDisposer;
@@ -20,13 +20,16 @@ export class CryptoWalletConnectionStore {
   constructor(
     private cryptoWalletConnectionService: ICryptoWalletConnectionService,
     private analyticsService: IAnalyticsService,
+    isMetamask: boolean,
   ) {
+    
     this.hasEthereumProvider = hasInjectedProvider;
-    this.hasEventsSupport = cryptoWalletConnectionService.hasEventsSupport;
+    this.hasEventsSupport = isMetamask;
 
     this.reactionToWalletConnection = reaction(
       () => this.isConnectedToWallet,
       async (isConnected) => {
+        
         if (isConnected) {
           this.readInformationFromConnectedWallet();
         }
@@ -35,24 +38,13 @@ export class CryptoWalletConnectionStore {
         fireImmediately: true,
       },
     );
-
-    if (this.hasEthereumProvider) {
-      console.log('test');
-      
-      // We will only detect address change if the Ethereum provider can support it
-      if (this.cryptoWalletConnectionService.hasEventsSupport) {
-        this.cryptoWalletConnectionService.onMainAddressChange((address) => this.setMainAddress(address));
-      } else {
-        // Else, we will read it one time + set an interval
-        this.cryptoWalletConnectionService.readMainAddress().then((address) => this.setMainAddress(address));
-
-        this.addressCheckingInterval = setInterval(
-          () => this.cryptoWalletConnectionService.readMainAddress().then((address) => this.setMainAddress(address)),
-          1000,
-        );
-      }
-    }
   }
+
+  
+
+
+
+  
 
   @computed
   public get isConnectedToWallet(): boolean {
@@ -67,8 +59,9 @@ export class CryptoWalletConnectionStore {
       return true;
     } else {
       try {
-        const permissionGranted = await this.cryptoWalletConnectionService.requestConnectionPermission();
-        this.setWalletConnectionRequestApproved(permissionGranted);
+        
+        this.setWalletConnectionRequestApproved(true);
+       
         return this.walletConnectionRequestApproved;
       } catch (error) {
         const { captureException, sections } = errorMonitoring;
@@ -79,7 +72,10 @@ export class CryptoWalletConnectionStore {
 
   private async readInformationFromConnectedWallet() {
     try {
+      
       const walletAddress = await this.cryptoWalletConnectionService.readMainAddress();
+    
+      
       this.setMainAddress(walletAddress);
     } catch (error) {
       const { captureException, sections } = errorMonitoring;
@@ -97,7 +93,7 @@ export class CryptoWalletConnectionStore {
   }
 
   @action('setMainAddress')
-  private setMainAddress(mainAddress: string) {
+  public setMainAddress(mainAddress: string) {
     console.log(mainAddress);
     
     this.mainAddress = mainAddress;

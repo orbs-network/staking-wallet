@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { DEFAULT_CHAIN, NETWORK_QUERY_PARAM } from '../constants';
 import web3Service from '../services/web3Service';
 import { getSupportedChains } from '../utils';
+import useWeb3 from './useWeb3';
 
 const detectForcedNetwork = (location) => {
   const network = new URLSearchParams(location.search).get(NETWORK_QUERY_PARAM);
@@ -22,9 +23,10 @@ const useNetwork = (): {
   const [noProvider, setNoProvider] = useState<boolean>(false);
   const [forcedChain, setForcedChain] = useState<number | undefined>(undefined);
   const [chainLoaded, setChainLoaded] = useState(false);
+  const {getChainId, provider} = useWeb3()
   const getChain = async () => {
     try {
-      const result = await web3Service.getChainId();
+      const result = await getChainId();
       setChain(result);
     } catch (error) {
       console.error('error in getting chainId');
@@ -34,8 +36,8 @@ const useNetwork = (): {
   };
 
   useEffect(() => {
-    const ethereum = (window as any).ethereum;
-    if (!ethereum) {
+  
+    if (!provider) {
       setNoProvider(true);
       setChainLoaded(true);
     } else {
@@ -47,6 +49,9 @@ const useNetwork = (): {
       setForcedChain(availableChains.includes(forced) ? forced : Number(DEFAULT_CHAIN));
     }
   }, []);
+
+
+  
 
   return { chain, noProvider, forcedChain, chainLoaded };
 };

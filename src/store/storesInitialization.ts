@@ -43,10 +43,12 @@ export function getStores(
   delegationsService: IDelegationsService,
   electionsService: IElectionsService,
   alertErrors = false,
+  isMetamask: boolean
 ): IStores {
+  
   // Create stores instances + Hydrate the stores
   const orbsNodeStore = new OrbsNodeStore(orbsNodeService, electionsService);
-  const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService);
+  const cryptoWalletIntegrationStore = new CryptoWalletConnectionStore(cryptoWalletConnectionService, analyticsService, isMetamask);
   const orbsAccountStore = new OrbsAccountStore(
     cryptoWalletIntegrationStore,
     orbsNodeStore,

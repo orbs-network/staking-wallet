@@ -246,7 +246,7 @@ export class OrbsAccountStore {
       this.setDefaultAccountAddress(currentAddress);
 
       if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
-        this.refreshAccountListeners(currentAddress);
+         this.refreshAccountListeners(currentAddress);
       }
 
       try {
@@ -277,6 +277,8 @@ export class OrbsAccountStore {
     try {
       await this.readDataForAccount(address || this.cryptoWalletIntegrationStore.mainAddress);
     } catch (e) {
+      console.log(e);
+      
       const { sections, captureException } = errorMonitoring;
       this.failLoadingProcess(e);
       captureException(e, sections.accountStore, 'error in function: manuallyReadAccountData');

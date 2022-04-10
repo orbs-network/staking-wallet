@@ -52,11 +52,11 @@ export interface IServices {
 }
 
 export async function buildServices(
-  ethereumProvider: IEthereumProvider,
+  provider: any,
   axios: AxiosInstance,
   selectedChain: number,
 ): Promise<IServices> {
-  const web3: Web3 = new Web3(ethereumProvider as any);
+  const web3: Web3 = new Web3(provider as any);
   const orbsClient = BuildOrbsClient();
   const orbsClientService: IOrbsClientService = new OrbsClientService(orbsClient);
   const httpService: IHttpService = new HttpService(axios);
@@ -84,7 +84,7 @@ export async function buildServices(
 
   return {
     httpService,
-    cryptoWalletConnectionService: new CryptoWalletConnectionService(ethereumProvider),
+    cryptoWalletConnectionService: new CryptoWalletConnectionService(provider),
     orbsPOSDataService: orbsPOSDataServiceFactory(web3, orbsClient as any, addresses),
     stakingService: new StakingService(web3, addresses?.staking),
     orbsTokenService: new OrbsTokenService(web3, addresses?.erc20Contract),

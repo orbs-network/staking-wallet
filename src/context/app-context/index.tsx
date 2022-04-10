@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
-
+import React, { createContext, useContext, useState } from 'react';
+import {web3Modal} from '../../services/web3modal'
 interface IState {
   provider: any;
   setProvider: (val: any) => void;
+  showWrongNetworkPoup: boolean;
+  setShowWrongNetworkPopup: (val: boolean) => void
 }
 
 const Context = createContext<IState>({} as IState);
@@ -12,17 +14,23 @@ interface IProps {
 }
 
 const AppContext = ({ children }: IProps) => {
-  const [provider, setProvider] = useState(null)
+  const [provider, setProvider] = useState(null);
+  const [showWrongNetworkPoup, setShowWrongNetworkPopup] = useState(false);
 
   const value = {
     provider,
-    setProvider
+    setProvider,
+    showWrongNetworkPoup,
+    setShowWrongNetworkPopup
   };
-  return (
-    <Context.Provider value={value}>
-      {children}
-    </Context.Provider>
-  );
+  return <Context.Provider value={value}>{children}</Context.Provider>;
 };
-const useAppContext = () => useContext(Context);
+
+const useAppContext = () => {
+  
+  const values = useContext(Context);
+
+  return values
+};
+
 export { AppContext, useAppContext };

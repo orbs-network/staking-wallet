@@ -94,7 +94,8 @@ const useStyes = makeStyles((theme) => ({
 
 export const Header = () => {
   const { chainId } = useContext(MobXProviderContext);
-  const { mainAddress } = useCryptoWalletIntegrationStore();
+  const { mainAddress, isConnectedToWallet } = useCryptoWalletIntegrationStore();
+  
   const chainConfig = useMemo(() => getChainConfig(chainId), [chainId]);
   const TetraLogoAndIconSvg: any = chainConfig.ui.navbar.logo;
 
@@ -121,7 +122,7 @@ export const Header = () => {
                 </Grid>
               )}
 
-              {hasInjectedProvider && mainAddress && (
+              {isConnectedToWallet && mainAddress && (
                 <Grid item className={classes.walletAddressDesktop}>
                   <WalletAddress address={mainAddress} />
                 </Grid>
@@ -132,12 +133,12 @@ export const Header = () => {
               </Grid>
             </Grid>
             <Grid container className={classes.mobileGrid} direction='column'>
-              {hasInjectedProvider && mainAddress && (
+              {isConnectedToWallet && mainAddress && (
                 <Grid item className={classes.walletAddressMobile}>
                   <WalletAddress address={mainAddress} />
                 </Grid>
               )}
-              {hasInjectedProvider && (
+              {isConnectedToWallet && (
                 <Grid item className={classes.networkIndicatorMobile}>
                   <NetworkIndicator chainId={chainId} />
                 </Grid>

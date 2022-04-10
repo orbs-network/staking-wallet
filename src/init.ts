@@ -10,8 +10,7 @@ import { DEFAULT_CHAIN } from './constants';
 import Web3 from 'web3';
 import config from '../config';
 
-const initApp = async (provider: any, chain?: number) => {
-  const selectedChain = chain || DEFAULT_CHAIN;
+const initApp = async (provider: any, chain: number) => {
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -20,12 +19,11 @@ const initApp = async (provider: any, chain?: number) => {
   const urlParams = new URLSearchParams(window.location.search);
   const alertErrors = !!urlParams.get('alertErrors');
 
-  const infuraProvider = new Web3.providers.HttpProvider(config.networks[selectedChain].rpcUrls[0]);
+  const infuraProvider = new Web3.providers.HttpProvider(config.networks[chain].rpcUrls[0]);
+  const ethereumProvider = provider || infuraProvider;
 
-  const ethereumProvider =  (window as any).onto || infuraProvider;
-    console.log(ethereumProvider);
-    
-  const services = await buildServices(ethereumProvider, axios, selectedChain);
+  const services = await buildServices(ethereumProvider, axios, chain);
+
   const stores = getStores(
     services.orbsPOSDataService,
     services.stakingService,
@@ -37,6 +35,7 @@ const initApp = async (provider: any, chain?: number) => {
     services.delegationsService,
     services.electionsService,
     alertErrors,
+    ethereumProvider.ethereum && ethereumProvider.isMetaMask ? true : false,
   );
   services.analyticsService.init();
 
