@@ -3,21 +3,16 @@ import { getSupportedChains } from '../utils/index';
 import config from '../../config';
 import { web3Modal } from './web3modal';
 class Web3Service {
-  web3: Web3
+  web3: Web3;
   provider: any;
 
-
-
-  constructor(provider) {
+  constructor(provider?: any) {
     this.web3 = new Web3(provider);
-    this.provider = provider
+    this.provider = provider;
   }
 
-
   triggerNetworkChange = async (id: number | string, callback?: () => void) => {
-
-      console.log(this.provider);
-      
+    console.log(this.provider);
 
     const chainId = this.web3.utils.toHex(id);
     try {
@@ -30,7 +25,6 @@ class Web3Service {
         callback();
       }
     } catch (error) {
-    
       const chain = config.networks[id];
       const params = {
         chainId: this.web3.utils.toHex(id), // A 0x-prefixed hexadecimal string
@@ -59,7 +53,7 @@ class Web3Service {
   };
 
   addChangeEvents = () => {
-    const provider = this.provider
+    const provider = this.provider;
     if (provider) {
       provider.on('accountsChanged', async function () {
         // window.location.reload();
@@ -71,7 +65,6 @@ class Web3Service {
   };
 
   getAccountBalance = async (walletAddress: string) => {
-
     try {
       const result = await this.web3.eth.getBalance(walletAddress);
       const balance = this.web3.utils.fromWei(result);
@@ -82,32 +75,25 @@ class Web3Service {
   };
 
   addNetworkChangedEvent = () => {
-    const provider = this.provider
+    const provider = this.provider;
     if (provider) {
       provider.on('chainChanged', function () {
-          
-         window.location.reload();
+        window.location.reload();
       });
     }
   };
 
-
-
   addAccountChangedEvent = () => {
-    const provider = this.provider
+    const provider = this.provider;
     if (provider) {
       provider.on('accountsChanged', async function (accounts) {
         window.location.reload();
-        if(!accounts[0]){
-          web3Modal.clearCachedProvider()
+        if (!accounts[0]) {
+          web3Modal.clearCachedProvider();
         }
       });
     }
   };
-
- 
-
-
 
   getChainId = async () => {
     try {
@@ -141,4 +127,4 @@ class Web3Service {
   };
 }
 
-export default Web3Service
+export default Web3Service;

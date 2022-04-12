@@ -9,17 +9,16 @@ import { web3Modal } from '../services/web3modal';
 function useLogic() {
   const { chain, forcedChain, chainLoaded } = useNetwork();
   const { setProvider } = useAppContext();
-  const [providerLoading, setProviderLoading] = useState(false)
+  const [providerLoading, setProviderLoading] = useState(false);
   const selected = forcedChain || chain || DEFAULT_CHAIN;
 
   const eagerConnect = async () => {
     if (web3Modal.cachedProvider) {
-      setProviderLoading(true)
+      setProviderLoading(true);
       const newProvider = await web3Modal.connect();
       setProvider(newProvider);
-      setProviderLoading(false)
+      setProviderLoading(false);
     }
-
   };
 
   useEffect(() => {
@@ -36,9 +35,8 @@ function useLogic() {
   }, [selected]);
 
   return {
-    isLoading: !chainLoaded,
+    isLoading: !chainLoaded || providerLoading,
     chain: selected,
-    providerLoading
   };
 }
 

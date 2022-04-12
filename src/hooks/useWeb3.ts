@@ -1,46 +1,44 @@
+import { useEffect, useRef } from 'react';
 import { useAppContext } from '../context/app-context';
 import { web3Modal } from '../services/web3modal';
 import Web3Service from '../services/web3Service';
 function useWeb3() {
   const { provider } = useAppContext();
+  const web3Ref = useRef(new Web3Service());
 
-  const addNetworkChangedEvent = () => {
-    new Web3Service(provider).addNetworkChangedEvent();
-  };
+  useEffect(() => {
+    web3Ref.current = new Web3Service(provider);
+  }, [provider]);
 
-  const addAccountChangedEvent = () => {
-    new Web3Service(provider).addAccountChangedEvent();
+
+
+  const addProviderListeners = () => {
+    web3Ref.current.addAccountChangedEvent();
+    web3Ref.current.addNetworkChangedEvent();
   };
 
   const getLatestBlock = () => {
-    return new Web3Service(provider).getLatestBlock();
+    return web3Ref.current.getLatestBlock();
   };
   const getAccountBalance = (address: string) => {
-    return new Web3Service(provider).getAccountBalance(address);
-  };
-
-  const forceChainChange = (id: string | number, callback?: () => void) => {
-    return new Web3Service(provider).triggerNetworkChange(id, callback);
+    return web3Ref.current.getAccountBalance(address);
   };
 
   const getChainId = () => {
-    return new Web3Service(provider).getChainId();
+    return web3Ref.current.getChainId();
   };
 
-
   const disconnect = () => {
-    return web3Modal.clearCachedProvider()
-  }
+    return web3Modal.clearCachedProvider();
+  };
 
   return {
-    addNetworkChangedEvent,
-    addAccountChangedEvent,
+    addProviderListeners,
     getLatestBlock,
     getAccountBalance,
-    forceChainChange,
     getChainId,
     provider,
-    disconnect
+    disconnect,
   };
 }
 

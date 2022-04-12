@@ -138,7 +138,7 @@ export const Header = () => {
                   <WalletAddress address={mainAddress} />
                 </Grid>
               )}
-              {isConnectedToWallet && (
+              {hasInjectedProvider && (
                 <Grid item className={classes.networkIndicatorMobile}>
                   <NetworkIndicator chainId={chainId} />
                 </Grid>

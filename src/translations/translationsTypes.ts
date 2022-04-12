@@ -63,6 +63,8 @@ export interface IConnectWalletSectionTranslations {
   refreshPageAfterInstallingMetaMask: string;
   initialGreeting: string;
   agreeToTheToUAndPrivacyPolicy: string;
+  wrongChain: string;
+  pleaseChangeChain: string;
 }
 
 export interface IWizardsCommonsTranslations {

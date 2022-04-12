@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { App } from '../App';
 import '../services/i18n/index';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
@@ -8,7 +8,6 @@ import { SnackbarProvider } from 'notistack';
 import useLogic from './useLogic';
 import { AppStyles, getTheme } from '../theme/Theme';
 import errorMonitoring from '../services/error-monitoring/index';
-import WrongNetwork from '../components/WrongNetwork';
 import ProviderWrapper from '../wrappers/ProviderWrapper';
 import AppLoader from '../components/app-loader';
 
@@ -21,7 +20,7 @@ const getThemeAndStyles = (theme: Theme) => {
 
 
 export const AppWrapper = () => {
-  const { isLoading, chain, providerLoading } = useLogic();
+  const { isLoading, chain } = useLogic();
   const theme = getTheme(chain);
 
 
@@ -31,7 +30,7 @@ export const AppWrapper = () => {
         <SCThemeProvider theme={getThemeAndStyles(theme)}>
           <CssBaseline />
           <errorMonitoring.ErrorBoundary>
-            {isLoading || providerLoading ? (
+            {isLoading ? (
               <AppLoader />
             ) : (
               <ProviderWrapper chain={chain}>

@@ -34,12 +34,8 @@ const StyledButton = styled(Button)({
 });
 
 const ChainIndicator = observer(({ chainId }: IProps) => {
-  const history = useHistory();
   const supportedNetworks = getSupportedChains();
   const commonsTranslations = useCommonsTranslations();
-  const { isConnectedToWallet } = useCryptoWalletIntegrationStore();
-
-  const { forceChainChange } = useWeb3();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);

@@ -20,7 +20,8 @@ import { web3Modal } from '../../services/web3modal';
 import { useAppContext } from '../../context/app-context';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 import Web3Service from '../../services/web3Service';
-import WrongNetworkPopup from './WrongNetworkPopup';
+import PageLoader from '../../components/loaders/page-loader';
+
 type TWalletConnectionPhase = 'install' | 'connect';
 
 export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: Theme }) => ({
@@ -31,6 +32,7 @@ export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: The
 }));
 
 const ConnectWalletSection = observer(() => {
+  const [connectLoading, setConnectLoading] = useState(false);
   const { setProvider, setShowWrongNetworkPopup } = useAppContext();
   const { chainId } = useContext(MobXProviderContext);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
@@ -46,17 +48,22 @@ const ConnectWalletSection = observer(() => {
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
+   
     try {
       const provider = await web3Modal.connect();
+      setConnectLoading(true);
       const web3 = new Web3Service(provider);
       const chain = await web3.getChainId();
       if (chain !== Number(chainId)) {
-        setShowWrongNetworkPopup(true)
-
+        setShowWrongNetworkPopup(true);
+        web3Modal.clearCachedProvider();
       } else {
         setProvider(provider);
       }
     } catch (error) {
+      web3Modal.clearCachedProvider();
+    } finally {
+      setConnectLoading(false);
     }
   }, []);
 
@@ -71,6 +78,7 @@ const ConnectWalletSection = observer(() => {
 
   return (
     <StyledSection data-testid='connect-to-wallet-section' alignItems={'center'} id='connectWalletSection'>
+      <PageLoader open={connectLoading} />
       <WalletConnectionInnerGrid
         container
         item

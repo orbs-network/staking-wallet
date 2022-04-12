@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
@@ -12,14 +12,14 @@ import AppVersion from './components/app-version/index';
 import './services/error-monitoring/index';
 import routes from './router/routes';
 import ChainTopBackground from './components/chain/ChainTopBackground';
-import { useCryptoWalletIntegrationStore, useOrbsAccountStore } from './store/storeHooks';
+import { useCryptoWalletIntegrationStore } from './store/storeHooks';
 import { useAppContext } from './context/app-context';
 import useWeb3 from './hooks/useWeb3';
 import WrongNetworkPopup from './sections/connect-wallet/WrongNetworkPopup';
 
 export const App = observer(() => {
   const { provider, setShowWrongNetworkPopup } = useAppContext();
-  const { getChainId } = useWeb3();
+  const { getChainId, addProviderListeners } = useWeb3();
   const { chainId } = useContext(MobXProviderContext);
   useMonitoring();
   useLanguage();
@@ -33,7 +33,9 @@ export const App = observer(() => {
   }, [provider]);
 
   const onConnected = async () => {
+    
     const walletChainId = await getChainId();
+    addProviderListeners();
     if (walletChainId !== chainId) {
       setShowWrongNetworkPopup(true);
     } else {
@@ -41,7 +43,7 @@ export const App = observer(() => {
     }
   };
 
-  return (
+  return  (
     <main>
       <Header />
       <ContentContainer id='appContainer'>
@@ -51,10 +53,10 @@ export const App = observer(() => {
           <Route exact path={routes.main} component={MainAppPage} />
         </Switch>
         <WrongNetworkPopup />
+      
       </ContentContainer>
-
       <AppVersion />
       <Footer />
     </main>
-  );
+  ) 
 });

@@ -7,12 +7,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Container = styled(Grid)(({ theme }) => ({}));
 
-const SpinnerLoader = ({ style }: IBaseLoader) => {
+const SpinnerLoader = ({ style ={} }: IBaseLoader) => {
   const classes = useLoaderStyles();
 
   return (
     <Container>
-      <CircularProgress disableShrink style={{ color: 'white' }} />
+      <CircularProgress disableShrink style={{ color: 'white', ...style }} />
     </Container>
   );
 };

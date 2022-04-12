@@ -41,12 +41,6 @@ const isWrongNetwork = (chain: number, availableChains: number[]) => {
   return !availableChains.includes(chain);
 };
 
-const forceChainChange = (forcedChain?: number, selectedChain?: number) => {
-  if (!forcedChain || !selectedChain) {
-    return false;
-  }
-  return forcedChain !== selectedChain;
-};
 
 
-export { sleep, getSupportedChains, getSortedChains, getNavbarImagesByChain, getChainConfig, isWrongNetwork , forceChainChange};
+export { sleep, getSupportedChains, getSortedChains, getNavbarImagesByChain, getChainConfig, isWrongNetwork};

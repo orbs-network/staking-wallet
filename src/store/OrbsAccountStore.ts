@@ -361,7 +361,6 @@ export class OrbsAccountStore {
   private async readAndSetLiquidOrbs(accountAddress: string) {
     try {
       const liquidOrbs = await this.orbsPOSDataService.readOrbsBalance(accountAddress);
-      console.log(liquidOrbs);
       
       this.setLiquidOrbs(liquidOrbs);
     } catch (error) {

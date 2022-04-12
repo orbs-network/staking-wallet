@@ -94,7 +94,6 @@ export class CryptoWalletConnectionStore {
 
   @action('setMainAddress')
   public setMainAddress(mainAddress: string) {
-    console.log(mainAddress);
     
     this.mainAddress = mainAddress;
 
