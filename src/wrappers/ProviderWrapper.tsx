@@ -1,39 +1,45 @@
 import { Provider } from 'mobx-react';
 import React, { ReactNode, useEffect, useState } from 'react';
+import AppLoader from '../components/app-loader';
+import { useAppContext } from '../context/app-context/';
 import initApp from '../init';
 
 interface IProps {
   children: ReactNode;
   chain?: number;
-  hideLoader: () => void;
 }
 
-function ProviderWrapper({ children, chain, hideLoader }: IProps) {
+function ProviderWrapper({ children, chain }: IProps) {
   const [services, setServices] = useState(null);
   const [stores, setStores] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { provider } = useAppContext();
+
+  const init = async () => {
+    setServices(null);
+    setStores(null);
+    try {
+      const res = await initApp(provider, chain);
+      setServices(res.services);
+      setStores(res.stores);
+    } catch (error) {
+    } finally {
+    }
+  };
 
   useEffect(() => {
-    const onLoad = async () => {
-      try {
-        const res = await initApp(chain);
-        setServices(res.services);
-        setStores(res.stores);
-      } catch (error) {
-      } finally {
-        hideLoader();
-        setIsLoaded(true);
-      }
-    };
-    onLoad();
+    init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chain]);
+  }, [chain, provider]);
 
-  return isLoaded ? (
+  
+
+  return services && stores ? (
     <Provider {...services} {...stores} chainId={chain}>
       {children}
     </Provider>
-  ) : null;
+  ) : (
+    <AppLoader />
+  );
 }
 
 export default ProviderWrapper;

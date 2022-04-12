@@ -20,6 +20,9 @@ import { useCommonsTranslations } from '../../translations/translationsHooks';
 import styled from 'styled-components';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { InfoToolTipIcon } from '../tooltips/InfoTooltipIcon';
+import useWeb3 from '../../hooks/useWeb3';
+import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import { observer } from 'mobx-react';
 interface IProps {
   chainId: string;
 }
@@ -30,14 +33,13 @@ const StyledButton = styled(Button)({
   background: 'transparent',
 });
 
-const ChainIndicator = ({ chainId }: IProps) => {
-  const history = useHistory();
+const ChainIndicator = observer(({ chainId }: IProps) => {
   const supportedNetworks = getSupportedChains();
   const commonsTranslations = useCommonsTranslations();
-
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -77,12 +79,10 @@ const ChainIndicator = ({ chainId }: IProps) => {
     if (!network) {
       return;
     }
-    const onSuccessfullyChainChanged = () => {
-      removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
-    };
-
-    web3Service.triggerNetworkChange(id, onSuccessfullyChainChanged);
+    window.location.replace(`${window.location.pathname}?${NETWORK_QUERY_PARAM}=${id}`)
   };
+
+
 
   return (
     <div className={classes.root}>
@@ -142,6 +142,6 @@ const ChainIndicator = ({ chainId }: IProps) => {
       </>
     </div>
   );
-};
+});
 
 export default ChainIndicator;

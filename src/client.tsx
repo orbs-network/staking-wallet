@@ -6,13 +6,15 @@ import { AppWrapper } from './AppWrapper';
 import config, { IS_DEV } from '../config';
 import { LangRouter } from './multi-lang/LangRouter';
 import i18n from 'i18next';
-
+import { AppContext } from './context/app-context';
 
 ReactDOM.render(
   <LangRouter preLangBasename={IS_DEV ? '' : config.urlBase}>
     <I18nextProvider i18n={i18n}>
       <StylesProvider injectFirst>
-        <AppWrapper />
+        <AppContext>
+          <AppWrapper />
+        </AppContext>
       </StylesProvider>
     </I18nextProvider>
   </LangRouter>,

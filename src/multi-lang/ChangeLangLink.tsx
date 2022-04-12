@@ -17,13 +17,11 @@ function addLangToCurrentLocation(location, preLangBasename: string, lang: strin
   const locationWithProperLang = location.pathname.match(langRegexp)
     ? location.pathname.replace(langRegexp, `/${lang}/`)
     : `/${lang}${location.pathname}`;
-
-  return locationWithProperLang;
+  
+  return `${locationWithProperLang}${location.search}`;
 }
 
-function addLangToCurrentLocationBasic(lang: string, base = '') {
-  return `/${lang}`;
-}
+
 
 interface IProps {
   location: any;

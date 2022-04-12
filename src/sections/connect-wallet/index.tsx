@@ -1,6 +1,5 @@
-import React, { useCallback, useRef } from 'react';
-import { observer } from 'mobx-react';
-import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import React, { useCallback, useContext, useRef, useState } from 'react';
+import { MobXProviderContext, observer } from 'mobx-react';
 import Typography from '@material-ui/core/Typography';
 import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
@@ -17,24 +16,31 @@ import { WalletConnectionInnerGrid } from './components/style';
 import { hasInjectedProvider } from '../../constants';
 import styled from 'styled-components';
 import { Theme } from '@material-ui/core';
+import { web3Modal } from '../../services/web3modal';
+import { useAppContext } from '../../context/app-context';
+import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
+import Web3Service from '../../services/web3Service';
+import PageLoader from '../../components/loaders/page-loader';
 
 type TWalletConnectionPhase = 'install' | 'connect';
 
 export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: Theme }) => ({
-  marginTop: '5em' ,
+  marginTop: '5em',
   [theme.breakpoints.down('sm')]: {
     marginTop: '1.7em',
   },
 }));
 
 const ConnectWalletSection = observer(() => {
+  const [connectLoading, setConnectLoading] = useState(false);
+  const { setProvider, setShowWrongNetworkPopup } = useAppContext();
+  const { chainId } = useContext(MobXProviderContext);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
   const legalDocsAgreedTo = useBoolean(false);
-
+  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const hoverTargetRef = useRef();
 
   const walletConnectionState: TWalletConnectionPhase = hasInjectedProvider ? 'connect' : 'install';
@@ -42,21 +48,37 @@ const ConnectWalletSection = observer(() => {
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
-    const approvedConnection = await cryptoWalletIntegrationStore.askToConnect();
-    rejectedConnection.setValue(!approvedConnection);
-  }, [rejectedConnection, cryptoWalletIntegrationStore]);
+   
+    try {
+      const provider = await web3Modal.connect();
+      setConnectLoading(true);
+      const web3 = new Web3Service(provider);
+      const chain = await web3.getChainId();
+      if (chain !== Number(chainId)) {
+        setShowWrongNetworkPopup(true);
+        web3Modal.clearCachedProvider();
+      } else {
+        setProvider(provider);
+      }
+    } catch (error) {
+      web3Modal.clearCachedProvider();
+    } finally {
+      setConnectLoading(false);
+    }
+  }, []);
 
   const handleInstallClicked = useCallback(async () => {
     window.open('https://metamask.io/', '_blank');
     pressedOnInstallMetamask.setTrue();
   }, [pressedOnInstallMetamask]);
 
+  const handleOntoInstallClicked = () => {
+    window.open('https://onto.app/', '_blank');
+  };
+
   return (
-    <StyledSection
-      data-testid='connect-to-wallet-section'
-      alignItems={'center'}
-      id='connectWalletSection'
-    >
+    <StyledSection data-testid='connect-to-wallet-section' alignItems={'center'} id='connectWalletSection'>
+      <PageLoader open={connectLoading} />
       <WalletConnectionInnerGrid
         container
         item
@@ -94,6 +116,7 @@ const ConnectWalletSection = observer(() => {
               handleConnectClicked={handleConnectClicked}
               handleInstallClicked={handleInstallClicked}
               disabled={!legalDocsAgreedTo.value}
+              handleOntoInstallClicked={handleOntoInstallClicked}
             />
           </Grid>
 

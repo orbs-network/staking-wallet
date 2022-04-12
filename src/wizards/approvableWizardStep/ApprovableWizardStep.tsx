@@ -48,7 +48,7 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
   } = props;
   const { chainId } = useContext(MobXProviderContext);
   const requiredConfirmations = config.networks[chainId].requiredConfirmations;
-  const { needsManualUpdatingOfState, manuallyReadAccountData } = useOrbsAccountStore();
+  const orbsAccountStore = useOrbsAccountStore()
   const reReadStoresData = useReReadAllStoresData();
 
   const stepState = useStateful<TStepState>('Action');
@@ -72,8 +72,8 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     // DEV_NOTE : This manually updating part is less about the wizard logic and more about
     //            helping us maintain the true state of the address after each action.
     // Then, if our ethereum provider has no event support, we will want to read
-    if (needsManualUpdatingOfState) {
-      manuallyReadAccountData();
+    if (orbsAccountStore.needsManualUpdatingOfState) {
+      orbsAccountStore.manuallyReadAccountData();
     }
 
     // Do we want to display the congratulations sub step ?
@@ -87,8 +87,8 @@ export const ApprovableWizardStep = React.memo<IProps>((props) => {
     goToCongratulationSubStep,
     moveToNextStepAction,
     displayCongratulationsSubStep,
-    manuallyReadAccountData,
-    needsManualUpdatingOfState,
+    orbsAccountStore.manuallyReadAccountData,
+    orbsAccountStore.needsManualUpdatingOfState,
   ]);
 
   const disableTxCreationInputs = useBoolean(false);

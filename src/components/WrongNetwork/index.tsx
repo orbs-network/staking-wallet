@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import LinkOffIcon from '@material-ui/icons/LinkOff';
 import { NETWORK_QUERY_PARAM } from '../../constants';
 import { useHistory, useLocation } from 'react-router';
@@ -7,40 +7,16 @@ import { removeQueryParam } from '../../utils/url';
 import config, { INetwork } from '../../../config';
 import { CommonActionButton } from '../base/CommonActionButton';
 import { useStyles } from './styles';
-import web3Service from '../../services/web3Service';
 import { getSupportedChains } from '../../utils';
+import useWeb3 from '../../hooks/useWeb3';
+import { MobXProviderContext } from 'mobx-react';
 
-interface IProps {
-  selectedChain: number;
-  forcedChain?: number;
-  hideLoader: () => void;
-}
+
 const availableChains = getSupportedChains();
 
-function WrongNetwork({ selectedChain, forcedChain, hideLoader }: IProps) {
+function WrongNetwork() {
   const classes = useStyles();
-  const history = useHistory();
-  const location = useLocation();
-
-  const changeChain = (id: number) => {
-    const network = config.networks[id];
-    const onNetworkChanged = () => {
-      removeQueryParam(NETWORK_QUERY_PARAM, history, location.search);
-    };
-
-    web3Service.triggerNetworkChange(id, onNetworkChanged);
-  };
-
-  useEffect(() => {
-    hideLoader();
-  }, []);
-
-  useEffect(() => {
-    if (forcedChain) {
-      changeChain(forcedChain);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forcedChain]);
+  const {chainId} = useContext(MobXProviderContext)
 
   return (
     <div className={classes.container}>
@@ -51,16 +27,16 @@ function WrongNetwork({ selectedChain, forcedChain, hideLoader }: IProps) {
         <Typography className={classes.text}>Please change the network</Typography>
         <div className={classes.btnsContainer}>
           {availableChains
-            .filter((c) => c !== selectedChain)
+            .filter((c) => c !== chainId)
             .map((chain, index) => {
               const network = config.networks[chain];
               if (!network) {
                 return null;
               }
               return (
-                <CommonActionButton className={classes.networkBtn} key={index} onClick={() => changeChain(chain)}>
+                <Typography className={classes.networkBtn} key={index}>
                   {network.name}
-                </CommonActionButton>
+                </Typography>
               );
             })}
         </div>

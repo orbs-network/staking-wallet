@@ -4,5 +4,7 @@
   "initialGreeting": "To begin, connect your wallet",
   "installMetaMask": "Install MetaMask",
   "pleaseApproveAccountConnection": "Please approve the account connection",
-  "refreshPageAfterInstallingMetaMask": "Please refresh this page after installing MetaMask"
+  "refreshPageAfterInstallingMetaMask": "Please refresh this page after installing MetaMask",
+  "wrongChain": "Oops, wrong network!",
+  "pleaseChangeChain": "Please change the network to {{chainName}}"
 }

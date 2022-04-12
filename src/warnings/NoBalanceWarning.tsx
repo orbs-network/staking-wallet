@@ -5,12 +5,14 @@ import CustomSnackbar from '../components/snackbar/custom-snackbar';
 import web3Service from '../services/web3Service';
 import { useAlertsTranslations, useCommonsTranslations } from '../translations/translationsHooks';
 import { CHAINS, ORBS_TELEGRAM } from '../constants';
+import useWeb3 from '../hooks/useWeb3';
 
 
 const NoBalanceWarning = observer(() => {
   const [showWarning, setShowWarning] = useState(false);
   const { mainAddress } = useCryptoWalletIntegrationStore();
   const { chainId } = useContext(MobXProviderContext);
+  const {getAccountBalance} = useWeb3()
   const alerts = useAlertsTranslations();
   const common = useCommonsTranslations();
 
@@ -27,7 +29,7 @@ const NoBalanceWarning = observer(() => {
       if (item || !mainAddress) {
         return;
       }
-      const balance = await web3Service.getAccountBalance(mainAddress);
+      const balance = await getAccountBalance(mainAddress);
       if (Number(balance) === 0) {
         setShowWarning(true);
       }

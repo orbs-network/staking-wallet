@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import React from 'react';
 import { CommonActionButton } from '../../../components/base/CommonActionButton';
 import { useConnectWalletSectionTranslations } from '../../../translations/translationsHooks';
@@ -6,6 +7,7 @@ interface IProps {
   walletConnectionState: string;
   handleConnectClicked: () => void;
   handleInstallClicked: () => void;
+  handleOntoInstallClicked: () => void;
   disabled: boolean;
 }
 
@@ -14,6 +16,7 @@ const InstallOrConnectBtn = ({
   handleConnectClicked,
   handleInstallClicked,
   disabled,
+  handleOntoInstallClicked
 }: IProps) => {
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
 
@@ -25,9 +28,14 @@ const InstallOrConnectBtn = ({
     );
   } else {
     return (
-      <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked}>
-        {connectWalletSectionTranslations('installMetaMask')}
-      </CommonActionButton>
+      <Box>
+        <CommonActionButton data-testid='button-install-metamask' onClick={handleInstallClicked} style={{marginRight: 20}}>
+          {connectWalletSectionTranslations('installMetaMask')}
+        </CommonActionButton>
+        <CommonActionButton data-testid='button-install-metamask' onClick={handleOntoInstallClicked}>
+        Install Onto
+        </CommonActionButton>
+      </Box>
     );
   }
 };

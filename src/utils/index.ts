@@ -34,4 +34,13 @@ const getNavbarImagesByChain = (chain: number) => {
   return network.ui.navbar;
 };
 
-export { sleep, getSupportedChains, getSortedChains, getNavbarImagesByChain, getChainConfig };
+const isWrongNetwork = (chain: number, availableChains: number[]) => {
+  if (!chain) {
+    return false;
+  }
+  return !availableChains.includes(chain);
+};
+
+
+
+export { sleep, getSupportedChains, getSortedChains, getNavbarImagesByChain, getChainConfig, isWrongNetwork};
