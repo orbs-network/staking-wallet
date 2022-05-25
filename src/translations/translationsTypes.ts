@@ -65,6 +65,7 @@ export interface IConnectWalletSectionTranslations {
   agreeToTheToUAndPrivacyPolicy: string;
   wrongChain: string;
   pleaseChangeChain: string;
+  swicthToDifferentChain: string;
 }
 
 export interface IWizardsCommonsTranslations {

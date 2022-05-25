@@ -18,9 +18,9 @@ import styled from 'styled-components';
 import { Theme } from '@material-ui/core';
 import { web3Modal } from '../../services/web3modal';
 import { useAppContext } from '../../context/app-context';
-import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 import Web3Service from '../../services/web3Service';
 import PageLoader from '../../components/loaders/page-loader';
+import WrongNetworkPopup from './WrongNetworkPopup';
 
 type TWalletConnectionPhase = 'install' | 'connect';
 
@@ -33,15 +33,16 @@ export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: The
 
 const ConnectWalletSection = observer(() => {
   const [connectLoading, setConnectLoading] = useState(false);
-  const { setProvider, setShowWrongNetworkPopup } = useAppContext();
+  const { setProvider } = useAppContext();
   const { chainId } = useContext(MobXProviderContext);
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
   const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
   const legalDocsAgreedTo = useBoolean(false);
-  const cryptoWalletIntegrationStore = useCryptoWalletIntegrationStore();
   const hoverTargetRef = useRef();
+  const userChainRef = useRef(null)
+  const [showWrongNetworkPopup, setShowWrongNetworkPopup] = useState(false)
 
   const walletConnectionState: TWalletConnectionPhase = hasInjectedProvider ? 'connect' : 'install';
 
@@ -55,6 +56,7 @@ const ConnectWalletSection = observer(() => {
       const web3 = new Web3Service(provider);
       const chain = await web3.getChainId();
       if (chain !== Number(chainId)) {
+        userChainRef.current = chain
         setShowWrongNetworkPopup(true);
         web3Modal.clearCachedProvider();
       } else {
@@ -78,6 +80,7 @@ const ConnectWalletSection = observer(() => {
 
   return (
     <StyledSection data-testid='connect-to-wallet-section' alignItems={'center'} id='connectWalletSection'>
+       <WrongNetworkPopup userChainId={userChainRef.current} chainId={chainId} onClose={() => setShowWrongNetworkPopup(false)} open={showWrongNetworkPopup} />
       <PageLoader open={connectLoading} />
       <WalletConnectionInnerGrid
         container

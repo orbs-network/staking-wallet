@@ -6,5 +6,7 @@
   "pleaseApproveAccountConnection": "Please approve the account connection",
   "refreshPageAfterInstallingMetaMask": "Please refresh this page after installing MetaMask",
   "wrongChain": "Oops, wrong network!",
-  "pleaseChangeChain": "Please change the network to {{chainName}}"
+  "pleaseChangeChain": "Please change the network to {{chainName}}",
+  "swicthToDifferentChain":"Or continue staking on <a href={{url}}>{{chainName}}</a>."
+
 }
