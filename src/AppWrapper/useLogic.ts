@@ -12,6 +12,7 @@ function useLogic() {
   const [providerLoading, setProviderLoading] = useState(false);
   const selected = forcedChain || chain || DEFAULT_CHAIN;
 
+  
   const eagerConnect = async () => {
     if (web3Modal.cachedProvider) {
       setProviderLoading(true);

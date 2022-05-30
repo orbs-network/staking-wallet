@@ -6,5 +6,7 @@
   "pleaseApproveAccountConnection": "アカウントの接続を許可してください",
   "refreshPageAfterInstallingMetaMask": "メタマスクをインストールした後、このページを更新してください",
   "wrongChain": "Oops, wrong network!",
-  "pleaseChangeChain": "Please change the network to {{chainName}}"
+  "pleaseChangeChain": "Please change the network to {{chainName}}",
+  "swicthToDifferentChain":"Or continue staking on <a href={{url}}>{{chainName}}</a>."
+
 }

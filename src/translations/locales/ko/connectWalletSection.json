@@ -5,6 +5,7 @@
   "installMetaMask": "메타마스크(MetaMask)를 먼저 설치하세요",
   "pleaseApproveAccountConnection": "계정 연결을 허용해주세요",
   "refreshPageAfterInstallingMetaMask": "메타마스크 확장앱을 설치 후 이 화면을 새로고침 해주세요",
-  "wrongChain": "Oops, wrong network!",
-  "pleaseChangeChain": "Please change the network to {{chainName}}"
+  "wrongChain": "이런, 잘못된 네트워크에요!",
+  "pleaseChangeChain": "메타마스크에서 네트워크를 {{chainName}}으로 변경하시거나, ",
+  "swicthToDifferentChain":"테트라에서 <a href={{url}}>{{chainName}}</a>을 선택하여 계속해서 스테이킹을 진행해주세요."
 }

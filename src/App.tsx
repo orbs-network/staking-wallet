@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Header } from './components/nav/Header';
 import { MainAppPage } from './pages/MainAppPage';
@@ -15,10 +15,9 @@ import ChainTopBackground from './components/chain/ChainTopBackground';
 import { useCryptoWalletIntegrationStore } from './store/storeHooks';
 import { useAppContext } from './context/app-context';
 import useWeb3 from './hooks/useWeb3';
-import WrongNetworkPopup from './sections/connect-wallet/WrongNetworkPopup';
 
 export const App = observer(() => {
-  const { provider, setShowWrongNetworkPopup } = useAppContext();
+  const { provider } = useAppContext();
   const { getChainId, addProviderListeners } = useWeb3();
   const { chainId } = useContext(MobXProviderContext);
   useMonitoring();
@@ -37,7 +36,7 @@ export const App = observer(() => {
     const walletChainId = await getChainId();
     addProviderListeners();
     if (walletChainId !== chainId) {
-      setShowWrongNetworkPopup(true);
+      
     } else {
       store.setIsConnected(true);
     }
@@ -52,7 +51,7 @@ export const App = observer(() => {
           <Route exact path={routes.guardiansPage} component={GuardianDisplayPage} />
           <Route exact path={routes.main} component={MainAppPage} />
         </Switch>
-        <WrongNetworkPopup />
+       
       
       </ContentContainer>
       <AppVersion />
