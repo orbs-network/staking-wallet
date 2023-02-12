@@ -15,7 +15,7 @@ import ChainTopBackground from './components/chain/ChainTopBackground';
 import { useCryptoWalletIntegrationStore } from './store/storeHooks';
 import { useAppContext } from './context/app-context';
 import useWeb3 from './hooks/useWeb3';
-
+import BadProviderPopup from './components/BadProviderPopup'
 export const App = observer(() => {
   const { provider } = useAppContext();
   const { getChainId, addProviderListeners } = useWeb3();
@@ -56,6 +56,7 @@ export const App = observer(() => {
       </ContentContainer>
       <AppVersion />
       <Footer />
+      <BadProviderPopup />
     </main>
   ) 
 });

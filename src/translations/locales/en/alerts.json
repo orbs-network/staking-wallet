@@ -6,5 +6,8 @@
   "polygonBridgeTokens": "Did you move your ORBS tokens on Polygon bridge from Ethereum?",
   "swicthToPolygon": "Did you know? by switching network on top to Polygon, you can enjoy reduced fees and auto rewards compounding.",
   "undergoingMaintenance": "Undergoing maintenance, all wallet interaction temporarily disabled. Please try again in a few hours.",
-  "walletAddressWasCopied": "Copied address!"
+  "walletAddressWasCopied": "Copied address!",
+  "providerErrorTitle":"oops! we noticed a data provider error",
+  "providerErrorBody":"reload the page or try connecting to a different RPC server address",
+  "reload":"reload"
 }

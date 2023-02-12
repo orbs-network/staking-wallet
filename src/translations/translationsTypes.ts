@@ -334,4 +334,7 @@ export interface IAlertsTranslations {
   noMaticBalance: string;
   polygonBridgeTokens: string;
   swicthToPolygon: string;
+  providerErrorTitle: string;
+  providerErrorBody: string;
+  reload: string;
 }

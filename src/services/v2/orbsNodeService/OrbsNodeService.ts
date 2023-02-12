@@ -57,6 +57,9 @@ export class OrbsNodeService implements IOrbsNodeService {
       this.selectedChain,
       minSelfStakePercentMille,
     );
+
+    console.log({ allManagementStatuses });
+    
       
     //groupedGuardiansByNetwork = all the guardians sorted by network,
     // allGuardians = all the guardians of all chains in one array
@@ -78,6 +81,7 @@ export class OrbsNodeService implements IOrbsNodeService {
       const res = await Promise.all(
         statusUrls.map(async (u) => {
           const { chain } = u;
+          
           return {
             chain,
             result: await fetchJson(u.managementServiceStatusPageUrl),

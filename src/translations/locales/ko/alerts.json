@@ -6,5 +6,8 @@
   "polygonBridgeTokens": "Did you move your ORBS tokens on Polygon bridge from Ethereum?",
   "swicthToPolygon": "Did you know? by switching network on top to Polygon, you can enjoy reduced fees and auto rewards compounding.",
   "undergoingMaintenance": "기능 점검 중에는 모든 지갑 기능을 잠시동안 사용할 수 없습니다. 몇 시간 후에 다시 이용해주세요.",
-  "walletAddressWasCopied": "주소가 복사되었습니다!"
+  "walletAddressWasCopied": "주소가 복사되었습니다!",
+   "providerErrorTitle":"이런! 데이터 제공 서버에 문제가 있습니다.",
+  "providerErrorBody":"잠시 후 페이지를 새로고치거나 다른 RPC 서버 주소로 바꿔보세요.",
+  "reload":"새로고침"
 }

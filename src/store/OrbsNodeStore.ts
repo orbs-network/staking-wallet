@@ -123,6 +123,7 @@ export class OrbsNodeStore {
           allManagementStatuses,
           this.minSelfStakePercentMille,
         );
+        
 
         return readAndProcessResult;
       } catch (e) {
