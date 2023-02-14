@@ -32,6 +32,12 @@ export class OrbsNodeStore {
     return this.guardians.map((guardian) => guardian.EthAddress.toLowerCase());
   }
 
+  @computed public get candidatesNotInStandByAddresses(): string[] {
+    return this.guardians
+      .filter((it) => it.isCandidateAndNotInStandby)
+      .map((guardian) => guardian.EthAddress.toLowerCase());
+  }
+
   @computed public get currentGuardiansAnnualRewardsInterest(): number {
     const committeeStake = this.committeeEffectiveStake;
 

@@ -79,6 +79,7 @@ export interface Guardian {
   Capacity: number;
   DelegatedStake: number;
   SelfStake: number;
+  isCandidateAndNotInStandby?: boolean;
 }
 
 export interface NodeServiceUrls {

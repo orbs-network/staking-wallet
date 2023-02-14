@@ -13,13 +13,15 @@ interface IProps extends IBaseTableProps {
 const GuardiansTable = (props: IProps) => {
   const [isMobile] = useMobile();
   const tableProps = {
+    showCandidatesNotInStandby: props.showCandidatesNotInStandby,
     committeeMembers: props.committeeMembers,
     guardiansToDelegatorsCut: props.guardiansToDelegatorsCut,
     onGuardianSelect: props.onGuardianSelect,
     selectedGuardian: props.selectedGuardian,
     guardianSelectionMode: props.guardianSelectionMode,
     disableSelection: props.disableSelection,
-    sortedGuardians: props.allChainsGuardians && getSortedGuardians(Object.values(props.allChainsGuardians), props.selectedGuardian),
+    sortedGuardians:
+      props.allChainsGuardians && getSortedGuardians(Object.values(props.allChainsGuardians), props.selectedGuardian),
     tableTitle: props.tableTitle,
     densePadding: props.densePadding,
     isGuardian: props.isGuardian,

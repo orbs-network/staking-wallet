@@ -60,11 +60,17 @@ export function updateSystemState(
   if (_.size(committeeMembers) === 0) {
     console.error(`Could not read a valid Committee, current network seems empty.`);
   }
-  const standbyMembersAddresses = _.map(
-    _.filter(rootNodeData.Payload.CurrentCandidates, (data) => data.IsStandby),
+  const standbyMembersAddresses = _.map(rootNodeData.Payload.CurrentCandidates, 'EthAddress');
+
+  const candidatesNotInStandby = _.map(
+    _.filter(rootNodeData.Payload.CurrentCandidates, (data) => !data.IsStandby),
     'EthAddress',
   );
   const standByMembers = _.pick(guardians, standbyMembersAddresses);
+
+  candidatesNotInStandby.forEach((it: string) => {
+    standByMembers[it].isCandidateAndNotInStandby = true;
+  });
 
   systemState.TimeSeconds = getCurrentClockTime();
   systemState.Timestamp = new Date().toISOString();
@@ -166,7 +172,6 @@ function extractDistributionFrequency(guardianData: IGuardianData): number {
 }
 
 function calculateCapacity(guardianData: IGuardianData, minSelfStakePercentMille: number): number {
-
   const { DelegatedStake, SelfStake } = guardianData;
 
   const capacity = SelfStake

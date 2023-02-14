@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginTop: theme.spacing(3),
     overflowX: 'auto',
-    paddingLeft: 20, paddingRight: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
     border: `1px solid ${theme.palette.secondary.main}`,
     background: '#1B1C1E',
     borderRadius: 0,
@@ -48,6 +49,7 @@ const DesktopTable = (props: IProps) => {
     sortedGuardians,
     selectedChain,
     minSelfStakePercentMille,
+    showCandidatesNotInStandby,
   } = props;
 
   const classes = useStyles();
@@ -97,6 +99,7 @@ const DesktopTable = (props: IProps) => {
           {data.map((group: IGuardiansDictionary, index: number) => {
             return (
               <TableRows
+                showCandidatesNotInStandby={showCandidatesNotInStandby}
                 key={index}
                 group={group}
                 selectedChain={selectedChain}

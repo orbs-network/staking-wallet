@@ -90,10 +90,11 @@ export const GuardianSelectionStepContent = observer(
       return (
         <Grid container item style={{ marginLeft: '1em', marginRight: '1em' }}>
           <GuardiansTable
+            showCandidatesNotInStandby={orbsAccountStore.isCandidateNotInStandby}
             minSelfStakePercentMille={orbsNodeStore.minSelfStakePercentMille}
             selectedChain={chainId}
             mainAddress={mainAddress}
-            isGuardian={orbsAccountStore.isGuardian}
+            isGuardian={orbsAccountStore.isGuardian && !orbsAccountStore.isCandidateNotInStandby}
             guardianSelectionMode={'Select'}
             allChainsGuardians={orbsNodeStore.allChainsGuardians}
             onGuardianSelect={selectGuardian}
@@ -117,9 +118,9 @@ export const GuardianSelectionStepContent = observer(
       selectedGuardianAddress,
       guardianAddressToDelegatorsCut,
       disableInputs,
+      orbsAccountStore.isCandidateNotInStandby,
     ]);
 
-    
     return (
       <BaseStepContent
         message={message.value}
@@ -130,7 +131,6 @@ export const GuardianSelectionStepContent = observer(
         isLoading={isBroadcastingMessage.value}
         contentTestId={'wizard_sub_step_initiate_guardian_selection_tx'}
         innerContent={guardianSelectionContent}
-
         close={closeWizard}
       />
     );

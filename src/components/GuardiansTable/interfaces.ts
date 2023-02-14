@@ -18,6 +18,7 @@ export interface IBaseTableProps {
   mainAddress: string;
   selectedChain: number;
   minSelfStakePercentMille: number;
+  showCandidatesNotInStandby?: boolean;
 }
 
 export interface IGetGuardianSelectionCellContent extends ISelectionProps {

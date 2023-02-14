@@ -56,6 +56,12 @@ export class OrbsAccountStore {
     return this.orbsNodeStore.guardiansAddresses.includes(this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase());
   }
 
+  @computed get isCandidateNotInStandby(): boolean {
+    return this.orbsNodeStore.candidatesNotInStandByAddresses.includes(
+      this.cryptoWalletIntegrationStore.mainAddress?.toLowerCase(),
+    );
+  }
+
   @computed get selectedGuardianAddress(): string {
     return this._selectedGuardianAddress;
   }
@@ -246,7 +252,7 @@ export class OrbsAccountStore {
       this.setDefaultAccountAddress(currentAddress);
 
       if (this.cryptoWalletIntegrationStore.hasEventsSupport) {
-         this.refreshAccountListeners(currentAddress);
+        this.refreshAccountListeners(currentAddress);
       }
 
       try {
@@ -278,7 +284,7 @@ export class OrbsAccountStore {
       await this.readDataForAccount(address || this.cryptoWalletIntegrationStore.mainAddress);
     } catch (e) {
       console.log(e);
-      
+
       const { sections, captureException } = errorMonitoring;
       this.failLoadingProcess(e);
       captureException(e, sections.accountStore, 'error in function: manuallyReadAccountData');
@@ -361,7 +367,7 @@ export class OrbsAccountStore {
   private async readAndSetLiquidOrbs(accountAddress: string) {
     try {
       const liquidOrbs = await this.orbsPOSDataService.readOrbsBalance(accountAddress);
-      
+
       this.setLiquidOrbs(liquidOrbs);
     } catch (error) {
       const { sections, captureException } = errorMonitoring;
@@ -476,7 +482,6 @@ export class OrbsAccountStore {
   // ****  Subscriptions ****
 
   private async refreshAccountListeners(accountAddress: string) {
-  
     this.cancelAllCurrentSubscriptions();
     // Orbs balance
     this.orbsBalanceChangeUnsubscribeFunction = this.orbsPOSDataService.subscribeToORBSBalanceChange(
@@ -484,7 +489,6 @@ export class OrbsAccountStore {
       (newBalance) => this.setLiquidOrbs(newBalance),
     );
 
-  
     // Staking contract allowance
     this.stakingContractAllowanceChangeUnsubscribeFunction = this.orbsTokenService.subscribeToAllowanceChange(
       accountAddress,

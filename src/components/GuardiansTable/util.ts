@@ -1,7 +1,29 @@
-import { ICommitteeMemberData, IGuardiansDictionary } from '../../services/v2/orbsNodeService/OrbsNodeTypes';
+import {
+  ICommitteeMemberData,
+  IGroupedGuardiansByNetwork,
+  IGuardiansDictionary,
+} from '../../services/v2/orbsNodeService/OrbsNodeTypes';
 import { ensurePrefix } from '../../utils/stringUtils';
 import { Guardian } from '../../services/v2/orbsNodeService/systemState';
 import { IBaseTableProps } from './interfaces';
+
+export const handleRemoveGuardianFromList = (
+  networks: IGroupedGuardiansByNetwork[],
+  showCandidatesNotInStandby?: boolean,
+  chain?: number,
+) => {
+  if (showCandidatesNotInStandby) {
+    return false;
+  }
+  let hide = false;
+  networks.forEach((network) => {
+    if (network.chain === chain && network.guardian && network.guardian.isCandidateAndNotInStandby) {
+      hide = true;
+    }
+  });
+
+  return hide;
+};
 
 export const compareGuardiansBySelectedAndThenStake = (
   a: IGuardiansDictionary,
@@ -46,7 +68,6 @@ export const getEffectiveStakeInUnits = (EffectiveStake: number): string => {
 };
 
 export const getCapacityText = (Capacity: any, toFixed: number) => {
-
   try {
     return !isNaN(Capacity) ? `${Capacity.toFixed(toFixed)}%` : '-';
   } catch (error) {

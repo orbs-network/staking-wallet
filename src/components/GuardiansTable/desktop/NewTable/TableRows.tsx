@@ -24,6 +24,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import config from '../../../../../config';
 import { useCommonsTranslations } from '../../../../translations/translationsHooks';
 import { HtmlTooltip } from '../../../base/HtmlTooltip';
+import { handleRemoveGuardianFromList } from '../../util';
 
 const useStyles = makeStyles((theme) => ({
   multipleGuardiansCell: {
@@ -69,6 +70,7 @@ interface IProps {
   isGuardian: boolean;
   mainAddress: string;
   copyAddress: (val: string) => void;
+  showCandidatesNotInStandby?: boolean;
 }
 
 function TableRows(props: IProps) {
@@ -88,6 +90,7 @@ function TableRows(props: IProps) {
     guardiansTableTranslations,
     group,
     copyAddress,
+    showCandidatesNotInStandby,
   } = props;
   const { networks, EthAddress, Name, Website: website, IsCertified, RegistrationTime } = group;
   const selectedChainGuardian = selectedChain ? networks.find((n) => n.chain === selectedChain).guardian : null;
@@ -100,6 +103,8 @@ function TableRows(props: IProps) {
     selectedChainGuardian.RegistrationTime = RegistrationTime;
     selectedChainGuardian.IsCertified = IsCertified;
   }
+
+  if (handleRemoveGuardianFromList(networks, showCandidatesNotInStandby, selectedChain)) return null;
   return (
     <>
       <TableRow>
