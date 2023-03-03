@@ -20,7 +20,7 @@
     "ganache-cli": "^6.9.1",
     "openzeppelin-solidity": "2.0.1",
     "rimraf": "^3.0.2",
-    "truffle": "5.1.24",
+    "truffle": "5.7.9",
     "typescript": "^4.1.4"
   },
   "devDependencies": {
