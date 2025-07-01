@@ -73,7 +73,7 @@
     "@sentry/tracing": "^6.7.0",
     "@walletconnect/web3-provider": "^1.7.7",
     "animated-number-react": "^0.1.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "big.js": "^5.2.2",
     "clsx": "^1.1.1",
     "color": "^3.1.2",
