@@ -1,6 +1,8 @@
 {
   "address": "Address",
   "copy": "Copy",
+  "copyAddress": "Copy Address",
+  "disconnect": "Disconnect",
   "notifications": "Notification",
   "qr": "QR"
 }

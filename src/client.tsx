@@ -7,6 +7,9 @@ import config, { IS_DEV } from '../config';
 import { LangRouter } from './multi-lang/LangRouter';
 import i18n from 'i18next';
 import { AppContext } from './context/app-context';
+import { initializeReownAppKit } from './services/wallet-connection/reownAppKit';
+
+initializeReownAppKit();
 
 ReactDOM.render(
   <LangRouter preLangBasename={IS_DEV ? '' : config.urlBase}>

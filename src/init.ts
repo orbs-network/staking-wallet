@@ -9,8 +9,9 @@ import 'moment/locale/ko';
 import { DEFAULT_CHAIN } from './constants';
 import Web3 from 'web3';
 import config from '../config';
+import { ConnectedWallet } from './services/wallet-connection';
 
-const initApp = async (provider: any, chain: number) => {
+const initApp = async (provider: any, chain: number, connectedWallet?: ConnectedWallet | null) => {
   moment.locale('ja');
   moment.locale('ko');
   moment.locale('en');
@@ -40,7 +41,9 @@ const initApp = async (provider: any, chain: number) => {
   services.analyticsService.init();
 
   let ethereumProviderName: TEthereumProviderName;
-  if (ethereumProvider) {
+  if (connectedWallet && connectedWallet.walletName) {
+    ethereumProviderName = connectedWallet.walletName;
+  } else if (ethereumProvider) {
     ethereumProviderName = detectEthereumProviderName(ethereumProvider);
   } else {
     ethereumProviderName = 'ORBS Infura';

@@ -71,6 +71,7 @@ export const CommonDialog = React.memo<DialogProps>((props) => {
       // fullWidth={!fullScreen}
       maxWidth={'lg'}
       BackdropComponent={DarkBackdrop}
+      disableScrollLock
       scroll={'paper'}
       {...others}
       id={'commonDialog'}

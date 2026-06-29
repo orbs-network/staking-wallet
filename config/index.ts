@@ -20,6 +20,18 @@ import { ReactElement } from 'react';
 
 export const IS_DEV = process.env.IS_DEV;
 
+const ethereumRpcUrls = [
+  'https://ethereum-rpc.publicnode.com',
+  'https://eth.llamarpc.com',
+  process.env.INFURA_ID ? `https://mainnet.infura.io/v3/${process.env.INFURA_ID}` : undefined,
+].filter(Boolean) as string[];
+
+const polygonRpcUrls = [
+  'https://polygon-bor-rpc.publicnode.com',
+  'https://polygon.llamarpc.com',
+  'https://rpc-mainnet.matic.network',
+  'https://polygon-rpc.com',
+];
 
 export interface INetwork {
   managementServiceStatusPageUrl?: string;
@@ -63,7 +75,7 @@ const networks: { [key: string]: INetwork } = {
     erc20Contract: process.env.NETWORK_1_ERC20,
     blockExplorerUrl: 'https://etherscan.io',
     navbarImage: navbarEthereumImg,
-    rpcUrls: [`https://mainnet.infura.io/v3/${process.env.INFURA_ID}`],
+    rpcUrls: ethereumRpcUrls,
     ui: uiConfig[CHAINS.ethereum],
   },
   [CHAINS.ropsten]: {
@@ -88,9 +100,7 @@ const networks: { [key: string]: INetwork } = {
     name: 'Polygon',
     smallLogo: smallPolygonIcon,
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-    rpcUrls: [
-      'https://polygon-rpc.com',
-    ],
+    rpcUrls: polygonRpcUrls,
     blockExplorerUrl: 'https://www.polygonscan.com',
     contractsRegistry: process.env.NETWORK_137_REGISTRY,
     erc20Contract: process.env.NETWORK_137_ERC20,

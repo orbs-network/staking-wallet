@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { MobXProviderContext, observer } from 'mobx-react';
+import React, { useCallback, useRef, useState } from 'react';
+import { observer } from 'mobx-react';
 import Typography from '@material-ui/core/Typography';
 import Grid, { GridProps } from '@material-ui/core/Grid';
 import { useBoolean } from 'react-hanger';
@@ -13,14 +13,15 @@ import InstallOrConnectBtn from './components/install-or-connect-btn';
 import LegalAgreement from './components/legal-agreement';
 import Message from './components/message';
 import { WalletConnectionInnerGrid } from './components/style';
-import { hasInjectedProvider } from '../../constants';
 import styled from 'styled-components';
 import { Theme } from '@material-ui/core';
-import { web3Modal } from '../../services/web3modal';
-import { useAppContext } from '../../context/app-context';
-import Web3Service from '../../services/web3Service';
 import PageLoader from '../../components/loaders/page-loader';
 import WrongNetworkPopup from './WrongNetworkPopup';
+import WalletOptionsDialog from './WalletOptionsDialog';
+import { walletLegalAgreement } from '../../services/wallet-connection/legalAgreement';
+import useWalletConnector from '../../hooks/useWalletConnector';
+import { ConnectWalletOptions } from '../../services/wallet-connection';
+import CustomSnackbar from '../../components/snackbar/custom-snackbar';
 
 type TWalletConnectionPhase = 'install' | 'connect';
 
@@ -32,42 +33,38 @@ export const StyledSection = styled(Section)<GridProps>(({ theme }: { theme: The
 }));
 
 const ConnectWalletSection = observer(() => {
-  const [connectLoading, setConnectLoading] = useState(false);
-  const { setProvider } = useAppContext();
-  const { chainId } = useContext(MobXProviderContext);
+  const [showWalletOptions, setShowWalletOptions] = useState(false);
+  const {
+    connect,
+    connectLoading,
+    rejectedConnection,
+    connectionErrorMessage,
+    clearConnectionError,
+    showWrongNetworkPopup,
+    setShowWrongNetworkPopup,
+    userChainId,
+  } = useWalletConnector();
   const sectionTitlesTranslations = useSectionsTitlesTranslations();
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
-  const rejectedConnection = useBoolean(false);
   const pressedOnInstallMetamask = useBoolean(false);
-  const legalDocsAgreedTo = useBoolean(false);
+  const legalDocsAgreedTo = useBoolean(walletLegalAgreement.getAccepted());
   const hoverTargetRef = useRef();
-  const userChainRef = useRef(null)
-  const [showWrongNetworkPopup, setShowWrongNetworkPopup] = useState(false)
 
-  const walletConnectionState: TWalletConnectionPhase = hasInjectedProvider ? 'connect' : 'install';
+  const walletConnectionState: TWalletConnectionPhase = 'connect';
 
   const shouldDisplayLegalTicker = walletConnectionState === 'connect';
 
   const handleConnectClicked = useCallback(async () => {
-   
-    try {
-      const provider = await web3Modal.connect();
-      setConnectLoading(true);
-      const web3 = new Web3Service(provider);
-      const chain = await web3.getChainId();
-      if (chain !== Number(chainId)) {
-        userChainRef.current = chain
-        setShowWrongNetworkPopup(true);
-        web3Modal.clearCachedProvider();
-      } else {
-        setProvider(provider);
-      }
-    } catch (error) {
-      web3Modal.clearCachedProvider();
-    } finally {
-      setConnectLoading(false);
-    }
+    setShowWalletOptions(true);
   }, []);
+
+  const handleWalletSelected = useCallback(
+    async (options: ConnectWalletOptions) => {
+      setShowWalletOptions(false);
+      await connect(options);
+    },
+    [connect],
+  );
 
   const handleInstallClicked = useCallback(async () => {
     window.open('https://metamask.io/', '_blank');
@@ -80,7 +77,23 @@ const ConnectWalletSection = observer(() => {
 
   return (
     <StyledSection data-testid='connect-to-wallet-section' alignItems={'center'} id='connectWalletSection'>
-       <WrongNetworkPopup userChainId={userChainRef.current} chainId={chainId} onClose={() => setShowWrongNetworkPopup(false)} open={showWrongNetworkPopup} />
+      <WrongNetworkPopup
+        userChainId={userChainId}
+        onClose={() => setShowWrongNetworkPopup(false)}
+        open={showWrongNetworkPopup}
+      />
+      <CustomSnackbar
+        show={!!connectionErrorMessage}
+        hide={clearConnectionError}
+        message={connectionErrorMessage}
+        variant='error'
+        autoHideDuration={6000}
+      />
+      <WalletOptionsDialog
+        open={showWalletOptions}
+        onClose={() => setShowWalletOptions(false)}
+        onSelect={handleWalletSelected}
+      />
       <PageLoader open={connectLoading} />
       <WalletConnectionInnerGrid
         container
@@ -125,14 +138,13 @@ const ConnectWalletSection = observer(() => {
 
           <LegalAgreement
             checked={legalDocsAgreedTo.value}
-            onChange={(e) => legalDocsAgreedTo.setValue(e.target.checked)}
+            onChange={(e) => {
+              legalDocsAgreedTo.setValue(e.target.checked);
+              walletLegalAgreement.setAccepted(e.target.checked);
+            }}
             shouldDisplayLegalTicker={shouldDisplayLegalTicker}
           />
-          <Message
-            pressedOnInstallMetamask={pressedOnInstallMetamask.value}
-            hasEthereumProvider={hasInjectedProvider}
-            rejectedConnection={rejectedConnection.value}
-          />
+          <Message pressedOnInstallMetamask={pressedOnInstallMetamask.value} rejectedConnection={rejectedConnection} />
         </Grid>
       </WalletConnectionInnerGrid>
     </StyledSection>

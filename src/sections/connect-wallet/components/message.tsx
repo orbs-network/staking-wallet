@@ -5,16 +5,15 @@ import Grid, { GridProps } from '@material-ui/core/Grid';
 
 interface IProps {
   pressedOnInstallMetamask: boolean;
-  hasEthereumProvider: boolean;
   rejectedConnection: boolean;
 }
 
-const Message = ({ pressedOnInstallMetamask, hasEthereumProvider, rejectedConnection }: IProps) => {
+const Message = ({ pressedOnInstallMetamask, rejectedConnection }: IProps) => {
   let testId = null;
   let messageText = null;
   const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
 
-  if (hasEthereumProvider && rejectedConnection) {
+  if (rejectedConnection) {
     testId = 'text-connection-was-not-approved';
     messageText = connectWalletSectionTranslations('pleaseApproveAccountConnection');
   } else if (pressedOnInstallMetamask) {

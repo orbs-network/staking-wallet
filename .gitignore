@@ -3,6 +3,9 @@ dist
 .vscode
 node_modules
 .DS_Store
+.env*
+!.env.sample
 local/
 contracts/
+docs/
 src/translations/syncTranslations.zsh

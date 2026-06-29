@@ -1,8 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
-import {web3Modal} from '../../services/web3modal'
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { ConnectedWallet } from '../../services/wallet-connection';
+
 interface IState {
   provider: any;
   setProvider: (val: any) => void;
+  connectedWallet: ConnectedWallet | null;
+  setConnectedWallet: (val: ConnectedWallet | null) => void;
 }
 
 const Context = createContext<IState>({} as IState);
@@ -13,19 +16,29 @@ interface IProps {
 
 const AppContext = ({ children }: IProps) => {
   const [provider, setProvider] = useState(null);
+  const [connectedWallet, setConnectedWalletState] = useState<ConnectedWallet | null>(null);
 
-  const value = {
-    provider,
-    setProvider,
-  };
+  const setConnectedWallet = useCallback((wallet: ConnectedWallet | null) => {
+    setConnectedWalletState(wallet);
+    setProvider(wallet ? wallet.provider : null);
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      provider,
+      setProvider,
+      connectedWallet,
+      setConnectedWallet,
+    }),
+    [connectedWallet, provider, setConnectedWallet],
+  );
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
 const useAppContext = () => {
-  
   const values = useContext(Context);
 
-  return values
+  return values;
 };
 
 export { AppContext, useAppContext };

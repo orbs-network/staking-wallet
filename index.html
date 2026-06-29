@@ -10,6 +10,9 @@
     <!-- Chrome, Firefox OS and Opera (DEV_NOTE : Same color as header) -->
     <meta name="theme-color" content="#0D0D0D" />
     <meta name="apple-mobile-web-app-status-bar-style" content="#0D0D0D" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="<%= htmlWebpackPlugin.options.publicBasePath %>manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="<%= htmlWebpackPlugin.options.publicBasePath %>pwa-icon-192.png" />
     <link id="favicon" rel="icon" type="image/x-icon" href="./assets/favicons/tet.png">
 
     <% if (!process.env.IS_DEV) { %>
@@ -78,5 +81,14 @@
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.0/umd/react.development.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.0/umd/react-dom.development.min.js"></script>
     <% } %>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('<%= htmlWebpackPlugin.options.publicBasePath %>sw.js').catch(function (error) {
+            console.warn('Service worker registration failed', error);
+          });
+        });
+      }
+    </script>
   </body>
 </html>

@@ -8,6 +8,7 @@ import LinkOffIcon from '@material-ui/icons/LinkOff';
 import { useConnectWalletSectionTranslations } from '../../translations/translationsHooks';
 import config from '../../../config';
 import { NETWORK_QUERY_PARAM } from '../../constants';
+import { MobXProviderContext } from 'mobx-react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,33 +21,35 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   text: {
-    fontSize:'20px',
-    "& *": {
-      color:'white'
-    }
-  }
+    fontSize: '20px',
+    '& *': {
+      color: 'white',
+    },
+  },
 }));
 
-interface Props {
-  chainId: number;
+interface IProps {
+  chainId?: number;
   open: boolean;
   onClose: () => void;
-  userChainId: number;
+  userChainId?: number;
 }
 
 const getUserConnectedChainConfig = (chain: number) => {
   return config.networks[chain];
 };
 
-function WrongNetworkPopup({ chainId, open, onClose, userChainId }: Props) {
+function WrongNetworkPopup({ chainId, open, onClose, userChainId }: IProps) {
   const classes = useStyles();
+  const mobxContext = useContext(MobXProviderContext);
+  const selectedChainId = chainId || mobxContext.chainId;
   const [chainName, setChainName] = useState('');
   const translation = useConnectWalletSectionTranslations();
 
   useEffect(() => {
-    const chainConfig = getChainConfig(chainId);
+    const chainConfig = getChainConfig(selectedChainId);
     setChainName(chainConfig.name);
-  }, [chainId]);
+  }, [selectedChainId]);
 
   const userConnectedChainConfig = useMemo(() => getUserConnectedChainConfig(userChainId), [userChainId]);
 
@@ -59,7 +62,6 @@ function WrongNetworkPopup({ chainId, open, onClose, userChainId }: Props) {
 
         {userConnectedChainConfig && (
           <Typography
-            
             className={classes.text}
             dangerouslySetInnerHTML={{
               __html: translation('swicthToDifferentChain', {

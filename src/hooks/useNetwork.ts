@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
-import { DEFAULT_CHAIN, NETWORK_QUERY_PARAM } from '../constants';
+import { DEFAULT_CHAIN, NETWORK_QUERY_PARAM, PENDING_NETWORK_SWITCH_CHAIN_KEY } from '../constants';
 import web3Service from '../services/web3Service';
 import { getSupportedChains } from '../utils';
 import useWeb3 from './useWeb3';
@@ -12,6 +12,17 @@ const detectForcedNetwork = (location) => {
   }
 };
 
+const getValidForcedNetwork = (location) => {
+  const forced = detectForcedNetwork(location);
+  const availableChains = getSupportedChains();
+
+  if (!forced) {
+    return undefined;
+  }
+
+  return availableChains.includes(forced) ? forced : Number(DEFAULT_CHAIN);
+};
+
 const useNetwork = (): {
   chain: number | undefined;
   noProvider: boolean;
@@ -21,7 +32,7 @@ const useNetwork = (): {
   const location = useLocation();
   const [chain, setChain] = useState<number | undefined>(undefined);
   const [noProvider, setNoProvider] = useState<boolean>(false);
-  const [forcedChain, setForcedChain] = useState<number | undefined>(undefined);
+  const [forcedChain, setForcedChain] = useState<number | undefined>(() => getValidForcedNetwork(location));
   const [chainLoaded, setChainLoaded] = useState(false);
   const {getChainId, provider} = useWeb3()
   const getChain = async () => {
@@ -43,10 +54,12 @@ const useNetwork = (): {
     } else {
       getChain();
     }
-    const forced = detectForcedNetwork(location);
-    const availableChains = getSupportedChains();
+    const forced = getValidForcedNetwork(location);
     if (forced) {
-      setForcedChain(availableChains.includes(forced) ? forced : Number(DEFAULT_CHAIN));
+      setForcedChain(forced);
+      if (window.sessionStorage.getItem(PENDING_NETWORK_SWITCH_CHAIN_KEY) === String(forced)) {
+        window.sessionStorage.removeItem(PENDING_NETWORK_SWITCH_CHAIN_KEY);
+      }
     }
   }, []);
 

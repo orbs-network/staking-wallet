@@ -1,6 +1,8 @@
 {
   "address": "アドレス",
   "copy": "コピー",
+  "copyAddress": "アドレスをコピー",
+  "disconnect": "接続解除",
   "notifications": "通知",
   "qr": "QRコード"
 }

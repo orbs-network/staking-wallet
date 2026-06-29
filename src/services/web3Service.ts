@@ -1,7 +1,25 @@
 import Web3 from 'web3';
 import { getSupportedChains } from '../utils/index';
 import config from '../../config';
-import { web3Modal } from './web3modal';
+import { walletConnection } from './wallet-connection';
+import { NETWORK_QUERY_PARAM, PENDING_NETWORK_SWITCH_CHAIN_KEY } from '../constants';
+
+function normalizeChainId(chainId: string | number | undefined): number | null {
+  if (chainId === undefined || chainId === null) {
+    return null;
+  }
+
+  if (typeof chainId === 'number') {
+    return chainId;
+  }
+
+  return chainId.startsWith('0x') ? parseInt(chainId, 16) : Number(chainId);
+}
+
+function getChainUrl(chainId: number) {
+  return `${window.location.pathname}?${NETWORK_QUERY_PARAM}=${chainId}`;
+}
+
 class Web3Service {
   web3: Web3;
   provider: any;
@@ -77,7 +95,15 @@ class Web3Service {
   addNetworkChangedEvent = () => {
     const provider = this.provider;
     if (provider) {
-      provider.on('chainChanged', function () {
+      provider.on('chainChanged', function (chainId) {
+        const switchedChainId = normalizeChainId(chainId);
+        const pendingChainId = normalizeChainId(window.sessionStorage.getItem(PENDING_NETWORK_SWITCH_CHAIN_KEY));
+
+        if (pendingChainId && getSupportedChains().includes(pendingChainId) && switchedChainId === pendingChainId) {
+          window.location.replace(getChainUrl(pendingChainId));
+          return;
+        }
+
         window.location.reload();
       });
     }
@@ -87,10 +113,10 @@ class Web3Service {
     const provider = this.provider;
     if (provider) {
       provider.on('accountsChanged', async function (accounts) {
-        window.location.reload();
         if (!accounts[0]) {
-          web3Modal.clearCachedProvider();
+          walletConnection.clearCachedProvider();
         }
+        window.location.reload();
       });
     }
   };

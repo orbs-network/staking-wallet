@@ -1,11 +1,6 @@
 import { TModalId, TStackingAction } from './analyticConstants';
 
-export type TEthereumProviderName =
-  | 'MetaMask'
-  | 'Trust Wallet'
-  | 'ImToken'
-  | 'ORBS Infura'
-  | 'Unknown Ethereum provider';
+export type TEthereumProviderName = string;
 
 export interface IAnalyticsService {
   isActive: boolean;

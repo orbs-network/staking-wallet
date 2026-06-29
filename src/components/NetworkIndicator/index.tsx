@@ -12,17 +12,20 @@ import NetworkItem from './NetworkItem';
 import { useHistory } from 'react-router';
 import InfoIcon from '@material-ui/icons/Info';
 import { removeQueryParam } from '../../utils/url';
-import { NETWORK_QUERY_PARAM } from '../../constants';
+import { NETWORK_QUERY_PARAM, PENDING_NETWORK_SWITCH_CHAIN_KEY } from '../../constants';
 import { getSupportedChains } from '../../utils';
 import web3Service from '../../services/web3Service';
 import { HtmlTooltip } from '../base/HtmlTooltip';
-import { useCommonsTranslations } from '../../translations/translationsHooks';
+import { useCommonsTranslations, useConnectWalletSectionTranslations } from '../../translations/translationsHooks';
 import styled from 'styled-components';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { InfoToolTipIcon } from '../tooltips/InfoTooltipIcon';
 import useWeb3 from '../../hooks/useWeb3';
 import { useCryptoWalletIntegrationStore } from '../../store/storeHooks';
 import { observer } from 'mobx-react';
+import { useAppContext } from '../../context/app-context';
+import { walletConnection } from '../../services/wallet-connection';
+import CustomSnackbar from '../snackbar/custom-snackbar';
 interface IProps {
   chainId: string;
 }
@@ -36,9 +39,13 @@ const StyledButton = styled(Button)({
 const ChainIndicator = observer(({ chainId }: IProps) => {
   const supportedNetworks = getSupportedChains();
   const commonsTranslations = useCommonsTranslations();
+  const connectWalletSectionTranslations = useConnectWalletSectionTranslations();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [networkSwitching, setNetworkSwitching] = React.useState(false);
+  const [networkSwitchError, setNetworkSwitchError] = React.useState('');
   const anchorRef = React.useRef(null);
+  const { connectedWallet } = useAppContext();
   
 
   const handleToggle = () => {
@@ -73,22 +80,44 @@ const ChainIndicator = observer(({ chainId }: IProps) => {
     return null;
   }
 
-  const onNetworkSelect = (e: any, id: number) => {
+  const navigateToNetwork = (id: number) => {
+    window.location.replace(`${window.location.pathname}?${NETWORK_QUERY_PARAM}=${id}`);
+  };
+
+  const onNetworkSelect = async (e: any, id: number) => {
     handleClose(e);
     const network = config.networks[id];
     if (!network) {
       return;
     }
-    window.location.replace(`${window.location.pathname}?${NETWORK_QUERY_PARAM}=${id}`)
+
+    if (!connectedWallet || !connectedWallet.provider) {
+      navigateToNetwork(id);
+      return;
+    }
+
+    setNetworkSwitching(true);
+    setNetworkSwitchError('');
+
+    try {
+      window.sessionStorage.setItem(PENDING_NETWORK_SWITCH_CHAIN_KEY, String(id));
+      await walletConnection.switchNetwork(connectedWallet.provider, id, connectedWallet.providerType);
+      navigateToNetwork(id);
+    } catch (error) {
+      window.sessionStorage.removeItem(PENDING_NETWORK_SWITCH_CHAIN_KEY);
+      setNetworkSwitchError(connectWalletSectionTranslations('networkSwitchFailed', { chainName: network.name }));
+      console.error('Wallet network switch failed', error);
+    } finally {
+      setNetworkSwitching(false);
+    }
   };
-
-
 
   return (
     <div className={classes.root}>
       <>
         <StyledButton
           className={classes.selector}
+          disabled={networkSwitching}
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
           aria-haspopup='true'
@@ -139,6 +168,13 @@ const ChainIndicator = observer(({ chainId }: IProps) => {
             </Grow>
           )}
         </Popper>
+        <CustomSnackbar
+          show={!!networkSwitchError}
+          hide={() => setNetworkSwitchError('')}
+          message={networkSwitchError}
+          variant='error'
+          autoHideDuration={6000}
+        />
       </>
     </div>
   );
